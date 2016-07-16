@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace MainSolutionTemplate.Utilities.Helpers
+namespace CoreDocker.Utilities.Helpers
 {
     public class ObjectPool<T>
     {

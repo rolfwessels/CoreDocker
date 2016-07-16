@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace MainSolutionTemplate.Utilities.Helpers
+namespace CoreDocker.Utilities.Helpers
 {
   public static class StreamHelper
   {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MainSolutionTemplate.Utilities.Helpers
+namespace CoreDocker.Utilities.Helpers
 {
     public static class TaskHelper
     {

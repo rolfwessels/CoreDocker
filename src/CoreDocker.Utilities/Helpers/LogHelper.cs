@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace MainSolutionTemplate.Utilities.Helpers
+namespace CoreDocker.Utilities.Helpers
 {
   public static class LogHelper
   {
@@ -12,7 +12,7 @@ namespace MainSolutionTemplate.Utilities.Helpers
 
     public static string Dump(this object val, bool indented)
     {
-      return JsonConvert.SerializeObject(val, indented ? Formatting.Indented : Formatting.None);
+        return JsonConvert.SerializeObject(val, indented ? Formatting.Indented : Formatting.None);
     }
 
     public static T Dump<T>(this T val, string description)

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace MainSolutionTemplate.Utilities.Helpers
+namespace CoreDocker.Utilities.Helpers
 {
     /// <summary>
     ///     Non-generic class allowing properties to be copied from one instance
@@ -129,13 +130,13 @@ namespace MainSolutionTemplate.Utilities.Helpers
             var bindings = new List<MemberBinding>();
             foreach (
                 PropertyInfo sourceProperty in
-                    typeof (TSource).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                    typeof (TSource).GetRuntimeProperties())
             {
                 if (!sourceProperty.CanRead)
                 {
                     continue;
                 }
-                PropertyInfo targetProperty = typeof (TTarget).GetProperty(sourceProperty.Name);
+                PropertyInfo targetProperty = typeof (TTarget).GetRuntimeProperties().FirstOrDefault(x=>x.Name == sourceProperty.Name);
                 if (targetProperty == null)
                 {
                     throw new ArgumentException("Property " + sourceProperty.Name + " is not present and accessible in " +
@@ -151,7 +152,7 @@ namespace MainSolutionTemplate.Utilities.Helpers
                     throw new ArgumentException("Property " + sourceProperty.Name + " is static in " +
                                                 typeof (TTarget).FullName);
                 }
-                if (!targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
+                if (targetProperty.PropertyType != sourceProperty.PropertyType)
                 {
                     throw new ArgumentException("Property " + sourceProperty.Name + " has an incompatible type in " +
                                                 typeof (TTarget).FullName);

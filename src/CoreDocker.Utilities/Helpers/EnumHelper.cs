@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MainSolutionTemplate.Utilities.Helpers
+namespace CoreDocker.Utilities.Helpers
 {
     public class EnumHelper
     {
