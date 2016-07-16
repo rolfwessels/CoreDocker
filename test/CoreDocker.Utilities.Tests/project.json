@@ -3,13 +3,13 @@
 
   "dependencies": {
     "NETStandard.Library": "1.6.0",
-    "NUnit": "3.4.0",
     "dotnet-test-nunit": "3.4.0-beta-1",
     "CoreDocker.Utilities": "1.0.0-*",
     "Microsoft.Extensions.Logging": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
-    "FluentAssertions": "4.12.0"
+    "FluentAssertions": "4.12.0",
+    "NUnit": "3.4.1"
   },
   "testRunner": "nunit",
   "frameworks": {
