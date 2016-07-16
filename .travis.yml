@@ -30,8 +30,3 @@ script:
   - popd
   - pushd test/CoreDocker.Utilities.Tests && dotnet test 
   - popd
-  
-  apt-get install dotnet-dev-1.0.0-preview2-003118
-
-And then install the preview1 sharedframework package so your app will continue to work
-apt-get install dotnet-sharedframework-microsoft.netcore.app-1.0.0-rc2-3002702
