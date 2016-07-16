@@ -39,7 +39,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // action
             var simpleException = aggregateException.ToSingleExceptionString();
             // assert
-            simpleException.Should().Be("Test\r\n");
+            simpleException.Trim().Should().Be("Test");
         }
 
         [Test]
