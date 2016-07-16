@@ -1,0 +1,25 @@
+language: generic
+
+sudo: required
+dist: trusty
+
+addons:
+  apt:
+    packages:
+    - gettext
+    - libunwind8
+    - libicu52
+    - dbus
+
+before_install:
+  - sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+  - sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+  - sudo apt-get update
+  - sudo apt-get install dotnet-dev-1.0.0-preview2-003121
+
+script:
+  - dotnet restore
+  - pushd src/CoreDocker.Api && dotnet pack -c Release && popd
+  - pushd test/CoreDocker.Core.Tests && dotnet test && popd
+  - pushd test/CoreDocker.Sdk.Tests && dotnet test && popd
+  - pushd test/CoreDocker.Utilities.Tests && dotnet test && popd
