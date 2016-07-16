@@ -1,4 +1,4 @@
-language: csharp
+language: generic
 
 sudo: required
 dist: trusty
@@ -12,11 +12,10 @@ addons:
     - dbus
 
 before_install:
-  # Install NetCore RC2
-  - sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list' 
+  - sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
   - sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
   - sudo apt-get update
-  - sudo apt-get install dotnet-dev-1.0.0-preview2-003121 -y
+  - sudo apt-get install dotnet-dev-1.0.0-preview2-003121
 
 script:
   - which dotnet
@@ -31,3 +30,8 @@ script:
   - popd
   - pushd test/CoreDocker.Utilities.Tests && dotnet test 
   - popd
+  
+  apt-get install dotnet-dev-1.0.0-preview2-003118
+
+And then install the preview1 sharedframework package so your app will continue to work
+apt-get install dotnet-sharedframework-microsoft.netcore.app-1.0.0-rc2-3002702
