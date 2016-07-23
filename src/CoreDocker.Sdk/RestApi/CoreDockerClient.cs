@@ -1,3 +1,5 @@
+using MainSolutionTemplate.Sdk.RestApi;
+
 namespace CoreDocker.Sdk
 {
     public class CoreDockerClient : ICoreDockerApi
@@ -7,7 +9,7 @@ namespace CoreDocker.Sdk
         public CoreDockerClient(string urlBase)
         {
             _urlBase = urlBase;
-            Projects = new ProjectClient(this);
+            Projects = new ProjectApiClient(this);
         }
 
         public string UrlBase
@@ -18,14 +20,8 @@ namespace CoreDocker.Sdk
         #region Implementation of ICoreDockerApi
 
 
-        public ProjectClient Projects { get; set; }
+        public ProjectApiClient Projects { get; set; }
 
         #endregion
-    }
-
-    
-    public interface ICoreDockerApi
-    {
-        ProjectClient Projects { get; set; }
     }
 }

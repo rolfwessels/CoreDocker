@@ -4,7 +4,7 @@ using CoreDocker.Shared;
 
 namespace CoreDocker.Api.Controllers
 {
-    [Route(RouteHelper.Config)]
+    [Route(RouteHelper.UserController)]
     public class ConfigController : Controller
     {
 
