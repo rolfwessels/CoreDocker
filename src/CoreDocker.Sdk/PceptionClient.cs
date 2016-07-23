@@ -7,7 +7,7 @@ namespace CoreDocker.Sdk
         public CoreDockerClient(string urlBase)
         {
             _urlBase = urlBase;
-            Configs = new ConfigClient(this);
+            Projects = new ProjectClient(this);
         }
 
         public string UrlBase
@@ -18,7 +18,7 @@ namespace CoreDocker.Sdk
         #region Implementation of ICoreDockerApi
 
 
-        public IConfigClient Configs { get; set; }
+        public ProjectClient Projects { get; set; }
 
         #endregion
     }
@@ -26,6 +26,6 @@ namespace CoreDocker.Sdk
     
     public interface ICoreDockerApi
     {
-        IConfigClient Configs { get; set; }
+        ProjectClient Projects { get; set; }
     }
 }
