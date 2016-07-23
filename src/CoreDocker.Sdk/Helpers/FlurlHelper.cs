@@ -20,7 +20,7 @@ namespace CoreDocker.Sdk
 
         public static async Task<HttpResponseMessage> GetAsyncAndLog(this Url appendPathSegment)
         {
-            return await AsyncAndLog(appendPathSegment, appendPathSegment.GetAsync, "GET");
+            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.GetAsync(), "GET");
         }
 
         public static async Task<HttpResponseMessage> PostJsonAsyncAndLog(this Url appendPathSegment, object post)
@@ -35,7 +35,7 @@ namespace CoreDocker.Sdk
 
         public static async Task<HttpResponseMessage> DeleteAsyncAndLog(this Url appendPathSegment)
         {
-            return await AsyncAndLog(appendPathSegment, appendPathSegment.DeleteAsync, "DELETE");
+            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.DeleteAsync(), "DELETE");
         }
 
         private static async Task<HttpResponseMessage> AsyncAndLog(Url appendPathSegment, Func<Task<HttpResponseMessage>> call, string args)

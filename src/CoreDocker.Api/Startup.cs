@@ -24,6 +24,7 @@ namespace CoreDocker.Api
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
+            
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -43,6 +44,7 @@ namespace CoreDocker.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
