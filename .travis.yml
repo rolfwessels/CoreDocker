@@ -32,6 +32,6 @@ script:
   - pushd test/CoreDocker.Sdk.Tests && dotnet test 
   - popd
   - pushd test/CoreDocker.Utilities.Tests && dotnet test 
-	- popd
-	- pushd test/CoreDocker.Dal.Tests && dotnet test 
-	- popd
+  - popd
+  - pushd test/CoreDocker.Dal.Tests && dotnet test 
+  - popd
