@@ -36,7 +36,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Utilities.Tests"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Utilities", "src\CoreDocker.Utilities\CoreDocker.Utilities.xproj", "{6ABA33CC-8F44-4FDD-B2CC-A75E77C15DAC}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Dal", "CoreDocker.Dal\CoreDocker.Dal.xproj", "{C3607C76-1352-4982-B78C-6D8EBD89B0AA}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Dal", "src\CoreDocker.Dal\CoreDocker.Dal.xproj", "{C3607C76-1352-4982-B78C-6D8EBD89B0AA}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Dal.Tests", "test\CoreDocker.Dal.Tests\CoreDocker.Dal.Tests.xproj", "{C761092D-0EBD-484F-A134-42EEB6348B51}"
 EndProject
