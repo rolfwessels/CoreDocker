@@ -6,6 +6,7 @@
     "dotnet-test-nunit": "3.4.0-beta-1",
     "CoreDocker.Dal": "1.0.0-*",
     "CoreDocker.Utilities": "1.0.0-*",
+    "CoreDocker.Utilities.Tests": "1.0.0-*",
     "FluentAssertions": "4.12.0",
     "NUnit": "3.4.1"
   },
