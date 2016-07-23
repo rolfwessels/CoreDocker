@@ -40,7 +40,7 @@ namespace MainSolutionTemplate.Core.Tests
         }
 
         [Test]
-        [Explicit]
+        [Ignore("not working right")]
         public void FindAllIssues()
         {
             // arrange
