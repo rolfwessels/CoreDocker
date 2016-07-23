@@ -8,7 +8,7 @@ namespace MainSolutionTemplate.Core.BusinessLogic.Components
 {
     public class ApplicationManager : BaseManager<Application>, IApplicationManager
     {
-        public ApplicationManager(BaseManagerArguments baseManagerArguments , ILogger<Application> log ) : base(baseManagerArguments , log)
+        public ApplicationManager(BaseManagerArguments baseManagerArguments , ILogger<ApplicationManager> log ) : base(baseManagerArguments , log)
         {
         }
 

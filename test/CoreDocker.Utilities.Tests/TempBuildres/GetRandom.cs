@@ -14,7 +14,12 @@ namespace FizzWare.NBuilder.Generator
             {
                 result += chars[_r.Next(chars.Length)];
             }
-            return result;
+            return result.ToLower();
+        }
+
+        public static string Email()
+        {
+            return String(20).ToLower() + "@" + String(5).ToLower() + ".com";
         }
     }
 }

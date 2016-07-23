@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FizzWare.NBuilder.Generator;
 using MainSolutionTemplate.Dal.Models;
 
@@ -27,6 +28,11 @@ namespace FizzWare.NBuilder
 
         public static T Build<T>(this T value)
         {
+            return value;
+        }
+        public static T With<T>(this T value , Action<T> apply )
+        {
+            apply(value);
             return value;
         }
     }
