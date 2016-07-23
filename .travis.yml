@@ -15,9 +15,7 @@ addons:
     - zlib1g
     - curl
 
-    
 before_install:
-
    # Try something else 
    - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
    - curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
@@ -34,6 +32,6 @@ script:
   - pushd test/CoreDocker.Sdk.Tests && dotnet test 
   - popd
   - pushd test/CoreDocker.Utilities.Tests && dotnet test 
-  - popd
+	- popd
 	- pushd test/CoreDocker.Dal.Tests && dotnet test 
-  - popd
+	- popd
