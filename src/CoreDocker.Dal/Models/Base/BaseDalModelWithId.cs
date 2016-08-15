@@ -7,9 +7,8 @@ namespace MainSolutionTemplate.Dal.Models
 	{
 		public BaseDalModelWithId()
 		{
-			Id = Guid.NewGuid();
 		}
 
-		public Guid Id { get; set; }
+		public string Id { get; set; }
 	}
 }

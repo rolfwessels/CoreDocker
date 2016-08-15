@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
+using MainSolutionTemplate.Api.AppStartup;
+using MainSolutionTemplate.Api.Models.Mappers;
+using MainSolutionTemplate.Api.WebApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CoreDocker.Api
 {
@@ -16,15 +18,15 @@ namespace CoreDocker.Api
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
             if (env.IsEnvironment("Development"))
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(developerMode: true);
+                builder.AddApplicationInsightsSettings(true);
             }
-            
+
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -33,26 +35,40 @@ namespace CoreDocker.Api
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            IocApi.Populate(services);
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
-
-            services.AddMvc();
+            services.AddMvc(options => WebApiSetup.Setup(options));
+            services.AddSwaggerGen();
+            SimpleFileServer.Initialize(services);
+            return new AutofacServiceProvider(IocApi.Instance.Container);
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.RollingFile(System.IO.Path.Combine(@"C:\temp\logs", "CoreDocker.Api.log"))
+            .CreateLogger();
             
+            Log.Information("Hello, world!");
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddSerilog();
             loggerFactory.AddDebug();
 
             app.UseApplicationInsightsRequestTelemetry();
-
             app.UseApplicationInsightsExceptionTelemetry();
-
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUi();
+
+            MapApi.EnsureInitialized();
         }
     }
 }

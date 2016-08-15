@@ -3,9 +3,9 @@ using FluentValidation.Results;
 
 namespace MainSolutionTemplate.Dal.Validation
 {
-    public abstract class ValidatorFactory : IValidatorFactory
+    public abstract class ValidatorFactoryBase : IValidatorFactory
     {
-        protected ValidatorFactory()
+        protected ValidatorFactoryBase()
         {
         }
         

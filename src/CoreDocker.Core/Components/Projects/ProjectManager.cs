@@ -60,7 +60,7 @@ namespace MainSolutionTemplate.Core.BusinessLogic.Components
       ]
     },
   {
-      "FileName": "FakeGeneralUnitOfWork.cs",
+      "FileName": "InMemoryGeneralUnitOfWork.cs",
       "Indexline": "Projects =",
       "InsertAbove": false,
       "InsertInline": false,
@@ -69,7 +69,7 @@ namespace MainSolutionTemplate.Core.BusinessLogic.Components
       ]
     },
     {
-      "FileName": "FakeGeneralUnitOfWork.cs",
+      "FileName": "InMemoryGeneralUnitOfWork.cs",
       "Indexline": "Projects { get",
       "InsertAbove": false,
       "InsertInline": false,

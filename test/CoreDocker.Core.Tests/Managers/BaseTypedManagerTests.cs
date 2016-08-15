@@ -27,7 +27,7 @@ namespace MainSolutionTemplate.Core.Tests.Managers
             // assert
             _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Removed)),
                                    Times.Once);
-            Manager.Get(project.Id).Result.Should().BeNull();
+            Manager.GetById(project.Id).Result.Should().BeNull();
         }
 
         [Test]
@@ -49,9 +49,9 @@ namespace MainSolutionTemplate.Core.Tests.Managers
             // arrange
             Setup();
             IList<T> addFake = Repository.AddFake();
-            Guid guid = addFake.First().Id;
+            string guid = addFake.First().Id;
             // action
-            T result = Manager.Get(guid).Result;
+            T result = Manager.GetById(guid).Result;
             // assert
             result.Id.Should().Be(guid);
         }

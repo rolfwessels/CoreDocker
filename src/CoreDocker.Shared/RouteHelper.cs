@@ -6,8 +6,9 @@
         public const string WithId = "{id}";
         public const string WithDetail = "/detail";
 
-        public const string ProjectController = ApiPrefix + "config";
-        public const string UserController = ApiPrefix + "config";
+        public const string ProjectController = ApiPrefix + "project";
+
+        public const string UserController = ApiPrefix + "user";
         public const string UserControllerRegister = "register";
         public const string UserControllerForgotPassword = "forgotpassword";
         public const string UserControllerWhoAmI = "whoami";

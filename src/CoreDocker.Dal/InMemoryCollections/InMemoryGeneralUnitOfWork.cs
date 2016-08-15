@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using CoreDocker.Utilities.Helpers;
 using MainSolutionTemplate.Dal.Models;
 using MainSolutionTemplate.Dal.Models.Interfaces;
 using MainSolutionTemplate.Dal.Persistance;
-using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Core.Tests.Fakes
+namespace CoreDocker.Dal.InMemoryCollections
 {
-    public class FakeGeneralUnitOfWork : IGeneralUnitOfWork
+    public class InMemoryGeneralUnitOfWork : IGeneralUnitOfWork
     {
-        public FakeGeneralUnitOfWork()
+        public InMemoryGeneralUnitOfWork()
         {
             Users = new FakeRepository<User>();
             Applications = new FakeRepository<Application>();
