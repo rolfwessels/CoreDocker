@@ -7,6 +7,9 @@ using MainSolutionTemplate.Dal.Persistance;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Dal.InMemoryCollections;
+using log4net;
+using Microsoft.Extensions.Logging;
+using MainSolutionTemplate.Dal.Mongo;
 
 namespace MainSolutionTemplate.Api.AppStartup
 {
@@ -38,7 +41,7 @@ namespace MainSolutionTemplate.Api.AppStartup
 
     protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
     {
-      return new InMemoryGeneralUnitOfWorkFactory();
+      return new MongoConnectionFactory("mongodb://localhost/MainSolutionTemplate-Sample", LogManager.GetLogger<MongoConnectionFactory>().Logger);
     }
 
     #endregion
@@ -53,6 +56,7 @@ namespace MainSolutionTemplate.Api.AppStartup
 
     private void SetupTools(ContainerBuilder builder)
     {
+            builder.RegisterType<UserCommonController>();
     }
 
   

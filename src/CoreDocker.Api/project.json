@@ -17,6 +17,7 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "CoreDocker.Shared": "1.0.0-*",
     "CoreDocker.Dal": "1.0.0-*",
+    "CoreDocker.Dal.MongoDb": "1.0.0-*",
     "CoreDocker.Core": "1.0.0-*",
     "CoreDocker.Utilities": "1.0.0-*",
     "Autofac.Extensions.DependencyInjection": "4.0.0-rc3-309",

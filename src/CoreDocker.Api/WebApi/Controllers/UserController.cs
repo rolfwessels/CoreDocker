@@ -17,7 +17,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	///     Api controller for managing all the user
 	/// </summary>
     [Route(RouteHelper.UserController)]
-    public class UserController : Controller//, IUserControllerActions, IBaseControllerLookups<UserModel, UserReferenceModel>
+    public class UserController : Controller, IUserControllerActions, IBaseControllerLookups<UserModel, UserReferenceModel>
     {
 	    private readonly UserCommonController _userCommonController;
 	    

@@ -57,18 +57,17 @@ namespace CoreDocker.Api
             .MinimumLevel.Debug()
             .WriteTo.RollingFile(System.IO.Path.Combine(@"C:\temp\logs", "CoreDocker.Api.log"))
             .CreateLogger();
-            
+
+            log4net.LogManager.SetLogger(loggerFactory);
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddSerilog();
             loggerFactory.AddDebug();
+            loggerFactory.AddSerilog();
 
             app.UseApplicationInsightsRequestTelemetry();
             app.UseApplicationInsightsExceptionTelemetry();
             app.UseMvc();
             SwaggerSetup.AddUi(app);
-        
-
-            MapApi.EnsureInitialized();
         }
     }
 }

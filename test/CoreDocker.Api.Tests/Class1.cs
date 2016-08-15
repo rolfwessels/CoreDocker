@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
+using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests
 {
@@ -8,6 +9,7 @@ namespace CoreDocker.Core.Tests
         [Test]
         public void Get_CallsConfig_ShouldReturnConfigValues()
         {
+            true.Should().Be(false);
 //            ILoggerFactory loggerFactory = new LoggerFactory()
 //                .AddConsole()
 //                .AddDebug();

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
+using MainSolutionTemplate.Api.Models.Mappers;
 
 namespace MainSolutionTemplate.Api.Common
 {
@@ -27,17 +27,17 @@ namespace MainSolutionTemplate.Api.Common
 
         protected virtual TModel ToModel(TDal arg)
         {
-            return Mapper.Map<TDal, TModel>(arg);
+            return MapApi.GetInstance().Map<TDal, TModel>(arg);
         }
 
         protected virtual IEnumerable<TModel> ToModelList(IEnumerable<TDal> arg)
         {
-            return Mapper.Map<IEnumerable<TDal>, IEnumerable<TModel>>(arg);
+            return MapApi.GetInstance().Map<IEnumerable<TDal>, IEnumerable<TModel>>(arg);
         }
 
         protected virtual IEnumerable<TReferenceModel> ToReferenceModelList(IEnumerable<TDal> arg)
         {
-            return Mapper.Map<IEnumerable<TDal>, IEnumerable<TReferenceModel>>(arg);
+            return MapApi.GetInstance().Map<IEnumerable<TDal>, IEnumerable<TReferenceModel>>(arg);
         }
     }
 }
