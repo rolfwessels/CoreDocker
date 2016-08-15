@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Swashbuckle.Swagger.Model;
+using MainSolutionTemplate.Api.Swagger;
 
 namespace CoreDocker.Api
 {
@@ -41,7 +43,8 @@ namespace CoreDocker.Api
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc(options => WebApiSetup.Setup(options));
-            services.AddSwaggerGen();
+            SwaggerSetup.Setup(services);
+            
             SimpleFileServer.Initialize(services);
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
@@ -55,8 +58,6 @@ namespace CoreDocker.Api
             .WriteTo.RollingFile(System.IO.Path.Combine(@"C:\temp\logs", "CoreDocker.Api.log"))
             .CreateLogger();
             
-            Log.Information("Hello, world!");
-
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddSerilog();
             loggerFactory.AddDebug();
@@ -64,9 +65,8 @@ namespace CoreDocker.Api
             app.UseApplicationInsightsRequestTelemetry();
             app.UseApplicationInsightsExceptionTelemetry();
             app.UseMvc();
-
-            app.UseSwagger();
-            app.UseSwaggerUi();
+            SwaggerSetup.AddUi(app);
+        
 
             MapApi.EnsureInitialized();
         }

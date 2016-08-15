@@ -17,7 +17,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	///     Api controller for managing all the user
 	/// </summary>
     [Route(RouteHelper.UserController)]
-    public class UserController : Controller, IUserControllerActions, IBaseControllerLookups<UserModel, UserReferenceModel>
+    public class UserController : Controller//, IUserControllerActions, IBaseControllerLookups<UserModel, UserReferenceModel>
     {
 	    private readonly UserCommonController _userCommonController;
 	    
@@ -68,7 +68,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	    /// <param name="model">The user.</param>
 	    /// <returns>
 	    /// </returns>
-        [HttpGet(RouteHelper.WithId), AuthorizeActivity(Activity.UpdateUsers), HttpPut]
+        [HttpPut(RouteHelper.WithId), AuthorizeActivity(Activity.UpdateUsers)]
 		public Task<UserModel> Update(string id, UserCreateUpdateModel model)
 		{
             return _userCommonController.Update(id, model);
