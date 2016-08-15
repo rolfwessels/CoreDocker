@@ -57,6 +57,8 @@ namespace CoreDocker.Dal.InMemoryCollections
             public Task<T> Add(T entity)
             {
                 entity.CreateDate = DateTime.Now;
+                var baseDalModelWithId = entity as IBaseDalModelWithId;
+                if (baseDalModelWithId != null) baseDalModelWithId.Id = Guid.NewGuid().ToString("n");
                 AddAndSetUpdateDate(entity);
                 return Task.FromResult(entity);
             }

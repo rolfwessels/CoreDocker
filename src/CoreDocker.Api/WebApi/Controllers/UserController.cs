@@ -69,7 +69,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	    /// <returns>
 	    /// </returns>
         [HttpPut(RouteHelper.WithId), AuthorizeActivity(Activity.UpdateUsers)]
-		public Task<UserModel> Update(string id, UserCreateUpdateModel model)
+		public Task<UserModel> Update(string id, [FromBody] UserCreateUpdateModel model)
 		{
             return _userCommonController.Update(id, model);
 		}
@@ -81,7 +81,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	    /// <returns>
 	    /// </returns>
         [HttpPost,AuthorizeActivity(Activity.InsertUsers)]
-		public Task<UserModel> Insert(UserCreateUpdateModel model)
+		public Task<UserModel> Insert([FromBody] UserCreateUpdateModel model)
 		{
             return _userCommonController.Insert(model);
 		}
@@ -113,7 +113,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	    /// <param name="user">The user.</param>
 	    /// <returns></returns>
         [HttpPost(RouteHelper.UserControllerRegister), AllowAnonymous]
-		public Task<UserModel> Register(RegisterModel user)
+		public Task<UserModel> Register([FromBody] RegisterModel user)
 		{
             return _userCommonController.Register(user);
 		}

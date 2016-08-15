@@ -67,7 +67,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	    /// <returns>
 	    /// </returns>
 		[HttpPut(RouteHelper.WithId),AuthorizeActivity(Activity.UpdateProject) ]
-		public Task<ProjectModel> Update(string id, ProjectCreateUpdateModel model)
+		public Task<ProjectModel> Update(string id, [FromBody] ProjectCreateUpdateModel model)
 		{
             return _projectCommonController.Update(id, model);
 		}
@@ -79,7 +79,7 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
 	    /// <returns>
 	    /// </returns>
         [HttpPost,AuthorizeActivity(Activity.InsertProject)]
-		public Task<ProjectModel> Insert(ProjectCreateUpdateModel model)
+		public Task<ProjectModel> Insert([FromBody] ProjectCreateUpdateModel model)
 		{
             return _projectCommonController.Insert(model);
 		}
