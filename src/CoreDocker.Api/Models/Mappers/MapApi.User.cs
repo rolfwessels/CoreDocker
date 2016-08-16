@@ -29,19 +29,19 @@ namespace MainSolutionTemplate.Api.Models.Mappers
             return Mapper.Map(user, model);
         }
 
-        public static IEnumerable<UserReferenceModel> ToReferenceModelList(IQueryable<User> users)
+        public static IEnumerable<UserReferenceModel> ToReferenceModelList(IEnumerable<User> users)
         {
-            return Mapper.Map<IQueryable<User>, IEnumerable<UserReferenceModel>>(users);
+            return Mapper.Map<IEnumerable<User>, IEnumerable<UserReferenceModel>>(users);
         }
 
-        public static IEnumerable<UserModel> ToModelList(IQueryable<User> users)
+        public static IEnumerable<UserModel> ToModelList(IEnumerable<User> users)
         {
-            return Mapper.Map<IQueryable<User>, IEnumerable<UserModel>>(users);
+            return Mapper.Map<IEnumerable<User>, IEnumerable<UserModel>>(users);
         }
 
-        public static IEnumerable<RoleModel> ToModels(this List<Role> users)
+        public static IEnumerable<RoleModel> ToModels(this IEnumerable<Role> roles)
         {
-            return Mapper.Map<List<Role>, IEnumerable<RoleModel>>(users);
+            return Mapper.Map<IEnumerable<Role>, IEnumerable<RoleModel>>(roles);
         }
 
         #region Private Methods

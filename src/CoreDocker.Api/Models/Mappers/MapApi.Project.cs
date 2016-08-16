@@ -20,14 +20,14 @@ namespace MainSolutionTemplate.Api.Models.Mappers
             return Mapper.Map(project, model);
         }
 
-        public static IEnumerable<ProjectReferenceModel> ToReferenceModelList(IQueryable<Project> projects)
+        public static IEnumerable<ProjectReferenceModel> ToReferenceModelList(this IEnumerable<Project> projects)
         {
-            return Mapper.Map<IQueryable<Project>, IEnumerable<ProjectReferenceModel>>(projects);
+            return Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectReferenceModel>>(projects);
         }
 
-        public static IEnumerable<ProjectModel> ToModelList(IQueryable<Project> projects)
+        public static IEnumerable<ProjectModel> ToModelList(this IEnumerable<Project> projects)
         {
-            return Mapper.Map<IQueryable<Project>, IEnumerable<ProjectModel>>(projects);
+            return Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectModel>>(projects);
         }
 
         #region Private Methods

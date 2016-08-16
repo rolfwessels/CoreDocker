@@ -1,0 +1,17 @@
+﻿using NUnit.Framework;
+using MainSolutionTemplate.Api.Models.Mappers;
+using AutoMapper;
+
+namespace CoreDocker.Core.Tests
+{
+    [TestFixture]
+    public class CoreTests
+    {
+        [Test]
+        public void AssertConfigurationIsValid_WhenCalled_ShouldBeValid()
+        {
+            var instance = MapApi.GetInstance();
+            Mapper.AssertConfigurationIsValid();
+        }
+    }
+}

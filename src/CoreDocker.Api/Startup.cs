@@ -26,7 +26,7 @@ namespace CoreDocker.Api
             if (env.IsEnvironment("Development"))
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(true);
+//                builder.AddApplicationInsightsSettings(true);
             }
 
 
@@ -41,7 +41,7 @@ namespace CoreDocker.Api
         {
             IocApi.Populate(services);
             // Add framework services.
-            services.AddApplicationInsightsTelemetry(Configuration);
+//            services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc(options => WebApiSetup.Setup(options));
             SwaggerSetup.Setup(services);
             
@@ -64,8 +64,8 @@ namespace CoreDocker.Api
             loggerFactory.AddDebug();
             loggerFactory.AddSerilog();
 
-            app.UseApplicationInsightsRequestTelemetry();
-            app.UseApplicationInsightsExceptionTelemetry();
+//            app.UseApplicationInsightsRequestTelemetry();
+//            app.UseApplicationInsightsExceptionTelemetry();
             app.UseMvc();
             SwaggerSetup.AddUi(app);
         }

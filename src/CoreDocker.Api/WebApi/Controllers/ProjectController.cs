@@ -96,6 +96,8 @@ namespace MainSolutionTemplate.Api.WebApi.Controllers
             return _projectCommonController.Delete(id);
 		}
 
+
+
 		
 	}
 }

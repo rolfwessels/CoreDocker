@@ -1,5 +1,3 @@
-using System.Linq;
-using MainSolutionTemplate.Api.Models.Mappers;
 using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
 using MainSolutionTemplate.Dal.Models;
 using MainSolutionTemplate.Shared.Interfaces.Shared;
@@ -15,6 +13,7 @@ namespace MainSolutionTemplate.Api.Common
             : base(projectManager)
         {
         }
+
 
     }
 }

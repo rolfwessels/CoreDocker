@@ -18,7 +18,7 @@ namespace MainSolutionTemplate.Api.Models.Mappers
                 MapProjectModel(cfg);
                 _log.Warn("casd");
             });
-
+            
           
         }
 
