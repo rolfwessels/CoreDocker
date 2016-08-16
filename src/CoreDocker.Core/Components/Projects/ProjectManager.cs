@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
 using MainSolutionTemplate.Dal.Models;
 using MainSolutionTemplate.Dal.Persistance;
 using Microsoft.Extensions.Logging;
+
 
 namespace MainSolutionTemplate.Core.BusinessLogic.Components
 {
@@ -9,6 +11,7 @@ namespace MainSolutionTemplate.Core.BusinessLogic.Components
     {
         public ProjectManager(BaseManagerArguments baseManagerArguments , ILogger<ProjectManager> logger ) : base(baseManagerArguments, logger)
         {
+          
         }
 
         #region Overrides of BaseManager<Project>

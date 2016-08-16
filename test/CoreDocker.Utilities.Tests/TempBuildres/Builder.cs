@@ -1,4 +1,7 @@
 ﻿using System;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FizzWare.NBuilder
 {
@@ -9,9 +12,9 @@ namespace FizzWare.NBuilder
             return Activator.CreateInstance<T>();
         }
 
-        public static object CreateListOfSize(int size)
+        public static IList<T> CreateListOfSize(int size)
         {
-            throw new NotImplementedException();
+            return Enumerable.Range(0, size).Select(x => CreateNew()).ToList();
         }
     }
 }
