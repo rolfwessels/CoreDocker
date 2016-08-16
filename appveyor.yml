@@ -19,7 +19,10 @@ build_script:
   # dotnet info
   - ps: dotnet --info
   - ps: dotnet restore
-  - ps: cd src/CoreDocker.Api && dotnet restore  && dotnet build
+  - ps: cd src/CoreDocker.Api 
+  - ps: dotnet restore
+  - ps: dotnet build
+  - ps: Pop-Location
   - ps: dotnet test .\test\CoreDocker.Core.Tests 
   - ps: dotnet test .\test\CoreDocker.Utilities.Tests
   - ps: dotnet test .\test\CoreDocker.Sdk.Tests
