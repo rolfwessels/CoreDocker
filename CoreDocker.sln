@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		src\Dockerfile = src\Dockerfile
 		global.json = global.json
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Api", "src\CoreDocker.Api\CoreDocker.Api.xproj", "{3E5C58AA-6B9A-4020-B70D-1DFC1341CFBD}"
