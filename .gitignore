@@ -6,3 +6,4 @@ bin/
 obj/
 project.lock.json
 .DS_Store
+/TestResult.xml

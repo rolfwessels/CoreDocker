@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{96956A56-3019-4049-896A-11C2FAD6B8EB}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
 		src\Dockerfile = src\Dockerfile
 		global.json = global.json
 	EndProjectSection
