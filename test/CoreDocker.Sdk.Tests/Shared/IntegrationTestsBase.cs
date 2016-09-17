@@ -1,12 +1,7 @@
-﻿using log4net;
-using System;
-using System.IO;
-using CoreDocker.Sdk;
-using Microsoft.AspNetCore.Hosting;
-using CoreDocker.Core.Tests.Helpers;
-using CoreDocker.Api;
-using Microsoft.AspNetCore.TestHost;
+﻿using System;
 using System.Diagnostics;
+using CoreDocker.Api;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CoreDocker.Sdk.Tests.Shared
 {
@@ -29,32 +24,29 @@ namespace CoreDocker.Sdk.Tests.Shared
             _adminRequestFactory = new Lazy<ConnectionFactory>(CreateAdminRequest);
         }
 
-
         #region Private Methods
 
         private static string StartHosting()
         {
-            int port = new Random().Next(9000, 9999);
-            string address = string.Format("http://localhost:{0}", port);
+            var port = new Random().Next(9000, 9999);
+            var address = string.Format("http://localhost:{0}", port);
+//            var websitePath = TestHelper.GetSourceBasePath();
 
-
-            
-
-            var websitePath = TestHelper.GetSourceBasePath();
-
-          var host = new WebHostBuilder()
+            var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseContentRoot(websitePath)
+//                .UseContentRoot(websitePath)
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
             _log = LogManager.GetLogger<IntegrationTestsBase>();
             _log.Info(string.Format("Starting api on [{0}]", address));
-            FlurlHelper.Log = m => {
+            FlurlHelper.Log = m =>
+            {
                 _log.Info(m);
                 Debug.WriteLine("value [{0}]", m);
             };
-            FlurlHelper.LogError = m => {
+            FlurlHelper.LogError = m =>
+            {
                 _log.Error(m);
                 Debug.WriteLine("value [{0}]", m);
             };
