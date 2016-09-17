@@ -28,9 +28,9 @@ build_script:
   - ps: cd ..\..
   - ps: cd test\CoreDocker.Utilities.Tests
   - ps: dotnet test 
-  - ps: cd ..\..
-  - ps: cd test\CoreDocker.Api.Tests
-  - ps: dotnet test 
+ # - ps: cd ..\..
+ # - ps: cd test\CoreDocker.Api.Tests
+ # - ps: dotnet test 
   - ps: cd ..\..
   - ps: cd test\CoreDocker.Dal.Tests
   - ps: dotnet test 
