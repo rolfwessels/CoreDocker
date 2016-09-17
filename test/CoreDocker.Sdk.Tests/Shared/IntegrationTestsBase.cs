@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using CoreDocker.Api;
 using Microsoft.AspNetCore.Hosting;
+using log4net;
 
 namespace CoreDocker.Sdk.Tests.Shared
 {
