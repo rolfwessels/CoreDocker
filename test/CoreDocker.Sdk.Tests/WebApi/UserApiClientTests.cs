@@ -66,16 +66,8 @@ namespace CoreDocker.Sdk.Tests.WebApi
         {
             // arrange
             Setup();
-            var userDetailModel = Builder<UserCreateUpdateModel>.CreateNew().Build();
+            var userDetailModel = Builder<UserCreateUpdateModel>.CreateNew().With(x=>x.Name = "should fail").Build();
             // action
-            try
-            {
-                _crudController.Insert(userDetailModel).Wait();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
             Action testCall = () => { _crudController.Insert(userDetailModel).Wait(); };
             // assert
             testCall.ShouldThrow<Exception>().WithMessage("'Email' is not a valid email address.");

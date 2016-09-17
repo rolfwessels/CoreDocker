@@ -21,7 +21,6 @@ namespace CoreDocker.Sdk.Tests.Shared
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
         protected static Lazy<ConnectionFactory> _adminRequestFactory;
-        private static TestServer _testServer;
 
         static IntegrationTestsBase()
         {
@@ -49,7 +48,6 @@ namespace CoreDocker.Sdk.Tests.Shared
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
-            //            _testServer = new TestServer(host);
             _log = LogManager.GetLogger<IntegrationTestsBase>();
             _log.Info(string.Format("Starting api on [{0}]", address));
             FlurlHelper.Log = m => {

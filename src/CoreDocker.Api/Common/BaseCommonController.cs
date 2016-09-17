@@ -14,7 +14,6 @@ namespace CoreDocker.Api.Common
         protected BaseCommonController(IBaseManager<TDal> projectManager)
         {
             _projectManager = projectManager;
-            MapApi.Initialize();
         }
 
 
@@ -43,14 +42,14 @@ namespace CoreDocker.Api.Common
 
         protected virtual async Task<TDal> ToDal(TDetailModel model)
         {
-            var mappedResult = Mapper.Map<TDetailModel, TDal>(model);
+            var mappedResult = MapApi.GetInstance().Map<TDetailModel, TDal>(model);
             await AddAdditionalMappings(model, mappedResult);
             return mappedResult;
         }
 
         protected virtual async Task<TDal> ToDal(TDetailModel model, TDal dal)
         {
-            var mappedResult = Mapper.Map(model, dal);
+            var mappedResult = MapApi.GetInstance().Map(model, dal);
             await AddAdditionalMappings(model, mappedResult);
             return mappedResult;
         }

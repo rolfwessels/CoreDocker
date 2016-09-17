@@ -1,8 +1,10 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CoreDocker.Shared.Models;
 using Flurl;
 using Flurl.Http;
+using CoreDocker.Sdk.OAuth;
 
 namespace CoreDocker.Sdk
 {
@@ -57,11 +59,15 @@ namespace CoreDocker.Sdk
             }
             catch (FlurlHttpException e)
             {
+                var responseString = e.GetResponseString();
                 if (Log != null)
                 {
-                    LogError(string.Format("Response {0} {1}", appendPathSegment, e.GetResponseString()));
+                    
+                    LogError(string.Format("Response {0} {1}", appendPathSegment, responseString));
                 }
-                throw;
+                ErrorMessage message = null;
+                if (responseString != null) FlurlHttp.Configure(x => message = x.JsonSerializer.Deserialize<ErrorMessage>(responseString));
+                throw new RestClientException(message, e);
             }
         }
 

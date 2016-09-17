@@ -10,36 +10,34 @@ namespace CoreDocker.Api.Models.Mappers
 {
     public static partial class MapApi
     {
-       
-
         public static User ToDal(this UserCreateUpdateModel model, User user = null)
         {
-            return Mapper.Map(model, user);
+            return GetInstance().Map(model, user);
         }
 
         public static User ToDal(this RegisterModel model, User user = null)
         {
-            return Mapper.Map(model, user);
+            return GetInstance().Map(model, user);
         }
 
         public static UserModel ToModel(this User user, UserModel model = null)
         {
-            return Mapper.Map(user, model);
+            return GetInstance().Map(user, model);
         }
 
         public static IEnumerable<UserReferenceModel> ToReferenceModelList(IEnumerable<User> users)
         {
-            return Mapper.Map<IEnumerable<User>, IEnumerable<UserReferenceModel>>(users);
+            return GetInstance().Map<IEnumerable<User>, IEnumerable<UserReferenceModel>>(users);
         }
 
         public static IEnumerable<UserModel> ToModelList(IEnumerable<User> users)
         {
-            return Mapper.Map<IEnumerable<User>, IEnumerable<UserModel>>(users);
+            return GetInstance().Map<IEnumerable<User>, IEnumerable<UserModel>>(users);
         }
 
         public static IEnumerable<RoleModel> ToModels(this IEnumerable<Role> roles)
         {
-            return Mapper.Map<IEnumerable<Role>, IEnumerable<RoleModel>>(roles);
+            return GetInstance().Map<IEnumerable<Role>, IEnumerable<RoleModel>>(roles);
         }
 
         #region Private Methods

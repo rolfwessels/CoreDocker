@@ -12,22 +12,22 @@ namespace CoreDocker.Api.Models.Mappers
     {
         public static Project ToDal(this ProjectCreateUpdateModel model, Project project = null)
         {
-            return Mapper.Map(model, project);
+            return GetInstance().Map(model, project);
         }
 
         public static ProjectModel ToModel(this Project project, ProjectModel model = null)
         {
-            return Mapper.Map(project, model);
+            return GetInstance().Map(project, model);
         }
 
         public static IEnumerable<ProjectReferenceModel> ToReferenceModelList(this IEnumerable<Project> projects)
         {
-            return Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectReferenceModel>>(projects);
+            return GetInstance().Map<IEnumerable<Project>, IEnumerable<ProjectReferenceModel>>(projects);
         }
 
         public static IEnumerable<ProjectModel> ToModelList(this IEnumerable<Project> projects)
         {
-            return Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectModel>>(projects);
+            return GetInstance().Map<IEnumerable<Project>, IEnumerable<ProjectModel>>(projects);
         }
 
         #region Private Methods

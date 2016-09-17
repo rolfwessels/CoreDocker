@@ -25,7 +25,7 @@ namespace CoreDocker.Api.Tests.Common
 
         public virtual void Setup()
         {
-            MapApi.Initialize();
+           
             _commonController = GetCommonController();
             _mockManager = GetManager();
         }
