@@ -22,22 +22,22 @@ build_script:
   - ps: cd src/CoreDocker.Api 
   - ps: dotnet restore
   - ps: dotnet build
-  - ps: Pop-Location
+  - ps: cd ..\..
   - ps: cd test\CoreDocker.Core.Tests
   - ps: dotnet test  
-  - ps: Pop-Location
+  - ps: cd ..\..
   - ps: cd test\CoreDocker.Utilities.Tests
   - ps: dotnet test 
-  - ps: Pop-Location
+  - ps: cd ..\..
   - ps: cd test\CoreDocker.Api.Tests
   - ps: dotnet test 
-  - ps: Pop-Location
+  - ps: cd ..\..
   - ps: cd test\CoreDocker.Dal.Tests
   - ps: dotnet test 
-  - ps: Pop-Location
+  - ps: cd ..\..
   - ps: cd test\CoreDocker.Sdk.Tests
   - ps: dotnet test 
-  - ps: Pop-Location
+  - ps: cd ..\..
 
 
 test: off 
