@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo
+namespace CoreDocker.Dal.Mongo
 {
     public class MongoConnectionFactory : IGeneralUnitOfWorkFactory
     {
@@ -18,7 +18,7 @@ namespace MainSolutionTemplate.Dal.Mongo
         {
             _connectionString = connectionString;
             _logger = logger;
-            _databaseName = new Uri(_connectionString).Segments.Skip(1).FirstOrDefault() ?? "MainSolutionTemplate";
+            _databaseName = new Uri(_connectionString).Segments.Skip(1).FirstOrDefault() ?? "CoreDocker";
             _singleConnection = new Lazy<IGeneralUnitOfWork>(GeneralUnitOfWork);
         }
 

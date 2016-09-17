@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Sdk.OAuth;
-using MainSolutionTemplate.Shared;
-using MainSolutionTemplate.Shared.Interfaces.Base;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Interfaces;
-using CoreDocker.Sdk;
-using Flurl.Http;
+using CoreDocker.Sdk.OAuth;
 using CoreDocker.Shared;
+using CoreDocker.Shared.Interfaces.Base;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Interfaces;
+using Flurl.Http;
 
-namespace MainSolutionTemplate.Sdk.RestApi.Base
+namespace CoreDocker.Sdk.RestApi.Base
 {
     public class BaseGetApiClient<TModel, TReferenceModel> : BaseApiClient,
                                                              IBaseStandardLookups<TModel, TReferenceModel>

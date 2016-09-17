@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using MainSolutionTemplate.Dal.Models.Interfaces;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Persistance;
 using FizzWare.NBuilder;
 
-namespace MainSolutionTemplate.Core.Tests.Helpers
+namespace CoreDocker.Core.Tests.Helpers
 {
     public static class FakeRepoHelper
     {

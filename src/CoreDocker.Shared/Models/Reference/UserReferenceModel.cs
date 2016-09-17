@@ -1,6 +1,6 @@
-using MainSolutionTemplate.Shared.Models.Base;
+using CoreDocker.Shared.Models.Base;
 
-namespace MainSolutionTemplate.Shared.Models.Reference
+namespace CoreDocker.Shared.Models.Reference
 {
     public class UserReferenceModel : BaseReferenceModelWithName
     {

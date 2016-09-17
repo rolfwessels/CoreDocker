@@ -1,17 +1,17 @@
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using MainSolutionTemplate.Api.Common;
-using MainSolutionTemplate.Api.Models.Mappers;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Core.Tests.Helpers;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Shared.Models.Base;
+using CoreDocker.Api.Common;
+using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Tests.Helpers;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Models.Base;
 using Moq;
 using NUnit.Framework;
 using System.Linq;
 
-namespace MainSolutionTemplate.Api.Tests.Common
+namespace CoreDocker.Api.Tests.Common
 {
     public abstract class BaseCommonControllerTests<TDal, TModel, TReferenceModel, TDetailModel, TManager>
         where TDal : BaseDalModelWithId

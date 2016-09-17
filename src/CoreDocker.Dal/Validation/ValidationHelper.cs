@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace MainSolutionTemplate.Dal.Validation
+namespace CoreDocker.Dal.Validation
 {
     public static class ValidationHelper
     {

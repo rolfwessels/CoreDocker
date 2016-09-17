@@ -1,12 +1,12 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Enums;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Persistance;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Managers
 {
     [TestFixture]
     public class RoleManagerTests

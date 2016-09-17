@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo.Migrations
+namespace CoreDocker.Dal.Mongo.Migrations
 {
     public interface IMigration
     {

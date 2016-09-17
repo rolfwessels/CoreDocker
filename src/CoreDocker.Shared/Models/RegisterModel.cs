@@ -1,4 +1,4 @@
-namespace MainSolutionTemplate.Shared.Models
+namespace CoreDocker.Shared.Models
 {
     public class RegisterModel
     {

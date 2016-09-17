@@ -1,11 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Shared.Interfaces.Base;
-using MainSolutionTemplate.Shared.Models;
+using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Shared.Interfaces.Base;
+using CoreDocker.Shared.Models;
 
-namespace MainSolutionTemplate.Api.Common
+namespace CoreDocker.Api.Common
 {
     public abstract class BaseCommonController<TDal, TModel, TReferenceModel, TDetailModel> : ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel>, ICrudController<TModel, TDetailModel>
     {
@@ -13,6 +14,7 @@ namespace MainSolutionTemplate.Api.Common
         protected BaseCommonController(IBaseManager<TDal> projectManager)
         {
             _projectManager = projectManager;
+            MapApi.Initialize();
         }
 
 

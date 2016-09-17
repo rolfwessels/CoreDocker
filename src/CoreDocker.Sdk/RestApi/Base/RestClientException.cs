@@ -1,6 +1,6 @@
 using System;
 
-namespace MainSolutionTemplate.Sdk.OAuth
+namespace CoreDocker.Sdk.OAuth
 {
     public class RestClientException : Exception
     {

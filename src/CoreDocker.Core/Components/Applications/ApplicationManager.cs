@@ -1,10 +1,10 @@
 using System.Linq;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 
-namespace MainSolutionTemplate.Core.BusinessLogic.Components
+namespace CoreDocker.Core.BusinessLogic.Components
 {
     public class ApplicationManager : BaseManager<Application>, IApplicationManager
     {

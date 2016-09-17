@@ -1,43 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using FluentAssertions;
-using MainSolutionTemplate.Api.Models.Mappers;
-using MainSolutionTemplate.Core.Mappers;
+using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Core.Mappers;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Api.Tests.Startup
+namespace CoreDocker.Api.Tests.Startup
 {
     [TestFixture]
     public class AutoMapperSetupTests
     {
-        private readonly IEnumerable<Type> _types;
-
         [Test]
-        public void AutoMapperSetup_ConstructAll_ShouldNotBeNull()
+        public void AssertConfigurationIsValid_OnMapCore_ShouldNotFaile()
         {
             // assert
-            Mapper.AssertConfigurationIsValid();
+            MapCore.AssertConfigurationIsValid();
         }
 
         [Test]
-        public void AutoMapperSetup_WhenConstructed_ShouldContainAutoMapperUserModel()
+        public void AssertConfigurationIsValid_OnMapApi_ShouldNotFaile()
         {
             // assert
-            _types.Select(x => x.Name).Should().Contain("MapApi");
-        }
-
-        [Test]
-        public void AutoMapperSetup_WhenConstructed_ShouldNotBeNull()
-        {
-            // assert
-            _types.Select(x => x.Name).Should().Contain("MapCore");
-        }
-
-        public AutoMapperSetupTests()
-        {
-            _types = new[] {typeof (MapCore), typeof (MapApi)};
+            MapApi.AssertConfigurationIsValid();
         }
     }
 }

@@ -1,12 +1,12 @@
 using FizzWare.NBuilder;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Managers
 {
     [TestFixture]
     public class ApplicationManagerTests : BaseTypedManagerTests<Application>

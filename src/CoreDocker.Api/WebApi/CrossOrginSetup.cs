@@ -1,5 +1,5 @@
 
-namespace MainSolutionTemplate.Api
+namespace CoreDocker.Api
 {
     public class CrossOrginSetup
     {

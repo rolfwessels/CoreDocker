@@ -1,10 +1,10 @@
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Shared.Interfaces.Shared;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Interfaces.Shared;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 
-namespace MainSolutionTemplate.Api.Common
+namespace CoreDocker.Api.Common
 {
     public class ProjectCommonController : BaseCommonController<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel>, IProjectControllerActions
     {

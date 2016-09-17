@@ -2,8 +2,8 @@
 using System.Net;
 using System.Reflection;
 using FluentValidation;
-using MainSolutionTemplate.Api.AppStartup;
-using MainSolutionTemplate.Shared.Models;
+using CoreDocker.Api.AppStartup;
+using CoreDocker.Shared.Models;
 using log4net;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MainSolutionTemplate.Api.WebApi.Filters
+namespace CoreDocker.Api.WebApi.Filters
 {
     public class CaptureExceptionFilter : ExceptionFilterAttribute
     {

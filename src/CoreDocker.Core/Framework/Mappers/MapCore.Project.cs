@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Reference;
+﻿using System;
+using AutoMapper;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Reference;
 
-namespace MainSolutionTemplate.Core.Mappers
+namespace CoreDocker.Core.Mappers
 {
     public static partial class MapCore
 	{
@@ -15,7 +16,12 @@ namespace MainSolutionTemplate.Core.Mappers
         {
             return Mapper.Map(project, projectReference);
         }
-	}
+
+        public static void AssertConfigurationIsValid()
+        {
+            Mapper.AssertConfigurationIsValid();
+        }
+    }
 }
 
 /* scaffolding [

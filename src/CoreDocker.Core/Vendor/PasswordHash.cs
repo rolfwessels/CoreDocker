@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace MainSolutionTemplate.Core.Vendor
+namespace CoreDocker.Core.Vendor
 {
     /* 
 	 * Password Hashing With PBKDF2 (http://crackstation.net/hashing-security.htm).

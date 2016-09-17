@@ -5,10 +5,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MainSolutionTemplate.Dal.Models.Interfaces;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Persistance;
 
-namespace MainSolutionTemplate.Core.Tests.Helpers
+namespace CoreDocker.Core.Tests.Helpers
 {
 	public class PersistanceTester<T>  where T:IBaseDalModelWithId
 	{

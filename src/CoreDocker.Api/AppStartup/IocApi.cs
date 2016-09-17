@@ -1,17 +1,17 @@
 ﻿using System;
 using Autofac;
-using MainSolutionTemplate.Api.Common;
-using MainSolutionTemplate.Api.WebApi.Controllers;
-using MainSolutionTemplate.Core.Startup;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Api.Common;
+using CoreDocker.Api.WebApi.Controllers;
+using CoreDocker.Core.Startup;
+using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Dal.InMemoryCollections;
 using log4net;
 using Microsoft.Extensions.Logging;
-using MainSolutionTemplate.Dal.Mongo;
+using CoreDocker.Dal.Mongo;
 
-namespace MainSolutionTemplate.Api.AppStartup
+namespace CoreDocker.Api.AppStartup
 {
   public class IocApi : IocCoreBase
   {
@@ -41,7 +41,7 @@ namespace MainSolutionTemplate.Api.AppStartup
 
     protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
     {
-      return new MongoConnectionFactory("mongodb://localhost/MainSolutionTemplate-Sample", LogManager.GetLogger<MongoConnectionFactory>().Logger);
+      return new MongoConnectionFactory("mongodb://localhost/CoreDocker-Sample", LogManager.GetLogger<MongoConnectionFactory>().Logger);
     }
 
     #endregion

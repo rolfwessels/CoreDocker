@@ -3,15 +3,15 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Core.Vendor;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Vendor;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.Extensions.Logging;
 using CoreDocker.Core.Framework.Logging;
 
-namespace MainSolutionTemplate.Core.BusinessLogic.Components
+namespace CoreDocker.Core.BusinessLogic.Components
 {
     public class UserManager : BaseManager<User>, IUserManager
     {

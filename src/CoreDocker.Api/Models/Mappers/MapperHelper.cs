@@ -1,7 +1,7 @@
 using AutoMapper;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 
-namespace MainSolutionTemplate.Api.Models.Mappers
+namespace CoreDocker.Api.Models.Mappers
 {
     public static class MapperHelper
     {

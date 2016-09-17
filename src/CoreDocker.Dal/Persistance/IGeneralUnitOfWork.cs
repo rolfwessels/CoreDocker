@@ -1,7 +1,7 @@
 ﻿using System;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 
-namespace MainSolutionTemplate.Dal.Persistance
+namespace CoreDocker.Dal.Persistance
 {
 	public interface IGeneralUnitOfWork : IDisposable
 	{

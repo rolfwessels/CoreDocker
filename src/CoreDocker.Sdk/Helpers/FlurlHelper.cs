@@ -20,34 +20,38 @@ namespace CoreDocker.Sdk
 
         public static async Task<HttpResponseMessage> GetAsyncAndLog(this Url appendPathSegment)
         {
-            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.GetAsync(), "GET");
+            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.WithHeader("Accept", "application/json").GetAsync(), "GET");
         }
 
         public static async Task<HttpResponseMessage> PostJsonAsyncAndLog(this Url appendPathSegment, object post)
         {
-            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.PostJsonAsync(post), "POST");
+            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.PostJsonAsync(post), "POST", post);
         }
         
         public static async Task<HttpResponseMessage> PutJsonAsyncAndLog(this Url appendPathSegment, object post)
         {
-            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.PutJsonAsync(post), "PUT");
+            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.PutJsonAsync(post), "PUT", post);
         }
 
         public static async Task<HttpResponseMessage> DeleteAsyncAndLog(this Url appendPathSegment)
         {
-            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.DeleteAsync(), "DELETE");
+            return await AsyncAndLog(appendPathSegment, () => appendPathSegment.WithHeader("Accept", "application/json").DeleteAsync(), "DELETE" );
         }
 
-        private static async Task<HttpResponseMessage> AsyncAndLog(Url appendPathSegment, Func<Task<HttpResponseMessage>> call, string args)
+        private static async Task<HttpResponseMessage> AsyncAndLog(Url appendPathSegment, Func<Task<HttpResponseMessage>> call, string args, object data = null)
         {
-            if (Log != null) Log(string.Format("Call {1} {0}", appendPathSegment,args));
+
+            var serializedData = "";
+            if (data != null) FlurlHttp.Configure(x => serializedData = x.JsonSerializer.Serialize(data));
+
+            if (Log != null) Log(string.Format("Call {1} {0} [{2}]", appendPathSegment,args , serializedData));
             try
             {
                 var asyncAndLog = await call();
                 if (Log != null)
                 {
                     var readAsStringAsync = await asyncAndLog.Content.ReadAsStringAsync();
-                    Log(string.Format("Resonse {0} {1}", appendPathSegment, readAsStringAsync));
+                    Log(string.Format("Response {0} {1}", appendPathSegment, readAsStringAsync));
                 }
                 return asyncAndLog;
             }
@@ -55,7 +59,7 @@ namespace CoreDocker.Sdk
             {
                 if (Log != null)
                 {
-                    Log(string.Format("Resonse {0} {1}", appendPathSegment, e.GetResponseString()));
+                    LogError(string.Format("Response {0} {1}", appendPathSegment, e.GetResponseString()));
                 }
                 throw;
             }
@@ -65,5 +69,6 @@ namespace CoreDocker.Sdk
 
         
         public static Action<string> Log { get; set; }
+        public static Action<string> LogError { get; set; }
     }
 }

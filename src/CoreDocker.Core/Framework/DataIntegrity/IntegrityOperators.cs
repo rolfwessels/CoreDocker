@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using MainSolutionTemplate.Core.Mappers;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Reference;
+using CoreDocker.Core.Mappers;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Reference;
 
-namespace MainSolutionTemplate.Core.DataIntegrity
+namespace CoreDocker.Core.DataIntegrity
 {
     public class IntegrityOperators
     {

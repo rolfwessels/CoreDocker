@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 
-namespace MainSolutionTemplate.Dal.Validation
+namespace CoreDocker.Dal.Validation
 {
     public abstract class ValidatorFactoryBase : IValidatorFactory
     {

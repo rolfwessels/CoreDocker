@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 
-namespace MainSolutionTemplate.Core.DataIntegrity
+namespace CoreDocker.Core.DataIntegrity
 {
     public interface IDataIntegrityManager
     {

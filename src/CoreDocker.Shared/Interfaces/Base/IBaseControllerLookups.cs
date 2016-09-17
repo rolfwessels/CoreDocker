@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MainSolutionTemplate.Shared.Interfaces.Base
+namespace CoreDocker.Shared.Interfaces.Base
 {
     public interface IBaseControllerLookups<TDetails, TModelReference>
     {

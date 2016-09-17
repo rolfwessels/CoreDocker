@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MainSolutionTemplate.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Reference;
 
-namespace MainSolutionTemplate.Dal.Models
+namespace CoreDocker.Dal.Models
 {
 	public class User : BaseDalModelWithId
 	{

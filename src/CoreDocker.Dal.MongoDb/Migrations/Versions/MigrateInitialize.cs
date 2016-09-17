@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.Vendor;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.Vendor;
+using CoreDocker.Dal.Models;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo.Migrations.Versions
+namespace CoreDocker.Dal.Mongo.Migrations.Versions
 {
     public class MigrateInitialize : IMigration
     {
@@ -41,9 +41,9 @@ namespace MainSolutionTemplate.Dal.Mongo.Migrations.Versions
         private async Task AddApplications(IMongoDatabase db)
         {
             var apps = new MongoRepository<Application>(db);
-            await apps.Add(new Application() { Active = true, AllowedOrigin = "*", ClientId = "MainSolutionTemplate.Api" });
-            await apps.Add(new Application() { Active = true, AllowedOrigin = "*", ClientId = "MainSolutionTemplate.Console" });
-            await apps.Add(new Application() { Active = true, AllowedOrigin = "*", ClientId = "MainSolutionTemplate.App" });
+            await apps.Add(new Application() { Active = true, AllowedOrigin = "*", ClientId = "CoreDocker.Api" });
+            await apps.Add(new Application() { Active = true, AllowedOrigin = "*", ClientId = "CoreDocker.Console" });
+            await apps.Add(new Application() { Active = true, AllowedOrigin = "*", ClientId = "CoreDocker.App" });
         }
 
         

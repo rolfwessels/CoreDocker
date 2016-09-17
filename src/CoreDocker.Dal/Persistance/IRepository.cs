@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Interfaces;
 
-namespace MainSolutionTemplate.Dal.Persistance
+namespace CoreDocker.Dal.Persistance
 {
 	public interface IRepository<T> where T : IBaseDalModel
 	{

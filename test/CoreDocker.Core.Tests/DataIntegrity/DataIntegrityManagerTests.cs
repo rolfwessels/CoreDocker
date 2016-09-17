@@ -2,17 +2,17 @@
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using MainSolutionTemplate.Core.DataIntegrity;
-using MainSolutionTemplate.Core.Mappers;
-using MainSolutionTemplate.Core.Tests.Helpers;
-using MainSolutionTemplate.Core.Tests.Managers;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Base;
-using MainSolutionTemplate.Dal.Models.Interfaces;
-using MainSolutionTemplate.Dal.Models.Reference;
+using CoreDocker.Core.DataIntegrity;
+using CoreDocker.Core.Mappers;
+using CoreDocker.Core.Tests.Helpers;
+using CoreDocker.Core.Tests.Managers;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Base;
+using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Reference;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Core.Tests.DataIntegrity
+namespace CoreDocker.Core.Tests.DataIntegrity
 {
     [TestFixture]
     public class DataIntegrityManagerTests : BaseManagerTests

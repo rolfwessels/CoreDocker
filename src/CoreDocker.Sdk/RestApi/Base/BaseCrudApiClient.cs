@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using MainSolutionTemplate.Shared.Interfaces.Base;
-using MainSolutionTemplate.Shared.Models.Interfaces;
+using CoreDocker.Shared.Interfaces.Base;
+using CoreDocker.Shared.Models.Interfaces;
 using CoreDocker.Sdk;
 using CoreDocker.Shared;
 using Flurl.Http;
 
-namespace MainSolutionTemplate.Sdk.RestApi.Base
+namespace CoreDocker.Sdk.RestApi.Base
 {
     public class BaseCrudApiClient<TModel, TDetailModel, TReferenceModel> : BaseGetApiClient<TModel, TReferenceModel>,
                                                                             ICrudController<TModel, TDetailModel>

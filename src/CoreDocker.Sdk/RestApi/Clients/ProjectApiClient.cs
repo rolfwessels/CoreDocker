@@ -1,11 +1,11 @@
 using CoreDocker.Sdk;
 using CoreDocker.Shared;
-using MainSolutionTemplate.Sdk.RestApi.Base;
-using MainSolutionTemplate.Shared.Interfaces.Shared;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Sdk.RestApi.Base;
+using CoreDocker.Shared.Interfaces.Shared;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 
-namespace MainSolutionTemplate.Sdk.RestApi
+namespace CoreDocker.Sdk.RestApi
 {
     public class ProjectApiClient : BaseCrudApiClient<ProjectModel, ProjectCreateUpdateModel, ProjectReferenceModel>,
         IProjectControllerActions

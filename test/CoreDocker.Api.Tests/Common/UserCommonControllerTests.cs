@@ -1,17 +1,17 @@
 ﻿using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using MainSolutionTemplate.Api.Common;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Core.Tests.Helpers;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Api.Common;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Tests.Helpers;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 using Moq;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Api.Tests.Common
+namespace CoreDocker.Api.Tests.Common
 {
     [TestFixture]
     public class UserCommonControllerTests:BaseCommonControllerTests<User, UserModel, UserReferenceModel, UserCreateUpdateModel, IUserManager>

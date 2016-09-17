@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace MainSolutionTemplate.Core.MessageUtil
+namespace CoreDocker.Core.MessageUtil
 {
 	public class Messenger : IMessenger
 	{

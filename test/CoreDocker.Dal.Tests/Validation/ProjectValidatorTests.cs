@@ -3,8 +3,8 @@ using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generator;
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Validation;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Validation;
 using NUnit.Framework;
 using System.Linq;
 

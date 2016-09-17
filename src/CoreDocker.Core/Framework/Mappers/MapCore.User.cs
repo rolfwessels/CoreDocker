@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Reference;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Reference;
 
-namespace MainSolutionTemplate.Core.Mappers
+namespace CoreDocker.Core.Mappers
 {
     public static partial class MapCore
 	{

@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Mongo.Migrations;
-using MainSolutionTemplate.Dal.Mongo.Migrations.Versions;
+using CoreDocker.Dal.Mongo.Migrations;
+using CoreDocker.Dal.Mongo.Migrations.Versions;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo
+namespace CoreDocker.Dal.Mongo
 {
 	public class Configuration
 	{

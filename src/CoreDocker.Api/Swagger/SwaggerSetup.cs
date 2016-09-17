@@ -2,12 +2,12 @@
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using MainSolutionTemplate.Api.WebApi.Controllers;
+using CoreDocker.Api.WebApi.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.Swagger.Model;
 
-namespace MainSolutionTemplate.Api.Swagger
+namespace CoreDocker.Api.Swagger
 {
     public class SwaggerSetup
     {

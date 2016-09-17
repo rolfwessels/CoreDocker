@@ -1,7 +1,7 @@
-﻿using MainSolutionTemplate.Api.WebApi.Filters;
+﻿using CoreDocker.Api.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MainSolutionTemplate.Api.WebApi
+namespace CoreDocker.Api.WebApi
 {
   public class WebApiSetup
   {

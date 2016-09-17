@@ -1,6 +1,6 @@
 using System;
 
-namespace MainSolutionTemplate.Core.Tests.Helpers
+namespace CoreDocker.Core.Tests.Helpers
 {
     public static class TimerHelper
     {

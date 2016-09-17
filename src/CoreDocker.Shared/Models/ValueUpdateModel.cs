@@ -1,6 +1,6 @@
-﻿using MainSolutionTemplate.Shared.Models.Enums;
+﻿using CoreDocker.Shared.Models.Enums;
 
-namespace MainSolutionTemplate.Shared.Models
+namespace CoreDocker.Shared.Models
 {
     public class ValueUpdateModel<T>
     {

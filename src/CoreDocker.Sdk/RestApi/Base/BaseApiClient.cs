@@ -4,7 +4,7 @@ using Flurl.Http;
 using Flurl;
 using CoreDocker.Shared;
 
-namespace MainSolutionTemplate.Sdk.OAuth
+namespace CoreDocker.Sdk.OAuth
 {
     public  abstract class BaseApiClient
     {
@@ -18,7 +18,6 @@ namespace MainSolutionTemplate.Sdk.OAuth
             var jsonSerializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Objects,
                 ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
             };
             FlurlHttp.Configure(x => x.JsonSerializer = new Flurl.Http.Configuration.NewtonsoftJsonSerializer(jsonSerializerSettings));

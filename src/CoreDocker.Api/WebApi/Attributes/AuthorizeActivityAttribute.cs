@@ -1,8 +1,8 @@
 using System;
-using MainSolutionTemplate.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Enums;
 using log4net;
 
-namespace MainSolutionTemplate.Api.WebApi.Attributes
+namespace CoreDocker.Api.WebApi.Attributes
 {
     public class AuthorizeActivityAttribute : Attribute//: AuthorizeAttribute
 	{

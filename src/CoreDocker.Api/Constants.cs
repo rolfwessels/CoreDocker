@@ -1,4 +1,4 @@
-namespace MainSolutionTemplate.Api
+namespace CoreDocker.Api
 {
 	internal class Constants
 	{

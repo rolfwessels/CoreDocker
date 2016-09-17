@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using MainSolutionTemplate.Api.Models.Mappers;
+using CoreDocker.Api.Models.Mappers;
 using AutoMapper;
 
 namespace CoreDocker.Core.Tests

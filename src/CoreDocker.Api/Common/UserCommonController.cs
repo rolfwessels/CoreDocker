@@ -4,16 +4,16 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Api.Models.Mappers;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Shared.Interfaces.Shared;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Interfaces.Shared;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 using log4net;
 
-namespace MainSolutionTemplate.Api.Common
+namespace CoreDocker.Api.Common
 {
     public class UserCommonController : BaseCommonController<User, UserModel, UserReferenceModel, UserCreateUpdateModel>,
                                         IUserControllerActions
@@ -43,8 +43,7 @@ namespace MainSolutionTemplate.Api.Common
             return Task.Run(() =>
                 {
 
-                    _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",
-                                            email));
+                    _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",email));
                     return true;
                     
                 });
@@ -71,8 +70,8 @@ namespace MainSolutionTemplate.Api.Common
 
         public async Task<UserModel> WhoAmI()
         {
-            var userByEmail = await _userManager.GetUserByEmail("casd@asdfas.com");
-            return userByEmail.ToModel();
+            var userByEmail = await _userManager.Get();
+            return userByEmail.First().ToModel();
         }
     }
 }

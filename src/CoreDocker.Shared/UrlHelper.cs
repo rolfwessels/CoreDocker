@@ -5,7 +5,7 @@
         public static string SetParam(this string baseUrl, string param ,string value)
         {
             
-            return baseUrl.Replace($"{param}", value);
+            return baseUrl.Replace($"{{{param}}}", value);
         }
 
         public static string AppendUrl(this string baseUrl, string appendToUrl)

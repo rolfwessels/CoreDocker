@@ -4,18 +4,18 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using MainSolutionTemplate.Api.AppStartup;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Core.DataIntegrity;
-using MainSolutionTemplate.Core.Mappers;
-using MainSolutionTemplate.Core.Tests.Helpers;
-using MainSolutionTemplate.Core.Tests.Managers;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Api.AppStartup;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.DataIntegrity;
+using CoreDocker.Core.Mappers;
+using CoreDocker.Core.Tests.Helpers;
+using CoreDocker.Core.Tests.Managers;
+using CoreDocker.Dal.Models;
 using NUnit.Framework;
 using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Api.Tests.DataIntegrity
+namespace CoreDocker.Api.Tests.DataIntegrity
 {
     [TestFixture]
     public class DataIntegrityManagerIntegrationTests : BaseManagerTests

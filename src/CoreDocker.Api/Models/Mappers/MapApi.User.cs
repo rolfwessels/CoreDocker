@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Reference;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 
-namespace MainSolutionTemplate.Api.Models.Mappers
+namespace CoreDocker.Api.Models.Mappers
 {
     public static partial class MapApi
     {
-        public static void Initialize()
-        {
-        }
+       
 
         public static User ToDal(this UserCreateUpdateModel model, User user = null)
         {

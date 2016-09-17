@@ -1,4 +1,4 @@
-﻿namespace MainSolutionTemplate.Dal.Models.Enums
+﻿namespace CoreDocker.Dal.Models.Enums
 {
 	public enum Activity
 	{

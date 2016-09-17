@@ -1,8 +1,8 @@
-﻿using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Persistance;
+﻿using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Persistance;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo
+namespace CoreDocker.Dal.Mongo
 {
 	public class MongoGeneralUnitOfWork : IGeneralUnitOfWork
 	{

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CoreDocker.Utilities.Helpers;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Interfaces;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Persistance;
 
 namespace CoreDocker.Dal.InMemoryCollections
 {

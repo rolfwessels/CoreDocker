@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Enums;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Core.BusinessLogic.Components
+namespace CoreDocker.Core.BusinessLogic.Components
 {
     public class RoleManager : IRoleManager
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace MainSolutionTemplate.Core.Mappers
+namespace CoreDocker.Core.Mappers
 {
     public static partial class MapCore
     {

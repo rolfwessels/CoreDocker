@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Persistance;
 
-namespace MainSolutionTemplate.Core.DataIntegrity
+namespace CoreDocker.Core.DataIntegrity
 {
     public interface IIntegrity
     {

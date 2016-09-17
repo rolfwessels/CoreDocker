@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
-using MainSolutionTemplate.Dal.Models.Reference;
+using CoreDocker.Shared.Models;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Dal.Models.Reference;
 
-namespace MainSolutionTemplate.Api.Models.Mappers
+namespace CoreDocker.Api.Models.Mappers
 {
     public static partial class MapApi
     {

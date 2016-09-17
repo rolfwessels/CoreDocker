@@ -1,18 +1,18 @@
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.Tests.Helpers;
-using MainSolutionTemplate.Core.Vendor;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.Tests.Helpers;
+using CoreDocker.Core.Vendor;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Persistance;
 using NUnit.Framework;
 using FizzWare.NBuilder.Generator;
 using Moq;
 using Microsoft.Extensions.Logging;
 using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Managers
 {
     [TestFixture]
     public class UserManagerTests : BaseTypedManagerTests<User>

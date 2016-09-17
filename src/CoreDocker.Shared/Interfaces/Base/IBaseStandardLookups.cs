@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Shared.Models;
+using CoreDocker.Shared.Models;
 
-namespace MainSolutionTemplate.Shared.Interfaces.Base
+namespace CoreDocker.Shared.Interfaces.Base
 {
     public interface IBaseStandardLookups<TDetails, TModelReference> : IBaseControllerLookups<TDetails, TModelReference>
     {

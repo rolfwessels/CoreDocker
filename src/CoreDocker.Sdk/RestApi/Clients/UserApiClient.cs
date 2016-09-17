@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Sdk.RestApi.Base;
-using MainSolutionTemplate.Shared.Interfaces.Shared;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Sdk.RestApi.Base;
+using CoreDocker.Shared.Interfaces.Shared;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 using CoreDocker.Shared;
 using CoreDocker.Sdk;
 using Flurl.Http;
 
-namespace MainSolutionTemplate.Sdk.RestApi
+namespace CoreDocker.Sdk.RestApi
 {
     public class UserApiClient : BaseCrudApiClient<UserModel, UserCreateUpdateModel, UserReferenceModel>,
                                  IUserControllerActions

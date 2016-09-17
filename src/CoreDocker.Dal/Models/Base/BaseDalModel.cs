@@ -1,7 +1,7 @@
 ﻿using System;
-using MainSolutionTemplate.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Interfaces;
 
-namespace MainSolutionTemplate.Dal.Models
+namespace CoreDocker.Dal.Models
 {
 	public abstract class BaseDalModel : IBaseDalModel
 	{

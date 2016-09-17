@@ -1,12 +1,12 @@
-using MainSolutionTemplate.Api.Common;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Reference;
+using CoreDocker.Api.Common;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Reference;
 using Moq;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Api.Tests.Common
+namespace CoreDocker.Api.Tests.Common
 {
     [TestFixture]
     public class ProjectCommonControllerTests : BaseCommonControllerTests<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel, IProjectManager>

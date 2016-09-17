@@ -4,7 +4,7 @@ using System.Reflection;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MainSolutionTemplate.Api.AppStartup
+namespace CoreDocker.Api.AppStartup
 {
     public class SimpleFileServer
     {
@@ -24,11 +24,11 @@ namespace MainSolutionTemplate.Api.AppStartup
 ////                string combine = Path.Combine(new Uri(Assembly.GetExecutingAssembly().CodeBase).PathAndQuery,
 ////                    @"..\..\..\");
 ////                yield return
-////                    Path.GetFullPath(Path.Combine(combine, @"MainSolutionTemplate.Website2\dist"));
+////                    Path.GetFullPath(Path.Combine(combine, @"CoreDocker.Website2\dist"));
 ////                yield return
-////                    Path.GetFullPath(Path.Combine(combine, @"MainSolutionTemplate.Website\build\debug"));
+////                    Path.GetFullPath(Path.Combine(combine, @"CoreDocker.Website\build\debug"));
 ////                yield return
-////                    Path.GetFullPath(Path.Combine(combine, @"MainSolutionTemplate.Website\dist"));
+////                    Path.GetFullPath(Path.Combine(combine, @"CoreDocker.Website\dist"));
 ////                
 ////            }
 ////            set { _possibleWebBasePath = value; }

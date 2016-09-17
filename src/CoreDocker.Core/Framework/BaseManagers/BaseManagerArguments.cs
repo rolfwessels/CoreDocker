@@ -1,9 +1,9 @@
-using MainSolutionTemplate.Core.DataIntegrity;
-using MainSolutionTemplate.Core.MessageUtil;
-using MainSolutionTemplate.Dal.Persistance;
-using MainSolutionTemplate.Dal.Validation;
+using CoreDocker.Core.DataIntegrity;
+using CoreDocker.Core.MessageUtil;
+using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Validation;
 
-namespace MainSolutionTemplate.Core.BusinessLogic.Components
+namespace CoreDocker.Core.BusinessLogic.Components
 {
     public class BaseManagerArguments
     {

@@ -7,7 +7,7 @@ using NUnit.Framework;
 using FluentAssertions;
 using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Core.Tests
+namespace CoreDocker.Core.Tests
 {
     [TestFixture]
     public class CodeScannerTests

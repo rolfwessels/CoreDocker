@@ -1,7 +1,7 @@
 using FluentValidation;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 
-namespace MainSolutionTemplate.Dal.Validation
+namespace CoreDocker.Dal.Validation
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
     public class ProjectValidator : AbstractValidator<Project>

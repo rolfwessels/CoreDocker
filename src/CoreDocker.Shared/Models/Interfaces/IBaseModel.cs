@@ -1,6 +1,6 @@
 using System;
 
-namespace MainSolutionTemplate.Shared.Models.Interfaces
+namespace CoreDocker.Shared.Models.Interfaces
 {
     public interface IBaseModel
     {

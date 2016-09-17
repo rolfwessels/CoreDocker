@@ -1,6 +1,6 @@
-using MainSolutionTemplate.Shared.Models.Base;
+using CoreDocker.Shared.Models.Base;
 
-namespace MainSolutionTemplate.Shared.Models
+namespace CoreDocker.Shared.Models
 {
     public class ProjectModel : BaseModel
     {

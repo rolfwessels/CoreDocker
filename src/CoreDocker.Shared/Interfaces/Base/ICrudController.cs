@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MainSolutionTemplate.Shared.Interfaces.Base
+namespace CoreDocker.Shared.Interfaces.Base
 {
     public interface ICrudController<TModel, TDetailModel> 
     {

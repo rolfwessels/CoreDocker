@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MainSolutionTemplate.Dal.Models.Interfaces
+namespace CoreDocker.Dal.Models.Interfaces
 {
 	public interface IBaseDalModel
 	{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.Logging;
 
 namespace log4net
@@ -13,11 +13,7 @@ namespace log4net
             return new LogAdaptor(_logger.CreateLogger<T>());
         }
 
-        internal static void SetLogger()
-        {
-        }
-
-        internal static void SetLogger(ILoggerFactory loggerFactory)
+        public static void SetLogger(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory;
         }
@@ -47,9 +43,24 @@ namespace log4net
                 _logger.LogError(message, exception);
             }
 
+            public void Warn(string message, Exception exception)
+            {
+                _logger.LogWarning(message, exception);
+            }
+
             public void Warn(string message)
             {
                 _logger.LogWarning(message);
+            }
+
+            public void Info(string message)
+            {
+                _logger.LogInformation(message);
+            }
+
+            public void Debug(string message)
+            {
+                _logger.LogDebug(message);
             }
         }
 
@@ -66,7 +77,12 @@ namespace log4net
                     throw new NotImplementedException();
                 }
             }
+
             #region ILog Members
+
+            public void Debug(string message)
+            {
+            }
 
             public void Error(string message)
             {
@@ -76,7 +92,15 @@ namespace log4net
             {
             }
 
+            public void Info(string message)
+            {
+            }
+
             public void Warn(string message)
+            {
+            }
+
+            public void Warn(string message, Exception exception)
             {
             }
 
@@ -84,14 +108,5 @@ namespace log4net
         }
 
         #endregion
-    }
-
-    public interface ILog
-    {
-        ILogger Logger { get; }
-
-        void Error(string error);
-        void Error(string message, Exception exception);
-        void Warn(string v);
     }
 }

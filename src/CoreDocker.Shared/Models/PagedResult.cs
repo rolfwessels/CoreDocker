@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MainSolutionTemplate.Shared.Models
+namespace CoreDocker.Shared.Models
 {
     public class PagedResult<T>
     {

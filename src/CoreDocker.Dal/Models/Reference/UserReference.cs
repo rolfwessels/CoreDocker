@@ -1,6 +1,6 @@
-﻿using MainSolutionTemplate.Dal.Models.Base;
+﻿using CoreDocker.Dal.Models.Base;
 
-namespace MainSolutionTemplate.Dal.Models.Reference
+namespace CoreDocker.Dal.Models.Reference
 {
     public class UserReference : BaseReferenceWithName
     {

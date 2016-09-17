@@ -1,12 +1,12 @@
 using System;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson;
 
-namespace MainSolutionTemplate.Dal.Mongo
+namespace CoreDocker.Dal.Mongo
 {
     public class MongoMappers
     {

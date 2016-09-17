@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MainSolutionTemplate.Core.MessageUtil
+namespace CoreDocker.Core.MessageUtil
 {
 	public interface IMessenger
 	{

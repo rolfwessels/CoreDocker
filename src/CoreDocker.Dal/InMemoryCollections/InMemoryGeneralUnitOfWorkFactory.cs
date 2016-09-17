@@ -1,5 +1,5 @@
 using System;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Persistance;
 
 namespace CoreDocker.Dal.InMemoryCollections
 {

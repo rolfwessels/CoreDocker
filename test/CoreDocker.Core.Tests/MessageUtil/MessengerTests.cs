@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
-using MainSolutionTemplate.Core.MessageUtil;
+using CoreDocker.Core.MessageUtil;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Core.Tests.MessageUtil
+namespace CoreDocker.Core.Tests.MessageUtil
 {
 	[TestFixture]
 	public class MessengerTests

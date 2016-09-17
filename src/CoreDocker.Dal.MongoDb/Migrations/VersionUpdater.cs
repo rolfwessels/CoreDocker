@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo.Migrations
+namespace CoreDocker.Dal.Mongo.Migrations
 {
     public class VersionUpdater
     {
         
         private readonly IMigration[] _updates;
-        private readonly Mutex _resetEvent = new Mutex(false, @"global/MainSolutionTemplate_VersionUpdater");
+        private readonly Mutex _resetEvent = new Mutex(false, @"global/CoreDocker_VersionUpdater");
         private ILogger _log;
 
         public VersionUpdater(IMigration[] updates, ILogger log)

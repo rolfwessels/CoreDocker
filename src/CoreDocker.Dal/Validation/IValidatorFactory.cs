@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 
-namespace MainSolutionTemplate.Dal.Validation
+namespace CoreDocker.Dal.Validation
 {
     public interface IValidatorFactory
     {

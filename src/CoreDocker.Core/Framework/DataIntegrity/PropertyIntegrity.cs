@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
-using MainSolutionTemplate.Dal.Models.Interfaces;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Core.DataIntegrity
+namespace CoreDocker.Core.DataIntegrity
 {
     public class PropertyIntegrity<TDal,TDalReference,TContainer> : IIntegrity where TDal : class where TContainer : IBaseDalModel where TDalReference : class
     {

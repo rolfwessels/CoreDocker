@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using MainSolutionTemplate.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Enums;
 
-namespace MainSolutionTemplate.Dal.Models
+namespace CoreDocker.Dal.Models
 {
 	public class Role
 	{

@@ -1,11 +1,12 @@
 using AutoMapper;
-using MainSolutionTemplate.Core.MessageUtil.Models;
-using MainSolutionTemplate.Shared.Models;
-using MainSolutionTemplate.Shared.Models.Enums;
+using CoreDocker.Core.MessageUtil.Models;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Enums;
 using log4net;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
+using System;
 
-namespace MainSolutionTemplate.Api.Models.Mappers
+namespace CoreDocker.Api.Models.Mappers
 {
     public static partial class MapApi
 	{
@@ -22,6 +23,10 @@ namespace MainSolutionTemplate.Api.Models.Mappers
           
         }
 
+        public static void Initialize()
+        {
+        }
+
         public static IMapper GetInstance() => Mapper.Instance;
 
 
@@ -29,5 +34,10 @@ namespace MainSolutionTemplate.Api.Models.Mappers
 		{
 			return new ValueUpdateModel<TModel>(Mapper.Instance.Map<T, TModel>(updateMessage.Value), (UpdateTypeCodes) updateMessage.UpdateType);
 		}
-	}
+
+        public static void AssertConfigurationIsValid()
+        {
+            Mapper.AssertConfigurationIsValid();
+        }
+    }
 }

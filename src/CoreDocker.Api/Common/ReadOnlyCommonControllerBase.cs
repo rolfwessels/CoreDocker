@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Api.Models.Mappers;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Api.Models.Mappers;
 
-namespace MainSolutionTemplate.Api.Common
+namespace CoreDocker.Api.Common
 {
     public abstract class ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel>
     {

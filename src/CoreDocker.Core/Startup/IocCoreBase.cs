@@ -1,15 +1,15 @@
 ﻿using System;
 using Autofac;
 using FluentValidation;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces;
-using MainSolutionTemplate.Core.MessageUtil;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Persistance;
-using MainSolutionTemplate.Dal.Validation;
-using ValidatorFactoryBase = MainSolutionTemplate.Dal.Validation.ValidatorFactoryBase;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.MessageUtil;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Validation;
+using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
-namespace MainSolutionTemplate.Core.Startup
+namespace CoreDocker.Core.Startup
 {
 	public abstract class IocCoreBase
 	{

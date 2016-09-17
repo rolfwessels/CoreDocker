@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Models.Interfaces;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Persistance;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace MainSolutionTemplate.Dal.Mongo
+namespace CoreDocker.Dal.Mongo
 {
     public class MongoRepository<T> : IRepository<T> where T : IBaseDalModel
     {

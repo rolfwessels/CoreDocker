@@ -1,4 +1,4 @@
-using MainSolutionTemplate.Sdk.RestApi;
+using CoreDocker.Sdk.RestApi;
 
 namespace CoreDocker.Sdk
 {
@@ -10,6 +10,7 @@ namespace CoreDocker.Sdk
         {
             _urlBase = urlBase;
             Projects = new ProjectApiClient(this);
+            Users = new UserApiClient(this);
         }
 
         public string UrlBase
@@ -21,6 +22,7 @@ namespace CoreDocker.Sdk
 
 
         public ProjectApiClient Projects { get; set; }
+        public UserApiClient Users { get; set; }
 
         #endregion
     }

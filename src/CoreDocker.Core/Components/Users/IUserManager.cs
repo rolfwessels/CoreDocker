@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Models;
+using CoreDocker.Dal.Models;
 
-namespace MainSolutionTemplate.Core.BusinessLogic.Components.Interfaces
+namespace CoreDocker.Core.BusinessLogic.Components.Interfaces
 {
     public interface IUserManager : IBaseManager<User>
     {

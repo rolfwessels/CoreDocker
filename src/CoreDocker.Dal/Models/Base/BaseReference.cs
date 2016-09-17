@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MainSolutionTemplate.Dal.Models.Base
+namespace CoreDocker.Dal.Models.Base
 {
     public abstract class BaseReference : IBaseReference
     {

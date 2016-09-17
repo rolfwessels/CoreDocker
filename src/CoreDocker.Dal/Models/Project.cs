@@ -1,4 +1,4 @@
-namespace MainSolutionTemplate.Dal.Models
+namespace CoreDocker.Dal.Models
 {
 	public class Project : BaseDalModelWithId
 	{

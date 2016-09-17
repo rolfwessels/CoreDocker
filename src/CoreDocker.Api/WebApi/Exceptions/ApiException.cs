@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace MainSolutionTemplate.Api.WebApi.Filters
+namespace CoreDocker.Api.WebApi.Filters
 {
   public class ApiException : Exception
   {

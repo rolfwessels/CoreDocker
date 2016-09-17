@@ -1,4 +1,4 @@
-﻿namespace MainSolutionTemplate.Dal.Models.Base
+﻿namespace CoreDocker.Dal.Models.Base
 {
     public abstract class BaseReferenceWithName : BaseReference
     {

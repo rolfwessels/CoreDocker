@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 
-namespace MainSolutionTemplate.Core.DataIntegrity
+namespace CoreDocker.Core.DataIntegrity
 {
     
     public class DataIntegrityManager : IDataIntegrityManager

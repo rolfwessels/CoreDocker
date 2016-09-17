@@ -1,11 +1,11 @@
 using CoreDocker.Dal.InMemoryCollections;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.MessageUtil;
-using MainSolutionTemplate.Dal.Validation;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.MessageUtil;
+using CoreDocker.Dal.Validation;
 using Moq;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Managers
 {
     [TestFixture]
     public class BaseManagerTests

@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using MainSolutionTemplate.Core.BusinessLogic.Components;
-using MainSolutionTemplate.Core.MessageUtil.Models;
-using MainSolutionTemplate.Core.Tests.Helpers;
-using MainSolutionTemplate.Dal.Models;
-using MainSolutionTemplate.Dal.Models.Enums;
-using MainSolutionTemplate.Dal.Persistance;
+using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.MessageUtil.Models;
+using CoreDocker.Core.Tests.Helpers;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Persistance;
 using Moq;
 using NUnit.Framework;
 
-namespace MainSolutionTemplate.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Managers
 {
     public abstract class BaseTypedManagerTests<T> : BaseManagerTests where T : BaseDalModelWithId
     {
