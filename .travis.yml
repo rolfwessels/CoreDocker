@@ -28,17 +28,17 @@ before_install:
 script:
   - which dotnet
   - dotnet --info
-  # - dotnet restore
-  # - pushd src/CoreDocker.Api && dotnet restore  && dotnet build
-  # - popd
-  # - pushd test/CoreDocker.Core.Tests && dotnet test 
-  # - popd
-  # #- pushd test/CoreDocker.Sdk.Tests && dotnet test 
-  # #- popd
-  # - pushd test/CoreDocker.Utilities.Tests && dotnet test 
-  # - popd
-  # - pushd test/CoreDocker.Dal.Tests && dotnet test 
-  # - popd
+  - dotnet restore
+  - pushd src/CoreDocker.Api && dotnet restore  && dotnet build
+  - popd
+  - pushd test/CoreDocker.Core.Tests && dotnet test 
+  - popd
+  #- pushd test/CoreDocker.Sdk.Tests && dotnet test 
+  #- popd
+  - pushd test/CoreDocker.Utilities.Tests && dotnet test 
+  - popd
+  - pushd test/CoreDocker.Dal.Tests && dotnet test 
+  - popd
 
 after_success:
   # Add docker images
