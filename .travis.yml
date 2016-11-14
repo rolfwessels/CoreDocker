@@ -46,9 +46,9 @@ after_success:
   - docker pull microsoft/dotnet
   - dotnet restore
   - pushd CoreDocker.Api
-  - dotnet publish -c Release -o bin/publish
+  - dotnet publish   --version-suffix $TRAVIS_BUILD_NUMBER -c Release -o bin/publish
   - popd
-  - docker build -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.1 .
+  - docker build -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.$TRAVIS_BUILD_NUMBER .
   - popd
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
