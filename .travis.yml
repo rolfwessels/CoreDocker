@@ -2,7 +2,7 @@ language: generic
 
 sudo: required
 dist: trusty
-env:  
+env:
   - CLI_VERSION=latest
 
 services:
@@ -20,18 +20,11 @@ addons:
     - curl
 
 before_install:
-   # Try something else 
-   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-   - curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
-   - export PATH="$DOTNET_INSTALL_DIR:$PATH"
-   # Add docker images
-   - pushd src/ 
-   - docker pull microsoft/dotnet
-   - dotnet restore
-   - dotnet publish -c Release -o bin/publish
-   - docker build rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.1 .
-   - popd
-   
+  # Try something else 
+  - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
+  - curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - export PATH="$DOTNET_INSTALL_DIR:$PATH"
+
 script:
   - which dotnet
   - dotnet --info
@@ -46,3 +39,16 @@ script:
   - popd
   - pushd test/CoreDocker.Dal.Tests && dotnet test 
   - popd
+
+after_success:
+  # Add docker images
+  - pushd src/ 
+  - docker pull microsoft/dotnet
+  - dotnet restore
+  - dotnet publish -c Release -o bin/publish
+  - docker build rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.1 .
+  - popd
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push rolfwessels/coredocker;
+    fi
