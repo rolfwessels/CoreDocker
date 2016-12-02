@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
@@ -12,17 +12,14 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "FluentAssertions": "4.12.0",
     "NUnit": "3.5.0",
-    "Moq": "4.6.36-alpha"
+    "Moq": "4.6.36-alpha",
+    "Microsoft.NETCore.App": "1.1.0"
   },
   "testRunner": "nunit",
   "frameworks": {
     "netcoreapp1.0": {
       "imports": "portable-net45+win8",
       "dependencies": {
-        "Microsoft.NETCore.App": {
-          "version": "1.0.0-*",
-          "type": "platform"
-        }
       }
     }
   },
@@ -30,5 +27,9 @@
     "embed": [
       "Resources/*.*"
     ]
+  },
+  "runtimes": {
+    "win10-x64": {}
   }
+
 }
