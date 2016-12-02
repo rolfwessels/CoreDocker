@@ -12,7 +12,8 @@
     "Microsoft.NETCore.App": "1.1.0",
     "FluentAssertions": "4.17.0",
     "NETStandard.Library": "1.6.1",
-    "System.Linq": "4.3.0"
+    "System.Linq": "4.3.0",
+    "Microsoft.DotNet.InternalAbstractions": "1.0.0"
   },
   "testRunner": "nunit",
   "frameworks": {
