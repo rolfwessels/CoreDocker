@@ -1,3 +1,6 @@
+**/obj/**/*
+**/bin/**/*
+**/*lock.json
 **/.idea.CoreDocker
 **/.vs
 *.swp
@@ -8,3 +11,4 @@ project.lock.json
 .DS_Store
 /TestResult.xml
 /CoreDocker.ncrunchsolution.user
+/_NCrunch_CoreDocker/CoreDocker.crunchsolution.cache
