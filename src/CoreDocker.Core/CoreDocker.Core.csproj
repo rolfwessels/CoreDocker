@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="6.4.0-beta3" />
-    <PackageReference Include="Autofac" Version="4.2.1" />
-    <PackageReference Include="AutoMapper" Version="5.2.0" />
+    <PackageReference Include="FluentValidation" Version="6.4.1" />
+    <PackageReference Include="Autofac" Version="4.5.0" />
+    <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.1" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
   </ItemGroup>

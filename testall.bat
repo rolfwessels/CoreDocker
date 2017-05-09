@@ -1,7 +1,17 @@
 dotnet restore
-dotnet test .\test\CoreDocker.Core.Tests 
-dotnet test .\test\CoreDocker.Utilities.Tests
-dotnet test .\test\CoreDocker.Sdk.Tests
-dotnet test .\test\CoreDocker.Api.Tests
-dotnet test .\test\CoreDocker.Dal.Tests
+cd .\test\CoreDocker.Core.Tests 
+dotnet test 
+cd ..\..\
+cd .\test\CoreDocker.Utilities.Tests
+dotnet test 
+cd ..\..\
+cd .\test\CoreDocker.Sdk.Tests
+dotnet test 
+cd ..\..\
+cd .\test\CoreDocker.Api.Tests
+dotnet test 
+cd ..\..\
+cd .\test\CoreDocker.Dal.Tests
+dotnet test 
+cd ..\..\
 pause
