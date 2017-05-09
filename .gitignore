@@ -8,3 +8,4 @@ project.lock.json
 .DS_Store
 /TestResult.xml
 /CoreDocker.ncrunchsolution.user
+*.user

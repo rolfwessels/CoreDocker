@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}"
 EndProject
@@ -11,41 +11,40 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		src\dockerbuild.sh = src\dockerbuild.sh
 		src\Dockerfile = src\Dockerfile
-		global.json = global.json
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Api", "src\CoreDocker.Api\CoreDocker.Api.xproj", "{3E5C58AA-6B9A-4020-B70D-1DFC1341CFBD}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Console", "src\CoreDocker.Console\CoreDocker.Console.xproj", "{0E64D15F-71FF-40F4-817A-C2DF2D0BFF7E}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Core", "src\CoreDocker.Core\CoreDocker.Core.xproj", "{EE740ECB-DE6D-42FB-BF0D-BC11767CB8F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{BA7073F6-2A1C-4F82-A240-D02064A3BE86}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Core.Tests", "test\CoreDocker.Core.Tests\CoreDocker.Core.Tests.xproj", "{FAE792E6-E5C5-4BD5-8C9A-5BB976F86E3A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Sdk", "src\CoreDocker.Sdk\CoreDocker.Sdk.xproj", "{B7B7527D-C857-4579-8937-86A0F29D0C2F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Sdk.Tests", "test\CoreDocker.Sdk.Tests\CoreDocker.Sdk.Tests.xproj", "{89078FA5-C3F4-412B-8BBB-4317C92DE235}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Shared", "src\CoreDocker.Shared\CoreDocker.Shared.xproj", "{FA98E371-97B2-461C-AC09-26A5D1A68333}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E1C5C555-3024-4E82-92B0-15CB6AA06135}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Utilities.Tests", "test\CoreDocker.Utilities.Tests\CoreDocker.Utilities.Tests.xproj", "{0E4AF7DF-6FB5-45F7-B3B1-374A8EABF5FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Api", "src\CoreDocker.Api\CoreDocker.Api.csproj", "{3E5C58AA-6B9A-4020-B70D-1DFC1341CFBD}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Utilities", "src\CoreDocker.Utilities\CoreDocker.Utilities.xproj", "{6ABA33CC-8F44-4FDD-B2CC-A75E77C15DAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Console", "src\CoreDocker.Console\CoreDocker.Console.csproj", "{0E64D15F-71FF-40F4-817A-C2DF2D0BFF7E}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Dal", "src\CoreDocker.Dal\CoreDocker.Dal.xproj", "{C3607C76-1352-4982-B78C-6D8EBD89B0AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Core", "src\CoreDocker.Core\CoreDocker.Core.csproj", "{EE740ECB-DE6D-42FB-BF0D-BC11767CB8F2}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Dal.Tests", "test\CoreDocker.Dal.Tests\CoreDocker.Dal.Tests.xproj", "{C761092D-0EBD-484F-A134-42EEB6348B51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Core.Tests", "test\CoreDocker.Core.Tests\CoreDocker.Core.Tests.csproj", "{FAE792E6-E5C5-4BD5-8C9A-5BB976F86E3A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Api.Tests", "test\CoreDocker.Api.Tests\CoreDocker.Api.Tests.xproj", "{22F26F83-C97A-4506-A976-81C0DA5C6332}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Sdk", "src\CoreDocker.Sdk\CoreDocker.Sdk.csproj", "{B7B7527D-C857-4579-8937-86A0F29D0C2F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreDocker.Dal.MongoDb", "src\CoreDocker.Dal.MongoDb\CoreDocker.Dal.MongoDb.xproj", "{2B94B549-655C-4119-9CED-953F006964F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Sdk.Tests", "test\CoreDocker.Sdk.Tests\CoreDocker.Sdk.Tests.csproj", "{89078FA5-C3F4-412B-8BBB-4317C92DE235}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Shared", "src\CoreDocker.Shared\CoreDocker.Shared.csproj", "{FA98E371-97B2-461C-AC09-26A5D1A68333}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Utilities.Tests", "test\CoreDocker.Utilities.Tests\CoreDocker.Utilities.Tests.csproj", "{0E4AF7DF-6FB5-45F7-B3B1-374A8EABF5FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Utilities", "src\CoreDocker.Utilities\CoreDocker.Utilities.csproj", "{6ABA33CC-8F44-4FDD-B2CC-A75E77C15DAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Dal", "src\CoreDocker.Dal\CoreDocker.Dal.csproj", "{C3607C76-1352-4982-B78C-6D8EBD89B0AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Dal.Tests", "test\CoreDocker.Dal.Tests\CoreDocker.Dal.Tests.csproj", "{C761092D-0EBD-484F-A134-42EEB6348B51}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Api.Tests", "test\CoreDocker.Api.Tests\CoreDocker.Api.Tests.csproj", "{22F26F83-C97A-4506-A976-81C0DA5C6332}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreDocker.Dal.MongoDb", "src\CoreDocker.Dal.MongoDb\CoreDocker.Dal.MongoDb.csproj", "{2B94B549-655C-4119-9CED-953F006964F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,15 +109,15 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{BA7073F6-2A1C-4F82-A240-D02064A3BE86} = {3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}
+		{E1C5C555-3024-4E82-92B0-15CB6AA06135} = {3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}
 		{3E5C58AA-6B9A-4020-B70D-1DFC1341CFBD} = {3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}
 		{0E64D15F-71FF-40F4-817A-C2DF2D0BFF7E} = {3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}
 		{EE740ECB-DE6D-42FB-BF0D-BC11767CB8F2} = {BA7073F6-2A1C-4F82-A240-D02064A3BE86}
-		{BA7073F6-2A1C-4F82-A240-D02064A3BE86} = {3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}
 		{FAE792E6-E5C5-4BD5-8C9A-5BB976F86E3A} = {1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}
 		{B7B7527D-C857-4579-8937-86A0F29D0C2F} = {E1C5C555-3024-4E82-92B0-15CB6AA06135}
 		{89078FA5-C3F4-412B-8BBB-4317C92DE235} = {1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}
 		{FA98E371-97B2-461C-AC09-26A5D1A68333} = {E1C5C555-3024-4E82-92B0-15CB6AA06135}
-		{E1C5C555-3024-4E82-92B0-15CB6AA06135} = {3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}
 		{0E4AF7DF-6FB5-45F7-B3B1-374A8EABF5FC} = {1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}
 		{6ABA33CC-8F44-4FDD-B2CC-A75E77C15DAC} = {E1C5C555-3024-4E82-92B0-15CB6AA06135}
 		{C3607C76-1352-4982-B78C-6D8EBD89B0AA} = {BA7073F6-2A1C-4F82-A240-D02064A3BE86}
