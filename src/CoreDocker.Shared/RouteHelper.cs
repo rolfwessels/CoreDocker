@@ -13,5 +13,6 @@
         public const string UserControllerForgotPassword = "forgotpassword";
         public const string UserControllerWhoAmI = "whoami";
         public const string UserControllerRoles = "roles";
+        public const string PingController = ApiPrefix+ "ping";
     }
 }
