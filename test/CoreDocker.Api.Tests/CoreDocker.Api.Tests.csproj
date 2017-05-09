@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>CoreDocker.Api.Tests</AssemblyName>
     <PackageId>CoreDocker.Api.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CoreDocker.Core\CoreDocker.Core.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Api\CoreDocker.Api.csproj" />
+    <ProjectReference Include="..\..\src\CoreDocker.Core\CoreDocker.Core.csproj" />
     <ProjectReference Include="..\CoreDocker.Utilities.Tests\CoreDocker.Utilities.Tests.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
     <ProjectReference Include="..\CoreDocker.Core.Tests\CoreDocker.Core.Tests.csproj" />
@@ -24,10 +24,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-3" />
     <PackageReference Include="Moq" Version="4.7.10" />
     <PackageReference Include="NUnit" Version="3.6.1" />
     <PackageReference Include="FluentAssertions" Version="4.19.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.7.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
   </ItemGroup>
