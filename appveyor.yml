@@ -21,20 +21,11 @@ build_script:
   - ps: dotnet restore
   - ps: cd src/CoreDocker.Api 
   - ps: dotnet restore
-  - ps: dotnet build
-  - ps: cd ..\..
-  - ps: cd test\CoreDocker.Core.Tests
-  - ps: dotnet test  
-  - ps: cd ..\..
-  - ps: cd test\CoreDocker.Utilities.Tests
-  - ps: dotnet test 
-  - ps: cd ..\..
-  - ps: cd test\CoreDocker.Api.Tests
-  - ps: dotnet test 
-  - ps: cd ..\..
-  - ps: cd test\CoreDocker.Dal.Tests
-  - ps: dotnet test 
-  - ps: cd ..\..
+  - ps: dotnet vstest (Get-ChildItem test | Where-Object {!$_.FullName.contains('Sdk') } | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp1.1/$($_.Name).dll") })
+  - ps: move testresults\*.trx testresults\result.trx
+  - ps: $wc = New-Object 'System.Net.WebClient'
+  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\testresults\result.trx))
+
   # - ps: cd test\CoreDocker.Sdk.Tests
   # - ps: dotnet test 
   # - ps: cd ..\..
