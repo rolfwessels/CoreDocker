@@ -20,7 +20,8 @@ build_script:
   - ps: dotnet --info
   - ps: dotnet restore
   - ps: cd src/CoreDocker.Api 
-  - ps: dotnet restore
+  - ps: dotnet build
+  - ps: cd ../..
   - ps: dotnet vstest (Get-ChildItem test | Where-Object {!$_.FullName.contains('Sdk') } | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp1.1/$($_.Name).dll") })
   - ps: move testresults\*.trx testresults\result.trx
   - ps: $wc = New-Object 'System.Net.WebClient'
