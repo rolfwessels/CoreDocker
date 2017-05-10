@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using CoreDocker.Api.Swagger;
 
+
 namespace CoreDocker.Api
 {
     public class Startup
@@ -52,8 +53,7 @@ namespace CoreDocker.Api
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.RollingFile(System.IO.Path.Combine(@"C:\temp\logs", "CoreDocker.Api.log"))
+            .ReadFrom.Configuration(Configuration)
             .CreateLogger();
 
             log4net.LogManager.SetLogger(loggerFactory);

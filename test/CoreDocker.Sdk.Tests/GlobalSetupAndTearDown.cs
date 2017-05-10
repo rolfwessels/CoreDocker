@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using Serilog;
 using log4net;
+using Serilog.Sinks.RollingFileAlternate;
 
 namespace CoreDocker.Sdk.Tests
 {
@@ -18,13 +19,13 @@ namespace CoreDocker.Sdk.Tests
             var loggerFactory = new LoggerFactory();
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.RollingFile(Path.Combine(@"C:\temp\logs", "CoreDocker.Sdk.Tests.log"))
+                .WriteTo.RollingFileAlternate(@"C:\temp\logs\CoreDocker.Api", fileSizeLimitBytes: 1024  )
                 .CreateLogger();
 
             loggerFactory.AddDebug();
             loggerFactory.AddSerilog();
 
-            log4net.LogManager.SetLogger(loggerFactory);
+            LogManager.SetLogger(loggerFactory);
             Log.Logger.Information("Starting");
         }
 
