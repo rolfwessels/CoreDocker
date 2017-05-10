@@ -1,7 +1,6 @@
 ﻿using System;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
-using CoreDocker.Api.Models.Mappers;
 using CoreDocker.Api.WebApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Swashbuckle.Swagger.Model;
 using CoreDocker.Api.Swagger;
 
 namespace CoreDocker.Api
