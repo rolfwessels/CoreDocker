@@ -46,7 +46,7 @@ namespace CoreDocker.Api
             services.AddMvc(options => WebApiSetup.Setup(options));
             SwaggerSetup.Setup(services);
             
-            SimpleFileServer.Initialize(services);
+            
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
 
@@ -68,6 +68,7 @@ namespace CoreDocker.Api
 //            app.UseApplicationInsightsExceptionTelemetry();
             app.UseMvc();
             SwaggerSetup.AddUi(app);
+            SimpleFileServer.Initialize(app);
         }
     }
 }

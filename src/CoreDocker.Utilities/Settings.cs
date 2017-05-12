@@ -29,7 +29,8 @@ namespace CoreDocker.Utilities
 
         public string MongoConnection => _configuration["MongoConnection"] ?? "mongodb://localhost/CoreDocker-Sample";
         public string MongoDatabase => _configuration["MongoDatabase"]?? "CoreDocker-Sample";
-        
+        public string WebBasePath => _configuration["WebBasePath"] ;
+
 
         public static void Initialize(IConfigurationRoot configuration)
         {

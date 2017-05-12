@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
 
 namespace CoreDocker.Api
 {
@@ -10,7 +10,7 @@ namespace CoreDocker.Api
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://*:5000")
+                .UseUrls(args.FirstOrDefault()??"http://*:5000")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
