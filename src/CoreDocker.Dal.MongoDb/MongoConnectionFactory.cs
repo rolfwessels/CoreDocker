@@ -22,15 +22,9 @@ namespace CoreDocker.Dal.Mongo
             _singleConnection = new Lazy<IGeneralUnitOfWork>(GeneralUnitOfWork);
         }
 
-        public string DatabaseName
-        {
-            get { return _databaseName; }
-        }
+        public string DatabaseName => _databaseName;
 
-        public string ConnectionString
-        {
-            get { return _connectionString; }
-        }
+        public string ConnectionString => _connectionString;
 
         #region IGeneralUnitOfWorkFactory Members
 
