@@ -10,6 +10,7 @@ using CoreDocker.Dal.InMemoryCollections;
 using log4net;
 using Microsoft.Extensions.Logging;
 using CoreDocker.Dal.Mongo;
+using CoreDocker.Utilities;
 
 namespace CoreDocker.Api.AppStartup
 {
@@ -41,7 +42,7 @@ namespace CoreDocker.Api.AppStartup
 
     protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
     {
-      return new MongoConnectionFactory("mongodb://localhost/CoreDocker-Sample", LogManager.GetLogger<MongoConnectionFactory>().Logger);
+      return new MongoConnectionFactory(Settings.Instance.MongoConnection, LogManager.GetLogger<MongoConnectionFactory>().Logger, Settings.Instance.MongoDatabase);
     }
 
     #endregion

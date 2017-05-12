@@ -1,16 +1,26 @@
-﻿using log4net;
+﻿using System.Diagnostics;
+using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests
 {
+  [SetUpFixture]
   public class GlobalSetupAndTearDown
   {
     private static readonly ILog _log = LogManager.GetLogger<GlobalSetupAndTearDown>();
 
-    [Test]
-    public void method_GiventestingFor_Shouldresult()
+    public GlobalSetupAndTearDown()
     {
       SharedTestLogger.Instance.EnsureEnabled();
+      _log.Info("Test");
+      LogManager.GetLogger<GlobalSetupAndTearDown>().Info("te");
     }
+
+   // [SetUp]
+    public void ShowSomeTrace()
+    {
+      
+    }
+
   }
 }

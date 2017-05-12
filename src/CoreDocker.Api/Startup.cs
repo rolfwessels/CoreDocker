@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using CoreDocker.Api.Swagger;
+using CoreDocker.Utilities;
 
 
 namespace CoreDocker.Api
@@ -31,6 +32,7 @@ namespace CoreDocker.Api
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            Settings.Initialize(Configuration);
         }
 
         public IConfigurationRoot Configuration { get; }

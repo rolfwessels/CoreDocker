@@ -14,11 +14,11 @@ namespace CoreDocker.Dal.Mongo
         private readonly string _databaseName;
         private readonly Lazy<IGeneralUnitOfWork> _singleConnection;
 
-        public MongoConnectionFactory(string connectionString , ILogger logger)
+        public MongoConnectionFactory(string connectionString , ILogger logger, string databaseName)
         {
             _connectionString = connectionString;
             _logger = logger;
-            _databaseName = new Uri(_connectionString).Segments.Skip(1).FirstOrDefault() ?? "CoreDocker";
+            _databaseName = databaseName;
             _singleConnection = new Lazy<IGeneralUnitOfWork>(GeneralUnitOfWork);
         }
 
