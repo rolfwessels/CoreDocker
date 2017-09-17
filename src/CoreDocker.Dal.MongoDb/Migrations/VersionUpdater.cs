@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -11,10 +9,9 @@ namespace CoreDocker.Dal.Mongo.Migrations
 {
     public class VersionUpdater
     {
-        
         private readonly IMigration[] _updates;
-        private readonly Mutex _resetEvent = new Mutex(false, @"global/CoreDocker_VersionUpdater");
-        private ILogger _log;
+        private readonly ILogger _log;
+        private static readonly object _locker = new object();
 
         public VersionUpdater(IMigration[] updates, ILogger log)
         {
@@ -27,9 +24,9 @@ namespace CoreDocker.Dal.Mongo.Migrations
 
             return Task.Run(() =>
             {
-                if (_resetEvent.WaitOne(TimeSpan.FromSeconds(5)))
+                lock (_locker)
                 {
-                    
+
                     var repository = new MongoRepository<DbVersion>(db);
                     List<DbVersion> versions = repository.Find().Result;
                     _log.LogInformation(string.Format("Found {0} database updates in database and {1} in code", versions.Count, _updates.Length));
@@ -39,15 +36,13 @@ namespace CoreDocker.Dal.Mongo.Migrations
                         EnsureThatVersionDoesNotExistThenUpdate(versions, i, migrateInitialize, repository, db).Wait();
                     }
                     _log.LogInformation("Done");
-                    
-                    _resetEvent.ReleaseMutex();
                 }
+               
 
             });
 
         }
 
-        
 
         #region Private Methods
 
