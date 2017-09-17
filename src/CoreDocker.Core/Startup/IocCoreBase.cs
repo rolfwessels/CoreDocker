@@ -7,6 +7,7 @@ using CoreDocker.Core.MessageUtil;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Validation;
+using log4net;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
 namespace CoreDocker.Core.Startup
@@ -24,7 +25,20 @@ namespace CoreDocker.Core.Startup
 	    protected virtual void SetupMongoDb(ContainerBuilder builder)
 	    {
 	        builder.Register(GetInstanceOfIGeneralUnitOfWorkFactory).SingleInstance();
-	        builder.Register(x => x.Resolve<IGeneralUnitOfWorkFactory>().GetConnection());
+	        builder.Register(Delegate).As<IProjectManager>();
+	    }
+
+	    private IGeneralUnitOfWork Delegate(IComponentContext x)
+	    {
+	        try
+	        {
+	            return x.Resolve<IGeneralUnitOfWorkFactory>().GetConnection();
+	        }
+	        catch (Exception e)
+	        {
+	            LogManager.GetLogger<IocCoreBase>().Error("IocCoreBase:Delegate " + e.Message, e);
+	            throw;
+	        }
 	    }
 
 	    private static void SetupManagers(ContainerBuilder builder)
