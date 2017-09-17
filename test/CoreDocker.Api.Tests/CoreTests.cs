@@ -11,7 +11,7 @@ namespace CoreDocker.Core.Tests
         public void AssertConfigurationIsValid_WhenCalled_ShouldBeValid()
         {
             var instance = MapApi.GetInstance();
-            Mapper.AssertConfigurationIsValid();
+            MapApi.AssertConfigurationIsValid();
         }
     }
 }

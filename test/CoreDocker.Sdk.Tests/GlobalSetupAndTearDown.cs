@@ -1,38 +1,26 @@
-﻿using System.IO;
-using Microsoft.Extensions.Logging;
-using NUnit.Framework;
-using Serilog;
+﻿using System.Diagnostics;
 using log4net;
+using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests
 {
-    
-    public class GlobalSetupAndTearDown
+  [SetUpFixture]
+  public class GlobalSetupAndTearDown
+  {
+    private static readonly ILog _log = LogManager.GetLogger<GlobalSetupAndTearDown>();
+
+    public GlobalSetupAndTearDown()
     {
-        private static readonly ILog _log = LogManager.GetLogger<GlobalSetupAndTearDown>();
-
-        [SetUp]
-        public void GlobalSetup()
-        {
-            // Do login here.
-            var loggerFactory = new LoggerFactory();
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.RollingFile(Path.Combine(@"C:\temp\logs", "CoreDocker.Sdk.Tests.log"))
-                .CreateLogger();
-
-            loggerFactory.AddDebug();
-            loggerFactory.AddSerilog();
-
-            log4net.LogManager.SetLogger(loggerFactory);
-            Log.Logger.Information("Starting");
-        }
-
-        [TearDown]
-        public void GlobalTeardown()
-        {
-            // Do logout here
-            _log.Info("Dones");
-        }
+      SharedTestLogger.Instance.EnsureEnabled();
+      _log.Info("Test");
+      LogManager.GetLogger<GlobalSetupAndTearDown>().Info("te");
     }
+
+   // [SetUp]
+    public void ShowSomeTrace()
+    {
+      
+    }
+
+  }
 }
