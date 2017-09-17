@@ -27,11 +27,10 @@ namespace CoreDocker.Utilities
 
         #endregion
 
-        public string MongoConnection => _configuration["MongoConnection"] ?? "mongodb://localhost/CoreDocker-Sample";
+        public string MongoConnection => _configuration["MongoConnection"] ?? "mongodb://localhost/";
         public string MongoDatabase => _configuration["MongoDatabase"]?? "CoreDocker-Sample";
         public string WebBasePath => _configuration["WebBasePath"] ;
-
-
+        
         public static void Initialize(IConfigurationRoot configuration)
         {
             _instance = new Lazy<Settings>(() => new Settings(configuration));
