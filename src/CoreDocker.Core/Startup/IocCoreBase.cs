@@ -36,7 +36,10 @@ namespace CoreDocker.Core.Startup
 	        }
 	        catch (Exception e)
 	        {
-	            LogManager.GetLogger<IocCoreBase>().Error("IocCoreBase:Delegate " + e.Message, e);
+	            var logger = LogManager.GetLogger<IocCoreBase>();
+	            logger.Error("IocCoreBase:Delegate " + e.Message, e);
+	            logger.Error(e.Source);
+                logger.Error(e.StackTrace);
 	            throw;
 	        }
 	    }

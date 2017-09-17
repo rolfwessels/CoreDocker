@@ -22,45 +22,43 @@ namespace log4net
 
         private class LogAdaptor : ILog
         {
-            private ILogger _logger;
+            private readonly ILogger _assignedLogger;
 
-            public LogAdaptor(ILogger logger)
+            public LogAdaptor(ILogger assignedLogger)
             {
-                this._logger = logger;
+                _assignedLogger = assignedLogger;
             }
 
-            public ILogger Logger {
-                get { return _logger; } 
-            }
+            public ILogger Logger => _assignedLogger;
 
             public void Error(string message)
             {
-                _logger.LogError(message);
+                _assignedLogger.LogError(message);
             }
 
             public void Error(string message, Exception exception)
             {
-                _logger.LogError(message, exception);
+                _assignedLogger.LogError(message, exception);
             }
 
             public void Warn(string message, Exception exception)
             {
-                _logger.LogWarning(message, exception);
+                _assignedLogger.LogWarning(message, exception);
             }
 
             public void Warn(string message)
             {
-                _logger.LogWarning(message);
+                _assignedLogger.LogWarning(message);
             }
 
             public void Info(string message)
             {
-                _logger.LogInformation(message);
+                _assignedLogger.LogInformation(message);
             }
 
             public void Debug(string message)
             {
-                _logger.LogDebug(message);
+                _assignedLogger.LogDebug(message);
             }
         }
 
