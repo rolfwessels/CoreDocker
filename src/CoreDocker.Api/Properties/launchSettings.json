@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/CoreDocker.Api",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:5000/",
       "sslPort": 0
@@ -17,7 +21,7 @@
       }
     },
     "CoreDocker.Api": {
-      "commandName": "Project",
+      "commandName": "IIS",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000/api/values",
       "environmentVariables": {
