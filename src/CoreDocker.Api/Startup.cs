@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
+using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Utilities;
 using log4net;
 using Microsoft.AspNetCore.Builder;
@@ -62,6 +63,7 @@ namespace CoreDocker.Api
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
+            PingController.Env = env.EnvironmentName;
             if (env.IsEnvironment("Development"))
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.

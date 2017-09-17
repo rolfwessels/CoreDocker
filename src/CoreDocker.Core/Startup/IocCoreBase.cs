@@ -25,7 +25,7 @@ namespace CoreDocker.Core.Startup
 	    protected virtual void SetupMongoDb(ContainerBuilder builder)
 	    {
 	        builder.Register(GetInstanceOfIGeneralUnitOfWorkFactory).SingleInstance();
-	        builder.Register(Delegate).As<IProjectManager>();
+	        builder.Register(Delegate).As<IGeneralUnitOfWork>();
 	    }
 
 	    private IGeneralUnitOfWork Delegate(IComponentContext x)
