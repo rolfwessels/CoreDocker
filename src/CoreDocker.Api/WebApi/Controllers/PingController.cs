@@ -1,11 +1,9 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using CoreDocker.Api.WebApi.Attributes;
-using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Shared;
-using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDocker.Api.WebApi.Controllers
@@ -19,7 +17,7 @@ namespace CoreDocker.Api.WebApi.Controllers
     public class PingController : Controller
     {
         private readonly IGeneralUnitOfWorkFactory _factory;
-        private static readonly ILog _log = LogManager.GetLogger<PingController>();
+        private static readonly string _informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
         public PingController(IGeneralUnitOfWorkFactory factory)
         {
@@ -33,11 +31,21 @@ namespace CoreDocker.Api.WebApi.Controllers
         /// </summary>
         /// <returns>
         /// </returns>
-        [HttpGet,AuthorizeActivity(Activity.ReadProject)]
+        [HttpGet, AllowAnonymous]
         public Task<PingResult> Get()
         {
-            var informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-            return Task.FromResult( new PingResult() { Version = informationalVersion , Database = IsDatabaseConnected() , Environment = Env });
+            return Task.FromResult( new PingResult() { Version = _informationalVersion , Database = IsDatabaseConnected() , Environment = Env , MachineName = Environment.MachineName });
+        }
+
+        /// <summary>
+        ///     Returns list of all the projects as references
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        [HttpGet (RouteHelper.PingControllerHealthCheck), AllowAnonymous]
+        public Task<PingResult> GetHealthCheck()
+        {
+            return Task.FromResult(new PingResult() { Version = _informationalVersion, Database = "Unknown.", Environment = Env, MachineName = Environment.MachineName });
         }
 
         private string IsDatabaseConnected()
@@ -58,6 +66,7 @@ namespace CoreDocker.Api.WebApi.Controllers
             public string Environment { get; set; }
             public string Version { get; set; }
             public string Database { get; set; }
+            public string MachineName { get; set; }
         }
     }
 
