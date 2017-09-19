@@ -7,8 +7,6 @@
     <OutputType>Exe</OutputType>
     <PackageId>CoreDocker.Api</PackageId>
     <RuntimeIdentifiers>win10-x64;win81-x64;ubuntu.14.04-x64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <StartupObject>CoreDocker.Api.Program</StartupObject>
   </PropertyGroup>
 
@@ -38,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.4.0" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="Swashbuckle" Version="6.0.0-beta902" />
