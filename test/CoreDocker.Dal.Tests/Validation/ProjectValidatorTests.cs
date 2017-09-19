@@ -1,12 +1,13 @@
 using CoreDocker.Utilities.Helpers;
 using FizzWare.NBuilder;
-using FizzWare.NBuilder.Generator;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Validation;
 using NUnit.Framework;
 using System.Linq;
+using CoreDocker.Utilities.Tests.TempBuildres;
+using FizzWare.NBuilder.Generators;
 
 namespace CoreDocker.Dal.Tests.Validation
 {

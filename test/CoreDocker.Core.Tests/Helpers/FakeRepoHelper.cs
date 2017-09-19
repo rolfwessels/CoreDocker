@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CoreDocker.Dal.Models.Interfaces;
 using CoreDocker.Dal.Persistance;
+using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 
 namespace CoreDocker.Core.Tests.Helpers
@@ -26,8 +27,7 @@ namespace CoreDocker.Core.Tests.Helpers
         
         public static T AddAFake<T>(this IRepository<T> repository) where T : IBaseDalModel
         {
-            var withValidData = Builder<T>.CreateNew().WithValidData().Build();
-            return repository.Add(withValidData).Result;
+          return repository.Add(Builder<T>.CreateNew().WithValidData().Build()).Result;
         }
     }
 }

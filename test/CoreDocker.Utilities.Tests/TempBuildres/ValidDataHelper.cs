@@ -1,77 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using FizzWare.NBuilder.Generator;
-using CoreDocker.Dal.Models;
-using CoreDocker.Shared.Models;
+﻿using CoreDocker.Dal.Models;
+using FizzWare.NBuilder;
+using FizzWare.NBuilder.Generators;
 
-namespace FizzWare.NBuilder
+namespace CoreDocker.Utilities.Tests.TempBuildres
 {
-    public static class ValidDataHelper
+  public static class ValidDataHelper
+  {
+    public static ISingleObjectBuilder<T> WithValidData<T>(this ISingleObjectBuilder<T> value)
     {
-        public static IList<T> All<T>(this IList<T> value)
-        {
-            return value;
-        }
-
-        public static IList<T> WithValidModelData<T>(this IList<T> value1)
-        {
-            foreach (var value in value1)
-            {
-                WithValidModelData(value);
-            }
-            
-            return value1;
-        }
-
-        public static T WithValidModelData<T>(this T value)
-        {
-            var project = value as ProjectCreateUpdateModel;
-            if (project != null)
-            {
-                project.Name = GetRandom.String(20);
-            }
-
-            var user = value as UserCreateUpdateModel;
-            if (user != null)
-            {
-                user.Name = GetRandom.String(20);
-                user.Email = GetRandom.String(20) + "@nomailmail.com";
-            }
-            return value;
-        }
-
-        public static IList<T> WithValidData<T>(this IList<T> value)
-        {
-            return value;
-        }
-
-        public static T WithValidData<T>(this T value)
-        {
-            var project = value as Project;
-            if (project != null)
-            {
-                project.Name = GetRandom.String(20);
-            }
-
-            var user = value as User;
-            if (user != null)
-            {
-                user.Name = GetRandom.String(20);
-                user.Email = GetRandom.String(20)+"@nomailmail.com";
-                user.HashedPassword = GetRandom.String(20);
-                user.Roles.Add("Guest");
-            }
-            return value;
-        }
-
-        public static T Build<T>(this T value)
-        {
-            return value;
-        }
-        public static T With<T>(this T value , Action<T> apply )
-        {
-            apply(value);
-            return value;
-        }
+      return value.With(ValidData);
     }
+
+    public static IListBuilder<T> WithValidData<T>(this IListBuilder<T> value)
+    {
+      return value.All().With(ValidData);
+    }
+
+    #region Private Methods
+
+    private static T ValidData<T>(T value)
+    {
+      var project = value as Project;
+      if (project != null)
+        project.Name = GetRandom.String(20);
+
+      var user = value as User;
+      if (user != null)
+      {
+        user.Name = GetRandom.String(20);
+        user.Email = (GetRandom.String(20) + "@nomailmail.com").ToLower();
+        user.HashedPassword = GetRandom.String(20);
+        user.Roles.Add("Guest");
+      }
+      return value;
+    }
+
+    #endregion
+  }
 }

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using CoreDocker.Api.WebApi.Controllers;
+﻿using System.Linq;
+using System.Reflection;
+using CoreDocker.Utilities.Helpers;
+using log4net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.Swagger.Model;
@@ -11,12 +10,20 @@ namespace CoreDocker.Api.Swagger
 {
     public class SwaggerSetup
     {
-        
+        private static readonly ILog _log = LogManager.GetLogger<SwaggerSetup>();
+
+        private static string _informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            .InformationalVersion;
+
         #region Private Methods
 
         private static string GetVersion()
         {
-            return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
+            _informationalVersion = _informationalVersion.Split('.').Take(1).StringJoin(".");
+            var version = "v"+_informationalVersion;
+            _log.Info("swagger version:"+ version);
+            return version;
+            ;
         }
 
         #endregion
@@ -25,15 +32,20 @@ namespace CoreDocker.Api.Swagger
 
         internal static void Setup(IServiceCollection services)
         {
-            services.AddSwaggerGen();
-            // todo: Rolf Add version information  
+
+            services.AddSwaggerGen(
+                options => options.SingleApiVersion(new Info
+                {
+                    Title = $"CoreDocker API v"+ _informationalVersion,
+                    Version = GetVersion()
+                }));  
             // todo: Rolf Add Auth response codes
         }
 
         internal static void AddUi(IApplicationBuilder app)
         {
             app.UseSwagger();
-            app.UseSwaggerUi("swagger/ui");
+            app.UseSwaggerUi();
         }
 
         #endregion
