@@ -6,11 +6,11 @@ using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Persistance;
+using CoreDocker.Utilities.Helpers;
+using FizzWare.NBuilder.Generators;
 using NUnit.Framework;
-using FizzWare.NBuilder.Generator;
 using Moq;
 using Microsoft.Extensions.Logging;
-using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Tests.Managers
 {
@@ -92,6 +92,8 @@ namespace CoreDocker.Core.Tests.Managers
             // arrange
             Setup();
             User user = _fakeGeneralUnitOfWork.Users.AddFake().First();
+            
+          
             // action
             User userFound = _userManager.GetUserByEmail(user.Email).Result;
             // assert

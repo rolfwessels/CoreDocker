@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3DDA180C-DBB7-4E9C-AE72-0427DB7A98A3}"
 EndProject
@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\dockerbuild.sh = src\dockerbuild.sh
 		src\Dockerfile = src\Dockerfile
 		README.md = README.md
+		testall.ps1 = testall.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}"
@@ -124,5 +125,8 @@ Global
 		{C761092D-0EBD-484F-A134-42EEB6348B51} = {1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}
 		{22F26F83-C97A-4506-A976-81C0DA5C6332} = {1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}
 		{2B94B549-655C-4119-9CED-953F006964F8} = {BA7073F6-2A1C-4F82-A240-D02064A3BE86}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2AD4DEAF-9CA0-40AD-90E5-2377A4BB3BB4}
 	EndGlobalSection
 EndGlobal
