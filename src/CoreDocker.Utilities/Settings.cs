@@ -17,7 +17,8 @@ namespace CoreDocker.Utilities
 
         private Settings()
         {
-            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true);
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true);
             _configuration = builder.Build();
         }
 
