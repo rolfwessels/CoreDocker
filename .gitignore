@@ -14,3 +14,4 @@ project.lock.json
 /_NCrunch_CoreDocker/CoreDocker.crunchsolution.cache
 *.user
 *.ncrunchproject
+/TestResults/*.trx
