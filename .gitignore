@@ -13,3 +13,4 @@ project.lock.json
 /CoreDocker.ncrunchsolution.user
 /_NCrunch_CoreDocker/CoreDocker.crunchsolution.cache
 *.user
+*.ncrunchproject
