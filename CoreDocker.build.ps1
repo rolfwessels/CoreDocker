@@ -189,16 +189,21 @@ task clean.database {
    'Use '+ $mongo + ' to drop the database '+$database
    exec { &($mongo) $database  --eval 'db.dropDatabase()' }
 }
-
-task test.run  -depends build.restore,build.build  -precondition { return $buildConfiguration -eq 'debug' } {
+#-depends build.restore,build.build
+task test.run    -precondition { return $buildConfiguration -eq 'debug' } {
     mkdir $buildReportsDirectory -ErrorAction SilentlyContinue
-    dotnet vstest /logger:trx (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") })
-    if (!$?) {
-        throw "Failed to test."
+    $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") }) 
+    if (!$env:APPVEYOR_JOB_ID) {
+        $tests = $tests | Where-Object { $_ -notlike  '*Sdk.Tests*'}
+        write-host "Skip sdk tests. (requires db)" -foreground "magenta"
     }
+    dotnet vstest /logger:trx $tests 
     Remove-Item $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue
     Move-Item testresults\*.trx $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue
     Remove-Item .\testresults -Force -Recurse -ErrorAction SilentlyContinue
+    if (!$?) {
+        throw "Failed to test."
+    }
 }
 
 task deploy.zip {
