@@ -268,7 +268,7 @@ function fullversion() {
         $version = $env:BUILD_NUMBER
     }
     if ($env:APPVEYOR_BUILD_NUMBER) {
-        $env:$APPVEYOR_BUILD_VERSION 
+        $env:APPVEYOR_BUILD_VERSION 
         $version = $env:APPVEYOR_BUILD_NUMBER
     }
     return "$versionMajor.$versionMajor.$version".Trim()
