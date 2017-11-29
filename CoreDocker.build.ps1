@@ -189,8 +189,8 @@ task clean.database {
    'Use '+ $mongo + ' to drop the database '+$database
    exec { &($mongo) $database  --eval 'db.dropDatabase()' }
 }
-#-depends build.restore,build.build
-task test.run    -precondition { return $buildConfiguration -eq 'debug' } {
+
+task test.run -depends build.restore,build.build   -precondition { return $buildConfiguration -eq 'debug' } {
     mkdir $buildReportsDirectory -ErrorAction SilentlyContinue
     $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") }) 
     if (!$env:APPVEYOR_JOB_ID) {
