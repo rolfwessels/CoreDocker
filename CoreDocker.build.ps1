@@ -193,7 +193,7 @@ task clean.database {
 task test.run -depends build.restore,build.build   -precondition { return $buildConfiguration -eq 'debug' } {
     mkdir $buildReportsDirectory -ErrorAction SilentlyContinue
     $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") }) 
-    if (!$env:APPVEYOR_JOB_ID) {
+    if ($env:APPVEYOR_JOB_ID) {
         $tests = $tests | Where-Object { $_ -notlike  '*Sdk.Tests*'}
         write-host "Skip sdk tests. (requires db)" -foreground "magenta"
     }
