@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
+using CoreDocker.Shared.Interfaces.Base;
+using CoreDocker.Shared.Models.Interfaces;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using NUnit.Framework;
 using log4net;
-using CoreDocker.Shared.Models.Interfaces;
-using CoreDocker.Shared.Interfaces.Base;
-using FizzWare.NBuilder;
+using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.Shared
 {
-    public abstract class CrudComponentTestsBase<TModel, TDetailModel, TReferenceModel> : IntegrationTestsBase where TModel : IBaseModel
+    public abstract class CrudComponentTestsBase<TModel, TDetailModel, TReferenceModel> : IntegrationTestsBase
+        where TModel : IBaseModel
     {
         private static readonly ILog _log = LogManager.GetLogger<IntegrationTestsBase>();
         protected ICrudController<TModel, TDetailModel> _crudController;
@@ -28,38 +29,37 @@ namespace CoreDocker.Sdk.Tests.Shared
             // arrange
             Setup();
             // action
-            var baseStandardLookups = _crudController  as IBaseStandardLookups<TModel, TReferenceModel>;
-            if (baseStandardLookups != null)
+            if (_crudController is IBaseStandardLookups<TModel, TReferenceModel> baseStandardLookups)
             {
                 var restResponse = baseStandardLookups.GetDetail("$top=1").Result;
                 // assert
                 restResponse.Count().Should().BeGreaterOrEqualTo(0);
             }
-        }  
+        }
 
         [Test]
         public void PostPutDelete_WhenWhenGivenValidModel_ShouldLookupModels()
         {
             // arrange
             Setup();
-            IList<TDetailModel> projectModel = GetExampleData();
+            var projectModel = GetExampleData();
 
             // action
-            TModel projectModels = _crudController.Insert(projectModel[0]).Result;
-            TModel savedProject = _crudController.GetById(projectModels.Id).Result;
-            TModel projectModelLoad = _crudController.Update(projectModels.Id, projectModel[1]).Result;
-            bool removed = _crudController.Delete(projectModels.Id).Result;
-            bool removedSecond = _crudController.Delete(projectModels.Id).Result;
-            TModel removedProject = _crudController.GetById(projectModels.Id).Result;
+            var projectModels = _crudController.Insert(projectModel[0]).Result;
+            var savedProject = _crudController.GetById(projectModels.Id).Result;
+            var projectModelLoad = _crudController.Update(projectModels.Id, projectModel[1]).Result;
+            var removed = _crudController.Delete(projectModels.Id).Result;
+            var removedSecond = _crudController.Delete(projectModels.Id).Result;
+            var removedProject = _crudController.GetById(projectModels.Id).Result;
 
             // assert
-            (savedProject).Should().NotBeNull();
-            (removedProject).Should().BeNull();
+            savedProject.Should().NotBeNull();
+            removedProject.Should().BeNull();
             projectModel[0].ShouldBeEquivalentTo(projectModels, CompareConfig);
             projectModel[1].ShouldBeEquivalentTo(projectModelLoad, CompareConfig);
-            (removed).Should().BeTrue();
-            (savedProject).Should().NotBeNull();
-            (removedSecond).Should().BeFalse();
+            removed.Should().BeTrue();
+            savedProject.Should().NotBeNull();
+            removedSecond.Should().BeFalse();
         }
 
         protected virtual EquivalencyAssertionOptions<TDetailModel> CompareConfig(
@@ -72,6 +72,5 @@ namespace CoreDocker.Sdk.Tests.Shared
         {
             return Builder<TDetailModel>.CreateListOfSize(2).All().Build();
         }
-
     }
 }

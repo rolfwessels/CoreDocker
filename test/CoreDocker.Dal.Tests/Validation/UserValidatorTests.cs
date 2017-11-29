@@ -6,6 +6,7 @@ using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Validation;
 using NUnit.Framework;
 using System.Linq;
+using CoreDocker.Utilities.Tests.TempBuildres;
 
 namespace CoreDocker.Dal.Tests.Validation
 {
@@ -35,7 +36,9 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
-            var user = Builder<User>.CreateNew().WithValidData().Build();
+          ISingleObjectBuilder<User> singleObjectBuilder = Builder<User>.CreateNew();
+          var user = singleObjectBuilder.WithValidData().Build();
+          
             // action
             var validationResult = _validator.Validate(user);
             // assert
