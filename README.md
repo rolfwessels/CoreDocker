@@ -6,7 +6,6 @@
 Sample project using .net core and docker file.
 
  * Better API with integrated website.
- * Add nbuilder back into the mix
  * Decide what to do about logging, still not sold on the injection method
  * Signal-r replacement.
  * Authentication - github or google would be awesome.
