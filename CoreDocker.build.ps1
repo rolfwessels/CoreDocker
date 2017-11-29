@@ -267,8 +267,9 @@ function fullversion() {
     if ($env:BUILD_NUMBER) {
         $version = $env:BUILD_NUMBER
     }
-    if ($env:APPVEYOR_JOB_ID) {
-        $version = $env:APPVEYOR_JOB_ID
+    if ($env:APPVEYOR_BUILD_NUMBER) {
+        $APPVEYOR_BUILD_VERSION 
+        $version = $env:APPVEYOR_BUILD_NUMBER
     }
     return "$versionMajor.$versionMajor.$version"
 }
