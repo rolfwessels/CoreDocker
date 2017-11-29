@@ -10,18 +10,19 @@ properties {
     $buildReportsDirectory =  Join-Path $buildDirectory 'reports'
     $buildPackageDirectory =  Join-Path $buildDirectory 'packages'
     $buildDistDirectory =  Join-Path $buildDirectory 'dist'
-
+    $buildPublishProjects =  'CoreDocker.Api','CoreDocker.Console'
+    $versions = 'netcoreapp2.0','net46'
     $buildContants = ''
 
     $srcDirectory = 'src'
-    $srcSolution = Join-Path $srcDirectory 'CoreDocker.sln'
+    $testDirectory = 'test'
     $srcWebFolder = Join-Path $srcDirectory 'CoreDocker.Website'
 
     $codeCoverRequired = 70
 
     $versionMajor = 0
     $versionMinor = 0
-    $versionBuild = 1
+    $versionBuild = 2
     $versionRevision = 0
 
     $vsVersion = "12.0"
@@ -36,73 +37,108 @@ properties {
 #
 
 task default -depends build  -Description "By default it just builds"
-task clean -depends build.clean,build.cleanbin -Description "Removes build folder"
-task build -depends build.cleanbin,version,build.compile,build.publish,build.copy,build.website -Description "Cleans bin/object and builds the project placing binaries in build directory"
-task test -depends build,test.run  -Description "Builds and runs part cover tests"
-task full -depends test,deploy.zip -Description "Versions builds and creates distributions"
+task clean -depends clean.build,clean.binobj -Description "Removes build folder"
+task build -depends clean.binobj,version,build.restore,build.publish,build.copy -Description "Cleans bin/object and builds the project placing binaries in build directory"
+task test -depends clean.binobj,build.restore,test.run  -Description "Builds and runs part cover tests"
+task full -depends test,build,deploy.zip -Description "Versions builds and creates distributions"
 task package -depends version,build,deploy.package -Description "Creates packages that could be user for deployments"
 task deploy -depends version,build,deploy.api,deploy.service -Description "Deploy the files to webserver using msdeploy"
-task appveyor -depends build, test.run, deploy.zip -Description "Deploy the files to webserver using msdeploy"
+task appveyor -depends build, test.run, deploy.zip -Description "Runs tests and deploys zip"
 
 #
 # task depends
 #
 
-task build.clean {
+task clean.build {
     remove-item -force -recurse $buildDirectory -ErrorAction SilentlyContinue
+}
+
+task clean.binobj {
+    remove-item -force -recurse $buildReportsDirectory -ErrorAction SilentlyContinue
+    remove-item -force -recurse (buildConfigDirectory) -ErrorAction SilentlyContinue
     $binFolders = Get-ChildItem ($srcDirectory + '\*\*') | where { $_.name -eq 'bin' -or $_.name -eq 'obj'} | Foreach-Object {$_.fullname}
     if ($binFolders -ne $null)
     {
         remove-item $binFolders -force -recurse -ErrorAction SilentlyContinue
     }
-}
-
-task build.cleanbin {
-    remove-item -force -recurse $buildReportsDirectory -ErrorAction SilentlyContinue
-    remove-item -force -recurse (buildConfigDirectory) -ErrorAction SilentlyContinue
-    $binFolders = Get-ChildItem $srcDirectory -include bin,obj  | Foreach-Object {$_.fullname}
+    $binFolders = Get-ChildItem ($testDirectory + '\*\*') | where { $_.name -eq 'bin' -or $_.name -eq 'obj'} | Foreach-Object {$_.fullname}
     if ($binFolders -ne $null)
     {
         remove-item $binFolders -force -recurse -ErrorAction SilentlyContinue
     }
 }
 
-task build.compile {
-    'Compile '+$buildConfiguration+' version '+(srcBinFolder)
-    msbuild  $srcSolution /t:rebuild /p:Configuration=$buildConfiguration /p:VisualStudioVersion=$vsVersion /v:q
+task build.restore {
+    'restore '+$buildConfiguration
+    dotnet restore -v quiet
     if (!$?) {
-        throw 'Failed to compile'
+        throw 'Failed to restore'
+    }
+}
+task build.build {
+    'build '+$buildConfiguration
+    dotnet build -v quiet
+    if (!$?) {
+        throw 'Failed to restore'
     }
 }
 
 task version {
     $projectFolders = Get-ChildItem $srcDirectory '*' -Directory
     foreach ($projectFolder in $projectFolders) {
-        
-        $projectFolders = Get-ChildItem $projectFolder.FullName '*.csproj' -File
-       
-        $projectFolders.FullName
-        
-        [xml]$Xml = Get-Content $projectFolders.FullName
-        [int]$result= $Xml.'test-results'.failures
-        Write-Host ($Xml | Format-List | Out-String)
-        #$hasFailure =  $hasFailure -or $result -gt 0
-
+        $projectFile = Get-ChildItem $projectFolder.FullName '*.csproj' -File
+        [xml]$Xml = Get-Content $projectFile.FullName
+        $result = $Xml.Project.PropertyGroup.Version
+        if (![string]::IsNullOrEmpty($result)) {
+            $version = (fullversionrev) 
+            write-host "Set version $version in  $projectFile" -foreground "magenta"
+            $Xml.Project.PropertyGroup.Version = $version
+            $Xml.Save( $projectFile.FullName)
+        }
     }
-    # $commonAssemblyInfo = Join-Path $srcDirectory 'CoreDocker.Core/Properties/CommonAssemblyInfo.cs'
-    # $regEx = 'AssemblyVersion\(.*\)'
-    # $replace = 'AssemblyVersion("' + (fullversionrev) + '")'
-    # $replace
-    # 'Set the version in ' +$commonAssemblyInfo
-    # (gc  $commonAssemblyInfo )  -replace $regEx, $replace |sc $commonAssemblyInfo
+}
+
+
+task build.publish {
+    
+    foreach ($buildPublishProject in $buildPublishProjects) {
+        $toFolder = (Join-Path ( Join-Path (resolve-path .)(buildConfigDirectory)) $buildPublishProject)
+        $project =  Join-Path $srcDirectory $buildPublishProject
+        # --version-suffix $TRAVIS_BUILD_NUMBER
+        Push-Location $project
+        
+        if ($buildConfiguration -ne 'release') {
+            write-host "Publish $project with suffix $buildConfiguration" -foreground "magenta"
+            dotnet publish -c $buildConfiguration --version-suffix $buildConfiguration  -v quiet
+        }
+        else {
+            write-host "Publish $project  $buildConfiguration" -foreground "magenta"
+            dotnet publish -c $buildConfiguration   -v quiet
+        }
+        #msbuild   /v:q
+        if (!$?) {
+            throw "Failed to publish $project"
+        }
+        
+        Pop-Location
+    }
+    
 }
 
 task build.copy {
-    'Copy the console'
-    $fromFolder =  Join-Path $srcDirectory (Join-Path 'CoreDocker.Console' (srcBinFolder) )
-    $toFolder =  Join-Path (buildConfigDirectory) 'CoreDocker.Console'
-    copy-files $fromFolder $toFolder
+    foreach ($buildPublishProject in $buildPublishProjects) {
+        foreach ($version in $versions ) {
+            $fromFolder =  Join-Path $srcDirectory (Join-Path $buildPublishProject (srcBinFolder) )
+            $publishFolders = Get-ChildItem -Recurse -Directory $fromFolder | where { $_.name -like '*publish*' -and  $_.fullname -like "*$version*"} | Foreach-Object {$_.fullname}
+            foreach ($publishFolder in $publishFolders ) {
+                "Copy the $buildPublishProject "+$version
+                $toFolder =  Join-Path (Join-Path (buildConfigDirectory) $version) $buildPublishProject
+                copy-files $publishFolder $toFolder
+            }
+        }
+    }
 }
+    
 
 
 task build.website -depend gulp.build {
@@ -128,15 +164,6 @@ task gulp.watch {
     popd
 }
 
-task build.publish {
-    $toFolder = Join-Path ( Join-Path (resolve-path .)(buildConfigDirectory)) 'CoreDocker.Api'
-    $project = Join-Path $srcDirectory 'CoreDocker.Api\CoreDocker.Api.csproj'
-    $publishProfile = "Publish - $buildConfiguration.pubxml";
-    msbuild  $project /p:DeployOnBuild=true /p:publishurl=$toFolder /p:VisualStudioVersion=$vsVersion /p:DefineConstants=$buildContants /p:Configuration=$buildConfiguration /p:PublishProfile=$publishProfile /p:VisualStudioVersion=$vsVersion /v:q
-    if (!$?) {
-        throw 'Failed to compile'
-    }
-}
 
 task build.nugetPackages -depend build {
     $packagesFolder =  $buildDistDirectory
@@ -163,83 +190,28 @@ task clean.database {
    exec { &($mongo) $database  --eval 'db.dropDatabase()' }
 }
 
-task test.run -depend nuget.restore -precondition { return $buildConfiguration -eq 'debug' } {
+task test.run  -depends build.restore,build.build  -precondition { return $buildConfiguration -eq 'debug' } {
     mkdir $buildReportsDirectory -ErrorAction SilentlyContinue
-
-    $currentPath = resolve-path '.'
-    $partcoverDirectory = resolve-path 'lib\OpenCover.4.6.166\tools'
-    $nunitDirectory =  resolve-path 'lib\NUnit.Runners.2.6.4\tools\nunit-console.exe'
-    $reportGenerator = 'lib\ReportGenerator.2.3.2.0\tools'
-
-    $partcoverExe = Join-Path $partcoverDirectory 'OpenCover.Console.exe'
-
-
-
-    $runTestsTimeout = '60000'
-    $runTestsDirectory = '.Tests'
-    $runTestsSettings = '/exclude:Unstable /timeout:' + $runTestsTimeout
-
-    $nunit2failed = 'false'
-    $hasFailure = $FALSE
-    $testFolders = Get-ChildItem $srcDirectory '*.Tests' -Directory
-    foreach ($testFolder in $testFolders) {
-
-        $runTestsFolder = Join-Path $testFolder.FullName (srcBinFolder)
-        $runTestsFolderDll = Join-Path $runTestsFolder ($testFolder.Name + '.dll')
-
-        $buildReportsDirectoryResolved = '..\..\..\'+ $buildReportsDirectory;
-        $runTestsFolderResult =  Join-Path $buildReportsDirectoryResolved ($testFolder.Name + '.xml')
-        $runTestsFolderOut =  Join-Path $buildReportsDirectoryResolved ($testFolder.Name + '.txt')
-        $runTestsFolderPartResult =  Join-Path $buildReportsDirectoryResolved ($testFolder.Name + '.part.xml')
-        '----------------------------------------------'
-        $testFolder.Name
-
-        Set-Location $partcoverDirectory
-
-        $target = '-targetargs:'+$runTestsFolderDll+' /nologo /noshadow /out:'+$runTestsFolderOut +' /xml:'+$runTestsFolderResult
-        $runTestsFolder
-
-        ./OpenCover.Console.exe -target:$nunitDirectory $target   -register:user -output:$runTestsFolderPartResult -log:Warn
-        [xml]$Xml = Get-Content $runTestsFolderResult
-        [int]$result= $Xml.'test-results'.failures
-        $hasFailure =  $hasFailure -or $result -gt 0
-
+    dotnet vstest /logger:trx (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") })
+    if (!$?) {
+        throw "Failed to test."
     }
-
-    if ($hasFailure)
-    {
-        throw "Tests have failed"
-    }
-
-    write-host 'Generate report' -foreground "magenta"
-    Set-Location $currentPath
-    Set-Location $reportGenerator
-    $buildReportsDirectoryRelative = Join-Path '..\..\..\' $buildReportsDirectory
-    $reports = Join-Path  $buildReportsDirectoryRelative '*.Tests.part.xml'
-    $targetdir = Join-Path  $buildReportsDirectoryRelative 'CodeCoverage'
-    $reporttypes = 'HTML;HTMLSummary;XMLSummary'
-    $filters = '+CoreDocker*;-CoreDocker*Tests';
-
-    ./ReportGenerator.exe -reports:$reports -targetdir:$targetdir -reporttypes:$reporttypes -filters:$filters -verbosity:Error
-    Set-Location $currentPath
-    write-host 'Validate code coverage' -foreground "magenta"
-
-    $codeCoverSummary = Join-Path $buildReportsDirectory 'CodeCoverage\Summary.xml'
-    [xml]$Xml = Get-Content $codeCoverSummary
-    [int]$codeCover = $Xml.CoverageReport.Summary.LineCoverage -replace '%', ''
-    if ($codeCover -lt $codeCoverRequired) {
-        throw 'The solution currently has '+$codeCover+'% coverage, less than the required '+$codeCoverRequired+'%'
-    }
+    Remove-Item $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue
+    Move-Item testresults\*.trx $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue
+    Remove-Item .\testresults -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 task deploy.zip {
     mkdir $buildDistDirectory -ErrorAction SilentlyContinue
-    $folders = Get-ChildItem (buildConfigDirectory) -Directory
-    foreach ($folder in $folders) {
-        $version = fullversion
-        $zipname = Join-Path $buildDistDirectory ($folder.name + '.v.'+ $version+'.'+$buildConfiguration+'.zip' )
-        write-host ('Create '+$zipname)
-        ZipFiles $zipname $folder.fullname
+    $packVersions = Get-ChildItem (buildConfigDirectory) -Directory
+    foreach ($packVersion in $packVersions) {
+        $appNames = Get-ChildItem $packVersion.FullName -Directory
+        foreach ($appName in $appNames) {
+            $version = fullversion
+            $zipname = Join-Path $buildDistDirectory ($appName.name  + '.v.'+ $version+'.'+$buildConfiguration+'-' + $packVersion +'.zip' )
+            write-host ('Create '+$zipname)
+            ZipFiles $zipname $appName.fullname
+        }
     }
 }
 

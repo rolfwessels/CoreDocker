@@ -18,6 +18,7 @@ Sample project using .net core and docker file.
  * CI Appvayor && Travis
  * Unit tests
  * Nbuilder
+ * Psake
 
 
 
