@@ -43,7 +43,7 @@ task test -depends clean.binobj,build.restore,test.run  -Description "Builds and
 task full -depends test,build,deploy.zip -Description "Versions builds and creates distributions"
 task package -depends version,build,deploy.package -Description "Creates packages that could be user for deployments"
 task deploy -depends version,build,deploy.api,deploy.service -Description "Deploy the files to webserver using msdeploy"
-task appveyor -depends build, test.run, deploy.zip -Description "Runs tests and deploys zip"
+task appveyor -depends build,deploy.zip -Description "Runs tests and deploys zip"
 
 #
 # task depends
@@ -261,6 +261,9 @@ function fullversion() {
     $version = $versionBuild
     if ($env:BUILD_NUMBER) {
         $version = $env:BUILD_NUMBER
+    }
+    if ($env:APPVEYOR_JOB_ID) {
+        $version = $env:APPVEYOR_JOB_ID
     }
     return "$versionMajor.$versionMajor.$version"
 }
