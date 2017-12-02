@@ -4,12 +4,12 @@ install:
 build_script:
   # dotnet info
   - ps: dotnet --info
-  - ps: dotnet restore
-  - ps: dotnet build
-  - ps: dotnet vstest /logger:trx (Get-ChildItem test | Where-Object {!$_.FullName.contains('Sdk') } | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") })
-  - ps: move testresults\*.trx testresults\result.trx
+  - ps: ./go test
   - ps: $wc = New-Object 'System.Net.WebClient'
-  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\testresults\result.trx))
+  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\build\reports\result.trx))
+  - go appveyor -properties @{'buildConfiguration'='Release'}
+
+
 
 test: off 
 version: 0.0.1.{build}
