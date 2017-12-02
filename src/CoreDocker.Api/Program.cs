@@ -2,6 +2,7 @@
 using System.Linq;
 using CoreDocker.Core;
 using Microsoft.AspNetCore.Hosting;
+using OpenIdConfigBase = CoreDocker.Api.Security.OpenIdConfigBase;
 
 namespace CoreDocker.Api
 {

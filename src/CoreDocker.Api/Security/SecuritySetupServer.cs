@@ -1,5 +1,4 @@
-﻿using CoreDocker.Console;
-using CoreDocker.Core;
+﻿using CoreDocker.Core;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +16,7 @@ namespace CoreDocker.Api.Security
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources())
                 .AddInMemoryClients(OpenIdConfig.GetClients())
-                .Services.AddTransient<IResourceOwnerPasswordValidator, IdentityWithAdditionalClaimsProfileService>()
+                .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>()
                 ;
 //                .AddTestUsers(OpenIdConfig.Users())??>
         }

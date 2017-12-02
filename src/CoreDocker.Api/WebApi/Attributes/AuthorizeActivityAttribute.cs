@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using CoreDocker.Api.Security;
 using CoreDocker.Dal.Models.Enums;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ namespace CoreDocker.Api.WebApi.Attributes
         {
         }
 
-        public AuthorizeActivityAttribute(Activity activities) : base("admin")
+        public AuthorizeActivityAttribute(Activity activities) : base(UserClaimProvider.ToPolicyName(activities))
 		{
 			Activities = activities;
 		}
@@ -44,8 +45,6 @@ namespace CoreDocker.Api.WebApi.Attributes
 //		}
 
 		#endregion
-
-
 
 	}
 }

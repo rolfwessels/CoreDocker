@@ -1,10 +1,10 @@
 ﻿using System;
-using Autofac;
-using CoreDocker.Core;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Utilities.Helpers;
+using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
-using IdentityServer4.Services;
-using IdentityServer4.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,31 +15,29 @@ namespace CoreDocker.Api.Security
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("dataEventRecordsAdmin", policyAdmin =>
-                {
-                    policyAdmin.RequireClaim("role", "dataEventRecords.admin");
-                });
-                options.AddPolicy("admin", policyAdmin =>
-                {
-                    policyAdmin.RequireClaim("role", "admin");
-                });
-                options.AddPolicy("dataEventRecordsUser", policyUser =>
-                {
-                    policyUser.RequireClaim("role", "dataEventRecords.user");
-                });
-            });
+            services.AddAuthorization(options => { AddFromActivities(options); });
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = OpenIdConfigBase.HostUrl;
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = OpenIdConfigBase.ResourceName;
-                    options.ApiSecret = "secret";
+                    options.ApiName = OpenIdConfigBase.ApiResourceName;
+                    options.ApiSecret = OpenIdConfigBase.ApiResourceSecret;
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });
+        }
+
+        private static void AddFromActivities(AuthorizationOptions options)
+        {
+            EnumHelper.ToArray<Activity>()
+                .ForEach(activity =>
+                {
+                    options.AddPolicy(UserClaimProvider.ToPolicyName(activity), policyAdmin => {
+                        policyAdmin.RequireClaim(JwtClaimTypes.Role, UserClaimProvider.ToPolicyName(activity));
+                    });
+                });
+            
         }
 
         public static void UseBearerAuthentication(this IApplicationBuilder app)

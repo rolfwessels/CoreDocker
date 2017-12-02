@@ -6,7 +6,6 @@ using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
-using CoreDocker.Console;
 using CoreDocker.Core;
 using CoreDocker.Utilities;
 using log4net;
