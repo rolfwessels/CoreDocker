@@ -15,6 +15,7 @@ namespace CoreDocker.Sdk.RestApi
             Authenticate = new AuthenticateApiClient(this);
             Projects = new ProjectApiClient(this);
             Users = new UserApiClient(this);
+            Ping = new PingApiClient(this);
         }
 
 
@@ -23,6 +24,7 @@ namespace CoreDocker.Sdk.RestApi
         #region Implementation of ICoreDockerApi
         
         public AuthenticateApiClient Authenticate { get; set; }
+        public PingApiClient Ping { get; set; }
         public ProjectApiClient Projects { get; set; }
         public UserApiClient Users { get; set; }
 

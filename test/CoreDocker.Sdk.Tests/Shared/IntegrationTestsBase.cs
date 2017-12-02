@@ -45,15 +45,10 @@ namespace CoreDocker.Sdk.Tests.Shared
             host.Build().Start();
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             _log.Info(string.Format("Starting api on [{0}]", address));
-            FlurlHelper.Log = m =>
+            RestShapHelper.Log = m =>
             {
-                _log.Info(m);
-                Debug.WriteLine("value [{0}]", m);
-            };
-            FlurlHelper.LogError = m =>
-            {
-                _log.Error(m);
-                Debug.WriteLine("value [{0}]", m);
+                _log.Debug(m);
+//                Debug.WriteLine("value [{0}]", m);
             };
             return address;
         }

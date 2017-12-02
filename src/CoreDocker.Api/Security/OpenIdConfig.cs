@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 
 namespace CoreDocker.Api.Security
 {
     public class OpenIdConfig
     {
         public static string HostUrl = "https://localhost:44363";
-        public const string ScopeApi = "Api";
+        public const string ScopeApi = "api";
         public const string CoredockerApi = "coredocker.api";
 
         public static IEnumerable<IdentityResource> GetIdentityResources()
@@ -27,36 +28,21 @@ namespace CoreDocker.Api.Security
             {
                 new ApiResource("dataEventRecords")
                 {
-                    ApiSecrets =
-                    {
-                        new Secret("dataEventRecordsSecret".Sha256())
-                    },
+//                    ApiSecrets =
+//                    {
+//                        new Secret("dataEventRecordsSecret".Sha256())
+//                    },
                     Scopes =
                     {
                         new Scope
                         {
-                            Name = "dataeventrecordsscope",
-                            DisplayName = "Scope for the dataEventRecords ApiResource"
+                            Name = ScopeApi,
+                            DisplayName = "Standard api access"
                         }
                     },
-                    UserClaims = { "role", "admin", "user", "dataEventRecords", "dataEventRecords.admin", "dataEventRecords.user" }
+                    UserClaims = { "role", "admin", "user" }
                 },
-                new ApiResource("securedFiles")
-                {
-                    ApiSecrets =
-                    {
-                        new Secret("securedFilesSecret".Sha256())
-                    },
-                    Scopes =
-                    {
-                        new Scope
-                        {
-                            Name = "securedfilesscope",
-                            DisplayName = "Scope for the securedFiles ApiResource"
-                        }
-                    },
-                    UserClaims = { "role", "admin", "user", "securedFiles", "securedFiles.admin", "securedFiles.user" }
-                }
+                
             };
         }
         public static IEnumerable<Client> GetClients()
@@ -70,8 +56,13 @@ namespace CoreDocker.Api.Security
                     ClientId = CoredockerApi,
                     RequireConsent = false,
                     AccessTokenType = AccessTokenType.Reference,
-                    //AccessTokenLifetime = 600, // 10 minutes, default 60 minutes
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AccessTokenLifetime = 600, // 10 minutes, default 60 minutes
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    
+                    ClientSecrets =
+                    {
+                        new Secret("e0acca78-4dc2-46c6-83c6-c6aeacfffd46".Sha256())
+                    },
                     AllowAccessTokensViaBrowser = true,
                     RedirectUris = new List<string>
                     {
@@ -90,6 +81,15 @@ namespace CoreDocker.Api.Security
                         ScopeApi
                     }
                 }
+            };
+        }
+
+        public static List<TestUser> Users()
+        {
+            return new List<TestUser>()
+            {
+                new TestUser() {Username = "admin" , Password = "admin!" , SubjectId = "2",},
+                new TestUser() {Username = "password" , Password = "casd", SubjectId = "1",}
             };
         }
     }

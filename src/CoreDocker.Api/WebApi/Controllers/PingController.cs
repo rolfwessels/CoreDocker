@@ -3,13 +3,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Shared;
+using CoreDocker.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDocker.Api.WebApi.Controllers
 {
-
     /// <inheritdoc />
     /// <summary>
     /// Simple ping call. 
@@ -33,9 +33,9 @@ namespace CoreDocker.Api.WebApi.Controllers
         /// <returns>
         /// </returns>
         [HttpGet, AllowAnonymous]
-        public Task<PingResult> Get()
+        public Task<PingModel> Get()
         {
-            return Task.FromResult( new PingResult() { Version = _informationalVersion , Database = IsDatabaseConnected() , Environment = _environmentName , MachineName = Environment.MachineName });
+            return Task.FromResult( new PingModel() { Version = _informationalVersion , Database = IsDatabaseConnected() , Environment = _environmentName , MachineName = Environment.MachineName });
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace CoreDocker.Api.WebApi.Controllers
         /// <returns>
         /// </returns>
         [HttpGet (RouteHelper.PingControllerHealthCheck), AllowAnonymous]
-        public Task<PingResult> GetHealthCheck()
+        public Task<PingModel> GetHealthCheck()
         {
-            return Task.FromResult(new PingResult() { Version = _informationalVersion, Database = "Unknown.", Environment = _environmentName, MachineName = Environment.MachineName });
+            return Task.FromResult(new PingModel() { Version = _informationalVersion, Database = "Unknown.", Environment = _environmentName, MachineName = Environment.MachineName });
         }
 
         private string IsDatabaseConnected()
@@ -62,13 +62,7 @@ namespace CoreDocker.Api.WebApi.Controllers
             }
         }
 
-        public class PingResult
-        {
-            public string Environment { get; set; }
-            public string Version { get; set; }
-            public string Database { get; set; }
-            public string MachineName { get; set; }
-        }
+       
     }
 
 

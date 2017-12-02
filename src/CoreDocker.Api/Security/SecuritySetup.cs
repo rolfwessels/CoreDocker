@@ -37,8 +37,9 @@ namespace CoreDocker.Api.Security
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources())
                 .AddInMemoryClients(OpenIdConfig.GetClients())
+                .AddTestUsers(OpenIdConfig.Users());
 //                .AddAspNetIdentity<ApplicationUser>()
-                .AddProfileService<IdentityWithAdditionalClaimsProfileService>();
+//                .AddProfileService<IdentityWithAdditionalClaimsProfileService>();
 //
 //            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
 //                .AddIdentityServerAuthentication(options =>
@@ -66,7 +67,6 @@ namespace CoreDocker.Api.Security
                 {
                     policyUser.RequireClaim("role", "dataEventRecords.user");
                 });
-
             });
 
         }

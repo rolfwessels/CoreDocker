@@ -23,6 +23,7 @@ namespace CoreDocker.Sdk.Tests.Security
         protected void Setup()
         {
             _connection = _defaultRequestFactory.Value.GetConnection();
+//            _connection = new CoreDockerClient("http://localhost:5000");
             _projectApiClient = _connection.Projects;
         }
 
@@ -53,9 +54,24 @@ namespace CoreDocker.Sdk.Tests.Security
             // arrange
             Setup();
             // action
-            var data = await _connection.Authenticate.GetToken("coredocker.api",AdminUser,AdminPassword);
-            data.Should().BeNull();
+            var data = await _connection.Authenticate.GetToken(AdminUser, AdminPassword);
             data.AccessToken.Should().NotBeEmpty();
+            data.ExpiresIn.Should().BeGreaterThan(30);
+            data.TokenType.Should().Be("Bearer");
+        }
+
+        [Test]
+        public async Task AfterLogin_WhenUsingApi_ShouldGetResults()
+        {
+            // arrange
+            Setup();
+            var pingModel = await _connection.Ping.Get();
+            pingModel.Environment.Should().Be("Production"); //??
+
+            var data = await _connection.Authenticate.GetToken(AdminUser, AdminPassword);
+            // action
+            var projectsEnumerable = await _connection.Projects.Get();
+            projectsEnumerable.Count().Should().BeGreaterThan(0);
         }
     }
 }

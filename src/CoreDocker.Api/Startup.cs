@@ -61,7 +61,7 @@ namespace CoreDocker.Api
 
         private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
         {
-            loggerFactory.AddConsole(configurationRoot.GetSection("Logging"));
+            loggerFactory.AddConsole();
             loggerFactory.AddDebug();
         }
 
@@ -71,9 +71,6 @@ namespace CoreDocker.Api
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
-
-            
-
 
             builder.AddEnvironmentVariables();
             return builder.Build();

@@ -6,6 +6,7 @@ using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Interfaces;
 using Flurl.Http;
+using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base
 {
@@ -34,30 +35,30 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         public async Task<PagedResult<TReferenceModel>> GetPaged(string oDataQuery)
         {
-            return await DefaultUrl("?" + EnsureHasInlinecount(oDataQuery))
-               .GetAsyncAndLog()
-               .ReceiveJson<PagedResult<TReferenceModel>>();
+            var restRequest = new RestRequest(DefaultUrl( $"?{EnsureHasInlinecount(oDataQuery)}"));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<PagedResult<TReferenceModel>>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<PagedResult<TModel>> GetDetailPaged(string oDataQuery)
         {
-            return await DefaultUrl(RouteHelper.WithDetail+"?" + EnsureHasInlinecount(oDataQuery))
-                .GetAsyncAndLog()
-                .ReceiveJson<PagedResult<TModel>>();
+            var restRequest = new RestRequest(DefaultUrl($"{RouteHelper.WithDetail}?{EnsureHasInlinecount(oDataQuery)}"));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<PagedResult<TModel>>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<IEnumerable<TReferenceModel>> Get(string oDataQuery)
         {
-            return await DefaultUrl("?" + oDataQuery)
-             .GetAsyncAndLog()
-             .ReceiveJson<List<TReferenceModel>>();
+            var restRequest = new RestRequest(DefaultUrl($"?{oDataQuery}"));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<List<TReferenceModel>>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<IEnumerable<TModel>> GetDetail(string oDataQuery)
         {
-            return await DefaultUrl(RouteHelper.WithDetail+"?" + oDataQuery)
-            .GetAsyncAndLog()
-            .ReceiveJson<List<TModel>>();
+            var restRequest = new RestRequest(DefaultUrl($"{RouteHelper.WithDetail}?{oDataQuery}"));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<List<TModel>>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         private static string EnsureHasInlinecount(string oDataQuery)

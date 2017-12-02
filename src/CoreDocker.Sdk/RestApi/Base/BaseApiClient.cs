@@ -33,7 +33,7 @@ namespace CoreDocker.Sdk.RestApi.Base
             return new Url(CoreDockerClient.UrlBase.AppendUrl(_baseUrl).AppendUrl(appendToUrl));
         }
 
-        protected virtual void ValidateResponse<T>(IRestResponse<T> result)
+        protected virtual T ValidateResponse<T>(IRestResponse<T> result)
         {
             if (result.StatusCode != HttpStatusCode.OK)
             {
@@ -42,6 +42,7 @@ namespace CoreDocker.Sdk.RestApi.Base
                 var errorMessage = JsonConvert.DeserializeObject<ErrorMessage>(result.Content);
                 throw new Exception(errorMessage.Message);
             }
+            return result.Data;
         }
 
         protected async Task<T> ExecuteAndValidate<T>(RestRequest request) where T : new()

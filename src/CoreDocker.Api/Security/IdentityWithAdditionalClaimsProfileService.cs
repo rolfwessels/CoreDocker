@@ -42,9 +42,6 @@ namespace CoreDocker.Api.Security
                 ? new Claim(JwtClaimTypes.Role, "admin")
                 : new Claim(JwtClaimTypes.Role, "guest"));
 
-
-
-
             context.IssuedClaims = claims;
         }
 

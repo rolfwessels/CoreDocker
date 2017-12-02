@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models;
+using Newtonsoft.Json;
 using RestSharp;
+using RestSharp.Authenticators;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -28,11 +32,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
             public List<Dictionary<string, string>> Keys { get; set; }
         }
 
-        public Task<TokenResponseModel> GetToken(string client, string adminUser, string adminPassword)
+        public Task<TokenResponseModel> GetToken(string adminUser, string adminPassword)
         {
             return GetToken(new TokenRequestModel()
             {
-                ClientId = client,
+                ClientId = "coredocker.api",
+                ClientSecret = "e0acca78-4dc2-46c6-83c6-c6aeacfffd46",
                 UserName = adminUser,
                 Password = adminPassword
             });
@@ -41,19 +46,36 @@ namespace CoreDocker.Sdk.RestApi.Clients
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)
         {
             var request = new RestRequest(DefaultUrl(), Method.POST);
-//            request.AddHeader("Authorization", "Basic YXBpOjUxYmUyMTNiMzQwNzQ3NWVhMDlkMTY5OGFhZjZlZDE1");
             request.AddParameter("username", tokenRequestModel.UserName);
             request.AddParameter("password", tokenRequestModel.Password);
             request.AddParameter("grant_type", tokenRequestModel.GrantType);
-//            request.AddParameter("scope", tokenRequestModel.Scope);
-            
-            IRestResponse<TokenResponseModel> result = await _coreDockerClient.Client.ExecuteAsyncWithLogging<TokenResponseModel>(request);
-            ValidateResponse(result);
-//            var bearerToken = string.Format("{0} {1}", result.Data.TokenType.ToInitialCase(), result.Data.AccessToken);
-//            _restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
+            request.AddParameter("scope", "api");
+            var restClient = _coreDockerClient.Client;
+            restClient.Authenticator = new HttpBasicAuthenticator(tokenRequestModel.ClientId, tokenRequestModel.ClientSecret );
+            IRestResponse<TokenResponseModel> result =
+                await restClient.ExecuteAsyncWithLogging<TokenResponseModel>(request);
+            ValidateTokenResponse(result);
+            var bearerToken = string.Format("{0} {1}", "Bearer", result.Data.AccessToken);
+            restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
             return result.Data;
         }
-    }
 
-    
+        protected virtual void ValidateTokenResponse<T>(IRestResponse<T> result)
+        {
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                if (string.IsNullOrEmpty(result.Content))
+                    throw new ApplicationException(
+                        $"{result.StatusCode} response contains no data.");
+                var errorMessage = JsonConvert.DeserializeObject<TokenErrorMessage>(result.Content);
+                throw new Exception($"{errorMessage.Error}[{errorMessage.error_description}]");
+            }
+        }
+
+        internal class TokenErrorMessage
+        {
+            public string Error { get; set; }
+            public string error_description { get; set; }
+        }
+    }
 }

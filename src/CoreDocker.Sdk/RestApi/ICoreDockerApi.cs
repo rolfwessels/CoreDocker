@@ -4,8 +4,9 @@ namespace CoreDocker.Sdk.RestApi
 {
     public interface ICoreDockerApi
     {
-        ProjectApiClient Projects { get; set; }
-        UserApiClient Users { get; set; }
-        AuthenticateApiClient Authenticate { get; set; }
+        ProjectApiClient Projects { get; }
+        UserApiClient Users { get; }
+        AuthenticateApiClient Authenticate { get; }
+        PingApiClient Ping { get; }
     }
 }
