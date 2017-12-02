@@ -1,7 +1,9 @@
+using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
+using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
 using Flurl.Http;
 using NUnit.Framework;
@@ -38,10 +40,22 @@ namespace CoreDocker.Sdk.Tests.Security
             Setup();
             // action
             var flurlClient = new FlurlClient(_hostAddress.Value);
-            var o = await flurlClient.Request(".well-known/openid-configuration/jwks")
+            var s = await flurlClient.Request(".well-known/openid-configuration/jwks")
                 .GetStringAsync();
-            var data = await _connection.Authenticate.GetConfig();
-            o.Should().Contain("keys");
+            var data = await _connection.Authenticate.GetConfigAsync();
+            data.Keys.Dump("data.Keys");
+            data.Keys.First().Keys.Should().Contain("kty");
+        }
+
+        [Test]
+        public async Task GivenAuthorization_WhenCalled_ShouldHaveResult()
+        {
+            // arrange
+            Setup();
+            // action
+            var data = await _connection.Authenticate.GetToken("coredocker.api",AdminUser,AdminPassword);
+            data.Should().BeNull();
+            data.AccessToken.Should().NotBeEmpty();
         }
     }
 }

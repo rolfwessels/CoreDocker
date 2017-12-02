@@ -9,6 +9,7 @@ namespace CoreDocker.Sdk.Tests.Shared
 {
     public class IntegrationTestsBase
     {
+        
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin";
@@ -21,6 +22,7 @@ namespace CoreDocker.Sdk.Tests.Shared
 
         static IntegrationTestsBase()
         {
+            RestShapHelper.Log = s => _log.Debug(s);
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
             _adminRequestFactory = new Lazy<ConnectionFactory>(CreateAdminRequest);
