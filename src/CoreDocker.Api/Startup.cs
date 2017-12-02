@@ -50,8 +50,8 @@ namespace CoreDocker.Api
             {
 //                app.UseDeveloperExceptionPage();
             }
-            app.UseIdentityServer();
-            app.UseAuthentication();
+            SecuritySetup.SetupMap(app);
+          
             app.UseMvc();
             SwaggerSetup.AddUi(app);
             SimpleFileServer.Initialize(app);

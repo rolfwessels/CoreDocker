@@ -46,12 +46,13 @@ namespace CoreDocker.Sdk.RestApi.Clients
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)
         {
             var request = new RestRequest(DefaultUrl(), Method.POST);
+            request.AddParameter("client_id", tokenRequestModel.ClientId);
+            request.AddParameter("client_secret", tokenRequestModel.ClientSecret);
             request.AddParameter("username", tokenRequestModel.UserName);
             request.AddParameter("password", tokenRequestModel.Password);
             request.AddParameter("grant_type", tokenRequestModel.GrantType);
             request.AddParameter("scope", "api");
             var restClient = _coreDockerClient.Client;
-            restClient.Authenticator = new HttpBasicAuthenticator(tokenRequestModel.ClientId, tokenRequestModel.ClientSecret );
             IRestResponse<TokenResponseModel> result =
                 await restClient.ExecuteAsyncWithLogging<TokenResponseModel>(request);
             ValidateTokenResponse(result);

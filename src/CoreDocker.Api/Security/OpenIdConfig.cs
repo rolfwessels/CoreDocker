@@ -5,8 +5,9 @@ using IdentityServer4.Test;
 namespace CoreDocker.Api.Security
 {
     public class OpenIdConfig
-    {
+    {   
         public static string HostUrl = "https://localhost:44363";
+        public const string ResourceName = "api.resource";
         public const string ScopeApi = "api";
         public const string CoredockerApi = "coredocker.api";
 
@@ -17,7 +18,7 @@ namespace CoreDocker.Api.Security
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
-                new IdentityResource("dataeventrecordsscope",new []{ "role", "admin", "user", "dataEventRecords", "dataEventRecords.admin" , "dataEventRecords.user" } ),
+                new IdentityResource("dataeventrecordsscope",new []{ "role", "admin", "user", ResourceName, "dataEventRecords.admin" , "dataEventRecords.user" } ),
                 new IdentityResource("securedfilesscope",new []{ "role", "admin", "user", "securedFiles", "securedFiles.admin", "securedFiles.user"} )
             };
         }
@@ -26,7 +27,7 @@ namespace CoreDocker.Api.Security
         {
             return new List<ApiResource>
             {
-                new ApiResource("dataEventRecords")
+                new ApiResource(ResourceName)
                 {
 //                    ApiSecrets =
 //                    {

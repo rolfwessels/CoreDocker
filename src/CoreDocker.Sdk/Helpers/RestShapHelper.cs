@@ -21,12 +21,11 @@ namespace CoreDocker.Sdk.Helpers
             stopwatch.Start();
             string paramsSent = request.Parameters.Where(x => x.Name == "application/json").Select(x => x.Value.ToString()).FirstOrDefault();
             
-            Log(string.Format("Sent {2} {1} [{0}]", Truncate(paramsSent,MaxLogLength), buildUri, method));
+            Log($"Sent {method} {buildUri} [{Truncate(paramsSent, MaxLogLength)}]");
             client.ExecuteAsync<T>(request, response =>
                 {
                     stopwatch.Stop();
-                    Log(string.Format("Response {2} {1} [{3}] [{0}]", Truncate(response.Content, MaxLogLength), buildUri, method,
-                                             stopwatch.ElapsedMilliseconds));
+                    Log($"Response {method} {buildUri} [{stopwatch.ElapsedMilliseconds}ms] [{Truncate(response.Content, MaxLogLength)}]");
                     taskCompletionSource.SetResult(response);
                 });
 

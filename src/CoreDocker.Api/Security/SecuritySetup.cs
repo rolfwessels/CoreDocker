@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using Autofac;
+﻿using Autofac;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.Security
@@ -26,10 +24,18 @@ namespace CoreDocker.Api.Security
                 .RequireClaim("scope", "dataEventRecords")
                 .Build();
 
-            
-//
-//            services.AddTransient<IEmailSender, AuthMessageSender>();
-//            services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            //
+            //            services.AddTransient<IEmailSender, AuthMessageSender>();
+            //            services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = OpenIdConfig.HostUrl;
+                    options.RequireHttpsMetadata = false;
+                    options.ApiName = OpenIdConfig.ResourceName;
+                });
 
             services.AddIdentityServer()
 //                .AddSigningCredential(cert)
@@ -38,20 +44,9 @@ namespace CoreDocker.Api.Security
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources())
                 .AddInMemoryClients(OpenIdConfig.GetClients())
                 .AddTestUsers(OpenIdConfig.Users());
-//                .AddAspNetIdentity<ApplicationUser>()
-//                .AddProfileService<IdentityWithAdditionalClaimsProfileService>();
-//
-//            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-//                .AddIdentityServerAuthentication(options =>
-//                {
-//                    options.Authority = Config.HOST_URL + "/";
-//                    options.AllowedScopes = new List<string> { "dataEventRecords" };
-//                    options.ApiName = "dataEventRecords";
-//                    options.ApiSecret = "dataEventRecordsSecret";
-//                    options.SupportedTokens = SupportedTokens.Both;
-//                });
 
-           
+
+
 
             services.AddAuthorization(options =>
             {
@@ -75,22 +70,13 @@ namespace CoreDocker.Api.Security
         {
             builder.RegisterType<IdentityWithAdditionalClaimsProfileService>().As<IProfileService>();
         }
+
+
+        public static void SetupMap(IApplicationBuilder app)
+        {
+            app.UseIdentityServer();
+            app.UseAuthentication();
+        }
     }
 }
 
-//JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-//IdentityServerAuthenticationOptions identityServerValidationOptions = new IdentityServerAuthenticationOptions
-//{
-//    Authority = Config.HOST_URL + "/",
-//    AllowedScopes = new List<string> { "dataEventRecords" },
-//    ApiSecret = "dataEventRecordsSecret",
-//    ApiName = "dataEventRecords",
-//    AutomaticAuthenticate = true,
-//    SupportedTokens = SupportedTokens.Both,
-//    // TokenRetriever = _tokenRetriever,
-//    // required if you want to return a 403 and not a 401 for forbidden responses
-//    AutomaticChallenge = true,
-//};
-
-//app.UseIdentityServerAuthentication(identityServerValidationOptions);
