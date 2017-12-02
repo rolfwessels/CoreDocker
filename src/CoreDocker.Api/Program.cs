@@ -8,6 +8,9 @@ namespace CoreDocker.Api
     {
         public static void Main(string[] args)
         {
+      
+
+            System.Console.Title = "CoreDocker.Api";
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls(args.FirstOrDefault()??"http://*:5001")

@@ -15,7 +15,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
     {
         private readonly CoreDockerClient _coreDockerClient;
 
-        public AuthenticateApiClient(CoreDockerClient coreDockerClient) : base(coreDockerClient, "connect/token")
+        public AuthenticateApiClient(CoreDockerClient coreDockerClient) : base(coreDockerClient, "connect")
         {
             _coreDockerClient = coreDockerClient;
         }
@@ -45,7 +45,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)
         {
-            var request = new RestRequest(DefaultUrl(), Method.POST);
+            var request = new RestRequest(DefaultTokenUrl("token"), Method.POST);
             request.AddParameter("client_id", tokenRequestModel.ClientId);
             request.AddParameter("client_secret", tokenRequestModel.ClientSecret);
             request.AddParameter("username", tokenRequestModel.UserName);

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using CoreDocker.Api;
 using CoreDocker.Api.Security;
+using CoreDocker.Core;
 using CoreDocker.Sdk.Helpers;
 using IdentityServer4.Models;
 using log4net;
@@ -38,7 +39,7 @@ namespace CoreDocker.Sdk.Tests.Shared
             var port = new Random().Next(9000, 9999);
             var address = string.Format("http://localhost:{0}", port);
 //            var websitePath = TestHelper.GetSourceBasePath();
-            
+            OpenIdConfigBase.HostUrl = address;
             var host = new WebHostBuilder()
                 .UseKestrel()
 //                .UseContentRoot(websitePath)

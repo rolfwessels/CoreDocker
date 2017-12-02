@@ -6,5 +6,6 @@
         public const string ResourceName = "api.resource";
         public const string ScopeApi = "api";
         public const string CoredockerApi = "coredocker.api";
+        public const string IdentPath = "identity";
     }
 }

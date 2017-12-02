@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
+using CoreDocker.Core;
 using CoreDocker.Utilities.Helpers;
 using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.Services;
@@ -7,11 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.Security
 {
-    public class SecuritySetup
+    public static class SecuritySetupClient
     {
-        public static void AddIndentityServer4(IServiceCollection services)
+        public static void AddBearerAuthentication(this IServiceCollection services)
         {
-            services.AddCors();
+            
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("dataEventRecordsAdmin", policyAdmin =>
@@ -31,13 +33,14 @@ namespace CoreDocker.Api.Security
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = OpenIdConfig.HostUrl.Dump("csad");
+                    options.Authority = OpenIdConfigBase.HostUrl.UriCombine(OpenIdConfigBase.IdentPath).Dump("---------------->");
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = OpenIdConfig.ResourceName;
+                    options.ApiName = OpenIdConfigBase.ResourceName;
                     options.ApiSecret = "secret";
+                    options.EnableCaching = true;
+                    options.CacheDuration = TimeSpan.FromMinutes(5);
                 });
-
-          
+ 
         }
 
         public static void Add(ContainerBuilder builder)
@@ -46,16 +49,10 @@ namespace CoreDocker.Api.Security
         }
 
 
-        public static void SetupMap(IApplicationBuilder app)
+        public static void UseBearerAuthentication(this IApplicationBuilder app)
         {
             app.UseAuthentication();
-            app.UseCors(policy =>
-            {
-                policy.AllowAnyOrigin();
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                policy.WithExposedHeaders("WWW-Authenticate");
-            });
+            
         }
     }
 }

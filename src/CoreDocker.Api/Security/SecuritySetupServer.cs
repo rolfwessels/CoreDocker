@@ -1,17 +1,14 @@
-﻿using Autofac;
-using CoreDocker.Console;
-using IdentityServer4.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using CoreDocker.Console;
+using CoreDocker.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.Security
 {
-    public class SecuritySetup
+    public static class SecuritySetupServer
     {
-        public static void AddIndentityServer4(IServiceCollection services)
+        public static void UseIndentityService(this IServiceCollection services)
         {
-
             services.AddIdentityServer()
 //                .AddSigningCredential(cert)
                 .AddDeveloperSigningCredential()
@@ -19,16 +16,12 @@ namespace CoreDocker.Api.Security
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources())
                 .AddInMemoryClients(OpenIdConfig.GetClients())
                 .AddTestUsers(OpenIdConfig.Users());
-
-            
         }
         
-
-        public static void SetupMap(IApplicationBuilder app)
+        public static void UseIndentityService(this IApplicationBuilder app)
         {
             app.UseIdentityServer();
-            app.UseAuthentication();
+
         }
     }
 }
-

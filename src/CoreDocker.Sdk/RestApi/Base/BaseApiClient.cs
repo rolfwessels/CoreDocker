@@ -30,7 +30,12 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         protected virtual Url DefaultUrl(string appendToUrl = null)
         {
-            return new Url(CoreDockerClient.UrlBase.AppendUrl(_baseUrl).AppendUrl(appendToUrl));
+            return new Url(CoreDockerClient.UrlBase.AppendUrl("api").AppendUrl(_baseUrl).AppendUrl(appendToUrl));
+        }
+
+        protected virtual Url DefaultTokenUrl(string appendToUrl = null)
+        {
+            return new Url(CoreDockerClient.UrlBase.AppendUrl("identity").AppendUrl(_baseUrl).AppendUrl(appendToUrl));
         }
 
         protected virtual T ValidateResponse<T>(IRestResponse<T> result)

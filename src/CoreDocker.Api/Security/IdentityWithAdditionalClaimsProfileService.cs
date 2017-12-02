@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoreDocker.Core;
 using CoreDocker.Core.Components.Users;
 using IdentityModel;
 using IdentityServer4;
@@ -34,7 +35,7 @@ namespace CoreDocker.Api.Security
             {
                 new Claim(JwtClaimTypes.GivenName, user.Name),
                 new Claim(IdentityServerConstants.StandardScopes.Email, user.Email),
-                new Claim(JwtClaimTypes.Scope, OpenIdConfig.ScopeApi)
+                new Claim(JwtClaimTypes.Scope, OpenIdConfigBase.ScopeApi)
             };
 
 

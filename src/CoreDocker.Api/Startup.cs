@@ -6,6 +6,8 @@ using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
+using CoreDocker.Console;
+using CoreDocker.Core;
 using CoreDocker.Utilities;
 using log4net;
 using log4net.Config;
@@ -33,28 +35,47 @@ namespace CoreDocker.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
-            SecuritySetup.AddIndentityServer4(services);
+            services.AddCors();
+            services.UseIndentityService();
+            services.AddBearerAuthentication();
             services.AddMvc(WebApiSetup.Setup);
-
             SwaggerSetup.Setup(services);
-
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
-
-
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                policy.WithExposedHeaders("WWW-Authenticate");
+            });
             Config(loggerFactory, Configuration);
             if (env.IsDevelopment())
             {
 //                app.UseDeveloperExceptionPage();
             }
-            SecuritySetup.SetupMap(app);
-          
-            app.UseMvc();
+            
+            app.Map($"/{OpenIdConfigBase.IdentPath}", identityServerApp =>
+            {
+                identityServerApp.UseIndentityService();
+            });
+
+            app.Map("/api", arr =>
+            {
+                arr.UseBearerAuthentication();
+                arr.UseMvc();
+            });
+
+
+//            app.UseBearerAuthentication();
+//            app.UseMvc();
             SwaggerSetup.AddUi(app);
             SimpleFileServer.Initialize(app);
+            
         }
 
         #region Private Methods

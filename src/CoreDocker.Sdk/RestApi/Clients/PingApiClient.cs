@@ -15,7 +15,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public async Task<PingModel> Get()
         {
-            var restRequest = new RestRequest(RouteHelper.PingController);
+            var restRequest = new RestRequest(DefaultUrl());
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<PingModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }

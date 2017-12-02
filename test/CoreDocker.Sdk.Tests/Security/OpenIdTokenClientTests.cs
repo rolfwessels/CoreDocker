@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
+using CoreDocker.Shared.Models;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
 using Flurl.Http;
@@ -17,14 +18,15 @@ namespace CoreDocker.Sdk.Tests.Security
         private ICoreDockerApi _connection;
 
         private ProjectApiClient _projectApiClient;
-        private CoreDockerClient _connectionAuth;
+        private ICoreDockerApi _connectionAuth;
 
         #region Setup/Teardown
 
         protected void Setup()
         {
             _connection = _defaultRequestFactory.Value.GetConnection();
-            _connectionAuth = new CoreDockerClient("http://localhost:5000");
+            _connectionAuth = _defaultRequestFactory.Value.GetConnection();
+//            _connectionAuth = new CoreDockerClient("http://localhost:5000");
             _projectApiClient = _connection.Projects;
         }
 
@@ -70,8 +72,10 @@ namespace CoreDocker.Sdk.Tests.Security
             pingModel.Environment.Should().Be("Production"); //??
 
             var data = await _connectionAuth.Authenticate.GetToken(AdminUser, AdminPassword);
+            data.AccessToken.Dump("AccessToken");
             // action
             _connection.SetToken(data);
+//            _connection.SetToken(new TokenResponseModel() { AccessToken= "92e3e7de2f15ceb4181e7d789114a556174fadb576921cc7ee2b13fe8ec91a00" });
             var projectsEnumerable = await _connection.Projects.Get();
             projectsEnumerable.Count().Should().BeGreaterThan(0);
         }
