@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ namespace CoreDocker.Api.Swagger
 {
     public class SwaggerSetup
     {
-        private static readonly ILog _log = LogManager.GetLogger<SwaggerSetup>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static string _informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;

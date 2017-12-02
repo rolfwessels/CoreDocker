@@ -1,6 +1,7 @@
 using System;
+using System.Reflection;
 using CoreDocker.Dal.Models.Enums;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Attributes
@@ -9,7 +10,7 @@ namespace CoreDocker.Api.WebApi.Attributes
 
     public class AuthorizeActivityAttribute : AuthorizeAttribute 
     {
-		private static readonly ILog _log = LogManager.GetLogger<AuthorizeActivityAttribute>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public AuthorizeActivityAttribute() : base()
         {

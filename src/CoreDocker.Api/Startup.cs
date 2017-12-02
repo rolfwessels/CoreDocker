@@ -1,18 +1,19 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
-using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Utilities;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
+using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace CoreDocker.Api
 {
@@ -20,6 +21,8 @@ namespace CoreDocker.Api
     {
         public Startup(IHostingEnvironment env)
         {
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("logSettings.xml"));
             Configuration = ReadAppSettings(env);
             Settings.Initialize(Configuration);
         }
@@ -58,15 +61,8 @@ namespace CoreDocker.Api
 
         private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
         {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configurationRoot)
-                .CreateLogger();
-
-            LogManager.SetLogger(loggerFactory);
-
             loggerFactory.AddConsole(configurationRoot.GetSection("Logging"));
             loggerFactory.AddDebug();
-            loggerFactory.AddSerilog();
         }
 
         private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)

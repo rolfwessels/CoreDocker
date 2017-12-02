@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\CoreDocker.Utilities.Tests\logSettings.xml" Link="logSettings.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\CoreDocker.Core\CoreDocker.Core.csproj" />
     <ProjectReference Include="..\CoreDocker.Utilities.Tests\CoreDocker.Utilities.Tests.csproj" />
   </ItemGroup>

@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\CoreDocker.Utilities.Tests\logSettings.xml" Link="logSettings.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Api\CoreDocker.Api.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Sdk\CoreDocker.Sdk.csproj" />
@@ -28,7 +32,6 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>

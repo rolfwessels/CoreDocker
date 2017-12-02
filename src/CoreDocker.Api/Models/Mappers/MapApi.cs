@@ -1,17 +1,16 @@
 using AutoMapper;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Enums;
-using CoreDocker.Dal.Models;
 using System;
+using System.Reflection;
 using CoreDocker.Core.Framework.MessageUtil.Models;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
 
 namespace CoreDocker.Api.Models.Mappers
 {
     public static partial class MapApi
 	{
-	    private static readonly ILog _log = LogManager.GetLogger<Application>();
-        private static readonly Lazy<IMapper> _mapper;
+	    private static readonly Lazy<IMapper> _mapper;
         static MapApi()
         {
             _mapper = new Lazy<IMapper>(InitializeMapping);
@@ -23,7 +22,6 @@ namespace CoreDocker.Api.Models.Mappers
             var config = new MapperConfiguration(cfg => {
                 MapUserModel(cfg);
                 MapProjectModel(cfg);
-                _log.Warn("casd");
             });
             return config.CreateMapper();
         }

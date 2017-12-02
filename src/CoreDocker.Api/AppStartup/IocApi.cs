@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.Common;
@@ -7,13 +8,14 @@ using CoreDocker.Core.Startup;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.AppStartup
 {
     public class IocApi : IocCoreBase
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static bool _isInitialized;
         private static readonly object _locker = new object();
         private static IocApi _instance;
@@ -40,16 +42,15 @@ namespace CoreDocker.Api.AppStartup
 
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
-            var logger = LogManager.GetLogger<IocApi>();
-            logger.Info($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
+            
+            _log.Info($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
             try
             {
-                return new MongoConnectionFactory(Settings.Instance.MongoConnection,
-                    LogManager.GetLogger<MongoConnectionFactory>().Logger, Settings.Instance.MongoDatabase);
+                return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
             }
             catch (Exception e)
             {
-                logger.Error($"Error connecting to the database:{e.Message}", e);
+                _log.Error($"Error connecting to the database:{e.Message}", e);
                 throw;
             }
         }

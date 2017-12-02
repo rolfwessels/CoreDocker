@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
@@ -10,12 +12,11 @@ namespace CoreDocker.Dal.MongoDb.Migrations
     public class VersionUpdater
     {
         private readonly IMigration[] _updates;
-        private readonly ILogger _log;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly object _locker = new object();
 
-        public VersionUpdater(IMigration[] updates, ILogger log)
+        public VersionUpdater(IMigration[] updates)
         {
-            _log = log;
             _updates = updates;
         }
 
@@ -29,16 +30,16 @@ namespace CoreDocker.Dal.MongoDb.Migrations
 
                     var repository = new MongoRepository<DbVersion>(db);
                     List<DbVersion> versions = repository.Find().Result;
-                    _log.LogInformation(string.Format("Found {0} database updates in database and {1} in code", versions.Count, _updates.Length));
+                    var stopwatch = new Stopwatch();
+                    stopwatch.Start();
                     for (int i = 0; i < _updates.Length; i++)
                     {   
                         IMigration migrateInitialize = _updates[i];
                         EnsureThatVersionDoesNotExistThenUpdate(versions, i, migrateInitialize, repository, db).Wait();
                     }
-                    _log.LogInformation("Done");
+                    stopwatch.Stop();
+                    _log.Info($"Found {versions.Count} database updates in database and {_updates.Length} in code. Update took [{stopwatch.ElapsedMilliseconds}]");
                 }
-               
-
             });
 
         }
@@ -51,7 +52,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations
             DbVersion version = versions.FirstOrDefault(x => x.Id == i);
             if (version == null)
             {
-                _log.LogInformation(string.Format("Running version update {0}", migrateInitialize.GetType().Name));
+                _log.Info($"Running version update {migrateInitialize.GetType().Name}");
                 await RunTheUpdate(migrateInitialize, db);
                 var dbVersion1 = new DbVersion {Id = i, Name = migrateInitialize.GetType().Name};
                 await repository.Add(dbVersion1);
@@ -60,12 +61,12 @@ namespace CoreDocker.Dal.MongoDb.Migrations
 
         private async Task RunTheUpdate(IMigration migrateInitialize, IMongoDatabase db)
         {
-            _log.LogInformation(string.Format("Starting {0} db update", migrateInitialize.GetType().Name));
+            _log.Info($"Starting {migrateInitialize.GetType().Name} db update");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             await migrateInitialize.Update(db);
             stopwatch.Stop();
-            _log.LogInformation(string.Format("Done {0} in {1}ms", migrateInitialize.GetType().Name, stopwatch.ElapsedMilliseconds));
+            _log.Info($"Done {migrateInitialize.GetType().Name} in {stopwatch.ElapsedMilliseconds}ms");
         }
 
         #endregion

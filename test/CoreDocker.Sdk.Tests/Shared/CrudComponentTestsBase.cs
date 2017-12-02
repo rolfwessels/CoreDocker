@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Interfaces;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -13,7 +14,7 @@ namespace CoreDocker.Sdk.Tests.Shared
     public abstract class CrudComponentTestsBase<TModel, TDetailModel, TReferenceModel> : IntegrationTestsBase
         where TModel : IBaseModel
     {
-        private static readonly ILog _log = LogManager.GetLogger<IntegrationTestsBase>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         protected ICrudController<TModel, TDetailModel> _crudController;
 
         protected void SetRequiredData(ICrudController<TModel, TDetailModel> userControllerActions)

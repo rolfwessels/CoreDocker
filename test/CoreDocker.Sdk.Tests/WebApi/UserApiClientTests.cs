@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using CoreDocker.Utilities.FakeLogging;
+using log4net;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
@@ -20,7 +21,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
   [Category("Integration")]
   public class UserApiClientTests : CrudComponentTestsBase<UserModel, UserCreateUpdateModel, UserReferenceModel>
   {
-    private static readonly ILog _log = LogManager.GetLogger<UserApiClientTests>();
+      private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     private UserApiClient _userApiClient;
 
     #region Setup/Teardown

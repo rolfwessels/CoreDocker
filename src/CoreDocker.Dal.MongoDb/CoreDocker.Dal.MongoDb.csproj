@@ -18,4 +18,10 @@
     <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>C:\Users\User-pc\.nuget\packages\log4net\2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
