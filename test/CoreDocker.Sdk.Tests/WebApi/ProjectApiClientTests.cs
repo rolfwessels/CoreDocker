@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi;
+using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;

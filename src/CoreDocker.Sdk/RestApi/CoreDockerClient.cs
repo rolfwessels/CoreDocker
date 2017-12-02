@@ -1,4 +1,5 @@
 using CoreDocker.Sdk.RestApi;
+using CoreDocker.Sdk.RestApi.Clients;
 
 namespace CoreDocker.Sdk
 {

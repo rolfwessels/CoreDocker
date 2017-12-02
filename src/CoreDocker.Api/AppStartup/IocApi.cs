@@ -2,8 +2,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.Common;
+using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
 using CoreDocker.Dal.Mongo;
+using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities;
 using log4net;
@@ -24,6 +26,7 @@ namespace CoreDocker.Api.AppStartup
             SetupCore(builder);
             SetupCommonControllers(builder);
             SetupTools(builder);
+            SecuritySetup.Add(builder);
             builder.Populate(_services);
             Container = builder.Build();
         }
@@ -60,6 +63,7 @@ namespace CoreDocker.Api.AppStartup
         {
             builder.RegisterType<UserCommonController>();
             builder.RegisterType<ProjectCommonController>();
+
         }
 
         private void SetupTools(ContainerBuilder builder)

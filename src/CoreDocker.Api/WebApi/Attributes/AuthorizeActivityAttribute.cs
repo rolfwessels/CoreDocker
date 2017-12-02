@@ -1,26 +1,29 @@
 using System;
 using CoreDocker.Dal.Models.Enums;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Attributes
 {
-    public class AuthorizeActivityAttribute : Attribute//: AuthorizeAttribute
-	{
+ 
+
+    public class AuthorizeActivityAttribute : AuthorizeAttribute 
+    {
 		private static readonly ILog _log = LogManager.GetLogger<AuthorizeActivityAttribute>();
-		private readonly Activity[] _activities;
-        
-		public AuthorizeActivityAttribute(params Activity[] activities)
+
+        public AuthorizeActivityAttribute() : base()
+        {
+        }
+
+        public AuthorizeActivityAttribute(Activity activities) : base("admin")
 		{
-			_activities = activities;
+			Activities = activities;
 		}
 
-		public Activity[] Activities
-		{
-			get { return _activities; }
-		}
+		public Activity Activities { get; }
 
-	
-		#region Overrides of AuthorizeAttribute
+
+        #region Overrides of AuthorizeAttribute
 
 //		protected override bool IsAuthorized(HttpActionContext actionContext)
 //		{

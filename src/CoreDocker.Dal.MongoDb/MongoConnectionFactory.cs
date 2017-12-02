@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
+using CoreDocker.Dal.Mongo;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
     public class MongoConnectionFactory : IGeneralUnitOfWorkFactory
     {

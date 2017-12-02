@@ -19,7 +19,7 @@ namespace CoreDocker.Api.Swagger
 
         private static string GetVersion()
         {
-            _informationalVersion = _informationalVersion.Split('.').Take(1).StringJoin(".");
+            _informationalVersion = _informationalVersion.Split('.').Take(2).StringJoin(".");
             var version = "v"+_informationalVersion;
             _log.Info("swagger version:"+ version);
             return version;
@@ -36,7 +36,7 @@ namespace CoreDocker.Api.Swagger
             services.AddSwaggerGen(
                 options => options.SingleApiVersion(new Info
                 {
-                    Title = $"CoreDocker API v"+ _informationalVersion,
+                    Title = $"CoreDocker API v{_informationalVersion}",
                     Version = GetVersion()
                 }));  
             // todo: Rolf Add Auth response codes
@@ -45,7 +45,7 @@ namespace CoreDocker.Api.Swagger
         internal static void AddUi(IApplicationBuilder app)
         {
             app.UseSwagger();
-            app.UseSwaggerUi();
+            app.UseSwaggerUi(swaggerUrl: $"/swagger/{GetVersion()}/swagger.json");
         }
 
         #endregion

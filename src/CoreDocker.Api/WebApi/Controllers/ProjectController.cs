@@ -78,7 +78,7 @@ namespace CoreDocker.Api.WebApi.Controllers
 	    /// <param name="model">The project.</param>
 	    /// <returns>
 	    /// </returns>
-        [HttpPost,AuthorizeActivity(Activity.InsertProject)]
+        [HttpPost,AuthorizeActivity(Activity.UpdateProject)]
 		public Task<ProjectModel> Insert([FromBody] ProjectCreateUpdateModel model)
 		{
             return _projectCommonController.Insert(model);

@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using CoreDocker.Dal.Mongo;
 using CoreDocker.Dal.Mongo.Migrations;
 using CoreDocker.Dal.Mongo.Migrations.Versions;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
 	public class Configuration
 	{

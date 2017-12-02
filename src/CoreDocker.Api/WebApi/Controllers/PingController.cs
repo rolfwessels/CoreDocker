@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Shared;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDocker.Api.WebApi.Controllers
@@ -18,14 +19,14 @@ namespace CoreDocker.Api.WebApi.Controllers
     {
         private readonly IGeneralUnitOfWorkFactory _factory;
         private static readonly string _informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        private readonly string _environmentName;
 
-        public PingController(IGeneralUnitOfWorkFactory factory)
+        public PingController(IGeneralUnitOfWorkFactory factory, IHostingEnvironment environment)
         {
             _factory = factory;
+            _environmentName = environment.EnvironmentName;
         }
-
-        public static string Env { get; set; } = "Develop";
-
+        
         /// <summary>
         ///     Returns list of all the projects as references
         /// </summary>
@@ -34,7 +35,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         [HttpGet, AllowAnonymous]
         public Task<PingResult> Get()
         {
-            return Task.FromResult( new PingResult() { Version = _informationalVersion , Database = IsDatabaseConnected() , Environment = Env , MachineName = Environment.MachineName });
+            return Task.FromResult( new PingResult() { Version = _informationalVersion , Database = IsDatabaseConnected() , Environment = _environmentName , MachineName = Environment.MachineName });
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         [HttpGet (RouteHelper.PingControllerHealthCheck), AllowAnonymous]
         public Task<PingResult> GetHealthCheck()
         {
-            return Task.FromResult(new PingResult() { Version = _informationalVersion, Database = "Unknown.", Environment = Env, MachineName = Environment.MachineName });
+            return Task.FromResult(new PingResult() { Version = _informationalVersion, Database = "Unknown.", Environment = _environmentName, MachineName = Environment.MachineName });
         }
 
         private string IsDatabaseConnected()

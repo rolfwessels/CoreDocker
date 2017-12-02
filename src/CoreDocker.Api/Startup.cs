@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
+using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
 using CoreDocker.Api.WebApi.Controllers;
@@ -29,7 +30,9 @@ namespace CoreDocker.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
-            services.AddMvc(options => WebApiSetup.Setup(options));
+            SecuritySetup.AddIndentityServer4(services);
+            services.AddMvc(WebApiSetup.Setup);
+
             SwaggerSetup.Setup(services);
 
             return new AutofacServiceProvider(IocApi.Instance.Container);
@@ -39,22 +42,32 @@ namespace CoreDocker.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger();
-
-            LogManager.SetLogger(loggerFactory);
-
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            loggerFactory.AddSerilog();
-
+            Config(loggerFactory, Configuration);
+            if (env.IsDevelopment())
+            {
+//                app.UseDeveloperExceptionPage();
+            }
+            app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseMvc();
             SwaggerSetup.AddUi(app);
             SimpleFileServer.Initialize(app);
         }
 
         #region Private Methods
+
+        private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configurationRoot)
+                .CreateLogger();
+
+            LogManager.SetLogger(loggerFactory);
+
+            loggerFactory.AddConsole(configurationRoot.GetSection("Logging"));
+            loggerFactory.AddDebug();
+            loggerFactory.AddSerilog();
+        }
 
         private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)
         {
@@ -63,12 +76,7 @@ namespace CoreDocker.Api
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
-            PingController.Env = env.EnvironmentName;
-            if (env.IsEnvironment("Development"))
-            {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-//                builder.AddApplicationInsightsSettings(true);
-            }
+            
 
 
             builder.AddEnvironmentVariables();
