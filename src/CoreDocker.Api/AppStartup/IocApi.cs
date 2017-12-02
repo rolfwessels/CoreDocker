@@ -27,7 +27,6 @@ namespace CoreDocker.Api.AppStartup
             SetupCore(builder);
             SetupCommonControllers(builder);
             SetupTools(builder);
-            SecuritySetupClient.Add(builder);
             builder.Populate(_services);
             Container = builder.Build();
         }

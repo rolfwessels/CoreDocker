@@ -96,9 +96,7 @@ namespace CoreDocker.Console
                 new Claim(JwtClaimTypes.Scope, OpenIdConfig.ScopeApi),
                 new Claim(JwtClaimTypes.Role, "admin")
             };
-
-
-      
+            
             return new List<TestUser>()
             {
                 new TestUser() {Username = "admin", Password = "admin!", SubjectId = "2", Claims = claims },

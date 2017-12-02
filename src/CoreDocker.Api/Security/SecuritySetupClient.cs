@@ -4,6 +4,7 @@ using CoreDocker.Core;
 using CoreDocker.Utilities.Helpers;
 using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.Services;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,11 +42,6 @@ namespace CoreDocker.Api.Security
                 });
         }
 
-        public static void Add(ContainerBuilder builder)
-        {
-            builder.RegisterType<IdentityWithAdditionalClaimsProfileService>().As<IProfileService>();
-        }
-        
         public static void UseBearerAuthentication(this IApplicationBuilder app)
         {
             app.UseAuthentication();
