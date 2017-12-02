@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
+using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using CoreDocker.Shared;
-using CoreDocker.Sdk;
 using Flurl.Http;
 
-namespace CoreDocker.Sdk.RestApi
+namespace CoreDocker.Sdk.RestApi.Clients
 {
     public class UserApiClient : BaseCrudApiClient<UserModel, UserCreateUpdateModel, UserReferenceModel>,
                                  IUserControllerActions

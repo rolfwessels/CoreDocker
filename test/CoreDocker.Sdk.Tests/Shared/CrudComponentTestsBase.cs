@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Interfaces;
+using CoreDocker.Utilities.FakeLogging;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.Shared

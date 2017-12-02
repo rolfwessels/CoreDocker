@@ -4,11 +4,10 @@ using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.Common;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
-using CoreDocker.Dal.Mongo;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities;
-using log4net;
+using CoreDocker.Utilities.FakeLogging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.AppStartup

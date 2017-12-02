@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi;
+using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Utilities.FakeLogging;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.WebApi

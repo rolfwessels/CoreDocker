@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using CoreDocker.Api;
+using CoreDocker.Sdk.Helpers;
+using CoreDocker.Utilities.FakeLogging;
 using Microsoft.AspNetCore.Hosting;
-using log4net;
 
 namespace CoreDocker.Sdk.Tests.Shared
 {

@@ -2,7 +2,7 @@
 using CoreDocker.Dal.Persistance;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
 	public class MongoGeneralUnitOfWork : IGeneralUnitOfWork
 	{

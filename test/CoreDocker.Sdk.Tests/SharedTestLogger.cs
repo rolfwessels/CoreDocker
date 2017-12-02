@@ -1,5 +1,5 @@
 ﻿using System;
-using log4net;
+using CoreDocker.Utilities.FakeLogging;
 using Microsoft.Extensions.Logging;
 using Serilog;
 

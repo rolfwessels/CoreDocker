@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
+using CoreDocker.Utilities.FakeLogging;
 using CoreDocker.Utilities.Helpers;
-using log4net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.Swagger.Model;

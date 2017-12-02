@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using CoreDocker.Dal.Mongo;
-using CoreDocker.Dal.Mongo.Migrations;
-using CoreDocker.Dal.Mongo.Migrations.Versions;
+using CoreDocker.Dal.MongoDb.Migrations;
+using CoreDocker.Dal.MongoDb.Migrations.Versions;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 

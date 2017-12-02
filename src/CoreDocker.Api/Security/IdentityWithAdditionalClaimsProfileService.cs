@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Users;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Extensions;

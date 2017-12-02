@@ -1,4 +1,4 @@
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;

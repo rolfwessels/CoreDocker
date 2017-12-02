@@ -1,12 +1,12 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models;
 using Flurl;
 using Flurl.Http;
-using CoreDocker.Sdk.OAuth;
 
-namespace CoreDocker.Sdk
+namespace CoreDocker.Sdk.Helpers
 {
     public static class FlurlHelper
     {

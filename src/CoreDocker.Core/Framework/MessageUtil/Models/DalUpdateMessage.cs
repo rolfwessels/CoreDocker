@@ -1,6 +1,6 @@
 ﻿using CoreDocker.Dal.Models.Enums;
 
-namespace CoreDocker.Core.MessageUtil.Models
+namespace CoreDocker.Core.Framework.MessageUtil.Models
 {
 	public class DalUpdateMessage<T>
 	{

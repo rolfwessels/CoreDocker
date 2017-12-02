@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo.Migrations
+namespace CoreDocker.Dal.MongoDb.Migrations
 {
     public class VersionUpdater
     {

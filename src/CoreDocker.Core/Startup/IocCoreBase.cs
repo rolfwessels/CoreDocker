@@ -1,13 +1,15 @@
 ﻿using System;
 using Autofac;
+using CoreDocker.Core.Components.Projects;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.MessageUtil;
 using FluentValidation;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
-using CoreDocker.Core.MessageUtil;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Validation;
-using log4net;
+using CoreDocker.Dal.Validation.Validators;
+using CoreDocker.Utilities.FakeLogging;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
 namespace CoreDocker.Core.Startup

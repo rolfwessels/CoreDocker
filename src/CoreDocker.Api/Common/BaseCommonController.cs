@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoreDocker.Api.Models.Mappers;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models;
 

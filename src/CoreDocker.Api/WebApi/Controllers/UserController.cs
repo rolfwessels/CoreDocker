@@ -9,7 +9,6 @@ using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
 using Microsoft.AspNetCore.Mvc;
 using CoreDocker.Shared;
-using log4net;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Controllers

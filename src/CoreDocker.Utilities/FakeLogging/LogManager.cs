@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace log4net
+namespace CoreDocker.Utilities.FakeLogging
 {
     public class LogManager
     {

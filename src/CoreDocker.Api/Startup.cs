@@ -6,7 +6,7 @@ using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Utilities;
-using log4net;
+using CoreDocker.Utilities.FakeLogging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

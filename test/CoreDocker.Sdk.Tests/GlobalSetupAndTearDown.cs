@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using log4net;
+using CoreDocker.Utilities.FakeLogging;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests

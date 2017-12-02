@@ -1,5 +1,5 @@
 using CoreDocker.Api.Common;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;

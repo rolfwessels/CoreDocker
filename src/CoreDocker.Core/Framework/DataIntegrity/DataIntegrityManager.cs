@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
-using CoreDocker.Utilities.Helpers;
 
-namespace CoreDocker.Core.DataIntegrity
+namespace CoreDocker.Core.Framework.DataIntegrity
 {
     
     public class DataIntegrityManager : IDataIntegrityManager

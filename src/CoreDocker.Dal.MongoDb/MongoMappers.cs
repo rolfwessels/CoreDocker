@@ -1,12 +1,12 @@
 using System;
-using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Base;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
     public class MongoMappers
     {

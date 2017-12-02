@@ -2,12 +2,12 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using CoreDocker.Api.Common;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Utilities.Tests.Tools;
 using Moq;
 using NUnit.Framework;
 

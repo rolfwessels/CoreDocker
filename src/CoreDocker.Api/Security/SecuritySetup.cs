@@ -2,7 +2,6 @@
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
-using CoreDocker.Dal.Mongo;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;

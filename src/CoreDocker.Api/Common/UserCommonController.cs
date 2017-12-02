@@ -5,13 +5,12 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Api.Models.Mappers;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using log4net;
+using CoreDocker.Utilities.FakeLogging;
 
 namespace CoreDocker.Api.Common
 {

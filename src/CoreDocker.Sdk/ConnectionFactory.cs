@@ -1,4 +1,5 @@
 using System;
+using CoreDocker.Sdk.RestApi;
 using Flurl.Http;
 
 namespace CoreDocker.Sdk

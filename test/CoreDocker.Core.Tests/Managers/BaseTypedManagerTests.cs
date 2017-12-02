@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.MessageUtil.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.MessageUtil.Models;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Dal.Persistance;
 using Moq;

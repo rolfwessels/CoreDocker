@@ -1,7 +1,6 @@
-using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 
-namespace CoreDocker.Sdk
+namespace CoreDocker.Sdk.RestApi
 {
     public interface ICoreDockerApi
     {

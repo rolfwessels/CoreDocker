@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
 
-namespace CoreDocker.Core.BusinessLogic.Components.Interfaces
+namespace CoreDocker.Core.Components.Users
 {
     public interface IRoleManager 
     {

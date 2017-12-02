@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreDocker.Sdk.OAuth;
+using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models;

@@ -1,5 +1,4 @@
 ﻿using System;
-using CoreDocker.Dal.Mongo;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;

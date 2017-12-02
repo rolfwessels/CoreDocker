@@ -1,6 +1,6 @@
 using System;
 using CoreDocker.Dal.Models.Enums;
-using log4net;
+using CoreDocker.Utilities.FakeLogging;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Attributes

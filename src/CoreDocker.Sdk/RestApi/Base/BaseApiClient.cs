@@ -1,10 +1,9 @@
-using Newtonsoft.Json;
-using CoreDocker.Sdk;
-using Flurl.Http;
-using Flurl;
 using CoreDocker.Shared;
+using Flurl;
+using Flurl.Http;
+using Newtonsoft.Json;
 
-namespace CoreDocker.Sdk.OAuth
+namespace CoreDocker.Sdk.RestApi.Base
 {
     public  abstract class BaseApiClient
     {

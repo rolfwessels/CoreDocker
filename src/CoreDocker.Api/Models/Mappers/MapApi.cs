@@ -1,10 +1,10 @@
 using AutoMapper;
-using CoreDocker.Core.MessageUtil.Models;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Enums;
-using log4net;
 using CoreDocker.Dal.Models;
 using System;
+using CoreDocker.Core.Framework.MessageUtil.Models;
+using CoreDocker.Utilities.FakeLogging;
 
 namespace CoreDocker.Api.Models.Mappers
 {
