@@ -6,5 +6,6 @@ namespace CoreDocker.Sdk.RestApi
     {
         ProjectApiClient Projects { get; set; }
         UserApiClient Users { get; set; }
+        AuthenticateApiClient Authenticate { get; set; }
     }
 }

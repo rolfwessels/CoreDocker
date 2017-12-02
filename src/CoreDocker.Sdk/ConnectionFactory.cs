@@ -10,7 +10,7 @@ namespace CoreDocker.Sdk
 
         public ConnectionFactory(string urlBase)
         {
-            FlurlHttp.Configure(c => { c.DefaultTimeout = TimeSpan.FromSeconds(30); });
+            FlurlHttp.Configure(c => { c.Timeout = TimeSpan.FromSeconds(30); });
             _urlBase = urlBase;
         }
 

@@ -13,7 +13,7 @@ namespace CoreDocker.Sdk.Tests.Shared
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin";
         private static ILog _log = LogManager.GetLogger<IntegrationTestsBase>();
-        private static readonly Lazy<string> _hostAddress;
+        protected static readonly Lazy<string> _hostAddress;
 
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
