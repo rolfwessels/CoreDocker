@@ -38,7 +38,7 @@ namespace CoreDocker.Sdk.Tests.Shared
             var port = new Random().Next(9000, 9999);
             var address = string.Format("http://localhost:{0}", port);
 //            var websitePath = TestHelper.GetSourceBasePath();
-            OpenIdConfig.HostUrl = address;
+            
             var host = new WebHostBuilder()
                 .UseKestrel()
 //                .UseContentRoot(websitePath)

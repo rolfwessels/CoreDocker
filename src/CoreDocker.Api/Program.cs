@@ -10,7 +10,7 @@ namespace CoreDocker.Api
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls(args.FirstOrDefault()??"http://*:5000")
+                .UseUrls(args.FirstOrDefault()??"http://*:5001")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

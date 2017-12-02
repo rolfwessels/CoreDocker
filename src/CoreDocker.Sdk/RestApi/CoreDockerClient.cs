@@ -1,4 +1,5 @@
 using CoreDocker.Sdk.RestApi.Clients;
+using CoreDocker.Shared.Models;
 using Flurl.Http;
 using RestSharp;
 
@@ -22,9 +23,17 @@ namespace CoreDocker.Sdk.RestApi
         public string UrlBase { get; }
 
         #region Implementation of ICoreDockerApi
-        
+
+        public void SetToken(TokenResponseModel data)
+        {
+            var bearerToken = string.Format("{0} {1}", "Bearer", data.AccessToken);
+            _restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
+        }
+
         public AuthenticateApiClient Authenticate { get; set; }
         public PingApiClient Ping { get; set; }
+       
+
         public ProjectApiClient Projects { get; set; }
         public UserApiClient Users { get; set; }
 

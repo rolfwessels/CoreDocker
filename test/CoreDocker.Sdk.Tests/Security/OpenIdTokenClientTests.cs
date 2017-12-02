@@ -17,13 +17,14 @@ namespace CoreDocker.Sdk.Tests.Security
         private ICoreDockerApi _connection;
 
         private ProjectApiClient _projectApiClient;
+        private CoreDockerClient _connectionAuth;
 
         #region Setup/Teardown
 
         protected void Setup()
         {
             _connection = _defaultRequestFactory.Value.GetConnection();
-//            _connection = new CoreDockerClient("http://localhost:5000");
+            _connectionAuth = new CoreDockerClient("http://localhost:5000");
             _projectApiClient = _connection.Projects;
         }
 
@@ -68,8 +69,9 @@ namespace CoreDocker.Sdk.Tests.Security
             var pingModel = await _connection.Ping.Get();
             pingModel.Environment.Should().Be("Production"); //??
 
-            var data = await _connection.Authenticate.GetToken(AdminUser, AdminPassword);
+            var data = await _connectionAuth.Authenticate.GetToken(AdminUser, AdminPassword);
             // action
+            _connection.SetToken(data);
             var projectsEnumerable = await _connection.Projects.Get();
             projectsEnumerable.Count().Should().BeGreaterThan(0);
         }

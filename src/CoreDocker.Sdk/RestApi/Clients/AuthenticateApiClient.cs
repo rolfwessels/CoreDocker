@@ -56,8 +56,6 @@ namespace CoreDocker.Sdk.RestApi.Clients
             IRestResponse<TokenResponseModel> result =
                 await restClient.ExecuteAsyncWithLogging<TokenResponseModel>(request);
             ValidateTokenResponse(result);
-            var bearerToken = string.Format("{0} {1}", "Bearer", result.Data.AccessToken);
-            restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
             return result.Data;
         }
 
