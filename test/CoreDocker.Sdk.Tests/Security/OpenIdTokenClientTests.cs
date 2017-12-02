@@ -57,7 +57,7 @@ namespace CoreDocker.Sdk.Tests.Security
             // arrange
             Setup();
             // action
-            var data = await _connection.Authenticate.GetToken(AdminUser, AdminPassword);
+            var data = await _connection.Authenticate.Login(AdminUser, AdminPassword);
             data.AccessToken.Should().NotBeEmpty();
             data.ExpiresIn.Should().BeGreaterThan(30);
             data.TokenType.Should().Be("Bearer");
@@ -71,13 +71,14 @@ namespace CoreDocker.Sdk.Tests.Security
             var pingModel = await _connection.Ping.Get();
             pingModel.Environment.Should().Be("Production"); //??
 
-            var data = await _connectionAuth.Authenticate.GetToken(AdminUser, AdminPassword);
+            var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
             data.AccessToken.Dump("AccessToken");
             // action
             _connection.SetToken(data);
-//            _connection.SetToken(new TokenResponseModel() { AccessToken= "92e3e7de2f15ceb4181e7d789114a556174fadb576921cc7ee2b13fe8ec91a00" });
             var projectsEnumerable = await _connection.Projects.Get();
             projectsEnumerable.Count().Should().BeGreaterThan(0);
+            await _connection.Projects.Get();
+            
         }
     }
 }

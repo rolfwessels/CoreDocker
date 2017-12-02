@@ -5,6 +5,7 @@ using CoreDocker.Api;
 using CoreDocker.Api.Security;
 using CoreDocker.Core;
 using CoreDocker.Sdk.Helpers;
+using CoreDocker.Sdk.RestApi;
 using IdentityServer4.Models;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
@@ -22,14 +23,14 @@ namespace CoreDocker.Sdk.Tests.Shared
 
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
-        protected static Lazy<ConnectionFactory> _adminRequestFactory;
+        protected static Lazy<ICoreDockerApi> _adminConnection;
 
         static IntegrationTestsBase()
         {
             RestShapHelper.Log = s => _log.Debug(s);
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
-            _adminRequestFactory = new Lazy<ConnectionFactory>(CreateAdminRequest);
+            _adminConnection = new Lazy<ICoreDockerApi>(CreateAdminRequest);
         }
 
         #region Private Methods
@@ -57,11 +58,12 @@ namespace CoreDocker.Sdk.Tests.Shared
         }
 
 
-        private static ConnectionFactory CreateAdminRequest()
+        private static ICoreDockerApi CreateAdminRequest()
         {
-            var restConnectionFactory = new ConnectionFactory(_hostAddress.Value);
+            var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
+            coreDockerApi.Authenticate.Login(AdminUser, AdminPassword).Wait();
             // add the authentication here
-            return restConnectionFactory;
+            return coreDockerApi;
         }
 
         #endregion

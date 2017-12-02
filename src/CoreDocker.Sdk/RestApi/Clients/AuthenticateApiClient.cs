@@ -32,15 +32,17 @@ namespace CoreDocker.Sdk.RestApi.Clients
             public List<Dictionary<string, string>> Keys { get; set; }
         }
 
-        public Task<TokenResponseModel> GetToken(string adminUser, string adminPassword)
+        public async Task<TokenResponseModel> Login(string adminUser, string adminPassword)
         {
-            return GetToken(new TokenRequestModel()
+            var token =  await GetToken(new TokenRequestModel()
             {
                 ClientId = "coredocker.api",
                 ClientSecret = "e0acca78-4dc2-46c6-83c6-c6aeacfffd46",
                 UserName = adminUser,
                 Password = adminPassword
             });
+            CoreDockerClient.SetToken(token);
+            return token;
         }
 
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)

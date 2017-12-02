@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
@@ -28,7 +29,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
 
     protected override void Setup()
     {
-      var connection = _adminRequestFactory.Value.GetConnection();
+      var connection = _adminConnection.Value;
       _userApiClient = connection.Users;
       SetRequiredData(_userApiClient);
     }
@@ -53,24 +54,24 @@ namespace CoreDocker.Sdk.Tests.WebApi
     }
 
     [Test]
-    public void Roles_WhenCalled_ShouldReturnAllRoleInformation()
+    public async Task Roles_WhenCalled_ShouldReturnAllRoleInformation()
     {
       // arrange
       Setup();
       // action
-      var userModel = _userApiClient.Roles().Result;
+      var userModel = await _userApiClient.Roles();
       // assert
       userModel.Count.Should().BeGreaterOrEqualTo(2);
       userModel.Select(x => x.Name).Should().Contain("Admin");
     }
 
     [Test]
-    public void WhoAmI_GivenUserData_ShouldReturn()
+    public async Task WhoAmI_GivenUserData_ShouldReturn()
     {
       // arrange
       Setup();
       // action
-      var userModel = _userApiClient.WhoAmI().Result;
+      var userModel = await _userApiClient.WhoAmI();
       // assert
       userModel.Should().NotBeNull();
       userModel.Email.Should().Be("admin");

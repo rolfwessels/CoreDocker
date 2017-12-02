@@ -13,7 +13,7 @@ namespace CoreDocker.Api.Security
     {
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
-            
+            services.AddDistributedMemoryCache();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("dataEventRecordsAdmin", policyAdmin =>
@@ -29,30 +29,26 @@ namespace CoreDocker.Api.Security
                     policyUser.RequireClaim("role", "dataEventRecords.user");
                 });
             });
-
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = OpenIdConfigBase.HostUrl.Dump("---------------->");
+                    options.Authority = OpenIdConfigBase.HostUrl;
                     options.RequireHttpsMetadata = false;
                     options.ApiName = OpenIdConfigBase.ResourceName;
                     options.ApiSecret = "secret";
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });
- 
         }
 
         public static void Add(ContainerBuilder builder)
         {
             builder.RegisterType<IdentityWithAdditionalClaimsProfileService>().As<IProfileService>();
         }
-
-
+        
         public static void UseBearerAuthentication(this IApplicationBuilder app)
         {
             app.UseAuthentication();
-            
         }
     }
 }

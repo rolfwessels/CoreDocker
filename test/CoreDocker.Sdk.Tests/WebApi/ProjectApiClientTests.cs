@@ -23,7 +23,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
 
     protected override void Setup()
     {
-      var connection = _adminRequestFactory.Value.GetConnection();
+      var connection = _adminConnection.Value;
       _projectApiClient = connection.Projects;
       SetRequiredData(_projectApiClient);
     }

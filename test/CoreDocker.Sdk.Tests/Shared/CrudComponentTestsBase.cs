@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Interfaces;
 using log4net;
@@ -25,42 +27,50 @@ namespace CoreDocker.Sdk.Tests.Shared
         protected abstract void Setup();
 
         [Test]
-        public void Get_WhenCalledWithOData_ShouldShouldFilter()
+        public async Task Get_WhenCalledWithOData_ShouldShouldFilter()
         {
             // arrange
             Setup();
             // action
             if (_crudController is IBaseStandardLookups<TModel, TReferenceModel> baseStandardLookups)
             {
-                var restResponse = baseStandardLookups.GetDetail("$top=1").Result;
+                var restResponse = await baseStandardLookups.GetDetail("$top=1");
                 // assert
                 restResponse.Count().Should().BeGreaterOrEqualTo(0);
             }
         }
 
         [Test]
-        public void PostPutDelete_WhenWhenGivenValidModel_ShouldLookupModels()
+        public async Task PostPutDelete_WhenWhenGivenValidModel_ShouldLookupModels()
         {
             // arrange
             Setup();
             var projectModel = GetExampleData();
 
             // action
-            var projectModels = _crudController.Insert(projectModel[0]).Result;
-            var savedProject = _crudController.GetById(projectModels.Id).Result;
-            var projectModelLoad = _crudController.Update(projectModels.Id, projectModel[1]).Result;
-            var removed = _crudController.Delete(projectModels.Id).Result;
-            var removedSecond = _crudController.Delete(projectModels.Id).Result;
-            var removedProject = _crudController.GetById(projectModels.Id).Result;
-
+            if (_crudController is IBaseStandardLookups<TModel, TReferenceModel> baseStandardLookups)
+            {
+                var restResponse = await baseStandardLookups.GetDetail();
+                restResponse.Count().Should().BeGreaterOrEqualTo(0);
+            }
+            var projectModels = await _crudController.Insert(projectModel[0]);
+            var savedProject = await _crudController.GetById(projectModels.Id);
+            var projectModelLoad = await _crudController.Update(projectModels.Id, projectModel[1]);
+            var removed = await _crudController.Delete(projectModels.Id);
+            var removedSecond = await _crudController.Delete(projectModels.Id);
+            Action testCall = () =>
+            {
+               _crudController.GetById(projectModels.Id).Wait();
+            };
+           
             // assert
             savedProject.Should().NotBeNull();
-            removedProject.Should().BeNull();
             projectModel[0].ShouldBeEquivalentTo(projectModels, CompareConfig);
             projectModel[1].ShouldBeEquivalentTo(projectModelLoad, CompareConfig);
             removed.Should().BeTrue();
             savedProject.Should().NotBeNull();
             removedSecond.Should().BeFalse();
+            testCall.ShouldThrow<Exception>();
         }
 
         protected virtual EquivalencyAssertionOptions<TDetailModel> CompareConfig(

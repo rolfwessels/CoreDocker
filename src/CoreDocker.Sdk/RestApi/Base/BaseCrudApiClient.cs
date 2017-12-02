@@ -32,6 +32,7 @@ namespace CoreDocker.Sdk.RestApi.Base
         public async Task<TModel> Insert(TDetailModel model)
         {
             var restRequest = new RestRequest(DefaultUrl(),Method.POST);
+            restRequest.AddJsonBody(model);
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }
