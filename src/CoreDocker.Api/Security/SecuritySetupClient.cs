@@ -33,7 +33,7 @@ namespace CoreDocker.Api.Security
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = OpenIdConfigBase.HostUrl.UriCombine(OpenIdConfigBase.IdentPath).Dump("---------------->");
+                    options.Authority = OpenIdConfigBase.HostUrl.Dump("---------------->");
                     options.RequireHttpsMetadata = false;
                     options.ApiName = OpenIdConfigBase.ResourceName;
                     options.ApiSecret = "secret";

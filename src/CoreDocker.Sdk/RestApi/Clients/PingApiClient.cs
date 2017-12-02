@@ -9,7 +9,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 {
     public class PingApiClient : BaseApiClient
     {
-        public PingApiClient(CoreDockerClient coreDockerClient) : base(coreDockerClient, "ping")
+        public PingApiClient(CoreDockerClient coreDockerClient) : base(coreDockerClient, RouteHelper.PingController)
         {
         }
 

@@ -58,21 +58,14 @@ namespace CoreDocker.Api
             {
 //                app.UseDeveloperExceptionPage();
             }
-            
-            app.Map($"/{OpenIdConfigBase.IdentPath}", identityServerApp =>
-            {
-                identityServerApp.UseIndentityService();
-            });
 
-            app.Map("/api", arr =>
-            {
-                arr.UseBearerAuthentication();
-                arr.UseMvc();
-            });
+            app.UseIndentityService();
+            app.UseBearerAuthentication();
+            app.UseMvc();
 
 
-//            app.UseBearerAuthentication();
-//            app.UseMvc();
+            //            app.UseBearerAuthentication();
+            //            app.UseMvc();
             SwaggerSetup.AddUi(app);
             SimpleFileServer.Initialize(app);
             
