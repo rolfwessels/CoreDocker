@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 
-
-namespace CoreDocker.Core.BusinessLogic.Components
+namespace CoreDocker.Core.Components.Projects
 {
     public class ProjectManager : BaseManager<Project>, IProjectManager
     {

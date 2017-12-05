@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
+using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using CoreDocker.Shared;
-using CoreDocker.Sdk;
 using Flurl.Http;
+using RestSharp;
 
-namespace CoreDocker.Sdk.RestApi
+namespace CoreDocker.Sdk.RestApi.Clients
 {
     public class UserApiClient : BaseCrudApiClient<UserModel, UserCreateUpdateModel, UserReferenceModel>,
                                  IUserControllerActions
@@ -22,30 +23,30 @@ namespace CoreDocker.Sdk.RestApi
 
         public async Task<UserModel> Register(RegisterModel user)
         {
-            return await DefaultUrl(RouteHelper.UserControllerRegister)
-              .PostJsonAsyncAndLog(user)
-              .ReceiveJson<UserModel>();
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerRegister),Method.POST);
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<UserModel>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<bool> ForgotPassword(string email)
         {
-            return await DefaultUrl(RouteHelper.UserControllerForgotPassword.SetParam("email", email))
-              .GetAsyncAndLog()
-              .ReceiveJson<bool>();
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerForgotPassword.SetParam("email", email)));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<bool> (restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<UserModel> WhoAmI()
         {
-            return await DefaultUrl(RouteHelper.UserControllerWhoAmI)
-             .GetAsyncAndLog()
-             .ReceiveJson<UserModel>();
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerWhoAmI));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<UserModel>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
-        public Task<List<RoleModel>> Roles()
+        public async Task<List<RoleModel>> Roles()
         {
-            return DefaultUrl(RouteHelper.UserControllerRoles)
-            .GetAsyncAndLog()
-            .ReceiveJson<List<RoleModel>>();
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerRoles));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<List<RoleModel>>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         #endregion

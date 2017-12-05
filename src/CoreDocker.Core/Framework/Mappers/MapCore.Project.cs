@@ -1,9 +1,8 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Reference;
 
-namespace CoreDocker.Core.Mappers
+namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
 	{

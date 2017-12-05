@@ -1,10 +1,14 @@
-using CoreDocker.Sdk.RestApi;
+using CoreDocker.Sdk.RestApi.Clients;
+using CoreDocker.Shared.Models;
 
-namespace CoreDocker.Sdk
+namespace CoreDocker.Sdk.RestApi
 {
     public interface ICoreDockerApi
     {
-        ProjectApiClient Projects { get; set; }
-        UserApiClient Users { get; set; }
+        ProjectApiClient Projects { get; }
+        UserApiClient Users { get; }
+        AuthenticateApiClient Authenticate { get; }
+        PingApiClient Ping { get; }
+        void SetToken(TokenResponseModel data);
     }
 }

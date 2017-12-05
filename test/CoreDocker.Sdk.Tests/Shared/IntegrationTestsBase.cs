@@ -1,28 +1,36 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using CoreDocker.Api;
-using Microsoft.AspNetCore.Hosting;
+using CoreDocker.Api.Security;
+using CoreDocker.Core;
+using CoreDocker.Sdk.Helpers;
+using CoreDocker.Sdk.RestApi;
+using IdentityServer4.Models;
 using log4net;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CoreDocker.Sdk.Tests.Shared
 {
     public class IntegrationTestsBase
     {
+        
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin";
-        private static ILog _log = LogManager.GetLogger<IntegrationTestsBase>();
-        private static readonly Lazy<string> _hostAddress;
+        private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        protected static readonly Lazy<string> _hostAddress;
 
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
-        protected static Lazy<ConnectionFactory> _adminRequestFactory;
+        protected static Lazy<ICoreDockerApi> _adminConnection;
 
         static IntegrationTestsBase()
         {
+            RestShapHelper.Log = s => _log.Debug(s);
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
-            _adminRequestFactory = new Lazy<ConnectionFactory>(CreateAdminRequest);
+            _adminConnection = new Lazy<ICoreDockerApi>(CreateAdminRequest);
         }
 
         #region Private Methods
@@ -32,34 +40,30 @@ namespace CoreDocker.Sdk.Tests.Shared
             var port = new Random().Next(9000, 9999);
             var address = string.Format("http://localhost:{0}", port);
 //            var websitePath = TestHelper.GetSourceBasePath();
-
+            OpenIdConfigBase.HostUrl = address;
             var host = new WebHostBuilder()
                 .UseKestrel()
 //                .UseContentRoot(websitePath)
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
-            _log = LogManager.GetLogger<IntegrationTestsBase>();
+            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             _log.Info(string.Format("Starting api on [{0}]", address));
-            FlurlHelper.Log = m =>
+            RestShapHelper.Log = m =>
             {
-                _log.Info(m);
-                Debug.WriteLine("value [{0}]", m);
-            };
-            FlurlHelper.LogError = m =>
-            {
-                _log.Error(m);
-                Debug.WriteLine("value [{0}]", m);
+                _log.Debug(m);
+//                Debug.WriteLine("value [{0}]", m);
             };
             return address;
         }
 
 
-        private static ConnectionFactory CreateAdminRequest()
+        private static ICoreDockerApi CreateAdminRequest()
         {
-            var restConnectionFactory = new ConnectionFactory(_hostAddress.Value);
+            var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
+            coreDockerApi.Authenticate.Login(AdminUser, AdminPassword).Wait();
             // add the authentication here
-            return restConnectionFactory;
+            return coreDockerApi;
         }
 
         #endregion

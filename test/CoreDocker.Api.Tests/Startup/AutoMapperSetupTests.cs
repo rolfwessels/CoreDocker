@@ -1,5 +1,5 @@
 using CoreDocker.Api.Models.Mappers;
-using CoreDocker.Core.Mappers;
+using CoreDocker.Core.Framework.Mappers;
 using NUnit.Framework;
 
 namespace CoreDocker.Api.Tests.Startup

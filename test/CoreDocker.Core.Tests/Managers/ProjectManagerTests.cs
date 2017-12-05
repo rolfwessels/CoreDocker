@@ -1,5 +1,6 @@
+using CoreDocker.Core.Components.Projects;
+using CoreDocker.Core.Framework.BaseManagers;
 using FizzWare.NBuilder;
-using CoreDocker.Core.BusinessLogic.Components;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;

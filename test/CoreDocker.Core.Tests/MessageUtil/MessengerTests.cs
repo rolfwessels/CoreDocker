@@ -1,6 +1,6 @@
 ﻿using System;
+using CoreDocker.Core.Framework.MessageUtil;
 using FluentAssertions;
-using CoreDocker.Core.MessageUtil;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.MessageUtil

@@ -11,7 +11,7 @@ project.lock.json
 .DS_Store
 /TestResult.xml
 /CoreDocker.ncrunchsolution.user
-/_NCrunch_CoreDocker/CoreDocker.crunchsolution.cache
+/_NCrunch_CoreDocker/**/*
 *.user
 *.ncrunchproject
 /TestResults/*.trx

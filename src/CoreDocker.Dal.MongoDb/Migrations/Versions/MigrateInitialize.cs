@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo.Migrations.Versions
+namespace CoreDocker.Dal.MongoDb.Migrations.Versions
 {
     public class MigrateInitialize : IMigration
     {

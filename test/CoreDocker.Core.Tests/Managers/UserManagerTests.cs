@@ -1,7 +1,8 @@
 using System.Linq;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.BaseManagers;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Core.BusinessLogic.Components;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;

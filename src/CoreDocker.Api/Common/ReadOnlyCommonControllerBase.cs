@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
 using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Core.Framework.BaseManagers;
 
 namespace CoreDocker.Api.Common
 {

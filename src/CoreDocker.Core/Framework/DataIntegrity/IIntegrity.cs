@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
 
-namespace CoreDocker.Core.DataIntegrity
+namespace CoreDocker.Core.Framework.DataIntegrity
 {
     public interface IIntegrity
     {

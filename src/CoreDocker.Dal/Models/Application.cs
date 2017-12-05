@@ -1,4 +1,6 @@
-﻿namespace CoreDocker.Dal.Models
+﻿using CoreDocker.Dal.Models.Base;
+
+namespace CoreDocker.Dal.Models
 {
 	public class Application : BaseDalModelWithId 
 	{

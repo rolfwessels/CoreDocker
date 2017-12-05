@@ -1,17 +1,20 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
+using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
-using CoreDocker.Api.WebApi.Controllers;
+using CoreDocker.Core;
 using CoreDocker.Utilities;
 using log4net;
+using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace CoreDocker.Api
 {
@@ -19,6 +22,8 @@ namespace CoreDocker.Api
     {
         public Startup(IHostingEnvironment env)
         {
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("logSettings.xml"));
             Configuration = ReadAppSettings(env);
             Settings.Initialize(Configuration);
         }
@@ -29,32 +34,49 @@ namespace CoreDocker.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
-            services.AddMvc(options => WebApiSetup.Setup(options));
-            SwaggerSetup.Setup(services);
-
+            services.AddCors();
+            services.UseIndentityService();
+            services.AddBearerAuthentication();
+            services.AddMvc(WebApiSetup.Setup);
+            services.AddSwagger();
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
-
-
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger();
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                policy.WithExposedHeaders("WWW-Authenticate");
+            });
+            Config(loggerFactory, Configuration);
+            if (env.IsDevelopment())
+            {
+//                app.UseDeveloperExceptionPage();
+            }
 
-            LogManager.SetLogger(loggerFactory);
-
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            loggerFactory.AddSerilog();
-
+            app.UseIndentityService();
+            app.UseBearerAuthentication();
             app.UseMvc();
-            SwaggerSetup.AddUi(app);
+
+
+            //            app.UseBearerAuthentication();
+            //            app.UseMvc();
+            app.UseSwagger();
             SimpleFileServer.Initialize(app);
+            
         }
 
         #region Private Methods
+
+        private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
+        {
+            loggerFactory.AddConsole();
+            loggerFactory.AddDebug();
+        }
 
         private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)
         {
@@ -62,14 +84,6 @@ namespace CoreDocker.Api
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
-
-            PingController.Env = env.EnvironmentName;
-            if (env.IsEnvironment("Development"))
-            {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-//                builder.AddApplicationInsightsSettings(true);
-            }
-
 
             builder.AddEnvironmentVariables();
             return builder.Build();

@@ -1,8 +1,8 @@
-using Moq.Language.Flow;
 using System;
 using System.Threading.Tasks;
+using Moq.Language.Flow;
 
-namespace CoreDocker.Core.Tests.Helpers
+namespace CoreDocker.Utilities.Tests.Tools
 {
     public static class TestHelper
     {

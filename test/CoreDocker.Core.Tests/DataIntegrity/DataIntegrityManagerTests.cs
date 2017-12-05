@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CoreDocker.Core.Framework.DataIntegrity;
+using CoreDocker.Core.Framework.Mappers;
 using FluentAssertions;
-using CoreDocker.Core.DataIntegrity;
-using CoreDocker.Core.Mappers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Tests.Managers;
 using CoreDocker.Dal.Models;

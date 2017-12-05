@@ -1,19 +1,20 @@
 using System;
-using CoreDocker.Dal.Models;
-using Microsoft.Extensions.Logging;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Bson.Serialization.IdGenerators;
+using System.Reflection;
+using CoreDocker.Dal.Models.Base;
+using log4net;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
     public class MongoMappers
     {
-
-        public void InitializeMappers(ILogger logger)
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public void InitializeMappers()
         {
-            SetupDataTimeSerializer(logger);
+            SetupDataTimeSerializer();
             SetupMapping();
         }
 
@@ -32,7 +33,7 @@ namespace CoreDocker.Dal.Mongo
             });
         }
 
-        private static void SetupDataTimeSerializer(ILogger logger)
+        private static void SetupDataTimeSerializer()
         {
             try
             {
@@ -41,7 +42,7 @@ namespace CoreDocker.Dal.Mongo
             }
             catch (Exception e)
             {
-                logger.LogError("MongoMappers:InitializeMappers " + e.Message,e);
+                _log.Error("MongoMappers:InitializeMappers " + e.Message,e);
             }
         }
     }

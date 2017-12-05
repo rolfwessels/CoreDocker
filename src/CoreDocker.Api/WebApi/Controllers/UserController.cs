@@ -80,7 +80,7 @@ namespace CoreDocker.Api.WebApi.Controllers
 	    /// <param name="model">The user.</param>
 	    /// <returns>
 	    /// </returns>
-        [HttpPost,AuthorizeActivity(Activity.InsertUsers)]
+        [HttpPost,AuthorizeActivity(Activity.UpdateUsers)]
 		public Task<UserModel> Insert([FromBody] UserCreateUpdateModel model)
 		{
             return _userCommonController.Insert(model);
@@ -142,6 +142,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         }
 
 
-		#endregion
-	}
+        #endregion
+        
+    }
 }

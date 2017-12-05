@@ -1,8 +1,7 @@
-﻿using NUnit.Framework;
-using CoreDocker.Api.Models.Mappers;
-using AutoMapper;
+﻿using CoreDocker.Api.Models.Mappers;
+using NUnit.Framework;
 
-namespace CoreDocker.Core.Tests
+namespace CoreDocker.Api.Tests
 {
     [TestFixture]
     public class CoreTests

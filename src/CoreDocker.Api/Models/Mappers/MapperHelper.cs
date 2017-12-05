@@ -1,5 +1,6 @@
 using AutoMapper;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Api.Models.Mappers
 {

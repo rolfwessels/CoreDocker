@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.Extensions.Logging;
-using CoreDocker.Core.Framework.Logging;
 
-namespace CoreDocker.Core.BusinessLogic.Components
+namespace CoreDocker.Core.Components.Users
 {
     public class UserManager : BaseManager<User>, IUserManager
     {

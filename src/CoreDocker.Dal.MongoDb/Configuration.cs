@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using CoreDocker.Dal.Mongo.Migrations;
-using CoreDocker.Dal.Mongo.Migrations.Versions;
-using Microsoft.Extensions.Logging;
+using CoreDocker.Dal.MongoDb.Migrations;
+using CoreDocker.Dal.MongoDb.Migrations.Versions;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
 	public class Configuration
 	{
@@ -21,15 +20,15 @@ namespace CoreDocker.Dal.Mongo
             };
 	    }
 
-	    public Task Update(IMongoDatabase db, ILogger logger)
+	    public Task Update(IMongoDatabase db)
 	    {
 	        lock (_instance)
 	        {
 	            if (_update == null)
 	            {
 	                _mongoMappers = new MongoMappers();
-	                _mongoMappers.InitializeMappers(logger);
-	                var versionUpdater = new VersionUpdater(_updates, logger);
+	                _mongoMappers.InitializeMappers();
+	                var versionUpdater = new VersionUpdater(_updates);
 	                _update = versionUpdater.Update(db);
 	            }
 	        }

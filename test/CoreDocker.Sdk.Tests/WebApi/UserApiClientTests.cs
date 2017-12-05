@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi;
+using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
+using log4net;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.WebApi
@@ -19,14 +22,14 @@ namespace CoreDocker.Sdk.Tests.WebApi
   [Category("Integration")]
   public class UserApiClientTests : CrudComponentTestsBase<UserModel, UserCreateUpdateModel, UserReferenceModel>
   {
-    private static readonly ILog _log = LogManager.GetLogger<UserApiClientTests>();
+      private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     private UserApiClient _userApiClient;
 
     #region Setup/Teardown
 
     protected override void Setup()
     {
-      var connection = _adminRequestFactory.Value.GetConnection();
+      var connection = _adminConnection.Value;
       _userApiClient = connection.Users;
       SetRequiredData(_userApiClient);
     }
@@ -51,24 +54,24 @@ namespace CoreDocker.Sdk.Tests.WebApi
     }
 
     [Test]
-    public void Roles_WhenCalled_ShouldReturnAllRoleInformation()
+    public async Task Roles_WhenCalled_ShouldReturnAllRoleInformation()
     {
       // arrange
       Setup();
       // action
-      var userModel = _userApiClient.Roles().Result;
+      var userModel = await _userApiClient.Roles();
       // assert
       userModel.Count.Should().BeGreaterOrEqualTo(2);
       userModel.Select(x => x.Name).Should().Contain("Admin");
     }
 
     [Test]
-    public void WhoAmI_GivenUserData_ShouldReturn()
+    public async Task WhoAmI_GivenUserData_ShouldReturn()
     {
       // arrange
       Setup();
       // action
-      var userModel = _userApiClient.WhoAmI().Result;
+      var userModel = await _userApiClient.WhoAmI();
       // assert
       userModel.Should().NotBeNull();
       userModel.Email.Should().Be("admin");

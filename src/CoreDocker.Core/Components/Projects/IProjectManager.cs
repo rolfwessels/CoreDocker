@@ -1,6 +1,7 @@
+using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models;
 
-namespace CoreDocker.Core.BusinessLogic.Components.Interfaces
+namespace CoreDocker.Core.Components.Projects
 {
     public interface IProjectManager : IBaseManager<Project>
     {

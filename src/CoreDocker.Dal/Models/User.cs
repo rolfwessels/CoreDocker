@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Reference;
 
 namespace CoreDocker.Dal.Models

@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Linq;
+using System.Reflection;
 using CoreDocker.Dal.Persistance;
+using log4net;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
     public class MongoConnectionFactory : IGeneralUnitOfWorkFactory
     {
-        
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
-        private readonly ILogger _logger;
+        
         private readonly string _databaseName;
         private readonly Lazy<IGeneralUnitOfWork> _singleConnection;
 
-        public MongoConnectionFactory(string connectionString , ILogger logger, string databaseName)
+        public MongoConnectionFactory(string connectionString, string databaseName)
         {
             _connectionString = connectionString;
-            _logger = logger;
             _databaseName = databaseName;
             _singleConnection = new Lazy<IGeneralUnitOfWork>(GeneralUnitOfWork);
         }
@@ -36,7 +36,7 @@ namespace CoreDocker.Dal.Mongo
         private IGeneralUnitOfWork GeneralUnitOfWork()
         {
             IMongoDatabase database = DatabaseOnly();
-            Configuration.Instance().Update(database, _logger).Wait();
+            Configuration.Instance().Update(database).Wait();
             return new MongoGeneralUnitOfWork(database);
         }
 

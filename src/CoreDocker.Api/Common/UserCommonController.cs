@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Api.Models.Mappers;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
@@ -18,12 +15,13 @@ namespace CoreDocker.Api.Common
     public class UserCommonController : BaseCommonController<User, UserModel, UserReferenceModel, UserCreateUpdateModel>,
                                         IUserControllerActions
     {
-        private static readonly ILog _log = LogManager.GetLogger<UserCommonController>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IUserManager _userManager;
         private readonly IRoleManager _roleManager;
 
         public UserCommonController(IUserManager userManager, IRoleManager roleManager) : base(userManager)
         {
+            
             _userManager = userManager;
             _roleManager = roleManager;
         }

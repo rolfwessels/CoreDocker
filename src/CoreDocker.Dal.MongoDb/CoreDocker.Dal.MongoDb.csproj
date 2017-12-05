@@ -16,6 +16,9 @@
 
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
+    <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>
+
+
 
 </Project>

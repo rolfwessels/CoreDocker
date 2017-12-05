@@ -14,5 +14,7 @@ namespace CoreDocker.Shared.Models
         public string ClientId { get; set; }
 
         public string GrantType { get; set; }
+
+        public string ClientSecret { get; set; }
     }
 }

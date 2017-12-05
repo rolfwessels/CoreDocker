@@ -1,7 +1,7 @@
 ﻿using System;
 using CoreDocker.Dal.Models.Interfaces;
 
-namespace CoreDocker.Dal.Mongo.Migrations
+namespace CoreDocker.Dal.MongoDb.Migrations
 {
 	public class DbVersion : IBaseDalModel
     {

@@ -1,6 +1,6 @@
+using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.InMemoryCollections;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.MessageUtil;
 using CoreDocker.Dal.Validation;
 using Moq;
 using NUnit.Framework;
