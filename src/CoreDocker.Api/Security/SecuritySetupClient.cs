@@ -15,7 +15,7 @@ namespace CoreDocker.Api.Security
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddAuthorization(options => { AddFromActivities(options); });
+            services.AddAuthorization(AddFromActivities);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {

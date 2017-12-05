@@ -38,7 +38,7 @@ namespace CoreDocker.Api
             services.UseIndentityService();
             services.AddBearerAuthentication();
             services.AddMvc(WebApiSetup.Setup);
-            SwaggerSetup.Setup(services);
+            services.AddSwagger();
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
         
@@ -65,7 +65,7 @@ namespace CoreDocker.Api
 
             //            app.UseBearerAuthentication();
             //            app.UseMvc();
-            SwaggerSetup.AddUi(app);
+            app.UseSwagger();
             SimpleFileServer.Initialize(app);
             
         }

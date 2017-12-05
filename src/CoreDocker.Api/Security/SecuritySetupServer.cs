@@ -16,9 +16,7 @@ namespace CoreDocker.Api.Security
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources())
                 .AddInMemoryClients(OpenIdConfig.GetClients())
-                .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>()
-                ;
-//                .AddTestUsers(OpenIdConfig.Users())??>
+                .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
         }
         
         public static void UseIndentityService(this IApplicationBuilder app)

@@ -37,7 +37,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             var token =  await GetToken(new TokenRequestModel()
             {
                 ClientId = "coredocker.api",
-                ClientSecret = "e0acca78-4dc2-46c6-83c6-c6aeacfffd46",
+                ClientSecret = "super_secure_password",
                 UserName = adminUser,
                 Password = adminPassword
             });
