@@ -5,7 +5,6 @@ using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Interfaces;
-using Flurl.Http;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base

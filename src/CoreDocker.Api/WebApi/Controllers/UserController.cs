@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Api.Common;
 using CoreDocker.Api.WebApi.Attributes;
@@ -9,6 +11,7 @@ using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
 using Microsoft.AspNetCore.Mvc;
 using CoreDocker.Shared;
+using CoreDocker.Utilities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Controllers
@@ -35,7 +38,8 @@ namespace CoreDocker.Api.WebApi.Controllers
         /// </returns>
         [HttpGet,AuthorizeActivity(Activity.ReadUsers)]
         public Task<IEnumerable<UserReferenceModel>> Get()
-        {   
+        {
+           
             return _userCommonController.Get(Request.GetQuery());
         }
 
@@ -46,7 +50,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         [HttpGet(RouteHelper.WithDetail),AuthorizeActivity(Activity.ReadUsers)]
         public Task<IEnumerable<UserModel>> GetDetail()
 		{
-		    return _userCommonController.GetDetail(Request.GetQuery());
+            return _userCommonController.GetDetail(Request.GetQuery());
 		}
 
 

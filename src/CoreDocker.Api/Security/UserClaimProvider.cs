@@ -75,6 +75,8 @@ namespace CoreDocker.Api.Security
         {
             var claims = new List<Claim>
             {
+                new Claim(JwtClaimTypes.Name, user.Email),
+                new Claim(JwtClaimTypes.Id, user.Id),
                 new Claim(JwtClaimTypes.GivenName, user.Name),
                 new Claim(IdentityServerConstants.StandardScopes.Email, user.Email),
                 new Claim(JwtClaimTypes.Scope, OpenIdConfigBase.ScopeApi),
@@ -87,6 +89,7 @@ namespace CoreDocker.Api.Security
             {
                 claims.Add(new Claim(JwtClaimTypes.Role, ToPolicyName(claim).Dump("a")));
             }
+            
             return claims;
         }
 

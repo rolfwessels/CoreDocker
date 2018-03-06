@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models;
-using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Authenticators;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -68,7 +66,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 if (string.IsNullOrEmpty(result.Content))
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
-                var errorMessage = JsonConvert.DeserializeObject<TokenErrorMessage>(result.Content);
+                var errorMessage = SimpleJson.SimpleJson.DeserializeObject<TokenErrorMessage>(result.Content);
                 throw new Exception($"{errorMessage.Error}[{errorMessage.error_description}]");
             }
         }

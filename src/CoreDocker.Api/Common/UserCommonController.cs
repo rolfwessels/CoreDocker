@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Api.Models.Mappers;
 using CoreDocker.Core.Components.Users;
@@ -8,7 +9,9 @@ using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Utilities.Helpers;
 using log4net;
+using Microsoft.AspNetCore.Http;
 
 namespace CoreDocker.Api.Common
 {
@@ -18,12 +21,14 @@ namespace CoreDocker.Api.Common
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IUserManager _userManager;
         private readonly IRoleManager _roleManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserCommonController(IUserManager userManager, IRoleManager roleManager) : base(userManager)
+        public UserCommonController(IUserManager userManager, IRoleManager roleManager, IHttpContextAccessor httpContextAccessor) : base(userManager)
         {
             
             _userManager = userManager;
             _roleManager = roleManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #region IUserControllerActions Members
@@ -68,8 +73,9 @@ namespace CoreDocker.Api.Common
 
         public async Task<UserModel> WhoAmI()
         {
-            var userByEmail = await _userManager.Get();
-            return userByEmail.First().ToModel();
+            var whoAmI = await _userManager.GetUserByEmail(_httpContextAccessor.GetName());
+            return whoAmI.ToModel();
+            
         }
     }
 }

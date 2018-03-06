@@ -1,6 +1,5 @@
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models;
-using Flurl.Http;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi

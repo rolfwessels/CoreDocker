@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
-using CoreDocker.Shared.Models;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
-using Flurl.Http;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.Security
@@ -43,10 +42,8 @@ namespace CoreDocker.Sdk.Tests.Security
             // arrange
             Setup();
             // action
-            var flurlClient = new FlurlClient(_hostAddress.Value);
-            var s = await flurlClient.Request(".well-known/openid-configuration/jwks")
-                .GetStringAsync();
             var data = await _connection.Authenticate.GetConfigAsync();
+            // assert
             data.Keys.Dump("data.Keys");
             data.Keys.First().Keys.Should().Contain("kty");
         }
@@ -58,6 +55,7 @@ namespace CoreDocker.Sdk.Tests.Security
             Setup();
             // action
             var data = await _connection.Authenticate.Login(AdminUser, AdminPassword);
+            // assert
             data.AccessToken.Should().NotBeEmpty();
             data.ExpiresIn.Should().BeGreaterThan(30);
             data.TokenType.Should().Be("Bearer");
@@ -70,11 +68,10 @@ namespace CoreDocker.Sdk.Tests.Security
             Setup();
             var pingModel = await _connection.Ping.Get();
             pingModel.Environment.Should().Be("Production"); //??
-
             var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
-            data.AccessToken.Dump("AccessToken");
             // action
             _connection.SetToken(data);
+            // assert
             var projectsEnumerable = await _connection.Projects.Get();
             projectsEnumerable.Count().Should().BeGreaterThan(0);
             await _connection.Projects.Get();

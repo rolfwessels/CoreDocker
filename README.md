@@ -22,3 +22,9 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Decide what to do about logging, still not sold on the injection method (and log4net not using appsettings.json).
  * Signal-r replacement.
  * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
+
+# Themes 
+
+ * http://coreui.io/
+ * https://github.com/akveo/ngx-admin
+  

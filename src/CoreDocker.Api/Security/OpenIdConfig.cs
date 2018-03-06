@@ -39,7 +39,7 @@ namespace CoreDocker.Api.Security
                             DisplayName = "Standard api access"
                         }
                     },
-                    UserClaims = { JwtClaimTypes.Role , JwtClaimTypes.GivenName , IdentityServerConstants.StandardScopes.Email }
+                    UserClaims = { JwtClaimTypes.Role , JwtClaimTypes.GivenName , IdentityServerConstants.StandardScopes.Email , JwtClaimTypes.Id, JwtClaimTypes.Name }
                 },
             };
         }

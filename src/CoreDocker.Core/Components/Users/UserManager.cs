@@ -85,6 +85,7 @@ namespace CoreDocker.Core.Components.Users
 
         public async Task<User> GetUserByEmail(string email)
         {
+            if (email == null) throw new ArgumentNullException(nameof(email));
             return await _generalUnitOfWork.Users.FindOne(x => x.Email == email.ToLower());
         }
 

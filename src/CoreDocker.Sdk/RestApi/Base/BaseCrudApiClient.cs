@@ -1,12 +1,8 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Interfaces;
-using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
-using CoreDocker.Shared.Models;
-using Flurl.Http;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base

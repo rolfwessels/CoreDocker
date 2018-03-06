@@ -11,10 +11,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreDocker.Shared\CoreDocker.Shared.csproj" />
+    <ProjectReference Include="..\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="2.0.1" />
     <PackageReference Include="RestSharp" Version="106.1.0" />
   </ItemGroup>
 

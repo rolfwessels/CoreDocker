@@ -6,7 +6,6 @@ using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using Flurl.Http;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Clients
@@ -14,6 +13,8 @@ namespace CoreDocker.Sdk.RestApi.Clients
     public class UserApiClient : BaseCrudApiClient<UserModel, UserCreateUpdateModel, UserReferenceModel>,
                                  IUserControllerActions
     {
+        
+
         public UserApiClient(CoreDockerClient dockerClient)
             : base(dockerClient, RouteHelper.UserController)
         {
@@ -37,6 +38,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public async Task<UserModel> WhoAmI()
         {
+            
             var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerWhoAmI));
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<UserModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);

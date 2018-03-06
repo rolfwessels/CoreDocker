@@ -4,9 +4,11 @@ using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CoreDocker.Api.Security
 {
@@ -27,6 +29,8 @@ namespace CoreDocker.Api.Security
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });
         }
+       
+
 
         private static void AddFromActivities(AuthorizationOptions options)
         {
