@@ -24,12 +24,8 @@ properties {
     $versionMinor = 0
     $versionBuild = 2
     $versionRevision = 0
-
-    $vsVersion = "12.0"
-
-    $msdeploy = 'C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe';
-    $deployServiceDest = "computerName='xxxx',userName='xxx',password='xxxx',includeAcls='False',tempAgent='false',dirPath='d:\server\temp'"
-    $deployApiDest = 'auto,includeAcls="False",tempAgent="false"'
+    
+    $nuget = './src/.nuget/NuGet.exe';
 }
 
 #
@@ -44,7 +40,7 @@ task full -depends test,build,deploy.zip -Description "Versions builds and creat
 task package -depends version,build,deploy.package -Description "Creates packages that could be user for deployments"
 task deploy -depends version,build,deploy.api,deploy.service -Description "Deploy the files to webserver using msdeploy"
 task appveyor -depends build,deploy.zip -Description "Runs tests and deploys zip"
-
+task prerequisite -depends prerequisite.choco,prerequisite.dotnet  -Description "Install all prerequisites"
 #
 # task depends
 #
@@ -56,15 +52,15 @@ task clean.build {
 task clean.binobj {
     remove-item -force -recurse $buildReportsDirectory -ErrorAction SilentlyContinue
     remove-item -force -recurse (buildConfigDirectory) -ErrorAction SilentlyContinue
-    $binFolders = Get-ChildItem ($srcDirectory + '\*\*') | where { $_.name -eq 'bin' -or $_.name -eq 'obj'} | Foreach-Object {$_.fullname}
-    if ($binFolders -ne $null)
+    $srcBinFolders = Get-ChildItem ($srcDirectory + '\*\*') | where { $_.name -eq 'bin' -or $_.name -eq 'obj'} | Foreach-Object {$_.fullname}
+    if ($srcBinFolders -ne $null)
     {
-        remove-item $binFolders -force -recurse -ErrorAction SilentlyContinue
+        remove-item $srcBinFolders -force -recurse -ErrorAction SilentlyContinue
     }
-    $binFolders = Get-ChildItem ($testDirectory + '\*\*') | where { $_.name -eq 'bin' -or $_.name -eq 'obj'} | Foreach-Object {$_.fullname}
-    if ($binFolders -ne $null)
+    $testBinFolders = Get-ChildItem ($testDirectory + '\*\*') | where { $_.name -eq 'bin' -or $_.name -eq 'obj'} | Foreach-Object {$_.fullname}
+    if ($testBinFolders -ne $null)
     {
-        remove-item $binFolders -force -recurse -ErrorAction SilentlyContinue
+        remove-item $testBinFolders -force -recurse -ErrorAction SilentlyContinue
     }
 }
 
@@ -179,7 +175,10 @@ task publish.nuget {
 }
 
 task nuget.restore {
-    ./src/.nuget/NuGet.exe install src\.nuget\packages.config -OutputDirectory lib
+    &($nuget) restore src\.nuget\packages.config -OutputDirectory lib
+    if (!$?) {
+        throw 'Failed NuGet.exe restore'
+    }
 }
 
 task clean.database {
@@ -195,7 +194,7 @@ task test.run -depends build.restore,build.build   -precondition { return $build
     $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") }) 
     if ($env:APPVEYOR_JOB_ID) {
         $tests = $tests | Where-Object { $_ -notlike  '*Sdk.Tests*'}
-        write-host "Skip sdk tests. (requires db)" -foreground "magenta"
+        write-host "Skip sdk tests. (requires db)" -foreground "yellow"
     }
     dotnet vstest /logger:trx $tests 
     Remove-Item $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue
@@ -254,6 +253,26 @@ task deploy.service {
     }
 }
 
+task prerequisite.choco {
+    $choco = (whereFile choco.exe)
+    if ([string]::IsNullOrEmpty($choco)) 
+    { 
+      'install choco.'
+      iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+      $choco = (whereFile choco.exe)
+    }
+}
+
+task prerequisite.dotnet {
+    $dotnet = (whereFile 'dotnet.dll')    
+    if ([string]::IsNullOrEmpty($dotnet))  
+    {
+        'install dotnetcore-sdk '
+        $choco = (whereFile choco.exe)
+        &($choco) install  -y dotnetcore-sdk --version 2.1.4
+    }
+}
+
 task ? -Description "Helper to display task info" {
 	WriteDocumentation
 }
@@ -291,6 +310,37 @@ function srcBinFolder() {
 
 function buildConfigDirectory() {
     Join-Path $buildDirectory $buildConfiguration
+}
+
+function whereFile($lookForName) {
+    $alternatives =  @(
+        'C:\ProgramData\chocolatey\bin\',
+        'C:\Program Files\dotnet\',
+        'C:\Program Files\dotnet\sdk\2.1.4')
+    $getcmd = get-command $lookForName -ErrorAction SilentlyContinue
+    
+    if (![string]::IsNullOrEmpty($getcmd)) 
+    { 
+        $location = $getcmd.path;
+    }
+
+    foreach ($alternative in $alternatives) {
+        $lookInLocation = Join-Path $alternative $lookForName
+        
+        if([System.IO.File]::Exists($lookInLocation)) {
+            $location = $lookInLocation
+            break
+        }
+    }
+
+    if ([string]::IsNullOrEmpty($location)) 
+    { 
+        write-host "Could not find $lookForName in paths." -foreground 'red'
+    }
+    else {
+        write-host "Found  $lookForName in $location." -foreground 'green'
+    }
+    return $location
 }
 
 function global:copy-files($source,$destination,$include=@(),$exclude=@()){
