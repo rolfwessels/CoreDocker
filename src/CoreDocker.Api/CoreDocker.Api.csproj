@@ -50,10 +50,8 @@
     <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="wwwroot\coreDocker.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\index.html">
+    <Content Include="..\CoreDocker.Website\dist\**\*.*">
+      <Link>wwwroot\%(RecursiveDir)\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

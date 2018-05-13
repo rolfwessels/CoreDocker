@@ -57,13 +57,11 @@ namespace CoreDocker.Api
             {
 //                app.UseDeveloperExceptionPage();
             }
-
+            SimpleFileServer.Initialize(app);
             app.UseIndentityService();
             app.UseBearerAuthentication();
             app.UseMvc();
             app.UseSwagger();
-            SimpleFileServer.Initialize(app);
-            
         }
 
         #region Private Methods
