@@ -50,7 +50,12 @@ namespace CoreDocker.Api.Swagger
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint($"/swagger/{GetVersion()}/swagger.json", $"Main {GetVersion()}");
-                c.ConfigureOAuth2(OpenIdConfigBase.ClientName, OpenIdConfigBase.ClientSecret, OpenIdConfigBase.ApiResourceName, "SwaggerAuth");
+                c.OAuthClientId(OpenIdConfigBase.ClientName);
+                c.OAuthClientSecret(OpenIdConfigBase.ClientSecret);
+                c.OAuthClientSecret(OpenIdConfigBase.ClientSecret);
+                c.OAuthClientSecret(OpenIdConfigBase.ClientSecret);
+                c.OAuthRealm(OpenIdConfigBase.ApiResourceName);
+                c.OAuthAppName("SwaggerAuth");
             });
 
         }

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Interfaces;
+using CoreDocker.Utilities.Helpers;
 using log4net;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -65,12 +66,12 @@ namespace CoreDocker.Sdk.Tests.Shared
            
             // assert
             savedProject.Should().NotBeNull();
-            projectModel[0].ShouldBeEquivalentTo(projectModels, CompareConfig);
-            projectModel[1].ShouldBeEquivalentTo(projectModelLoad, CompareConfig);
+            projectModel[0].Should().BeEquivalentTo(projectModels.DynamicCastTo<TDetailModel>(), CompareConfig);
+            projectModel[1].Should().BeEquivalentTo(projectModelLoad.DynamicCastTo<TDetailModel>(), CompareConfig);
             removed.Should().BeTrue();
             savedProject.Should().NotBeNull();
             removedSecond.Should().BeFalse();
-            testCall.ShouldThrow<Exception>();
+            testCall.Should().Throw<Exception>();
         }
 
         protected virtual EquivalencyAssertionOptions<TDetailModel> CompareConfig(
