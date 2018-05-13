@@ -68,8 +68,7 @@ namespace CoreDocker.Api.WebApi.Filters
         private void RespondWithValidationRequest(ExceptionContext context,
             ValidationException validationException)
         {
-            var errorMessage =
-                new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault());
+            var errorMessage =new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault());
             context.Result = CreateResponse(HttpStatusCode.BadRequest, errorMessage);
         }
 
@@ -86,7 +85,7 @@ namespace CoreDocker.Api.WebApi.Filters
         }
 
         private IActionResult CreateResponse(HttpStatusCode httpStatusCode, object errorMessage)
-        {
+        {   
             return new ObjectResult(errorMessage) {StatusCode = (int) httpStatusCode};
         }
 

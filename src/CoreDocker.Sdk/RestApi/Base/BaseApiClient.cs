@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
+using CoreDocker.Utilities.Helpers;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base
@@ -36,8 +38,7 @@ namespace CoreDocker.Sdk.RestApi.Base
             {
                 if (string.IsNullOrEmpty(result.Content)) throw new ApplicationException(
                     $"{result.StatusCode} response contains no data.");
-                Console.Out.WriteLine("SimpleJson.SimpleJson.CurrentJsonSerializerStrategy.DeserializeObject(result.Content,typeof(ErrorMessage))+"+ SimpleJson.SimpleJson.CurrentJsonSerializerStrategy.DeserializeObject(result.Content, typeof(ErrorMessage)));
-                var errorMessage = SimpleJson.SimpleJson.DeserializeObject<ErrorMessage>(result.Content);
+                var errorMessage = JsonConvert.DeserializeObject<ErrorMessage>(result.Content);
                 throw new Exception(errorMessage.Message);
             }
             return result.Data;
