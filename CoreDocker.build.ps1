@@ -141,10 +141,10 @@ task build.copy {
 
 task build.website -depend npm.install {
     pushd (srcWebFolder)
-    'ng build'
-    ng build
+    'npm run build'
+    npm run build
     if (!$?) {
-        throw 'ng build passed'
+        throw 'npm run build passed'
     }
     popd
 }
