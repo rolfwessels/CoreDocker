@@ -39,7 +39,7 @@ task test -depends clean.binobj,build.restore,test.run  -Description "Builds and
 task full -depends test,build,deploy.zip -Description "Versions builds and creates distributions"
 task package -depends version,build,deploy.package -Description "Creates packages that could be user for deployments"
 task deploy -depends version,build,deploy.api,deploy.service -Description "Deploy the files to webserver using msdeploy"
-task appveyor -depends build,deploy.zip -Description "Runs tests and deploys zip"
+task appveyor -depends clean.binobj,build.website,build,deploy.zip -Description "Runs tests and deploys zip"
 task prerequisite -depends prerequisite.choco,prerequisite.dotnet  -Description "Install all prerequisites"
 #
 # task depends
@@ -80,16 +80,18 @@ task build.build {
 }
 
 task version {
-    $projectFolders = Get-ChildItem $srcDirectory '*' -Directory
-    foreach ($projectFolder in $projectFolders) {
-        $projectFile = Get-ChildItem $projectFolder.FullName '*.csproj' -File
-        [xml]$Xml = Get-Content $projectFile.FullName
-        $result = $Xml.Project.PropertyGroup.Version
-        if (![string]::IsNullOrEmpty($result)) {
-            $version = (fullversionrev) 
-            write-host "Set version $version in  $projectFile" -foreground "magenta"
-            $Xml.Project.PropertyGroup.Version = $version
-            $Xml.Save( $projectFile.FullName)
+    $projects = ( Get-ChildItem $srcDirectory '*' -Directory | % { Join-Path $_.FullName -ChildPath  "$($_.name).csproj"  }  | Where-Object { [System.IO.File]::Exists($_)  })
+  
+    foreach ($projectFile in $projects) {
+        
+        [xml]$Xml = Get-Content $projectFile
+        $result = $Xml.Project.PropertyGroup[0].VersionPrefix
+        
+        if ($result -ne $null) {
+            $version = (fullversion) 
+            write-host "Set version $version in  $projectFile [$result]" -foreground "magenta"
+            $Xml.Project.PropertyGroup[0].VersionPrefix = $version
+            $Xml.Save( $projectFile)
         }
     }
 }
@@ -137,28 +139,27 @@ task build.copy {
     
 
 
-task build.website -depend gulp.build {
-    $fromFolder =  Join-Path (srcWebFolder) 'dist'
-    $toFolder =  (Join-Path (buildConfigDirectory) 'CoreDocker.Api/static')
-    copy-files $fromFolder $toFolder
-}
-
-task gulp.build {
-    'Yarn install'
+task build.website -depend npm.install {
     pushd (srcWebFolder)
-    yarn install --silent
-    'Bower install'
-    bower install --silent
-    gulp build
+    'ng build'
+    ng build
+    if (!$?) {
+        throw 'ng build passed'
+    }
     popd
 }
 
-task gulp.watch {
-    'Guld watch'
+task npm.install {
+    'npm install'
     pushd (srcWebFolder)
-    gulp serve
+    npm install --silent
+    if (!$?) {
+        throw 'Npm install failed.'
+    }
     popd
 }
+
+
 
 
 task build.nugetPackages -depend build {

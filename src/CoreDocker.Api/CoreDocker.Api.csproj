@@ -9,20 +9,7 @@
     <StartupObject>CoreDocker.Api.Program</StartupObject>
     <Version>0.0.2.0</Version>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Static\**" />
-    <Content Remove="Static\**" />
-    <EmbeddedResource Remove="Static\**" />
-    <None Remove="Static\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\index.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="wwwroot\**\*;Views;Areas\**\Views">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
-  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\CoreDocker.Shared\CoreDocker.Shared.csproj" />
     <ProjectReference Include="..\CoreDocker.Dal\CoreDocker.Dal.csproj" />
