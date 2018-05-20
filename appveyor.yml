@@ -1,12 +1,17 @@
 os: Visual Studio 2017
+
+
 install:
 
 build_script:
   # dotnet info
   - ps: dotnet --info
+  - ps: dotnet --info
   - ps: ./go test
   - ps: $wc = New-Object 'System.Net.WebClient'
   - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\build\reports\result.trx))
+  - npm install -g @angular/cli
+  - git submodule update --init --recursive
   - go appveyor -properties @{'buildConfiguration'='Release'}
 
 
