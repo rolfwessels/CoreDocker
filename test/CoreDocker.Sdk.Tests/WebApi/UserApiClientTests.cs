@@ -74,7 +74,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
       var userModel = await _userApiClient.WhoAmI();
       // assert
       userModel.Should().NotBeNull();
-      userModel.Email.Should().Be("admin");
+      userModel.Email.Should().StartWith("admin");
     }
 
     #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel>

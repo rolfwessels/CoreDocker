@@ -4,9 +4,9 @@ using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
+using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
-using CoreDocker.Core;
 using CoreDocker.Utilities;
 using log4net;
 using log4net.Config;
@@ -39,6 +39,7 @@ namespace CoreDocker.Api
             services.AddBearerAuthentication();
             services.AddMvc(WebApiSetup.Setup);
             services.AddSwagger();
+            services.AddSignalR();
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
         
@@ -47,10 +48,10 @@ namespace CoreDocker.Api
         {
             app.UseCors(policy =>
             {
-                policy.AllowAnyOrigin();
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                policy.WithExposedHeaders("WWW-Authenticate");
+                policy.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithOrigins("http://localhost:4200");
             });
             Config(loggerFactory, Configuration);
             if (env.IsDevelopment())
@@ -60,6 +61,7 @@ namespace CoreDocker.Api
             SimpleFileServer.Initialize(app);
             app.UseIndentityService();
             app.UseBearerAuthentication();
+            app.UseSingalRSetup();
             app.UseMvc();
             app.UseSwagger();
         }

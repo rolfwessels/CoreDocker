@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 using CoreDocker.Api;
 using CoreDocker.Api.Security;
-using CoreDocker.Core;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
-using IdentityServer4.Models;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 
@@ -17,7 +14,7 @@ namespace CoreDocker.Sdk.Tests.Shared
         
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
-        public const string AdminUser = "admin";
+        public const string AdminUser = "admin@admin.com";
         private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         protected static readonly Lazy<string> _hostAddress;
 

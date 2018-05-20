@@ -27,7 +27,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
             var emailIndex = Builders<User>.IndexKeys.Ascending(x => x.Email);
             users.Collection.Indexes.CreateOneAsync(emailIndex).Wait();
 
-			var admin = new User() {Name = "Admin user", Email = "admin", HashedPassword = PasswordHash.CreateHash("admin!")};
+			var admin = new User() {Name = "Admin user", Email = "admin@admin.com", HashedPassword = PasswordHash.CreateHash("admin!")};
             admin.Roles.Add(RoleManager.Admin.Name);
             await users.Add(admin);
 
