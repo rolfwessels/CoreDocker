@@ -70,8 +70,8 @@ namespace CoreDocker.Api
 
         private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
         {
-            loggerFactory.AddConsole();
-            loggerFactory.AddDebug();
+            loggerFactory.AddConsole(configurationRoot.GetSection("Logging"));
+            loggerFactory.AddDebug(LogLevel.Information);
         }
 
         private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)

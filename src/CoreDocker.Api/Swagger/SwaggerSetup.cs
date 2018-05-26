@@ -34,6 +34,7 @@ namespace CoreDocker.Api.Swagger
                 Title = "CoreDocker API",
                 Description = "Contains CoreDocker api descriptions."
             });
+            options.DescribeAllEnumsAsStrings();
             options.AddSecurityDefinition("oauth2", new OAuth2Scheme
             {
                 Type = "oauth2",
