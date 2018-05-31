@@ -67,7 +67,7 @@ namespace CoreDocker.Sdk.Tests.Security
             // arrange
             Setup();
             var pingModel = await _connection.Ping.Get();
-            pingModel.Environment.Should().Be("Production"); //??
+            pingModel.Environment.Should().Be("development"); //??
             var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
             // action
             _connection.SetToken(data);

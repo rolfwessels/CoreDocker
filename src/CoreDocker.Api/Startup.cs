@@ -8,28 +8,28 @@ using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
 using CoreDocker.Utilities;
+using CoreDocker.Utilities.Helpers;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Api
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
-
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("logSettings.xml"));
-            Configuration = ReadAppSettings(env);
+            Configuration = configuration;
             Settings.Initialize(Configuration);
         }
 
+        public IConfiguration Configuration { get; }
+        
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
@@ -41,10 +41,9 @@ namespace CoreDocker.Api
             services.AddSignalR();
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
-        
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            Config(loggerFactory, Configuration);
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {            
             app.UseCors(policy =>
             {
                 policy.AllowAnyMethod()
@@ -52,6 +51,12 @@ namespace CoreDocker.Api
                     .AllowCredentials()
                     .WithOrigins("http://localhost:4200");
             });
+            if (env.IsDevelopment())
+            {
+                
+                app.UseDeveloperExceptionPage();
+            }
+
             SimpleFileServer.Initialize(app);
             app.UseIndentityService();
             app.UseBearerAuthentication();
@@ -59,24 +64,5 @@ namespace CoreDocker.Api
             app.UseMvc();
             app.UseSwagger();
         }
-
-        #region Private Methods
-
-        private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
-        {
-            loggerFactory.AddConsole(configurationRoot.GetSection("Logging"));
-        }
-
-        private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
-            builder.AddEnvironmentVariables();
-            return builder.Build();
-        }
-
-        #endregion
     }
 }
