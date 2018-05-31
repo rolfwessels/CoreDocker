@@ -159,9 +159,6 @@ task npm.install {
     popd
 }
 
-
-
-
 task build.nugetPackages -depend build {
     $packagesFolder =  $buildDistDirectory
     mkdir $packagesFolder -ErrorAction SilentlyContinue

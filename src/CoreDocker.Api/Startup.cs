@@ -44,6 +44,7 @@ namespace CoreDocker.Api
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Config(loggerFactory, Configuration);
             app.UseCors(policy =>
             {
                 policy.AllowAnyMethod()
@@ -51,8 +52,6 @@ namespace CoreDocker.Api
                     .AllowCredentials()
                     .WithOrigins("http://localhost:4200");
             });
-            Config(loggerFactory, Configuration);
-
             SimpleFileServer.Initialize(app);
             app.UseIndentityService();
             app.UseBearerAuthentication();
