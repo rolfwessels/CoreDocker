@@ -20,6 +20,8 @@ namespace CoreDocker.Api
 {
     public class Startup
     {
+        public IConfigurationRoot Configuration { get; }
+
         public Startup(IHostingEnvironment env)
         {
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
@@ -28,9 +30,6 @@ namespace CoreDocker.Api
             Settings.Initialize(Configuration);
         }
 
-        public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
@@ -43,7 +42,6 @@ namespace CoreDocker.Api
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
         
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseCors(policy =>
@@ -54,10 +52,7 @@ namespace CoreDocker.Api
                     .WithOrigins("http://localhost:4200");
             });
             Config(loggerFactory, Configuration);
-            if (env.IsDevelopment())
-            {
-//                app.UseDeveloperExceptionPage();
-            }
+
             SimpleFileServer.Initialize(app);
             app.UseIndentityService();
             app.UseBearerAuthentication();
@@ -71,7 +66,6 @@ namespace CoreDocker.Api
         private static void Config(ILoggerFactory loggerFactory, IConfigurationRoot configurationRoot)
         {
             loggerFactory.AddConsole(configurationRoot.GetSection("Logging"));
-            loggerFactory.AddDebug(LogLevel.Information);
         }
 
         private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)
@@ -80,7 +74,6 @@ namespace CoreDocker.Api
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
-
             builder.AddEnvironmentVariables();
             return builder.Build();
         }
