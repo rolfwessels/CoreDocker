@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using CoreDocker.Api.Components.Users;
+using CoreDocker.Api.WebApi.Controllers;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Api.Common;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;

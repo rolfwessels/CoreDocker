@@ -14,10 +14,10 @@ namespace CoreDocker.Sdk.Tests.Security
     [Category("Integration")]
     public class OpenIdTokenClientTests : IntegrationTestsBase
     {
-        private ICoreDockerApi _connection;
+        private ICoreDockerClient _connection;
 
         private ProjectApiClient _projectApiClient;
-        private ICoreDockerApi _connectionAuth;
+        private ICoreDockerClient _connectionAuth;
 
         #region Setup/Teardown
 

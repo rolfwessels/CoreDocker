@@ -1,10 +1,15 @@
+using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models;
+using CoreDocker.Utilities.Helpers;
+using GraphQL.Client;
+using GraphQL.Common.Request;
+using GraphQL.Common.Response;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi
 {
-    public class CoreDockerClient : ICoreDockerApi
+    public class CoreDockerClient : ICoreDockerClient
     {
         internal RestClient _restClient;
 
@@ -25,7 +30,7 @@ namespace CoreDocker.Sdk.RestApi
 
         public void SetToken(TokenResponseModel data)
         {
-            var bearerToken = string.Format("{0} {1}", "Bearer", data.AccessToken);
+            var bearerToken = $"Bearer {data.AccessToken}";
             _restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
         }
 
@@ -40,5 +45,11 @@ namespace CoreDocker.Sdk.RestApi
 
 
         public RestClient Client => _restClient;
+
+        public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
+        {
+            var graphQlClient = new GraphQLClient(UrlBase.UriCombine("/graphql"));
+            return await graphQlClient.PostAsync(heroRequest);
+        }
     }
 }

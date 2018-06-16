@@ -9,5 +9,10 @@ namespace CoreDocker.Api.WebApi.Controllers
         {
             return request.Path;
         }
+
+        public static string GetName(this IHttpContextAccessor httpContextAccessor)
+        {
+            return httpContextAccessor.HttpContext.User?.Identity?.Name;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace CoreDocker.Sdk
             _urlBase = urlBase;
         }
 
-        public ICoreDockerApi GetConnection()
+        public ICoreDockerClient GetConnection()
         {
             return new CoreDockerClient(_urlBase);
         }

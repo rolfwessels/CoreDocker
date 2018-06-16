@@ -1,20 +1,17 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using CoreDocker.Api.Common;
 using CoreDocker.Api.WebApi.Attributes;
+using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using Microsoft.AspNetCore.Mvc;
-using CoreDocker.Shared;
-using CoreDocker.Utilities.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CoreDocker.Api.WebApi.Controllers
+namespace CoreDocker.Api.Components.Users
 {
     /// <summary>
 	///     Api controller for managing all the user
