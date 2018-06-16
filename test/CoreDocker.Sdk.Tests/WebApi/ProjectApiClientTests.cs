@@ -64,6 +64,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
             personType.Count.Should().BeGreaterOrEqualTo(1).And.BeLessOrEqualTo(4);
             personType.Should().OnlyContain(x => x.Name == null);
             personType.Should().OnlyContain(x => x.Id != null);
+
         }
      
         protected override IList<ProjectCreateUpdateModel> GetExampleData()
