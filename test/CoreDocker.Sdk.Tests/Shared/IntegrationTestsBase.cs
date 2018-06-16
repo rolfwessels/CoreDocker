@@ -20,14 +20,14 @@ namespace CoreDocker.Sdk.Tests.Shared
 
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
-        protected static Lazy<ICoreDockerApi> _adminConnection;
+        protected static Lazy<CoreDockerClient> _adminConnection;
 
         static IntegrationTestsBase()
         {
             RestShapHelper.Log = s => _log.Debug(s);
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
-            _adminConnection = new Lazy<ICoreDockerApi>(CreateAdminRequest);
+            _adminConnection = new Lazy<CoreDockerClient>(CreateAdminRequest);
         }
 
         #region Private Methods
@@ -55,12 +55,12 @@ namespace CoreDocker.Sdk.Tests.Shared
         }
 
 
-        private static ICoreDockerApi CreateAdminRequest()
+        private static CoreDockerClient CreateAdminRequest()
         {
             var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
             coreDockerApi.Authenticate.Login(AdminUser, AdminPassword).Wait();
             // add the authentication here
-            return coreDockerApi;
+            return (CoreDockerClient) coreDockerApi;
         }
 
         #endregion

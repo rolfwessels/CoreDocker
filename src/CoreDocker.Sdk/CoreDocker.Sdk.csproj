@@ -19,4 +19,13 @@
     <PackageReference Include="RestSharp" Version="106.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="GraphQL.Client">
+      <HintPath>C:\Users\User-pc\.nuget\packages\graphql.client\1.0.3\lib\netstandard2.0\GraphQL.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Common">
+      <HintPath>C:\Users\User-pc\.nuget\packages\graphql.common\1.0.3\lib\netstandard2.0\GraphQL.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
