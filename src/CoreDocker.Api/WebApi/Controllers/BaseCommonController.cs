@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using CoreDocker.Api.Models.Mappers;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Shared.Interfaces.Base;
-using CoreDocker.Shared.Models;
 
-namespace CoreDocker.Api.Common
+namespace CoreDocker.Api.WebApi.Controllers
 {
     public abstract class BaseCommonController<TDal, TModel, TReferenceModel, TDetailModel> : ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel>, ICrudController<TModel, TDetailModel>
     {
@@ -16,7 +17,7 @@ namespace CoreDocker.Api.Common
             _projectManager = projectManager;
         }
 
-
+     
         public async Task<TModel> Update(string id, TDetailModel model)
         {
             var projectFound = await _projectManager.GetById(id);

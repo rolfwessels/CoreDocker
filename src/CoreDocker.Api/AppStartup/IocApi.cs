@@ -2,8 +2,8 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using CoreDocker.Api.Common;
-using CoreDocker.Api.Security;
+using CoreDocker.Api.Components.Projects;
+using CoreDocker.Api.Components.Users;
 using CoreDocker.Core.Startup;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;
@@ -26,6 +26,8 @@ namespace CoreDocker.Api.AppStartup
             var builder = new ContainerBuilder();
             SetupCore(builder);
             SetupCommonControllers(builder);
+            
+            
             SetupTools(builder);
             builder.Populate(_services);
             Container = builder.Build();

@@ -1,10 +1,11 @@
+using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
 
-namespace CoreDocker.Api.Common
+namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectCommonController : BaseCommonController<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel>, IProjectControllerActions
     {
@@ -15,6 +16,7 @@ namespace CoreDocker.Api.Common
         }
 
 
+       
     }
 }
 /* scaffolding [

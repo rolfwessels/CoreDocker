@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Api.Common;
 using CoreDocker.Api.Models.Mappers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;
@@ -9,6 +8,7 @@ using CoreDocker.Shared.Models.Base;
 using Moq;
 using NUnit.Framework;
 using System.Linq;
+using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Utilities.Tests.Tools;

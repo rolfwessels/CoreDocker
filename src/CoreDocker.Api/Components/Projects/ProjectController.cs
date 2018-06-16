@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreDocker.Api.Common;
 using CoreDocker.Api.WebApi.Attributes;
+using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Reference;
-using CoreDocker.Shared;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CoreDocker.Api.WebApi.Controllers
+namespace CoreDocker.Api.Components.Projects
 {
 
     /// <summary>
