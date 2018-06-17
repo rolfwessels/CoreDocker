@@ -1,6 +1,6 @@
 ﻿using CoreDocker.Dal.Models.Base;
 
-namespace CoreDocker.Dal.Models
+namespace CoreDocker.Dal.Models.Auth
 {
 	public class Application : BaseDalModelWithId 
 	{

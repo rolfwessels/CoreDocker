@@ -8,7 +8,6 @@ using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Validation;
 using CoreDocker.Utilities.Helpers;

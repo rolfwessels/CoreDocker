@@ -1,4 +1,4 @@
-﻿namespace CoreDocker.Dal.Models.Enums
+﻿namespace CoreDocker.Dal.Models.Base
 {
 	public enum UpdateTypes
 	{

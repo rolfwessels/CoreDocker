@@ -6,6 +6,7 @@ using FluentAssertions;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Tests.Tools;

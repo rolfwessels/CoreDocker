@@ -8,7 +8,6 @@ using FluentAssertions;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Models.Enums;
 using CoreDocker.Dal.Persistance;
 using Moq;
 using NUnit.Framework;

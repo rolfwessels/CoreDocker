@@ -1,4 +1,6 @@
 ﻿using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 

@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Auth;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users

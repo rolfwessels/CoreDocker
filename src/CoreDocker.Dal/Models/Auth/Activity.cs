@@ -1,4 +1,4 @@
-﻿namespace CoreDocker.Dal.Models.Enums
+﻿namespace CoreDocker.Dal.Models.Auth
 {
 	public enum Activity
 	{

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Projects;
 
-namespace CoreDocker.Dal.Models
+namespace CoreDocker.Dal.Models.Users
 {
 	public class User : BaseDalModelWithId
 	{

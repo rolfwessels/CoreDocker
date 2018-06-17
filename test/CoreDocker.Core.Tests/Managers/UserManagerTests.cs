@@ -6,6 +6,7 @@ using FluentAssertions;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 using FizzWare.NBuilder.Generators;

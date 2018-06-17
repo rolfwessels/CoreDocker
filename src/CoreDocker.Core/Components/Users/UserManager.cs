@@ -6,6 +6,7 @@ using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.Extensions.Logging;

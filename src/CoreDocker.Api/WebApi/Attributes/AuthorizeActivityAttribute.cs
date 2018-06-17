@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using CoreDocker.Api.Security;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Auth;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 

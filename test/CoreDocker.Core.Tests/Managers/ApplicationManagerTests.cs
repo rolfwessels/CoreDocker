@@ -2,6 +2,7 @@ using CoreDocker.Core.Components.Applications;
 using CoreDocker.Core.Framework.BaseManagers;
 using FizzWare.NBuilder;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 using Moq;

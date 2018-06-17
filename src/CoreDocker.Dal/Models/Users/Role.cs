@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Auth;
 
-namespace CoreDocker.Dal.Models
+namespace CoreDocker.Dal.Models.Users
 {
 	public class Role
 	{

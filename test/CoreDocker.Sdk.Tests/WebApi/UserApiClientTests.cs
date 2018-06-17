@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;

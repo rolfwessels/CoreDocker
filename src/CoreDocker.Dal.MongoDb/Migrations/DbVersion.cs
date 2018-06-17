@@ -1,5 +1,5 @@
 ﻿using System;
-using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.MongoDb.Migrations
 {

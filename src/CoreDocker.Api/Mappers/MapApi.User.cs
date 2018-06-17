@@ -2,7 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
 

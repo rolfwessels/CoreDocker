@@ -1,6 +1,6 @@
 using CoreDocker.Dal.Models.Base;
 
-namespace CoreDocker.Dal.Models.Reference
+namespace CoreDocker.Dal.Models.Projects
 {
     public class ProjectReference : BaseReferenceWithName
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 

@@ -6,7 +6,7 @@ using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Validation;
 using NUnit.Framework;
 using System.Linq;
-using CoreDocker.Dal.Validation.Validators;
+using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder.Generators;
 

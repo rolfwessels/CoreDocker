@@ -2,6 +2,7 @@ using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using Moq;

@@ -1,6 +1,7 @@
 using System.Linq;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
 using GraphQL.Types;

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using CoreDocker.Core.Framework.Mappers;
 using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 
 namespace CoreDocker.Core.Framework.DataIntegrity
 {

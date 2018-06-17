@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Api.WebApi.Attributes;
 using CoreDocker.Api.WebApi.Controllers;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Interfaces.Shared;

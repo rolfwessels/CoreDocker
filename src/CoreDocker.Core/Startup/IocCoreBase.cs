@@ -7,8 +7,9 @@ using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.MessageUtil;
 using FluentValidation;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
-using CoreDocker.Dal.Validation.Validators;
 using log4net;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 

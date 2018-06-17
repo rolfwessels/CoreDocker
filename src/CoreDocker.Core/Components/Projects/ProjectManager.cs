@@ -1,5 +1,6 @@
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 
