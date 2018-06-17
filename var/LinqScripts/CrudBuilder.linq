@@ -7,14 +7,14 @@
   <Namespace>System.Globalization</Namespace>
 </Query>
 
-string  _location = @"..\..\src";
+string  _location = @"..\..\..\";
 string  _template = @"Project";
-string  _toName = @"Sample";
-string[]  _fileTypes = new [] { @".cs",".js",".html",".txt",".json", ".less"};
-string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs" , "Enums\\","node_modules",".tmp"};
-string _focus = "Controller";
-string _templateFolder = "";
-string _toNameFolder = "";
+string  _toName = @"UserGrant";
+string[]  _fileTypes = new [] { @".cs",".js", ".ts",".html",".scss",".txt",".json", ".less"};
+string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs", "obj\\" , "Enums\\","node_modules",".tmp"};
+string _focus = "Test";
+string _templateFolder = null ;
+string _toNameFolder = null;
 bool _copyScaffold = false;
 void Main()
 {
@@ -22,7 +22,7 @@ void Main()
 	var files = Directory.GetFiles(_location, "*" + _template + "*", SearchOption.AllDirectories)
 				.Where(file => _fileTypes.Contains(Path.GetExtension(file)) && !_exclude.Any(x => file.Contains(x)))
 				.OrderByDescending(x => x.Contains(_focus));
-	_templateFolder = GetFolderName(_template);
+	_templateFolder = _templateFolder?? GetFolderName(_template);
 	_toNameFolder = GetFolderName(_toName) ?? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_toName.Humanize().Split(' ').Last().Humanize());
 	
 	var fileReplaces = files.Select(x => new { File = x, Replace = ReplaceAll(x) , Exists = File.Exists(ReplaceAll(x))}).ToList();

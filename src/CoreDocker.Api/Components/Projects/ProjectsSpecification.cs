@@ -1,4 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using CoreDocker.Api.GraphQl.DynamicQuery;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Projects
@@ -7,6 +14,7 @@ namespace CoreDocker.Api.Components.Projects
     {
         public ProjectsSpecification(ProjectCommonController projects)
         {
+            var options = new GraphQlQueryOptions<ProjectCommonController, ProjectModel,Project >(projects);
             Name = "Projects";
             Field<ProjectSpecification>(
                 "byId",
@@ -41,6 +49,50 @@ namespace CoreDocker.Api.Components.Projects
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
                     )
             );
+            Field<QueryResultSpecification>(
+                "query",
+                Description = "query the projects projects",
+                options.GetArguments(),
+                context => options.Query(context)
+            );
         }
     }
 }
+
+/* scaffolding [
+    {
+      "FileName": "DefaultQuery.cs",
+      "Indexline": "using CoreDocker.Api.Components.Projects;",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "using CoreDocker.Api.Components.Projects;"
+      ]
+    },
+    {
+      "FileName": "DefaultQuery.cs",
+      "Indexline": "Field<ProjectsSpecification>",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "Field<ProjectsSpecification>(\"projects\",resolve: context => Task.FromResult(new object()));"
+      ]
+    },
+    {
+      "FileName": "IocApi.cs",
+      "Indexline": "\/*project*\/",
+      "InsertAbove": true,
+      "InsertInline": false,
+      "Lines": [
+            "/*project*\/",
+            "builder.RegisterType<ProjectSpecification>().SingleInstance();",
+            "builder.RegisterType<ProjectsSpecification>().SingleInstance();",
+            "builder.RegisterType<ProjectCreateUpdateSpecification>().SingleInstance();",
+            "builder.RegisterType<ProjectsMutationSpecification>().SingleInstance();",
+            "",
+      ]
+    }
+       
+
+         
+] scaffolding */

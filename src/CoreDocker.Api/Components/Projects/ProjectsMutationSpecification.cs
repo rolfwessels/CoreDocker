@@ -1,4 +1,5 @@
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Projects
@@ -8,7 +9,7 @@ namespace CoreDocker.Api.Components.Projects
         private const string Value = "project";
         public ProjectsMutationSpecification(ProjectCommonController projectManager)
         {
-            Name = "MarketAppMutation";
+            Name = "ProjectsMutation";
 
             Field<ProjectSpecification>(
                 "insert",
@@ -21,6 +22,7 @@ namespace CoreDocker.Api.Components.Projects
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
                     return projectManager.Insert(project);
                 });
+
             Field<ProjectSpecification>(
                 "update",
                 Description = "update a project",
@@ -35,6 +37,39 @@ namespace CoreDocker.Api.Components.Projects
                     return projectManager.Update(id, project);
                 });
 
+            Field<BooleanGraphType>(
+                "delete",
+                Description = "permanently remove a project",
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                context =>
+                {
+                    var id = context.GetArgument<string>(Name = "id");
+                    return projectManager.Delete(id);
+                });
         }
     }
 }
+
+/* scaffolding [
+    
+    {
+      "FileName": "DefaultMutation.cs",
+      "Indexline": "using CoreDocker.Api.Components.Projects;",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "using CoreDocker.Api.Components.Projects;"
+      ]
+    },
+    {
+      "FileName": "DefaultMutation.cs",
+      "Indexline": "ProjectsMutationSpecification",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.FromResult(new object()));"
+      ]
+    }
+] scaffolding */

@@ -1,5 +1,6 @@
 using System;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Shared;
 
 namespace CoreDocker.Sdk.RestApi.Base
 {

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 
 namespace CoreDocker.Core.Components.Users
 {

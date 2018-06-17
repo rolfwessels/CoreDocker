@@ -1,4 +1,4 @@
-using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Framework.Mappers;
 using NUnit.Framework;
 

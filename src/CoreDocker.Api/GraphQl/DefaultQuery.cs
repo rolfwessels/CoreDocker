@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using CoreDocker.Api.Components.Projects;
+using CoreDocker.Api.Components.Users;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.GraphQl
@@ -11,6 +12,7 @@ namespace CoreDocker.Api.GraphQl
         {
             Name = "Query";
             Field<ProjectsSpecification>("projects",resolve: context => Task.FromResult(new object()));
+            Field<UsersSpecification>("users",resolve: context => Task.FromResult(new object()));
         }
 
        

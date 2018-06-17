@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
@@ -12,6 +12,10 @@ namespace CoreDocker.Core.Framework.Mappers
             });
         }
 
-        
+        public static void AssertConfigurationIsValid()
+        {
+            Mapper.AssertConfigurationIsValid();
+        }
+
     }
 }

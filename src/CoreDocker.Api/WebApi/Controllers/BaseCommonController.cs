@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Shared.Interfaces.Base;
 

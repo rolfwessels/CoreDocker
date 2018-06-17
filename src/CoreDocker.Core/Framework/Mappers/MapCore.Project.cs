@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Projects;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
@@ -16,10 +16,7 @@ namespace CoreDocker.Core.Framework.Mappers
             return Mapper.Map(project, projectReference);
         }
 
-        public static void AssertConfigurationIsValid()
-        {
-            Mapper.AssertConfigurationIsValid();
-        }
+       
     }
 }
 

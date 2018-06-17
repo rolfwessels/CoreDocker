@@ -90,5 +90,36 @@ namespace CoreDocker.Utilities.Tests.Helpers
         }
 
 
+        [Test]
+        public void Mask_GivenGivenLongValue_ShouldMask()
+        {
+            // arrange
+            // action
+            var uriCombine = "casdcasdcasd".Mask(5);
+            // assert
+            uriCombine.Should().Be("casdcXXXX");
+        }
+
+        [Test]
+        public void Mask_GivenGivenEmpty_ShouldMask()
+        {
+            // arrange
+            // action
+            var uriCombine = "".Mask(5);
+            // assert
+            uriCombine.Should().Be("XXXX");
+        }
+
+        [Test]
+        public void Mask_GivenGivenNull_ShouldMask()
+        {
+            // arrange
+            // action
+            var uriCombine = StringHelper.Mask(null, 5);
+            // assert
+            uriCombine.Should().Be(null);
+        }
+
+
     }
 }

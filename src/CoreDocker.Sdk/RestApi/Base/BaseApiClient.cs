@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Shared;
 using CoreDocker.Utilities.Helpers;
 using Newtonsoft.Json;
 using RestSharp;

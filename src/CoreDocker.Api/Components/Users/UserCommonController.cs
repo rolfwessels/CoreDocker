@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using CoreDocker.Api.Models.Mappers;
+using CoreDocker.Api.Mappers;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Users;
 using log4net;
 using Microsoft.AspNetCore.Http;
 

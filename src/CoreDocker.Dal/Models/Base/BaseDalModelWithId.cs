@@ -1,6 +1,4 @@
-﻿using CoreDocker.Dal.Models.Interfaces;
-
-namespace CoreDocker.Dal.Models.Base
+﻿namespace CoreDocker.Dal.Models.Base
 {
 	public abstract class BaseDalModelWithId : BaseDalModel, IBaseDalModelWithId
 	{

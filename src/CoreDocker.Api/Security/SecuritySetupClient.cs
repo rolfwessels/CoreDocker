@@ -1,6 +1,6 @@
 ﻿using System;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;

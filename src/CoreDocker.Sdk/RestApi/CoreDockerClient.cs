@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Auth;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Client;
 using GraphQL.Common.Request;
@@ -49,7 +52,22 @@ namespace CoreDocker.Sdk.RestApi
         public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
         {
             var graphQlClient = new GraphQLClient(UrlBase.UriCombine("/graphql"));
-            return await graphQlClient.PostAsync(heroRequest);
+            var graphQlResponse = await graphQlClient.PostAsync(heroRequest);
+            if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+            {
+                throw new GraphQlResponseException(graphQlResponse) ;
+            }
+            return graphQlResponse;
+        }
+    }
+
+    public class GraphQlResponseException : Exception
+    {
+        public GraphQLResponse GraphQlResponse { get; }
+
+        public GraphQlResponseException(GraphQLResponse graphQlResponse) : base(graphQlResponse.Errors.Select(x=>x.Message).StringJoin())
+        {
+            GraphQlResponse = graphQlResponse;
         }
     }
 }

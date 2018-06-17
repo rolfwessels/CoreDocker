@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using MongoDB.Driver;
 
 namespace CoreDocker.Dal.MongoDb.Migrations.Versions

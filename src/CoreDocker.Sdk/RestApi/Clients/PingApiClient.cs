@@ -3,6 +3,7 @@ using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Ping;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Clients

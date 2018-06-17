@@ -8,8 +8,8 @@ using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Tests.Managers;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Models.Interfaces;
-using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.DataIntegrity

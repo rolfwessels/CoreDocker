@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
 using CoreDocker.Api.WebApi.Exceptions;
+using CoreDocker.Shared.Models.Shared;
 using log4net;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.AspNetCore.Mvc;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Auth;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Clients

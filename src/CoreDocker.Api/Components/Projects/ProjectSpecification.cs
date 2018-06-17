@@ -1,5 +1,6 @@
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Projects
@@ -10,7 +11,7 @@ namespace CoreDocker.Api.Components.Projects
         {
             Name = "Project";
             Field(d => d.Id).Description("The id of the project.");
-            Field(d => d.Name, nullable: true).Description("The name of the project.");
+            Field(d => d.Name).Description("The name of the project.");
             Field(d => d.UpdateDate, nullable: true).Description("The update date of the project.");
         }
     }

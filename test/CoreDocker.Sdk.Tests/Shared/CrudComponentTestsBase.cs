@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
-using CoreDocker.Shared.Models.Interfaces;
+using CoreDocker.Shared.Models.Shared;
 using CoreDocker.Utilities.Helpers;
 using log4net;
 using FizzWare.NBuilder;
