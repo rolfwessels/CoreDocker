@@ -7,12 +7,12 @@
   <Namespace>System.Globalization</Namespace>
 </Query>
 
-string  _location = @"..\..\src";
+string  _location = @"..\..\..\";
 string  _template = @"Project";
 string  _toName = @"UserGrant";
 string[]  _fileTypes = new [] { @".cs",".js", ".ts",".html",".scss",".txt",".json", ".less"};
 string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs", "obj\\" , "Enums\\","node_modules",".tmp"};
-string _focus = ".Core";
+string _focus = "Test";
 string _templateFolder = null ;
 string _toNameFolder = null;
 bool _copyScaffold = false;

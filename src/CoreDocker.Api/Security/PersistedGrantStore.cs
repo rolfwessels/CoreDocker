@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.Mappers;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using log4net;
@@ -14,18 +15,22 @@ namespace CoreDocker.Api.Security
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IUserGrantManager _userGrantManager;
+        private readonly IUserManager _userManager;
 
         #region Implementation of IPersistedGrantStore
 
-        public PersistedGrantStore(IUserGrantManager userGrantManager)
+        public PersistedGrantStore(IUserGrantManager userGrantManager, IUserManager userManager)
         {
             _userGrantManager = userGrantManager;
+            _userManager = userManager;
         }
 
-        public Task StoreAsync(PersistedGrant grant)
+        public async Task StoreAsync(PersistedGrant grant)
         {
             var userGrant = grant.ToGrant();
-            return _userGrantManager.Insert(userGrant);
+            var userById = await _userManager.GetById(grant.SubjectId);
+            if (userById != null) userGrant.User = userById.ToReference();
+            await _userGrantManager.Insert(userGrant);
         }
 
         public async Task<PersistedGrant> GetAsync(string key)

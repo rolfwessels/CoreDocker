@@ -1,4 +1,5 @@
-﻿using CoreDocker.Dal.Models;
+﻿using CoreDocker.Core.Framework.Mappers;
+using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using FizzWare.NBuilder;
@@ -33,6 +34,12 @@ namespace CoreDocker.Utilities.Tests.TempBuildres
         user.Email = (GetRandom.String(20) + "@nomailmail.com").ToLower();
         user.HashedPassword = GetRandom.String(20);
         user.Roles.Add("Guest");
+      }
+
+      var userGrant = value as UserGrant;
+      if (userGrant != null)
+      {
+          userGrant.User = Builder<User>.CreateNew().Build().ToReference();
       }
       return value;
     }

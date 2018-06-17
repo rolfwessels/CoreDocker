@@ -1,5 +1,6 @@
 using System;
 using CoreDocker.Dal.Models.Base;
+using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Dal.Models.Users
 {
@@ -14,7 +15,7 @@ namespace CoreDocker.Dal.Models.Users
 
         public override string ToString()
 	    {
-	        return $"UserGrant: {Key.Substring(0,5)}";
+	        return $"UserGrant: {Key.Mask(5)} {User}";
 	    }
 	}
 }

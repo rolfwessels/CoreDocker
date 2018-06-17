@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\CoreDocker.Core\CoreDocker.Core.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Dal\CoreDocker.Dal.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Shared\CoreDocker.Shared.csproj" />

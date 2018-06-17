@@ -27,19 +27,10 @@ namespace CoreDocker.Core.Tests.Managers
 
         #endregion
 
-        protected override IRepository<Project> Repository
-        {
-            get { return _fakeGeneralUnitOfWork.Projects; }
-        }
+        protected override IRepository<Project> Repository => _fakeGeneralUnitOfWork.Projects;
 
-        protected override Project SampleObject
-        {
-            get { return Builder<Project>.CreateNew().Build(); }
-        }
+        protected override Project SampleObject => Builder<Project>.CreateNew().Build();
 
-        protected override BaseManager<Project> Manager
-        {
-            get { return _projectManager; }
-        }
+        protected override BaseManager<Project> Manager => _projectManager;
     }
 }
