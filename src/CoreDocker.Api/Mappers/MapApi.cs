@@ -1,12 +1,9 @@
-using AutoMapper;
-using CoreDocker.Shared.Models;
 using System;
-using System.Reflection;
+using AutoMapper;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Shared.Models.Shared;
-using log4net;
 
-namespace CoreDocker.Api.Models.Mappers
+namespace CoreDocker.Api.Mappers
 {
     public static partial class MapApi
 	{
@@ -22,6 +19,7 @@ namespace CoreDocker.Api.Models.Mappers
             var config = new MapperConfiguration(cfg => {
                 MapUserModel(cfg);
                 MapProjectModel(cfg);
+                MapUserGrantModel(cfg);
             });
             return config.CreateMapper();
         }

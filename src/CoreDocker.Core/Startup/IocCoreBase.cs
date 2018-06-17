@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Autofac;
 using CoreDocker.Core.Components.Projects;
@@ -11,6 +11,7 @@ using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
 using log4net;
+using UserGrant = CoreDocker.Dal.Models.Users.UserGrant;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
 namespace CoreDocker.Core.Startup
@@ -53,6 +54,7 @@ namespace CoreDocker.Core.Startup
             builder.RegisterType<ProjectManager>().As<IProjectManager>();
             builder.RegisterType<RoleManager>().As<IRoleManager>();
             builder.RegisterType<UserManager>().As<IUserManager>();
+            builder.RegisterType<UserGrantManager>().As<IUserGrantManager>();
 		}
 
 	    private static void SetupValidation(ContainerBuilder builder)
@@ -60,6 +62,7 @@ namespace CoreDocker.Core.Startup
             builder.RegisterType<AutofacValidatorFactory>().As<Dal.Validation.IValidatorFactory>();
 	        builder.RegisterType<UserValidator>().As<IValidator<User>>();
 	        builder.RegisterType<ProjectValidator>().As<IValidator<Project>>();
+	        builder.RegisterType<UserGrantValidator>().As<IValidator<UserGrant>>();
 	        builder.RegisterType<UserValidator>().As<IValidator<User>>();
 	    }
 

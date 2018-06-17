@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
-using CoreDocker.Shared.Models;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models.Projects;
 
-namespace CoreDocker.Api.Models.Mappers
+namespace CoreDocker.Api.Mappers
 {
     public static partial class MapApi
     {

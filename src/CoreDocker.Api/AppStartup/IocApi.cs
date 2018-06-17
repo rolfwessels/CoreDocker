@@ -5,6 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
+using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Core.Startup;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;

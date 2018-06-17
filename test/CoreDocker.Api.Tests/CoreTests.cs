@@ -1,4 +1,4 @@
-﻿using CoreDocker.Api.Models.Mappers;
+﻿using CoreDocker.Api.Mappers;
 using NUnit.Framework;
 
 namespace CoreDocker.Api.Tests
@@ -9,7 +9,7 @@ namespace CoreDocker.Api.Tests
         [Test]
         public void AssertConfigurationIsValid_WhenCalled_ShouldBeValid()
         {
-            var instance = MapApi.GetInstance();
+            MapApi.GetInstance();
             MapApi.AssertConfigurationIsValid();
         }
     }

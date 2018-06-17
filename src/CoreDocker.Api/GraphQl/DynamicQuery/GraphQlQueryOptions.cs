@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using CoreDocker.Api.WebApi.Controllers;
 using GraphQL.Types;
 
-namespace CoreDocker.Api.Components.Projects
+namespace CoreDocker.Api.GraphQl.DynamicQuery
 {
     public class GraphQlQueryOptions<TController,TModel, TDal>  where TController : IQueryableControllerBase<TDal, TModel>
     {

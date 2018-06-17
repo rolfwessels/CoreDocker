@@ -16,10 +16,7 @@ namespace CoreDocker.Core.Framework.Mappers
             return Mapper.Map(project, projectReference);
         }
 
-        public static void AssertConfigurationIsValid()
-        {
-            Mapper.AssertConfigurationIsValid();
-        }
+       
     }
 }
 

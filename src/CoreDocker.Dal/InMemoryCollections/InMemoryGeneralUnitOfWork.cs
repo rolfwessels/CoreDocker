@@ -20,6 +20,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             Users = new FakeRepository<User>();
             Applications = new FakeRepository<Application>();
             Projects = new FakeRepository<Project>();
+            UserGrants = new FakeRepository<UserGrant>();
         }
 
 
@@ -36,6 +37,7 @@ namespace CoreDocker.Dal.InMemoryCollections
         public IRepository<User> Users { get; private set; }
         public IRepository<Application> Applications { get; private set; }
         public IRepository<Project> Projects { get; private set; }
+        public IRepository<UserGrant> UserGrants { get; private set; }
 
         #endregion
 
