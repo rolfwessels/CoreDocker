@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -31,30 +31,37 @@ namespace CoreDocker.Api.AppStartup
             var builder = new ContainerBuilder();
             SetupCore(builder);
             SetupCommonControllers(builder);
-            
+            SetupGraphQl(builder);
 
-        
+            SetupTools(builder);
+            builder.Populate(_services);
+            Container = builder.Build();
+        }
+
+        private static void SetupGraphQl(ContainerBuilder builder)
+        {
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
             builder.RegisterType<DocumentWriter>().As<IDocumentWriter>().SingleInstance();
-            
+
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
             builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
+            /*user*/
+            builder.RegisterType<UserSpecification>().SingleInstance();
+            builder.RegisterType<UsersSpecification>().SingleInstance();
+            builder.RegisterType<UserCreateUpdateSpecification>().SingleInstance();
+            builder.RegisterType<UsersMutationSpecification>().SingleInstance();
 
+            /*project*/
             builder.RegisterType<ProjectSpecification>().SingleInstance();
             builder.RegisterType<ProjectsSpecification>().SingleInstance();
             builder.RegisterType<ProjectCreateUpdateSpecification>().SingleInstance();
             builder.RegisterType<ProjectsMutationSpecification>().SingleInstance();
 
-            builder.RegisterType<UserInterface>().SingleInstance();
-            
+         
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-
-            SetupTools(builder);
-            builder.Populate(_services);
-            Container = builder.Build();
         }
 
         public static void Populate(IServiceCollection services)

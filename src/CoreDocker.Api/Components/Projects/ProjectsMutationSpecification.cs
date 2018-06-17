@@ -34,7 +34,6 @@ namespace CoreDocker.Api.Components.Projects
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
                     return projectManager.Update(id, project);
                 });
-
         }
     }
 }
@@ -42,12 +41,21 @@ namespace CoreDocker.Api.Components.Projects
 /* scaffolding [
     
     {
-      "FileName": "DefaultQuery.cs",
+      "FileName": "DefaultMutation.cs",
+      "Indexline": "using CoreDocker.Api.Components.Projects;",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "using CoreDocker.Api.Components.Projects;"
+      ]
+    },
+    {
+      "FileName": "DefaultMutation.cs",
       "Indexline": "ProjectsMutationSpecification",
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "Field<ProjectsMutationSpecification>("projects", resolve: context => Task.FromResult(new object()));"
+        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.FromResult(new object()));"
       ]
     }
 ] scaffolding */
