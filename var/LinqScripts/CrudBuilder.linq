@@ -9,10 +9,10 @@
 
 string  _location = @"..\..\src";
 string  _template = @"Project";
-string  _toName = @"Sample";
-string[]  _fileTypes = new [] { @".cs",".js",".html",".txt",".json", ".less"};
-string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs" , "Enums\\","node_modules",".tmp"};
-string _focus = "Controller";
+string  _toName = @"User";
+string[]  _fileTypes = new [] { @".cs",".js", ".ts",".html",".scss",".txt",".json", ".less"};
+string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs", "obj\\" , "Enums\\","node_modules",".tmp"};
+string _focus = "com";
 string _templateFolder = "";
 string _toNameFolder = "";
 bool _copyScaffold = false;

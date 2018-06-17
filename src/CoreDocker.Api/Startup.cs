@@ -50,9 +50,7 @@ namespace CoreDocker.Api
         {
             IocApi.Populate(services);
 
-            RegisterGraphQl(services);
-
-
+            services.AddGraphQl();
             services.AddCors();
             services.UseIndentityService();
             services.AddBearerAuthentication();
@@ -62,29 +60,6 @@ namespace CoreDocker.Api
          
             
             return new AutofacServiceProvider(IocApi.Instance.Container);
-        }
-
-        private static void RegisterGraphQl(IServiceCollection services)
-        {
-            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
-
-            services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
-            services.AddSingleton<IDocumentWriter, DocumentWriter>();
-            
-            services.AddSingleton<DefaultQuery>();
-            services.AddSingleton<DefaultMutation>();
-
-            services.AddSingleton<ProjectSpecification>();
-            services.AddSingleton<ProjectsSpecification>();
-            services.AddSingleton<ProjectCreateUpdateSpecification>();
-            services.AddSingleton<ProjectsMutationSpecification>();
-
-            services.AddSingleton<UserInterface>();
-            services.AddSingleton<ISchema, DefaultSchema>();
-            
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddGraphQLHttp();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -106,15 +81,9 @@ namespace CoreDocker.Api
             app.UseBearerAuthentication();
             app.UseSingalRSetup();
             app.UseMvc();
-            app.UseGraphQLHttp<ISchema>(new GraphQLHttpOptions());
-            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
+            app.AddGraphQl();
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
-        }
-
-        public class GraphQLUserContext
-        {
-            public ClaimsPrincipal User { get; set; }
         }
     }
 
