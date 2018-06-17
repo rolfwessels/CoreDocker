@@ -3,8 +3,8 @@ using System.Linq;
 using AutoMapper;
 using CoreDocker.Shared.Models;
 using CoreDocker.Dal.Models;
-using CoreDocker.Shared.Models.Reference;
 using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Shared.Models.Projects;
 
 namespace CoreDocker.Api.Models.Mappers
 {

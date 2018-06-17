@@ -1,6 +1,4 @@
-using System;
-
-namespace CoreDocker.Shared.Models.Base
+namespace CoreDocker.Shared.Models.Shared
 {
     public class BaseReferenceModel
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CoreDocker.Shared.Models
+namespace CoreDocker.Shared.Models.Users
 {
     public class RoleModel 
     {

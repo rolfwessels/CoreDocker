@@ -6,7 +6,7 @@ using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;

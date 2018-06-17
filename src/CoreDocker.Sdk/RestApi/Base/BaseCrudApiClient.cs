@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
-using CoreDocker.Shared.Models.Interfaces;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
+using CoreDocker.Shared.Models.Shared;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base

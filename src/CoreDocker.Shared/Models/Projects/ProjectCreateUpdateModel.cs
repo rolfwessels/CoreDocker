@@ -1,4 +1,4 @@
-namespace CoreDocker.Shared.Models
+namespace CoreDocker.Shared.Models.Projects
 {
     public class ProjectCreateUpdateModel 
     {

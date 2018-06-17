@@ -1,4 +1,4 @@
-﻿namespace CoreDocker.Shared.Models.Enums
+﻿namespace CoreDocker.Shared.Models.Shared
 {
     public enum UpdateTypeCodes
     {

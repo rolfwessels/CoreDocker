@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Projects

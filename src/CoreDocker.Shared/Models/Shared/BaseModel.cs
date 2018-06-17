@@ -1,7 +1,6 @@
 using System;
-using CoreDocker.Shared.Models.Interfaces;
 
-namespace CoreDocker.Shared.Models.Base
+namespace CoreDocker.Shared.Models.Shared
 {
     public abstract class BaseModel : IBaseModel
     {

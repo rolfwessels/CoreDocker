@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Auth;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Client;
 using GraphQL.Common.Request;

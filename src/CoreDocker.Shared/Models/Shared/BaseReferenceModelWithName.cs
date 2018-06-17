@@ -1,4 +1,4 @@
-namespace CoreDocker.Shared.Models.Base
+namespace CoreDocker.Shared.Models.Shared
 {
     public abstract class BaseReferenceModelWithName : BaseReferenceModel
     {

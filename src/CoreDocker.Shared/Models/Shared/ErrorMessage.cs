@@ -1,6 +1,6 @@
 using System;
 
-namespace CoreDocker.Shared.Models
+namespace CoreDocker.Shared.Models.Shared
 {
   public class ErrorMessage
   {

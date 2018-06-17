@@ -5,7 +5,7 @@ using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Users;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Clients

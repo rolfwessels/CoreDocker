@@ -1,6 +1,4 @@
-﻿using CoreDocker.Shared.Models.Enums;
-
-namespace CoreDocker.Shared.Models
+﻿namespace CoreDocker.Shared.Models.Shared
 {
     public class ValueUpdateModel<T>
     {

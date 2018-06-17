@@ -1,9 +1,9 @@
 using AutoMapper;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Enums;
 using System;
 using System.Reflection;
 using CoreDocker.Core.Framework.MessageUtil.Models;
+using CoreDocker.Shared.Models.Shared;
 using log4net;
 
 namespace CoreDocker.Api.Models.Mappers

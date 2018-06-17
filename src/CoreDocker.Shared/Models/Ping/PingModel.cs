@@ -1,4 +1,4 @@
-namespace CoreDocker.Shared.Models
+namespace CoreDocker.Shared.Models.Ping
 {
     public class PingModel
     {

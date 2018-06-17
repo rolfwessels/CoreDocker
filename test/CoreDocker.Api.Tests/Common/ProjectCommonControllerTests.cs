@@ -3,7 +3,7 @@ using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Projects;
 using Moq;
 using NUnit.Framework;
 

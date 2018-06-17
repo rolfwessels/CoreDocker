@@ -1,5 +1,6 @@
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Auth;
 
 namespace CoreDocker.Sdk.RestApi
 {

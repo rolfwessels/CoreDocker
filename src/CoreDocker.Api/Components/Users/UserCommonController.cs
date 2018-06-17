@@ -8,7 +8,7 @@ using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Users;
 using log4net;
 using Microsoft.AspNetCore.Http;
 

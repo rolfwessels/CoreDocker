@@ -9,7 +9,7 @@
 
 string  _location = @"..\..\src";
 string  _template = @"Project";
-string  _toName = @"User";
+string  _toName = @"UserGrant";
 string[]  _fileTypes = new [] { @".cs",".js", ".ts",".html",".scss",".txt",".json", ".less"};
 string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs", "obj\\" , "Enums\\","node_modules",".tmp"};
 string _focus = "Website";

@@ -4,7 +4,7 @@ using AutoMapper;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Reference;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Users;
 
 namespace CoreDocker.Api.Models.Mappers
 {

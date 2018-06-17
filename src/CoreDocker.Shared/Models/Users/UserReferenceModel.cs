@@ -1,6 +1,6 @@
-using CoreDocker.Shared.Models.Base;
+using CoreDocker.Shared.Models.Shared;
 
-namespace CoreDocker.Shared.Models.Reference
+namespace CoreDocker.Shared.Models.Users
 {
     public class UserReferenceModel : BaseReferenceModelWithName
     {

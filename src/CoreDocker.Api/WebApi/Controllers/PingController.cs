@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Ping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

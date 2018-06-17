@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using CoreDocker.Shared.Models.Base;
+using CoreDocker.Shared.Models.Shared;
 
-namespace CoreDocker.Shared.Models
+namespace CoreDocker.Shared.Models.Users
 {
     public class UserModel : BaseModel
     {

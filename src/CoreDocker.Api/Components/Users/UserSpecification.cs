@@ -1,5 +1,6 @@
 using CoreDocker.Dal.Models;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Users;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Users

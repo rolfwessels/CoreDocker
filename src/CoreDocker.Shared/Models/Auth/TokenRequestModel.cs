@@ -1,4 +1,4 @@
-namespace CoreDocker.Shared.Models
+namespace CoreDocker.Shared.Models.Auth
 {
     public class TokenRequestModel
     {

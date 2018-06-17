@@ -8,7 +8,7 @@ using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Users;
 using log4net;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;

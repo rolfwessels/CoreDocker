@@ -7,7 +7,7 @@ using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Projects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDocker.Api.Components.Projects
