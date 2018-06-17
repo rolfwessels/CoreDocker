@@ -8,7 +8,7 @@ namespace CoreDocker.Api.Components.Projects
         private const string Value = "project";
         public ProjectsMutationSpecification(ProjectCommonController projectManager)
         {
-            Name = "MarketAppMutation";
+            Name = "ProjectsMutation";
 
             Field<ProjectSpecification>(
                 "insert",
@@ -21,6 +21,7 @@ namespace CoreDocker.Api.Components.Projects
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
                     return projectManager.Insert(project);
                 });
+
             Field<ProjectSpecification>(
                 "update",
                 Description = "update a project",
@@ -33,6 +34,18 @@ namespace CoreDocker.Api.Components.Projects
                     var id = context.GetArgument<string>(Name = "id");
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
                     return projectManager.Update(id, project);
+                });
+
+            Field<BooleanGraphType>(
+                "delete",
+                Description = "permanently remove a project",
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                context =>
+                {
+                    var id = context.GetArgument<string>(Name = "id");
+                    return projectManager.Delete(id);
                 });
         }
     }

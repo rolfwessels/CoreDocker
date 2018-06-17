@@ -8,7 +8,7 @@ namespace CoreDocker.Api.Components.Users
         private const string Value = "user";
         public UsersMutationSpecification(UserCommonController userManager)
         {
-            Name = "MarketAppMutation";
+            Name = "UsersMutation";
 
             Field<UserSpecification>(
                 "insert",
@@ -21,6 +21,7 @@ namespace CoreDocker.Api.Components.Users
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
                     return userManager.Insert(user);
                 });
+
             Field<UserSpecification>(
                 "update",
                 Description = "update a user",
@@ -33,6 +34,18 @@ namespace CoreDocker.Api.Components.Users
                     var id = context.GetArgument<string>(Name = "id");
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
                     return userManager.Update(id, user);
+                });
+
+            Field<BooleanGraphType>(
+                "delete",
+                Description = "permanently remove a user",
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                context =>
+                {
+                    var id = context.GetArgument<string>(Name = "id");
+                    return userManager.Delete(id);
                 });
         }
     }

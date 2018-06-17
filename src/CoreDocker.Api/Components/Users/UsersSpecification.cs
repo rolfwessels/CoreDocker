@@ -1,4 +1,7 @@
 using System.Linq;
+using CoreDocker.Api.Components.Projects;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Models;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Users
@@ -7,6 +10,7 @@ namespace CoreDocker.Api.Components.Users
     {
         public UsersSpecification(UserCommonController users)
         {
+            var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);
             Name = "Users";
             Field<UserSpecification>(
                 "byId",
@@ -40,6 +44,12 @@ namespace CoreDocker.Api.Components.Users
                             .OrderByDescending(x => x.UpdateDate)
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
                     )
+            );
+            Field<QueryResultSpecification>(
+                "query",
+                Description = "query the projects projects",
+                options.GetArguments(),
+                context => options.Query(context)
             );
         }
     }

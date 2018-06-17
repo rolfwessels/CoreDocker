@@ -1,4 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using CoreDocker.Dal.Models;
+using CoreDocker.Shared.Models;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Projects
@@ -7,6 +11,7 @@ namespace CoreDocker.Api.Components.Projects
     {
         public ProjectsSpecification(ProjectCommonController projects)
         {
+            var options = new GraphQlQueryOptions<ProjectCommonController, ProjectModel,Project >(projects);
             Name = "Projects";
             Field<ProjectSpecification>(
                 "byId",
@@ -41,10 +46,14 @@ namespace CoreDocker.Api.Components.Projects
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
                     )
             );
+            Field<QueryResultSpecification>(
+                "query",
+                Description = "query the projects projects",
+                options.GetArguments(),
+                context => options.Query(context)
+            );
         }
     }
-
-
 }
 
 /* scaffolding [

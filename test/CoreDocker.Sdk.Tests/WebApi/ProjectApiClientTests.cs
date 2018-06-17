@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
 using CoreDocker.Sdk.RestApi.Clients;
@@ -64,6 +65,38 @@ namespace CoreDocker.Sdk.Tests.WebApi
             personType.Count.Should().BeGreaterOrEqualTo(1).And.BeLessOrEqualTo(4);
             personType.Should().OnlyContain(x => x.Name == null);
             personType.Should().OnlyContain(x => x.Id != null);
+
+        }
+
+        [Test]
+        public async Task Graph_QueryWithCountExt_Shouldresult()
+        {
+            // arrange
+            Setup();
+            var heroRequest = new GraphQLRequest
+            {
+                Query = @"
+                {
+                    projects {
+                        query(first: 4) {
+                            count
+                        }
+                    }
+                }
+            "};
+            // action
+            var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
+            object data = graphQlResponse.Data;
+            data.Dump("graphQlResponse.Data");
+
+
+            // assert
+            int count = graphQlResponse.Data.projects.query.count;
+            count.Should().BeGreaterThan(1);
+//            List<ProjectModel> personType = CastHelper.DynamicCastTo<List<ProjectModel>>(graphQlResponse.Data.projects.recent);
+//            personType.Count.Should().BeGreaterOrEqualTo(1).And.BeLessOrEqualTo(4);
+//            personType.Should().OnlyContain(x => x.Name == null);
+//            personType.Should().OnlyContain(x => x.Id != null);
 
         }
      

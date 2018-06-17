@@ -7,7 +7,7 @@ using CoreDocker.Core.Framework.BaseManagers;
 
 namespace CoreDocker.Api.WebApi.Controllers
 {
-    public abstract class ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel>
+    public abstract class ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel> : IQueryableControllerBase<TDal, TModel>
     {
         protected IBaseManager<TDal> _projectManager;
 
@@ -17,7 +17,15 @@ namespace CoreDocker.Api.WebApi.Controllers
             queryable = apply(queryable);
             return ToModelList(queryable).ToList();
         }
-        
+
+        public int Count(Func<IQueryable<TDal>, IQueryable<TDal>> apply)
+        {
+            var queryable = _projectManager.Query();
+            queryable = apply(queryable);
+            return queryable.Count();
+        }
+
+
         public Task<IEnumerable<TReferenceModel>> Get(string query = null)
         {
             return Task.FromResult(ToReferenceModelList(_projectManager.Query()));

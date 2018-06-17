@@ -45,19 +45,20 @@ namespace CoreDocker.Api.AppStartup
 
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
+            builder.RegisterType<QueryResultSpecification>().SingleInstance();
             builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
             /*user*/
-            builder.RegisterType<UserSpecification>().SingleInstance();
-            builder.RegisterType<UsersSpecification>().SingleInstance();
-            builder.RegisterType<UserCreateUpdateSpecification>().SingleInstance();
-            builder.RegisterType<UsersMutationSpecification>().SingleInstance();
+            builder.RegisterType<UserSpecification>();
+            builder.RegisterType<UsersSpecification>();
+            builder.RegisterType<UserCreateUpdateSpecification>();
+            builder.RegisterType<UsersMutationSpecification>();
 
             /*project*/
-            builder.RegisterType<ProjectSpecification>().SingleInstance();
-            builder.RegisterType<ProjectsSpecification>().SingleInstance();
-            builder.RegisterType<ProjectCreateUpdateSpecification>().SingleInstance();
-            builder.RegisterType<ProjectsMutationSpecification>().SingleInstance();
+            builder.RegisterType<ProjectSpecification>();
+            builder.RegisterType<ProjectsSpecification>();
+            builder.RegisterType<ProjectCreateUpdateSpecification>();
+            builder.RegisterType<ProjectsMutationSpecification>();
 
          
 
