@@ -43,4 +43,19 @@ namespace CoreDocker.Api.Components.Projects
             );
         }
     }
+
+
 }
+
+/* scaffolding [
+    
+    {
+      "FileName": "DefaultQuery.cs",
+      "Indexline": "Field<ProjectsSpecification>",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "Field<ProjectsSpecification>("projects",resolve: context => Task.FromResult(new object()));"
+      ]
+    }
+] scaffolding */
