@@ -23,6 +23,14 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Signal-r replacement.
  * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
 
+## Gettings started with docker
+
+ ```
+ git clone https://github.com/rolfwessels/CoreDocker.git
+ cd CoreDocker
+ git submodule update --init --recursive
+ ```
+
 # Themes 
 
  * http://coreui.io/
