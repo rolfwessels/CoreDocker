@@ -37,11 +37,6 @@ script:
 after_success:
   # Add docker images
   - pushd src/ 
-  - docker pull microsoft/dotnet
-  - dotnet restore
-  - pushd CoreDocker.Api
-  - dotnet publish   --version-suffix $TRAVIS_BUILD_NUMBER -c Release -o bin/publish
-  - popd
   - docker build -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.$TRAVIS_BUILD_NUMBER .
   - popd
   - if [ "$TRAVIS_BRANCH" == "master" ]; then

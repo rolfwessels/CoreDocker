@@ -1,1 +1,1 @@
-docker build rolfwessels/coredocker:beta
+docker build ./ -t rolfwessels/coredocker:latest
