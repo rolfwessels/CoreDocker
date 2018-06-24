@@ -33,7 +33,7 @@ WORKDIR /app/CoreDocker.Api
 RUN dotnet publish -c Release -o out
 RUN ls out
 
-FROM node:9-alpine AS build-web
+FROM node:8.11-alpine AS build-web
 WORKDIR /app
 COPY CoreDocker.Website/package* ./
 RUN npm i
@@ -45,9 +45,10 @@ FROM microsoft/dotnet:2.0-runtime
 
 WORKDIR /app
 COPY --from=build-env /app/CoreDocker.Api/out .
-COPY --from=build-web /app/src/dist ./wwwroot
-
-
-
+COPY --from=build-web /app/dist ./wwwroot
+COPY logSettings.xml .
+RUN cat logSettings.xml
+#  <file value="C:\temp\Logs\CoreDocker.Api.log" />
+#     <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
 EXPOSE 5000/tcp
 ENTRYPOINT ["dotnet", "CoreDocker.Api.dll"]
