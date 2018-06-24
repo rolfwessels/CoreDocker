@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using CoreDocker.Api;
+using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
@@ -36,20 +37,20 @@ namespace CoreDocker.Sdk.Tests.Shared
         {
             var port = new Random().Next(9000, 9999);
             var address = string.Format("http://localhost:{0}", port);
-//            var websitePath = TestHelper.GetSourceBasePath();
-            OpenIdConfigBase.HostUrl = address;
+            Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
+            
             var host = new WebHostBuilder()
                 .UseKestrel()
-//                .UseContentRoot(websitePath)
+                .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            
             _log.Info(string.Format("Starting api on [{0}]", address));
             RestShapHelper.Log = m =>
             {
                 _log.Debug(m);
-//                Debug.WriteLine("value [{0}]", m);
             };
             return address;
         }

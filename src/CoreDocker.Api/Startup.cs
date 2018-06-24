@@ -36,7 +36,7 @@ namespace CoreDocker.Api
 
             services.AddGraphQl();
             services.AddCors();
-            services.UseIndentityService();
+            services.UseIndentityService(Configuration);
             services.AddBearerAuthentication();
             services.AddMvc(WebApiSetup.Setup);
             services.AddSwagger();
@@ -70,6 +70,4 @@ namespace CoreDocker.Api
             SimpleFileServer.Initialize(app);
         }
     }
-
-
 }

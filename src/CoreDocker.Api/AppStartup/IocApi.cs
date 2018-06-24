@@ -6,6 +6,7 @@ using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
+using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;
@@ -57,6 +58,7 @@ namespace CoreDocker.Api.AppStartup
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();
+            builder.RegisterType<OpenIdSettings>();
             builder.RegisterType<ProjectsSpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
             builder.RegisterType<ProjectsMutationSpecification>();
