@@ -29,6 +29,7 @@ namespace CoreDocker.Sdk.Tests.Shared
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
             _adminConnection = new Lazy<CoreDockerClient>(CreateAdminRequest);
+            
         }
 
         #region Private Methods

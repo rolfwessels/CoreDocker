@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
@@ -9,6 +10,7 @@ using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
 using CoreDocker.Utilities;
+using CoreDocker.Utilities.Helpers;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
@@ -33,7 +35,6 @@ namespace CoreDocker.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
-
             services.AddGraphQl();
             services.AddCors();
             services.UseIndentityService(Configuration);
@@ -41,7 +42,6 @@ namespace CoreDocker.Api
             services.AddMvc(WebApiSetup.Setup);
             services.AddSwagger();
             services.AddSignalR();
-         
             
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
@@ -53,11 +53,11 @@ namespace CoreDocker.Api
                 policy.AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
-                    .WithOrigins("http://localhost:4200");
+                    .WithOrigins(new OpenIdSettings(Configuration).GetOriginList());
             });
+
             if (env.IsDevelopment())
             {
-                
                 app.UseDeveloperExceptionPage();
             }
 

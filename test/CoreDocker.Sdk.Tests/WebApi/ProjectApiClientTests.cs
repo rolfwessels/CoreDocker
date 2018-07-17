@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models;
@@ -94,13 +95,64 @@ namespace CoreDocker.Sdk.Tests.WebApi
             // assert
             int count = graphQlResponse.Data.projects.query.count;
             count.Should().BeGreaterThan(1);
-//            List<ProjectModel> personType = CastHelper.DynamicCastTo<List<ProjectModel>>(graphQlResponse.Data.projects.recent);
-//            personType.Count.Should().BeGreaterOrEqualTo(1).And.BeLessOrEqualTo(4);
-//            personType.Should().OnlyContain(x => x.Name == null);
-//            personType.Should().OnlyContain(x => x.Id != null);
 
         }
-     
+
+        [Test]
+        public async Task Graph_QueryMeWithLoggedInUser_ShouldReturnCurrentUserName()
+        {
+            // arrange
+            Setup();
+            var heroRequest = new GraphQLRequest
+            {
+                Query = @"
+                {
+                    users {
+                        me {
+                            name
+                        }
+                    }
+                }
+            "
+            };
+            // action
+            var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
+            object data = graphQlResponse.Data;
+            data.Dump("graphQlResponse.Data");
+            
+            // assert
+            string name = graphQlResponse.Data.users.me.name;
+            name.Should().Be("Admin user");
+
+        }
+
+
+        [Test]
+        public async Task Graph_QueryMeWithNonLoggedInUser_ShouldReturnCurrentUserName()
+        {
+            // arrange
+            Setup();
+            var heroRequest = new GraphQLRequest
+            {
+                Query = @"
+                {
+                    users {
+                        me {
+                            name
+                        }
+                    }
+                }
+            "
+            };
+            // action
+            var adminConnectionValue = (CoreDockerClient) _defaultRequestFactory.Value.GetConnection();
+            Action testCall = () => { adminConnectionValue.GraphQlPost(heroRequest).Wait(); };
+            testCall.Should().Throw<Exception>().WithMessage("Error trying to resolve me.")
+                .And.ToFirstExceptionOfException().GetType().Name.Should().Be("GraphQlResponseException");
+
+
+        }
+
         protected override IList<ProjectCreateUpdateModel> GetExampleData()
         {
             return Builder<Project>.CreateListOfSize(2).WithValidData().Build()

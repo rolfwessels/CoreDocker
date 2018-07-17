@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
@@ -67,10 +68,7 @@ namespace CoreDocker.Api.Security
                     {
                         openIdSettings.HostUrl.UriCombine("/Unauthorized") 
                     },
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        openIdSettings.HostUrl
-                    },
+                    AllowedCorsOrigins = openIdSettings.GetOriginList(),
                     AllowedScopes = new List<string>
                     {
                         openIdSettings.ScopeApi

@@ -1,16 +1,19 @@
+using System;
 using System.Linq;
-using CoreDocker.Api.Components.Projects;
+using System.Reflection;
+using System.Threading.Tasks;
 using CoreDocker.Api.GraphQl.DynamicQuery;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
 using GraphQL.Types;
+using log4net;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class UsersSpecification : ObjectGraphType<object>
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public UsersSpecification(UserCommonController users)
         {
             var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);
@@ -54,6 +57,17 @@ namespace CoreDocker.Api.Components.Users
                 options.GetArguments(),
                 context => options.Query(context)
             );
+
+            Field<UserSpecification>(
+                "me",
+                Description = "Current user",
+                resolve: context => Me(users)
+            );
+        }
+
+        private static async Task<UserModel> Me(UserCommonController users)
+        {
+            return await users.WhoAmI();
         }
     }
 

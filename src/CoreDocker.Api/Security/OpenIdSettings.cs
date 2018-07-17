@@ -1,4 +1,6 @@
-﻿using CoreDocker.Core.Framework.Settings;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CoreDocker.Core.Framework.Settings;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreDocker.Api.Security
@@ -10,8 +12,7 @@ namespace CoreDocker.Api.Security
         }
 
         public string HostUrl => ReadConfigValue("HostUrl", "http://localhost:5000");
-
-
+        
         public string ApiResourceName => ReadConfigValue("ApiResourceName", "api.resource");
 
         public string ApiResourceSecret => ReadConfigValue("ApiResourceSecret", "a98802aa-e4d4-432a-835e-6c856a05d999");
@@ -23,5 +24,12 @@ namespace CoreDocker.Api.Security
         public string IdentPath => ReadConfigValue("IdentPath", "identity");
 
         public string ScopeApi => ReadConfigValue("ScopeApi", "api");
+
+        public string Origins => ReadConfigValue("Origins", "http://localhost:5000");
+
+        public string[] GetOriginList()
+        {
+            return Origins.Split(',').ToArray();
+        }
     }
 }
