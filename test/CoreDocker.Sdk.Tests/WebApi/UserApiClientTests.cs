@@ -13,6 +13,7 @@ using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
 using NUnit.Framework;
@@ -188,14 +189,14 @@ namespace CoreDocker.Sdk.Tests.WebApi
                     Query = $@"
                 mutation {{
                   users {{
-                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""casd"",password:""{userCreate.Password}""}}) {{
+                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""asdf@invalid"",password:""{userCreate.Password}""}}) {{
                                 id
                             }}
                         }}
                     }}"
                 }).Wait();
             };
-         
+            testCall.Should().Throw<GraphQlResponseException>().And.GraphQlResponse.Dump("casd").Errors.Select(x => x.Message).Should().Contain("'Email' is not a valid email address.");
             var updateResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
             {
                 Query = $@"
@@ -233,9 +234,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
             updateId.Should().Be(id);
             deleteResults.Should().BeTrue();
             deleteResults1.Should().BeFalse();
-            testCall.Should().Throw<GraphQlResponseException>().And.GraphQlResponse.Errors.Select(x => x.Message).Should().Contain("'Email' is not a valid email address.");
-
-
+            
         }
 
 
@@ -262,7 +261,16 @@ namespace CoreDocker.Sdk.Tests.WebApi
             testCall.Should().Throw<Exception>().WithMessage("Error trying to resolve me.")
                 .And.ToFirstExceptionOfException().GetType().Name.Should().Be("GraphQlResponseException");
         }
-        
+
+        #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel,UserReferenceModel>
+
+        protected override EquivalencyAssertionOptions<UserCreateUpdateModel> CompareConfig(EquivalencyAssertionOptions<UserCreateUpdateModel> options)
+        {
+            return base.CompareConfig(options).Excluding(x=>x.Password);
+        }
+
+        #endregion
+
         #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel>
 
         protected override IList<UserCreateUpdateModel> GetExampleData()

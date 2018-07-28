@@ -11,8 +11,8 @@ namespace CoreDocker.Api.Components.Projects
     public class ProjectCommonController : BaseCommonController<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel>, IProjectControllerActions
     {
         
-        public ProjectCommonController(IProjectManager projectManager)
-            : base(projectManager)
+        public ProjectCommonController(IProjectManager manager)
+            : base(manager)
         {
         }
 

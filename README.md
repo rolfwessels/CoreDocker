@@ -24,8 +24,8 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Decide what to do about logging, still not sold on the injection method (and log4net not using appsettings.json).
  * Signal-r replacement.
  * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
- * GraphQL - Better error logging
- * GraphQL - Fix the properties
+ * Apply some CQRS patterns.
+ * GraphQL - Persmissions
  * GraphQL - Look at recursive queries
 
 ## Gettings started with docker

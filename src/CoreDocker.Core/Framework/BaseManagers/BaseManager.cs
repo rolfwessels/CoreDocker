@@ -71,7 +71,7 @@ namespace CoreDocker.Core.Framework.BaseManagers
                 long count = await _dataIntegrityManager.GetReferenceCount(project);
                 if (count > 0)
                 {
-                    throw new Exception(
+                    throw new ReferenceException(
                         string.Format(
                             "Could not remove {0} [{1}]. It is currently referenced in {2} other data object.",
                             typeof (T).Name.UnderScoreAndCamelCaseToHumanReadable(), project, count));
@@ -139,5 +139,8 @@ namespace CoreDocker.Core.Framework.BaseManagers
             _validationFactory.ValidateAndThrow(entity);
             return Task.FromResult(true);
         }
+
+        
+
     }
 }

@@ -9,18 +9,18 @@ namespace CoreDocker.Api.WebApi.Controllers
 {
     public abstract class ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel> : IQueryableControllerBase<TDal, TModel>
     {
-        protected IBaseManager<TDal> _projectManager;
+        protected IBaseManager<TDal> _manager;
 
         public List<TModel> Query(Func<IQueryable<TDal>, IQueryable<TDal>> apply)
         {
-            var queryable = _projectManager.Query();
+            var queryable = _manager.Query();
             queryable = apply(queryable);
             return ToModelList(queryable).ToList();
         }
 
         public int Count(Func<IQueryable<TDal>, IQueryable<TDal>> apply)
         {
-            var queryable = _projectManager.Query();
+            var queryable = _manager.Query();
             queryable = apply(queryable);
             return queryable.Count();
         }
@@ -28,17 +28,17 @@ namespace CoreDocker.Api.WebApi.Controllers
 
         public Task<IEnumerable<TReferenceModel>> Get(string query = null)
         {
-            return Task.FromResult(ToReferenceModelList(_projectManager.Query()));
+            return Task.FromResult(ToReferenceModelList(_manager.Query()));
         }
 
         public Task<IEnumerable<TModel>> GetDetail(string query = null)
         {
-            return Task.FromResult(ToModelList( _projectManager.Query()));
+            return Task.FromResult(ToModelList( _manager.Query()));
         }
 
         public async Task<TModel> GetById(string id)
         {
-            var task = await _projectManager.GetById(id);
+            var task = await _manager.GetById(id);
             return ToModel(task);
         }
 
