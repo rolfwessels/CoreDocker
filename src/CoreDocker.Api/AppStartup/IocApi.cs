@@ -44,6 +44,9 @@ namespace CoreDocker.Api.AppStartup
         {
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
             builder.RegisterType<DocumentWriter>().As<IDocumentWriter>().SingleInstance();
+            
+            builder.RegisterType<OriginalDateGraphType>().SingleInstance();
+            builder.RegisterType<OriginalDateGraphType>().As<DateGraphType>().SingleInstance();
 
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
@@ -62,6 +65,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<ProjectsSpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
             builder.RegisterType<ProjectsMutationSpecification>();
+            
 
          
 

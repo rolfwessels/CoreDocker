@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoreDocker.Utilities.Helpers;
 using GraphQL;
 using GraphQL.Server.Transports.AspNetCore;
 using GraphQL.Server.Ui.Playground;
 using GraphQL.Types;
 using GraphQL.Authorization;
+using GraphQL.Language.AST;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -77,6 +80,67 @@ namespace CoreDocker.Api.GraphQl
             public object Root { get; set; }
             public List<IValidationRule> ValidationRules { get; } = new List<IValidationRule>();
         }
+        
+    }
+    
+
+        /// <summary>
+        ///     Keep dates in the original format.
+        /// </summary>
+        public class OriginalDateGraphType : DateGraphType
+    {
+            public OriginalDateGraphType()
+            {
+                Name = "Date";
+                Description =
+                    "The `Date` scalar type represents a timestamp provided in UTC. `Date` expects timestamps " +
+                    "to be formatted in accordance with the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.";
+                
+            }
+
+            public override object Serialize(object value)
+            {
+                return ParseValue(value);
+            }
+
+            public override object ParseValue(object value)
+            {
+                if (value is DateTime time)
+                {
+                    return time.ToUniversalTime();
+                }
+
+                var inputValue = value?.ToString().Trim('"');
+
+                if (DateTime.TryParse(
+                    inputValue,
+                    CultureInfo.CurrentCulture,
+                    DateTimeStyles.NoCurrentDateDefault,
+                    out var outputValue))
+                {
+                    return outputValue.ToUniversalTime();
+                }
+
+                return null;
+            }
+
+            public override object ParseLiteral(IValue value)
+            {
+                var timeValue = value as DateTimeValue;
+                if (timeValue != null)
+                {
+                    return ParseValue(timeValue.Value);
+                }
+
+                var stringValue = value as StringValue;
+                if (stringValue != null)
+                {
+                    return ParseValue(stringValue.Value);
+                }
+
+                return null;
+            }
+        
     }
 
     

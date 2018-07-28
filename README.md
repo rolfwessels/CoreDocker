@@ -7,21 +7,27 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 ## Features
  * RESTful web API.
+ * GraphQL
+ * Reactjs Dashboad UI integrated
  * Authorization (OpenId with integrated identity server).
  * Swagger for API documentation.
  * MongoDB document storage database.
  * CI Appvayor && Travis for build automation
+ * Docker files to compile and compose a server
  * Developed using TDD practices.
+ 
 
 ## Todo
- * Psake for windows builds.
- * Use Git to determine version number.
- * Code coverage.
+ * Code coverage in build process.
  * Code analytics - look at resharper cli tools.
  * Better API with integrated website.
  * Decide what to do about logging, still not sold on the injection method (and log4net not using appsettings.json).
  * Signal-r replacement.
  * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
+ * GraphQL - Fix UTC date
+ * GraphQL - Better error logging
+ * GraphQL - Fix the properties
+ * GraphQL - Look at recursive queries
 
 ## Gettings started with docker
 

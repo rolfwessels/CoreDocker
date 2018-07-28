@@ -26,7 +26,7 @@ namespace CoreDocker.Api.Tests.Common
 
         #region Overrides of BaseCommonControllerTests
 
-        public override void Setup()
+        protected override void Setup()
         {
             _mockIUserManager = new Mock<IUserManager>(MockBehavior.Strict);
             _mockIRoleManager = new Mock<IRoleManager>(MockBehavior.Strict);

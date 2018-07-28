@@ -19,7 +19,7 @@ namespace CoreDocker.Api.Tests.Common
 
         #region Overrides of BaseCommonControllerTests
 
-        public override void Setup()
+        protected override void Setup()
         {
             _mockIProjectManager = new Mock<IProjectManager>(MockBehavior.Strict);
             _projectCommonController = new ProjectCommonController(_mockIProjectManager.Object);

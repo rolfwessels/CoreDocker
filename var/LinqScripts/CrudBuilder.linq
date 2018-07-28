@@ -84,7 +84,9 @@ public string InjectScaffolding(string fileData)
 	if (start < 0 || end < 0) return fileData;
 	var data = fileData.Substring(start+prefix.Length,end-start-prefix.Length);
 	var injections = JsonConvert.DeserializeObject<List<FileInjection>>(data);
-	var allfiles = Directory.GetFiles(_location, "*", SearchOption.AllDirectories);
+	var allfiles = Directory.GetFiles(_location, "*", SearchOption.AllDirectories)
+	.Where(file => !_exclude.Any(x => file.Contains(x)))
+	.ToArray();
 	
 	foreach (var inject in injections)
 	{
@@ -118,7 +120,7 @@ public string InjectScaffolding(string fileData)
 					break;
 				}
 			}
-			if (!found) ("****** could not find "+inject.Indexline+" in the file " + inject.FileName).Dump();
+			if (!found) ("****** could not find "+inject.Indexline+" in the file " + inFile).Dump();
 			//if (inject.InsertInline)projectFile.Dump();
 			TryIt(10 ,()=>File.WriteAllLines(inFile, projectFile.ToArray()));
 			

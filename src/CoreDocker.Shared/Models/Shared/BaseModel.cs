@@ -6,5 +6,6 @@ namespace CoreDocker.Shared.Models.Shared
     {
         public string Id { get; set; }
         public DateTime UpdateDate { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 }
