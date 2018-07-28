@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
+using log4net;
 
 namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsSpecification : ObjectGraphType<object>
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public ProjectsSpecification(ProjectCommonController projects)
         {
+            var safe = new Safe(_log);
             var options = new GraphQlQueryOptions<ProjectCommonController, ProjectModel,Project >(projects);
             Name = "Projects";
             Field<ProjectSpecification>(
@@ -25,12 +30,12 @@ namespace CoreDocker.Api.Components.Projects
                         Description = "id of the project"
                     }
                 ),
-                resolve: context => projects.GetById(context.GetArgument<string>("id"))
+                resolve: safe.Wrap( context => projects.GetById(context.GetArgument<string>("id")))
             );
             Field<ListGraphType<ProjectSpecification>>(
                 "all",
                 Description = "all projects",
-                resolve: context => projects.Query(queryable => queryable)
+                resolve: safe.Wrap(context => projects.Query(queryable => queryable))
             );
             Field<ListGraphType<ProjectSpecification>>(
                 "recent",
@@ -42,18 +47,18 @@ namespace CoreDocker.Api.Components.Projects
                         Description = "id of the project"
                     }
                 ),
-                context => projects
+                safe.Wrap(context => projects
                     .Query(queryable =>
                         queryable
                             .OrderByDescending(x => x.UpdateDate)
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
-                    )
+                    ))
             );
             Field<QueryResultSpecification>(
                 "query",
                 Description = "query the projects projects",
                 options.GetArguments(),
-                context => options.Query(context)
+                safe.Wrap(context => options.Query(context))
             );
         }
     }

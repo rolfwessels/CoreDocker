@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,8 +15,10 @@ namespace CoreDocker.Api.Components.Users
 
         public UsersSpecification(UserCommonController users)
         {
+            var safe = new Safe(_log);
             var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);
             Name = "Users";
+
             Field<UserSpecification>(
                 "byId",
                 arguments: new QueryArguments(
@@ -27,13 +28,15 @@ namespace CoreDocker.Api.Components.Users
                         Description = "id of the user"
                     }
                 ),
-                resolve: context => users.GetById(context.GetArgument<string>("id"))
+                resolve: safe.Wrap(context => users.GetById(context.GetArgument<string>("id")))
             );
+
             Field<ListGraphType<UserSpecification>>(
                 "all",
                 Description = "all users",
                 resolve: context => users.Query(queryable => queryable)
             );
+
             Field<ListGraphType<UserSpecification>>(
                 "recent",
                 Description = "recent modified users",
@@ -44,32 +47,35 @@ namespace CoreDocker.Api.Components.Users
                         Description = "id of the user"
                     }
                 ),
-                context => users
+                safe.Wrap(context => users
                     .Query(queryable =>
                         queryable
                             .OrderByDescending(x => x.UpdateDate)
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
-                    )
+                    ))
             );
+
             Field<QueryResultSpecification>(
                 "query",
                 Description = "query the projects projects",
                 options.GetArguments(),
-                context => options.Query(context)
+                safe.Wrap(context => options.Query(context))
             );
 
             Field<UserSpecification>(
                 "me",
                 Description = "Current user",
-                resolve: context => Me(users)
+                resolve: safe.Wrap(context => Me(users))
             );
         }
+
+        #region Private Methods
 
         private static async Task<UserModel> Me(UserCommonController users)
         {
             return await users.WhoAmI();
         }
+
+        #endregion
     }
-
-
 }

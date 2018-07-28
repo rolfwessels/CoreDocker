@@ -14,6 +14,7 @@ using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using GraphQL.Common.Request;
+using GraphQL.Common.Response;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.WebApi
@@ -111,7 +112,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
         {
             // arrange
             Setup();
-            var heroRequest = new GraphQLRequest
+            var request = new GraphQLRequest
             {
                 Query = @"
                 {
@@ -124,7 +125,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
             "
             };
             // action
-            var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
+            var graphQlResponse = await _adminConnection.Value.GraphQlPost(request);
             var userModel = await _adminConnection.Value.Users.WhoAmI();
             object data = graphQlResponse.Data;
             data.Dump("graphQlResponse.Data");
@@ -134,8 +135,110 @@ namespace CoreDocker.Sdk.Tests.WebApi
             var userModelUpdateDate = userModel.UpdateDate;
             updateDate.ToUniversalTime().Should().Be(userModelUpdateDate.ToUniversalTime());
         }
-        
-        
+
+        [Test]
+        public void GraphQl_WhenCalledWithInvalidModel_ShouldThrowExceptionWithSomeDetail()
+        {
+            // arrange
+            Setup();
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                mutation {
+                  users {
+                    insert (user:{name:"""",email:""""}) {
+                                id
+                            }
+                        }
+                    }"
+            };
+            // action
+            Action func = () => _adminConnection.Value.GraphQlPost(request).Wait();
+            var graphQlResponseException = func.Should().Throw<GraphQlResponseException>().And;
+//            graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message == "'Email' is not a valid email address.");
+            graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
+
+            
+        }
+
+        [Test]
+        public async Task GraphQl_EnsureCrud_ShouldCreateUpdateDeleteUser()
+        {
+            // arrange
+            Setup();
+            var userCreate = GetExampleData().First();
+
+            // action
+            var insertResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    insert (user:{{name:""{userCreate.Name.Substring(0,10)}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+            });
+            string id = insertResponst.Data.users.insert.id;
+            Action testCall = () =>
+            {
+                _adminConnection.Value.GraphQlPost(new GraphQLRequest
+                {
+                    Query = $@"
+                mutation {{
+                  users {{
+                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""casd"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+                }).Wait();
+            };
+         
+            var updateResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+            });
+            string updateId = updateResponst.Data.users.update.id;
+            var deleteResponse = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    delete (id:""{id}"") 
+                        }}
+                    }}"
+            });var deleteResponseTwo = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    delete (id:""{id}"") 
+                        }}
+                    }}"
+            });
+            bool deleteResults = deleteResponse.Data.users.delete;
+            bool deleteResults1 = deleteResponseTwo.Data.users.delete;
+            // assert
+
+            id.Should().NotBeEmpty();
+            updateId.Should().Be(id);
+            deleteResults.Should().BeTrue();
+            deleteResults1.Should().BeFalse();
+            testCall.Should().Throw<GraphQlResponseException>().And.GraphQlResponse.Errors.Select(x => x.Message).Should().Contain("'Email' is not a valid email address.");
+
+
+        }
+
+
         [Test]
         public void GraphQl_QueryMeWithNonLoggedInUser_ShouldThrowException()
         {
@@ -159,16 +262,15 @@ namespace CoreDocker.Sdk.Tests.WebApi
             testCall.Should().Throw<Exception>().WithMessage("Error trying to resolve me.")
                 .And.ToFirstExceptionOfException().GetType().Name.Should().Be("GraphQlResponseException");
         }
-
-
-
         
         #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel>
 
         protected override IList<UserCreateUpdateModel> GetExampleData()
         {
-            return Builder<User>.CreateListOfSize(2).WithValidData().Build()
+            var userCreateUpdateModels = Builder<User>.CreateListOfSize(2).WithValidData().Build()
                 .DynamicCastTo<List<UserCreateUpdateModel>>();
+            userCreateUpdateModels.ForEach(x => x.Password = "passw1");
+            return userCreateUpdateModels;
         }
 
         #endregion

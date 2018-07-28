@@ -18,7 +18,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         }
 
      
-        public async Task<TModel> Update(string id, TDetailModel model)
+        public virtual async Task<TModel> Update(string id, TDetailModel model)
         {
             var projectFound = await _projectManager.GetById(id);
             if (projectFound == null) throw new Exception(string.Format("Could not find model by id '{0}'", id));
@@ -28,14 +28,14 @@ namespace CoreDocker.Api.WebApi.Controllers
         }
 
 
-        public async Task<TModel> Insert(TDetailModel model)
+        public virtual async Task<TModel> Insert(TDetailModel model)
         {
             var entity = await ToDal(model);
             var savedProject = await _projectManager.Insert(entity);
             return ToModel(savedProject);
         }
 
-        public async Task<bool> Delete(string id)
+        public virtual async Task<bool> Delete(string id)
         {
             var deleteProject = await _projectManager.Delete(id);
             return deleteProject != null;
