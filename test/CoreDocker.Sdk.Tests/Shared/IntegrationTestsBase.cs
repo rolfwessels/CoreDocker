@@ -22,13 +22,15 @@ namespace CoreDocker.Sdk.Tests.Shared
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
         protected static Lazy<CoreDockerClient> _adminConnection;
+        protected static Lazy<CoreDockerClient> _guestConnection;
 
         static IntegrationTestsBase()
         {
             RestShapHelper.Log = s => _log.Debug(s);
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
-            _adminConnection = new Lazy<CoreDockerClient>(CreateAdminRequest);
+            _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
+            _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
             
         }
 
@@ -57,10 +59,10 @@ namespace CoreDocker.Sdk.Tests.Shared
         }
 
 
-        private static CoreDockerClient CreateAdminRequest()
+        private static CoreDockerClient CreateLoggedInRequest(string adminAdminCom, string adminPassword)
         {
             var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
-            coreDockerApi.Authenticate.Login(AdminUser, AdminPassword).Wait();
+            coreDockerApi.Authenticate.Login(adminAdminCom, adminPassword).Wait();
             // add the authentication here
             return (CoreDockerClient) coreDockerApi;
         }

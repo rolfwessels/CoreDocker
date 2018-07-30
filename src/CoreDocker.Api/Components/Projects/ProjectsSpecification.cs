@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CoreDocker.Api.Components.Users;
+using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
-using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 using log4net;
@@ -31,12 +29,12 @@ namespace CoreDocker.Api.Components.Projects
                     }
                 ),
                 resolve: safe.Wrap( context => projects.GetById(context.GetArgument<string>("id")))
-            );
+            ).RequirePermission(Activity.ReadProject);
             Field<ListGraphType<ProjectSpecification>>(
                 "all",
                 Description = "all projects",
                 resolve: safe.Wrap(context => projects.Query(queryable => queryable))
-            );
+            ).RequirePermission(Activity.ReadProject);
             Field<ListGraphType<ProjectSpecification>>(
                 "recent",
                 Description = "recent modified projects",
@@ -53,13 +51,13 @@ namespace CoreDocker.Api.Components.Projects
                             .OrderByDescending(x => x.UpdateDate)
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
                     ))
-            );
+            ).RequirePermission(Activity.ReadProject);
             Field<QueryResultSpecification>(
                 "query",
                 Description = "query the projects projects",
                 options.GetArguments(),
                 safe.Wrap(context => options.Query(context))
-            );
+            ).RequirePermission(Activity.ReadProject);
         }
     }
 }

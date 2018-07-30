@@ -12,8 +12,10 @@ using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities;
 using GraphQL;
+using GraphQL.Authorization;
 using GraphQL.Http;
 using GraphQL.Types;
+using GraphQL.Validation;
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,9 +46,23 @@ namespace CoreDocker.Api.AppStartup
         {
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
             builder.RegisterType<DocumentWriter>().As<IDocumentWriter>().SingleInstance();
-            
+
             builder.RegisterType<OriginalDateGraphType>().SingleInstance();
-            builder.RegisterType<OriginalDateGraphType>().As<DateGraphType>().SingleInstance();
+
+            //validation
+            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.RegisterType<RequiresAuthValidationRule>().As<IValidationRule>();
+//            builder.RegisterType<AuthorizationValidationRule>().As<IValidationRule>();
+            builder.RegisterType<AuthorizationEvaluator>().As<IAuthorizationEvaluator>().SingleInstance();
+
+            builder.Register(s =>
+            {
+                var authSettings = new AuthorizationSettings();
+
+                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim("role", "Admin"));
+
+                return authSettings;
+            });
 
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
@@ -58,6 +74,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<UsersSpecification>();
             builder.RegisterType<UserCreateUpdateSpecification>();
             builder.RegisterType<UsersMutationSpecification>();
+            builder.RegisterType<RoleSpecification>();
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();

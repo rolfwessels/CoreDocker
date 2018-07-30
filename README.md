@@ -7,7 +7,7 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 ## Features
  * RESTful web API.
- * GraphQL
+ * GraphQL (+ authorization + permissions)
  * Reactjs Dashboad UI integrated
  * Authorization (OpenId with integrated identity server).
  * Swagger for API documentation.
@@ -25,7 +25,6 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Signal-r replacement.
  * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
  * Apply some CQRS patterns.
- * GraphQL - Persmissions
  * GraphQL - Look at recursive queries
 
 ## Gettings started with docker

@@ -1,5 +1,7 @@
 using System.Reflection;
 using CoreDocker.Api.Components.Users;
+using CoreDocker.Api.GraphQl;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
@@ -25,7 +27,7 @@ namespace CoreDocker.Api.Components.Projects
                 {
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
                     return projectManager.Insert(project);
-                }));
+                })).RequirePermission(Activity.UpdateProject);
 
             Field<ProjectSpecification>(
                 "update",
@@ -39,7 +41,7 @@ namespace CoreDocker.Api.Components.Projects
                     var id = context.GetArgument<string>(Name = "id");
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
                     return projectManager.Update(id, project);
-                }));
+                })).RequirePermission(Activity.UpdateProject);
 
             Field<BooleanGraphType>(
                 "delete",
@@ -51,7 +53,7 @@ namespace CoreDocker.Api.Components.Projects
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     return projectManager.Delete(id);
-                }));
+                })).RequirePermission(Activity.DeleteProject);
         }
     }
 }

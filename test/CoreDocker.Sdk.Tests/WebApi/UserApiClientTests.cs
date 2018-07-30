@@ -109,6 +109,53 @@ namespace CoreDocker.Sdk.Tests.WebApi
 
 
         [Test]
+        public async Task GraphQl_QueryGuest_ShouldApplyPermissions()
+        {
+            // arrange
+            Setup();
+            var userCreate = GetExampleData().First();
+            var guest = _guestConnection.Value;
+
+            Action testCall = () =>
+            {
+                guest.GraphQlPost(new GraphQLRequest
+                {
+                    Query = $@"
+                mutation {{
+                  users {{
+                    insert (user:{{name:""{userCreate.Name.Substring(0, 10)}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+                }).Wait();
+            };
+            testCall.Should().Throw<Exception>().WithMessage("You are not authorized to run this query.");
+
+            // action
+            var graphQlResponse = await guest.GraphQlPost(new GraphQLRequest
+            {
+                Query = @"
+                {
+                    users {
+                        me {
+                            name
+                        }
+                    }
+                }
+            "
+            });
+            object data = graphQlResponse.Data;
+            data.Dump("graphQlResponse.Data");
+
+            // assert
+            string name = graphQlResponse.Data.users.me.name;
+            name.Should().Be("Guest");
+
+        }
+
+
+        [Test]
         public async Task GraphQl_EnsureCorrectDateFormat_ShouldMatchApiAndDb()
         {
             // arrange
@@ -125,6 +172,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
                 }
             "
             };
+
             // action
             var graphQlResponse = await _adminConnection.Value.GraphQlPost(request);
             var userModel = await _adminConnection.Value.Users.WhoAmI();
@@ -261,6 +309,8 @@ namespace CoreDocker.Sdk.Tests.WebApi
             testCall.Should().Throw<Exception>().WithMessage("Error trying to resolve me.")
                 .And.ToFirstExceptionOfException().GetType().Name.Should().Be("GraphQlResponseException");
         }
+
+
 
         #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel,UserReferenceModel>
 
