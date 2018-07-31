@@ -139,7 +139,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
                 {
                     users {
                         me {
-                            name
+                            name,activities
                         }
                     }
                 }

@@ -4,6 +4,7 @@ using CoreDocker.Api.GraphQl;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
+using GraphQL.Authorization;
 using GraphQL.Types;
 using log4net;
 
@@ -17,6 +18,8 @@ namespace CoreDocker.Api.Components.Projects
         {
             Name = "ProjectsMutation";
             var safe = new Safe(_log);
+            
+            this.RequiresAuthorization();
             Field<ProjectSpecification>(
                 "insert",
                 Description = "add a project",

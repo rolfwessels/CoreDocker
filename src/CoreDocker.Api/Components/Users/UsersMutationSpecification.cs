@@ -16,10 +16,9 @@ namespace CoreDocker.Api.Components.Users
         public UsersMutationSpecification(UserCommonController userManager)
         {
             Name = "UsersMutation";
-
             var safe = new Safe(_log);
-            this.RequiresAuthorization();
 
+            this.RequiresAuthorization();
             Field<UserSpecification>(
                 "insert",
                 Description = "add a user",
