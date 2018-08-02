@@ -1,20 +1,29 @@
+using System;
 using System.Linq;
-using CoreDocker.Api.Components.Projects;
+using System.Reflection;
+using System.Threading.Tasks;
+using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
-using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
+using GraphQL.Authorization;
 using GraphQL.Types;
+using log4net;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class UsersSpecification : ObjectGraphType<object>
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public UsersSpecification(UserCommonController users)
         {
+
+            var safe = new Safe(_log);
             var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);
             Name = "Users";
+
             Field<UserSpecification>(
                 "byId",
                 arguments: new QueryArguments(
@@ -24,13 +33,15 @@ namespace CoreDocker.Api.Components.Users
                         Description = "id of the user"
                     }
                 ),
-                resolve: context => users.GetById(context.GetArgument<string>("id"))
-            );
+                resolve: safe.Wrap(context => users.GetById(context.GetArgument<string>("id")))
+            ).RequirePermission(Activity.ReadUsers);
+
             Field<ListGraphType<UserSpecification>>(
                 "all",
                 Description = "all users",
                 resolve: context => users.Query(queryable => queryable)
-            );
+            ).RequirePermission(Activity.ReadUsers);
+
             Field<ListGraphType<UserSpecification>>(
                 "recent",
                 Description = "recent modified users",
@@ -41,21 +52,65 @@ namespace CoreDocker.Api.Components.Users
                         Description = "id of the user"
                     }
                 ),
-                context => users
+                safe.Wrap(context => users
                     .Query(queryable =>
                         queryable
                             .OrderByDescending(x => x.UpdateDate)
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
-                    )
-            );
+                    ))
+            ).RequirePermission(Activity.ReadUsers);
+
             Field<QueryResultSpecification>(
                 "query",
                 Description = "query the projects projects",
                 options.GetArguments(),
-                context => options.Query(context)
-            );
-        }
-    }
+                safe.Wrap(context => options.Query(context))
+            ).RequirePermission(Activity.ReadUsers);
 
+
+            Field<UserSpecification>(
+                "me",
+                Description = "Current user",
+                resolve: safe.Wrap(context => Me(users))
+            ).RequiresAuthorization();
+
+
+            Field<ListGraphType<RoleSpecification>>(
+                "roles",
+                Description = "All roles",
+                resolve: safe.Wrap(context => users.Roles())
+            );
+
+            Field<RoleSpecification>(
+                "role",
+                Description = "All roles",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "name",
+                        Description = "role name"
+                    }
+                ),
+                resolve: safe.Wrap(context => LookupRole(users,context.GetArgument<string>("name")))
+            );
+
+        }
+
+        private async Task<RoleModel> LookupRole(UserCommonController users, string getArgument)
+        {
+            var roleModels = await users.Roles();
+            return roleModels.FirstOrDefault(x =>
+                string.Equals(x.Name, getArgument, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        #region Private Methods
+
+        private static async Task<UserModel> Me(UserCommonController users)
+        {
+            return await users.WhoAmI();
+        }
+
+        #endregion
+    }
 
 }

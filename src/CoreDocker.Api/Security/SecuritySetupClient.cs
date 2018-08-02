@@ -1,14 +1,12 @@
 ﻿using System;
-using CoreDocker.Core.Components.Users;
+using CoreDocker.Api.AppStartup;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CoreDocker.Api.Security
 {
@@ -21,10 +19,10 @@ namespace CoreDocker.Api.Security
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = OpenIdConfigBase.HostUrl;
+                    options.Authority = IocApi.Instance.Resolve<OpenIdSettings>().HostUrl;
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = OpenIdConfigBase.ApiResourceName;
-                    options.ApiSecret = OpenIdConfigBase.ApiResourceSecret;
+                    options.ApiName = IocApi.Instance.Resolve<OpenIdSettings>().ApiResourceName;
+                    options.ApiSecret = IocApi.Instance.Resolve<OpenIdSettings>().ApiResourceSecret;
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });

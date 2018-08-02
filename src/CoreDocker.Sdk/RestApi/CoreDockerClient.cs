@@ -15,6 +15,7 @@ namespace CoreDocker.Sdk.RestApi
     public class CoreDockerClient : ICoreDockerClient
     {
         internal RestClient _restClient;
+        private readonly GraphQLClient _graphQlClient;
 
         public CoreDockerClient(string urlBase)
         {
@@ -24,9 +25,11 @@ namespace CoreDocker.Sdk.RestApi
             Projects = new ProjectApiClient(this);
             Users = new UserApiClient(this);
             Ping = new PingApiClient(this);
+            _graphQlClient = new GraphQLClient(UrlBase.UriCombine("/graphql"));
         }
 
-
+        public RestClient Client => _restClient;
+        
         public string UrlBase { get; }
 
         #region Implementation of ICoreDockerApi
@@ -35,6 +38,7 @@ namespace CoreDocker.Sdk.RestApi
         {
             var bearerToken = $"Bearer {data.AccessToken}";
             _restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
+            _graphQlClient.DefaultRequestHeaders.Add("Authorization",new []{ bearerToken });
         }
 
         public AuthenticateApiClient Authenticate { get; set; }
@@ -45,14 +49,10 @@ namespace CoreDocker.Sdk.RestApi
         public UserApiClient Users { get; set; }
 
         #endregion
-
-
-        public RestClient Client => _restClient;
-
+        
         public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
         {
-            var graphQlClient = new GraphQLClient(UrlBase.UriCombine("/graphql"));
-            var graphQlResponse = await graphQlClient.PostAsync(heroRequest);
+            var graphQlResponse = await _graphQlClient.PostAsync(heroRequest);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
             {
                 throw new GraphQlResponseException(graphQlResponse) ;

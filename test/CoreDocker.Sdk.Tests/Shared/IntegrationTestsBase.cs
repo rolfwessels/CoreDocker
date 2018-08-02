@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using CoreDocker.Api;
+using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
@@ -21,13 +22,16 @@ namespace CoreDocker.Sdk.Tests.Shared
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
         protected static Lazy<CoreDockerClient> _adminConnection;
+        protected static Lazy<CoreDockerClient> _guestConnection;
 
         static IntegrationTestsBase()
         {
             RestShapHelper.Log = s => _log.Debug(s);
             _hostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
-            _adminConnection = new Lazy<CoreDockerClient>(CreateAdminRequest);
+            _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
+            _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
+            
         }
 
         #region Private Methods
@@ -36,29 +40,29 @@ namespace CoreDocker.Sdk.Tests.Shared
         {
             var port = new Random().Next(9000, 9999);
             var address = string.Format("http://localhost:{0}", port);
-//            var websitePath = TestHelper.GetSourceBasePath();
-            OpenIdConfigBase.HostUrl = address;
+            Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
+            
             var host = new WebHostBuilder()
                 .UseKestrel()
-//                .UseContentRoot(websitePath)
+                .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            
             _log.Info(string.Format("Starting api on [{0}]", address));
             RestShapHelper.Log = m =>
             {
                 _log.Debug(m);
-//                Debug.WriteLine("value [{0}]", m);
             };
             return address;
         }
 
 
-        private static CoreDockerClient CreateAdminRequest()
+        private static CoreDockerClient CreateLoggedInRequest(string adminAdminCom, string adminPassword)
         {
             var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
-            coreDockerApi.Authenticate.Login(AdminUser, AdminPassword).Wait();
+            coreDockerApi.Authenticate.Login(adminAdminCom, adminPassword).Wait();
             // add the authentication here
             return (CoreDockerClient) coreDockerApi;
         }

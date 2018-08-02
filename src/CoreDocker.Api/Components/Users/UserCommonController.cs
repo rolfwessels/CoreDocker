@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using CoreDocker.Api.Mappers;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Interfaces.Shared;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
 using log4net;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +23,6 @@ namespace CoreDocker.Api.Components.Users
 
         public UserCommonController(IUserManager userManager, IRoleManager roleManager, IHttpContextAccessor httpContextAccessor) : base(userManager)
         {
-            
             _userManager = userManager;
             _roleManager = roleManager;
             _httpContextAccessor = httpContextAccessor;
@@ -44,13 +41,12 @@ namespace CoreDocker.Api.Components.Users
         public Task<bool> ForgotPassword(string email)
         {
             return Task.Run(() =>
-                {
-
-                    _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",email));
-                    return true;
-                    
-                });
+            {
+                _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",email));
+                return true;
+            });
         }
+        
 
         #endregion
 
@@ -58,10 +54,26 @@ namespace CoreDocker.Api.Components.Users
 
         protected override async Task<User> AddAdditionalMappings(UserCreateUpdateModel model, User dal)
         {
+            
             var addAdditionalMappings = await base.AddAdditionalMappings(model, dal);
+            
+            if (model.Roles != null && model.Roles.Any())
+            {
+                var roles = await _roleManager.Get();
+                var roleLookup = roles.ToDictionary(x=>x.Name.ToLower());
+                addAdditionalMappings.Roles.Clear();
+                addAdditionalMappings.Roles.AddRange(model.Roles
+                    .Where(x=> roleLookup.ContainsKey(x.ToLower()))
+                    .Select(x=> roleLookup[x.ToLower()])
+                    .Select(x=>x.Name)
+                );
+            }
             if (!addAdditionalMappings.Roles.Any()) addAdditionalMappings.Roles.Add(RoleManager.Guest.Name);
+
             return addAdditionalMappings;
         }
+
+
 
         #endregion
 

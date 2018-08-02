@@ -13,7 +13,7 @@ namespace CoreDocker.Core.Framework.DataIntegrity
             Default = new List<IIntegrity>
             {
                 new PropertyIntegrity<Project, ProjectReference, User>(u => u.DefaultProject, g => g.Users,r => x => x.DefaultProject.Id == r.Id, x=>x.ToReference()),
-                new PropertyIntegrity<User, UserReference, UserGrant>(u => u.User, g => g.UserGrants,r => x => x.User.Id == r.Id, x=>x.ToReference())
+//                new PropertyIntegrity<User, UserReference, UserGrant>(u => u.User, g => g.UserGrants,r => x => x.User.Id == r.Id, x=>x.ToReference())
                 //Sample with array of items
                 //new PropertyIntegrity<Project, ProjectReference, User>(u => u.AllowedProject[-1], g => g.Users,r => x => x.AllowedProject.Any(a=>a.Id == r.Id) , x=>x.ToReference()),
             };

@@ -12,32 +12,32 @@ namespace CoreDocker.Api.WebApi.Controllers
     public abstract class BaseCommonController<TDal, TModel, TReferenceModel, TDetailModel> : ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel>, ICrudController<TModel, TDetailModel>
     {
        
-        protected BaseCommonController(IBaseManager<TDal> projectManager)
+        protected BaseCommonController(IBaseManager<TDal> manager)
         {
-            _projectManager = projectManager;
+            _manager = manager;
         }
 
      
-        public async Task<TModel> Update(string id, TDetailModel model)
+        public virtual async Task<TModel> Update(string id, TDetailModel model)
         {
-            var projectFound = await _projectManager.GetById(id);
+            var projectFound = await _manager.GetById(id);
             if (projectFound == null) throw new Exception(string.Format("Could not find model by id '{0}'", id));
             var project = await ToDal(model, projectFound);
-            var saveProject = await _projectManager.Update(project);
+            var saveProject = await _manager.Update(project);
             return ToModel(saveProject);
         }
 
 
-        public async Task<TModel> Insert(TDetailModel model)
+        public virtual async Task<TModel> Insert(TDetailModel model)
         {
             var entity = await ToDal(model);
-            var savedProject = await _projectManager.Insert(entity);
+            var savedProject = await _manager.Insert(entity);
             return ToModel(savedProject);
         }
 
-        public async Task<bool> Delete(string id)
+        public virtual async Task<bool> Delete(string id)
         {
-            var deleteProject = await _projectManager.Delete(id);
+            var deleteProject = await _manager.Delete(id);
             return deleteProject != null;
         }
 

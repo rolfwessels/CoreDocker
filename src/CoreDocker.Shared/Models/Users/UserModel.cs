@@ -13,7 +13,7 @@ namespace CoreDocker.Shared.Models.Users
 
         public override string ToString()
         {
-            return string.Format("Id: {0}, Email: {1}, Name: {2}", Id, Email, Name);
+            return $"Id: {Id}, Email: {Email}, Name: {Name}";
         }
     }
 }

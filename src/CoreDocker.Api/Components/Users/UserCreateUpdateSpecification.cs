@@ -9,7 +9,10 @@ namespace CoreDocker.Api.Components.Users
         public UserCreateUpdateSpecification()
         {
             Name = "UserCreateUpdate";
-            Field(d => d.Name, true).Description("The name of the user.");
+            Field(d => d.Name).Description("The name of the user.");
+            Field(d => d.Email).Description("The email of the user.");
+            Field(d => d.Roles, true).Description("The users roles.");
+            Field(d => d.Password, true).Description("The password of the user.");
         }
     }
 }

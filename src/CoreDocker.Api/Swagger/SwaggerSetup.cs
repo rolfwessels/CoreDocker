@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Utilities.Helpers;
 using log4net;
@@ -27,7 +28,7 @@ namespace CoreDocker.Api.Swagger
             ;
         }
 
-        private static void SetupAction(SwaggerGenOptions options)
+        private static void SetupAction(SwaggerGenOptions options, string authorizationUrl)
         {
             options.SwaggerDoc(GetVersion(), new Info
             {
@@ -35,16 +36,17 @@ namespace CoreDocker.Api.Swagger
                 Description = "Contains CoreDocker api descriptions."
             });
             options.DescribeAllEnumsAsStrings();
+            var scopeApi = IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi;
             options.AddSecurityDefinition("oauth2", new OAuth2Scheme
             {
                 Type = "oauth2",
                 Flow = "password",
-                TokenUrl = OpenIdConfigBase.HostUrl.UriCombine("connect/token"),
-                AuthorizationUrl = OpenIdConfigBase.HostUrl,
+                TokenUrl = authorizationUrl.UriCombine("connect/token"),
+                AuthorizationUrl = authorizationUrl,
 
                 Scopes = new Dictionary<string, string>
                 {
-                    {OpenIdConfigBase.ScopeApi.UnderScoreAndCamelCaseToHumanReadable(), OpenIdConfigBase.ScopeApi}
+                    {scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi}
                 }
             });
         }
@@ -55,8 +57,7 @@ namespace CoreDocker.Api.Swagger
 
         public static void AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(SetupAction);
-
+            services.AddSwaggerGen(options => SetupAction(options, IocApi.Instance.Resolve<OpenIdSettings>().HostUrl));
             // todo: Rolf Add Auth response codes
         }
 
@@ -66,11 +67,12 @@ namespace CoreDocker.Api.Swagger
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint($"/swagger/{GetVersion()}/swagger.json", $"Main {GetVersion()}");
-                c.OAuthClientId(OpenIdConfigBase.ClientName);
-                c.OAuthClientSecret(OpenIdConfigBase.ClientSecret);
-                c.OAuthClientSecret(OpenIdConfigBase.ClientSecret);
-                c.OAuthClientSecret(OpenIdConfigBase.ClientSecret);
-                c.OAuthRealm(OpenIdConfigBase.ApiResourceName);
+                c.OAuthClientId(IocApi.Instance.Resolve<OpenIdSettings>().ClientName);
+                var clientSecret = IocApi.Instance.Resolve<OpenIdSettings>().ClientSecret;
+                c.OAuthClientSecret(clientSecret);
+                c.OAuthClientSecret(clientSecret);
+                c.OAuthClientSecret(clientSecret);
+                c.OAuthRealm(IocApi.Instance.Resolve<OpenIdSettings>().ApiResourceName);
                 c.OAuthAppName("SwaggerAuth");
             });
         }

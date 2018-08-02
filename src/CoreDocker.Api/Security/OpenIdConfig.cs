@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using CoreDocker.Core;
+using System.Linq;
+using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace CoreDocker.Api.Security
 {
-    public class OpenIdConfig : OpenIdConfigBase
+    public class OpenIdConfig
     {
-       
-
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
@@ -21,21 +20,21 @@ namespace CoreDocker.Api.Security
             };
         }
 
-        public static IEnumerable<ApiResource> GetApiResources()
+        public static IEnumerable<ApiResource> GetApiResources(OpenIdSettings openIdSettings)
         {
             return new List<ApiResource>
             {
-                new ApiResource(ApiResourceName)
+                new ApiResource(openIdSettings.ApiResourceName)
                 {
                     ApiSecrets =
                     {
-                        new Secret(ApiResourceSecret.Sha256())
+                        new Secret(openIdSettings.ApiResourceSecret.Sha256())
                     },
                     Scopes =
                     {
                         new Scope
                         {
-                            Name = ScopeApi,
+                            Name = openIdSettings.ScopeApi,
                             DisplayName = "Standard api access"
                         }
                     },
@@ -44,38 +43,35 @@ namespace CoreDocker.Api.Security
             };
         }
 
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(OpenIdSettings openIdSettings)
         {
             return new List<Client>
             {
                 new Client
                 {
                     ClientName = "CoreDocker Api",
-                    ClientId = ClientName,
+                    ClientId = openIdSettings.ClientName,
                     RequireConsent = false,
                     AccessTokenType = AccessTokenType.Reference,
                     AccessTokenLifetime = (int)TimeSpan.FromDays(1).TotalSeconds, // 10 minutes, default 60 minutes
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
                     {
-                        new Secret(ClientSecret.Sha256())
+                        new Secret(openIdSettings.ClientSecret.Sha256())
                     },
                     AllowAccessTokensViaBrowser = true,
                     RedirectUris = new List<string>
                     {
-                        HostUrl
+                        openIdSettings.HostUrl
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
-                        HostUrl + "/Unauthorized"
+                        openIdSettings.HostUrl.UriCombine("/Unauthorized") 
                     },
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        HostUrl
-                    },
+                    AllowedCorsOrigins = openIdSettings.GetOriginList(),
                     AllowedScopes = new List<string>
                     {
-                        ScopeApi
+                        openIdSettings.ScopeApi
                     }
                 }
             };

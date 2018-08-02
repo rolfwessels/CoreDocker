@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using CoreDocker.Core;
+using CoreDocker.Api.AppStartup;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Utilities.Helpers;
@@ -80,7 +79,7 @@ namespace CoreDocker.Api.Security
                 new Claim(JwtClaimTypes.Id, user.Id),
                 new Claim(JwtClaimTypes.GivenName, user.Name),
                 new Claim(IdentityServerConstants.StandardScopes.Email, user.Email),
-                new Claim(JwtClaimTypes.Scope, OpenIdConfigBase.ScopeApi),
+                new Claim(JwtClaimTypes.Scope, IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi),
                 user.Roles.Contains(RoleManager.Admin.Name)
                     ? new Claim(JwtClaimTypes.Role, RoleManager.Admin.Name)
                     : new Claim(JwtClaimTypes.Role, RoleManager.Guest.Name)

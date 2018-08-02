@@ -1,8 +1,5 @@
-using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Core.Tests.Helpers;
-using CoreDocker.Dal.Models;
 using Moq;
 using NUnit.Framework;
 using System.Linq;
@@ -19,22 +16,18 @@ namespace CoreDocker.Api.Tests.Common
         where TModel : BaseModel
         where TManager : class, IBaseManager<TDal>
     {
-        protected Mock<TManager> _mockManager;
-        protected BaseCommonController<TDal, TModel, TReferenceModel, TDetailModel> _commonController;
-        
+        private Mock<TManager> _mockManager;
+        private BaseCommonController<TDal, TModel, TReferenceModel, TDetailModel> _commonController;
 
 
-        public virtual void Setup()
+        protected virtual void Setup()
         {
            
             _commonController = GetCommonController();
             _mockManager = GetManager();
         }
 
-        protected virtual TDal SampleItem
-        {
-            get { return Builder<TDal>.CreateNew().Build(); }
-        }
+        protected virtual TDal SampleItem => Builder<TDal>.CreateNew().Build();
 
         protected abstract Mock<TManager> GetManager();
 

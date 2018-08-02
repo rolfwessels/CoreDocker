@@ -5,14 +5,13 @@ using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.Security
 {
     [TestFixture]
     [Category("Integration")]
-    public class OpenIdTokenClientTests : IntegrationTestsBase
+    public class AuthenticateApiClientTests : IntegrationTestsBase
     {
         private ICoreDockerClient _connection;
 
@@ -25,6 +24,7 @@ namespace CoreDocker.Sdk.Tests.Security
         {
             _connection = _defaultRequestFactory.Value.GetConnection();
             _connectionAuth = _defaultRequestFactory.Value.GetConnection();
+//            _connection = new CoreDockerClient("http://localhost:5000");
 //            _connectionAuth = new CoreDockerClient("http://localhost:5000");
             _projectApiClient = _connection.Projects;
         }
@@ -67,12 +67,12 @@ namespace CoreDocker.Sdk.Tests.Security
             // arrange
             Setup();
             var pingModel = await _connection.Ping.Get();
-            pingModel.Environment.Should().Be("development"); //??
-            var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
             // action
+            var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
             _connection.SetToken(data);
-            // assert
             var projectsEnumerable = await _connection.Projects.Get();
+            // assert
+            pingModel.Environment.Should().Be("development"); //??
             projectsEnumerable.Count().Should().BeGreaterThan(0);
             await _connection.Projects.Get();
             
