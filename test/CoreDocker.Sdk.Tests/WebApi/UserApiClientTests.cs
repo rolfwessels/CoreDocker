@@ -223,7 +223,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
                 Query = $@"
                 mutation {{
                   users {{
-                    insert (user:{{name:""{userCreate.Name.Substring(0,10)}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                    insert (user:{{name:""{userCreate.Name.Mask(10,"...")}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
                                 id
                             }}
                         }}
