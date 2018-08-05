@@ -75,6 +75,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<UserCreateUpdateSpecification>();
             builder.RegisterType<UsersMutationSpecification>();
             builder.RegisterType<RoleSpecification>();
+            builder.RegisterType<RegisterSpecification>();
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();

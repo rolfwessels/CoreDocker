@@ -13,6 +13,7 @@ namespace CoreDocker.Api.GraphQl
     public static class GraphQlExtensions
     {
         public static readonly string PermissionsKey = "Permissions";
+        public static readonly string Authorization = "Authorization";
 
         public static bool RequiresPermissions(this IProvideMetadata type)
         {
@@ -43,6 +44,17 @@ namespace CoreDocker.Api.GraphQl
             }
 
             permissions.Add(permission);
+        }
+
+        public static void RequireAuthorization(this IProvideMetadata type)
+        {
+            type.Metadata[Authorization] = true;
+        }
+
+
+        public static bool IsAuthorizationRequire(this IProvideMetadata type)
+        {
+            return type.GetMetadata<bool?>(Authorization) ?? false;
         }
 
         public static FieldBuilder<TSourceType, TReturnType> RequirePermission<TSourceType, TReturnType>(

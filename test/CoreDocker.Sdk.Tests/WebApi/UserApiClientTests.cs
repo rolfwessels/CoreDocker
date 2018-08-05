@@ -287,6 +287,42 @@ namespace CoreDocker.Sdk.Tests.WebApi
 
 
         [Test]
+        public async Task GraphQl_RegisterANewUser_ShouldWorkWhenNotLoggedIn()
+        {
+            // arrange
+            Setup();
+            var userCreate = GetExampleData().First();
+            var newClientNotAuthorized = (CoreDockerClient)  _defaultRequestFactory.Value.GetConnection();
+            // action
+            var insertResponst = await newClientNotAuthorized.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    register (user:{{name:""{userCreate.Name.Mask(10, "...")}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+            });
+            string id = insertResponst.Data.users.register.id;
+
+            await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    delete (id:""{id}"") 
+                        }}
+                    }}"
+            });
+
+            // assert
+
+            id.Should().NotBeEmpty();
+        }
+
+        [Test]
         public void GraphQl_QueryMeWithNonLoggedInUser_ShouldThrowException()
         {
             // arrange
