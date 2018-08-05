@@ -6,7 +6,7 @@ sudo: required
 dist: trusty
 
 services:
-  - docker
+  - docker  - mongodb
 
 addons:
   apt:
@@ -27,8 +27,8 @@ script:
   - popd
   - pushd test/CoreDocker.Core.Tests && dotnet test 
   - popd
-  #- pushd test/CoreDocker.Sdk.Tests && dotnet test 
-  #- popd
+  - pushd test/CoreDocker.Sdk.Tests && dotnet test 
+  - popd
   - pushd test/CoreDocker.Utilities.Tests && dotnet test 
   - popd
   - pushd test/CoreDocker.Dal.Tests && dotnet test 
@@ -37,9 +37,19 @@ script:
 after_success:
   # Add docker images
   - pushd src/ 
-  - docker build -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.$TRAVIS_BUILD_NUMBER .
-  - popd
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  # Add docker images
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - if [[ "$TRAVIS_BRANCH"  =~ ^feature.*$ ]]; then
+    docker build -t rolfwessels/coredocker:alpha .;
     docker push rolfwessels/coredocker;
     fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+    docker build -t rolfwessels/coredocker:beta .;
+    docker push rolfwessels/coredocker;
+    fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker build -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v0.0.$TRAVIS_BUILD_NUMBER .;
+    docker push rolfwessels/coredocker;
+    fi
+  - popd
+ 

@@ -33,19 +33,12 @@ WORKDIR /app/CoreDocker.Api
 RUN dotnet publish -c Release -o out
 RUN ls out
 
-FROM node:8.11-alpine AS build-web
-WORKDIR /app
-COPY CoreDocker.Website/package* ./
-RUN npm i
-COPY CoreDocker.Website/ ./
-RUN npm run build
-RUN ls dist
+
 # Build runtime image
 FROM microsoft/dotnet:2.0-runtime
 
 WORKDIR /app
 COPY --from=build-env /app/CoreDocker.Api/out .
-COPY --from=build-web /app/dist ./wwwroot
 COPY logSettings.xml .
 RUN cat logSettings.xml
 #  <file value="C:\temp\Logs\CoreDocker.Api.log" />

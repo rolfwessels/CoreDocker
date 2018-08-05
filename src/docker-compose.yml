@@ -1,7 +1,7 @@
 version: '3'
 services:
     db:
-        image: mongo:latest
+        image: mongo:4.0
         container_name: "db"
         restart: unless-stopped
         environment:
@@ -10,32 +10,31 @@ services:
         ports:
         - 27020:27017
         command: mongod --smallfiles --logpath=/dev/null # --quiet
-
-    web:
-        image: rolfwessels/coredocker:latest
+    www:
+        image: rolfwessels/coredocker-dashboard:alpha
+        links:
+        - api
+        ports:
+        - "3010:80"
+        environment:
+        - API_URL=http://localhost:5010
+    api:
+        build:  .
         deploy:
         restart: unless-stopped
         links:
-        - db:db
+        - db
         environment:
         - MongoConnection=mongodb://db:27017/CoreDocker
         - MongoDatabase=CoreDocker
-        - Serilog__WriteTo__0__Args__pathFormat=/data/logs/coredocker.api.{Date}.log
-        volumes:
-        - /data/logs:/data/logs
+        - OpenId__Origins=http://localhost:3010,http://localhost:5010
+        
         ports:
-        - 5000:5000
+        - 5010:5000
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:5000/api/ping/hc"]
             interval: 30s
             timeout: 10s
             retries: 3
-        labels:
-        - "traefik.enable=true"
-        - "traefik.port=5000"
-        - "traefik.frontend.rule=Host:dev-coredocker.mediaserver.wessels.online"
-networks:
- default:
-   external:
-      name: mediaserver_default
+    
 
