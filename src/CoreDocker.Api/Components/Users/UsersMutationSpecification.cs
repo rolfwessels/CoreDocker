@@ -17,8 +17,7 @@ namespace CoreDocker.Api.Components.Users
         {
             Name = "UsersMutation";
             var safe = new Safe(_log);
-
-            this.RequiresAuthorization();
+            
             Field<UserSpecification>(
                 "insert",
                 Description = "add a user",
@@ -29,6 +28,17 @@ namespace CoreDocker.Api.Components.Users
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
                     return userManager.Insert(user);
                 })).RequirePermission(Activity.UpdateUsers);
+
+            Field<UserSpecification>(
+                "register",
+                Description = "register a new user",
+                new QueryArguments(
+                    new QueryArgument<RegisterSpecification> { Name = Value }
+                ), safe.Wrap(context =>
+                {
+                    var user = context.GetArgument<RegisterModel>(Name = Value);
+                    return userManager.Register(user);
+                }));
 
             Field<UserSpecification>(
                 "update",
