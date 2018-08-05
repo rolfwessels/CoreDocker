@@ -39,7 +39,7 @@ task test -depends clean.binobj,build.restore,test.run  -Description "Builds and
 task full -depends test,build,deploy.zip -Description "Versions builds and creates distributions"
 task package -depends version,build,deploy.package -Description "Creates packages that could be user for deployments"
 task deploy -depends version,build,deploy.api,deploy.service -Description "Deploy the files to webserver using msdeploy"
-task appveyor -depends clean.binobj,build.website,build,deploy.zip -Description "Runs tests and deploys zip"
+task appveyor -depends clean.binobj,build,deploy.zip -Description "Runs tests and deploys zip"
 task prerequisite -depends prerequisite.choco,prerequisite.dotnet  -Description "Install all prerequisites"
 #
 # task depends
@@ -139,25 +139,7 @@ task build.copy {
     
 
 
-task build.website -depend npm.install {
-    pushd (srcWebFolder)
-    'npm run build'
-    npm run build
-    if (!$?) {
-        throw 'npm run build passed'
-    }
-    popd
-}
 
-task npm.install {
-    'npm install'
-    pushd (srcWebFolder)
-    npm install --silent
-    if (!$?) {
-        throw 'Npm install failed.'
-    }
-    popd
-}
 
 task build.nugetPackages -depend build {
     $packagesFolder =  $buildDistDirectory

@@ -11,7 +11,6 @@ build_script:
   - ps: $wc = New-Object 'System.Net.WebClient'
   - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\build\reports\result.trx))
   # - npm install -g @angular/cli
-  - git submodule update --init --recursive
   - go appveyor -properties @{'buildConfiguration'='Release'}
 
 
