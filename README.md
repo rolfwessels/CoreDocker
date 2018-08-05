@@ -53,6 +53,7 @@ see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-a
 ```
 cd src/CoreDocker.Api/Certificates
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout development.key -out development.crt -subj "/CN=localhost" -days 3650
+openssl pkcs12 -export -out development.pfx -inkey development.key -in development.crt -certfile development.crt
 ```
 
 
@@ -76,10 +77,12 @@ docker-compose exec api bash
 # Deploy lambda
 
 ```
-cd src\CoreDocker.Api.Lambda
+cd src/CoreDocker.Api.Lambda
 dotnet build -v=q
-dotnet lambda deploy-serverless
-// Stage coredocker-serverless
+dotnet lambda deploy-serverless --s3-bucket coredocker-serverless Stage
+dotnet lambda delete-serverless Stage
+# Note that there is some circular depenency so you will need to update the origin url manually for now :-(
+
 ```
 
 
