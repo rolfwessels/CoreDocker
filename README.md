@@ -35,13 +35,34 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Apply some CQRS patterns.
  * More https://shields.io/#/
 
-## Gettings started with docker
+## Gettings started with core
 
- ```
- git clone https://github.com/rolfwessels/CoreDocker.git
- cd CoreDocker
- git submodule update --init --recursive
- ```
+```
+git clone https://github.com/rolfwessels/CoreDocker.git
+cd CoreDocker
+dotnet restore -v=q
+# run all tests
+ForEach ($folder in (Get-ChildItem -Path test -Directory)) { dotnet test $folder.FullName -v=q }
+dotnet publish -c Release -o bin/publish src/CoreDocker.Api -v=q
+code .
+
+```
+# Deploy docker files
+
+```
+cd src
+docker-compose build;
+docker-compose up;
+```
+
+Debugging
+
+```
+cd src
+docker-compose up -d;
+docker-compose exec api bash
+```
+
 
 # Themes 
 

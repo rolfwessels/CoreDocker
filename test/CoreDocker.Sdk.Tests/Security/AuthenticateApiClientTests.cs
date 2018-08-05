@@ -72,7 +72,7 @@ namespace CoreDocker.Sdk.Tests.Security
             _connection.SetToken(data);
             var projectsEnumerable = await _connection.Projects.Get();
             // assert
-            pingModel.Environment.Should().Be("development"); //??
+            pingModel.Environment.ToLower().Should().Be("development"); //??
             projectsEnumerable.Count().Should().BeGreaterThan(0);
             await _connection.Projects.Get();
             

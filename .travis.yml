@@ -29,17 +29,18 @@ script:
   - popd
   - pushd test/CoreDocker.Core.Tests && dotnet test 
   - popd
-  - pushd test/CoreDocker.Sdk.Tests && dotnet test 
-  - popd
   - pushd test/CoreDocker.Utilities.Tests && dotnet test 
   - popd
   - pushd test/CoreDocker.Dal.Tests && dotnet test 
+  - popd
+  - pushd test/CoreDocker.Sdk.Tests && dotnet test 
+  - popd
+  - pushd test/CoreDocker.Api.Tests && dotnet test 
   - popd
 
 after_success:
   # Add docker images
   - pushd src/ 
-  # Add docker images
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - if [[ "$TRAVIS_BRANCH"  =~ ^feature.*$ ]]; then
     docker build -t rolfwessels/coredocker:alpha .;
