@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -12,16 +12,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\CoreDocker.Utilities.Tests\logSettings.xml" Link="logSettings.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\CoreDocker.Dal\CoreDocker.Dal.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
     <ProjectReference Include="..\CoreDocker.Utilities.Tests\CoreDocker.Utilities.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0-preview-20170914-09" />
-    <PackageReference Include="NUnit" Version="3.8.1" />
-    <PackageReference Include="FluentAssertions" Version="4.19.4" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="FluentAssertions" Version="5.3.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
 
   <ItemGroup>

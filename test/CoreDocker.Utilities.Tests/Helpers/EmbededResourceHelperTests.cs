@@ -32,7 +32,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
             ;
             // assert
 
-            testCall.ShouldThrow<ArgumentException>().WithMessage("CoreDocker.Utilities.Tests.Resources.t1.txt resource does not exist in CoreDocker.Utilities.Tests assembly.");
+            testCall.Should().Throw<ArgumentException>().WithMessage("CoreDocker.Utilities.Tests.Resources.t1.txt resource does not exist in CoreDocker.Utilities.Tests assembly.");
         }
 
 

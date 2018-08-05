@@ -1,9 +1,9 @@
-using CoreDocker.Core.DataIntegrity;
-using CoreDocker.Core.MessageUtil;
+using CoreDocker.Core.Framework.DataIntegrity;
+using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Validation;
 
-namespace CoreDocker.Core.BusinessLogic.Components
+namespace CoreDocker.Core.Framework.BaseManagers
 {
     public class BaseManagerArguments
     {

@@ -6,6 +6,7 @@ using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Validation;
 using NUnit.Framework;
 using System.Linq;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Utilities.Tests.TempBuildres;
 
 namespace CoreDocker.Dal.Tests.Validation

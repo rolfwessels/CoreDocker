@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 
-namespace CoreDocker.Core.BusinessLogic.Components.Interfaces
+namespace CoreDocker.Core.Components.Users
 {
     public interface IRoleManager 
     {

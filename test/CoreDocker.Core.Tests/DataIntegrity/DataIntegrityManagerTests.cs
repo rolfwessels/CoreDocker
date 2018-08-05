@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CoreDocker.Core.Framework.DataIntegrity;
+using CoreDocker.Core.Framework.Mappers;
 using FluentAssertions;
-using CoreDocker.Core.DataIntegrity;
-using CoreDocker.Core.Mappers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Tests.Managers;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Models.Interfaces;
-using CoreDocker.Dal.Models.Reference;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.DataIntegrity
@@ -27,6 +27,7 @@ namespace CoreDocker.Core.Tests.DataIntegrity
             base.Setup();
             _integrityUpdatetors = IntegrityOperators.Default;
             _dataIntegrityManager = new DataIntegrityManager(_baseManagerArguments.GeneralUnitOfWork,_integrityUpdatetors);
+            
             
         }
 
@@ -48,9 +49,10 @@ namespace CoreDocker.Core.Tests.DataIntegrity
             Setup();
             
             // action
-            long referenceCount = _dataIntegrityManager.FindMissingIntegrityOperators<IBaseDalModel, IBaseReference>(typeof(BaseDalModel).GetTypeInfo().Assembly);
+            var referenceCount = _dataIntegrityManager.FindMissingIntegrityOperators<IBaseDalModel, IBaseReference>(typeof(BaseDalModel).GetTypeInfo().Assembly);
             // assert
-            referenceCount.Should().Be(0);
+            
+            referenceCount.Where(x=> !x.Contains("Missing User on UserGrant")).Should().BeEmpty();
         }
 
         [Test]

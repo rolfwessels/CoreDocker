@@ -2,21 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
-using CoreDocker.Core.DataIntegrity;
-using CoreDocker.Core.MessageUtil;
-using CoreDocker.Core.MessageUtil.Models;
-using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Core.Framework.DataIntegrity;
+using CoreDocker.Core.Framework.Logging;
+using CoreDocker.Core.Framework.MessageUtil;
+using CoreDocker.Core.Framework.MessageUtil.Models;
+using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Validation;
 using CoreDocker.Utilities.Helpers;
-using CoreDocker.Core.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace CoreDocker.Core.BusinessLogic.Components
+namespace CoreDocker.Core.Framework.BaseManagers
 {
     public abstract class BaseManager
     {
@@ -74,7 +71,7 @@ namespace CoreDocker.Core.BusinessLogic.Components
                 long count = await _dataIntegrityManager.GetReferenceCount(project);
                 if (count > 0)
                 {
-                    throw new Exception(
+                    throw new ReferenceException(
                         string.Format(
                             "Could not remove {0} [{1}]. It is currently referenced in {2} other data object.",
                             typeof (T).Name.UnderScoreAndCamelCaseToHumanReadable(), project, count));
@@ -142,5 +139,8 @@ namespace CoreDocker.Core.BusinessLogic.Components
             _validationFactory.ValidateAndThrow(entity);
             return Task.FromResult(true);
         }
+
+        
+
     }
 }

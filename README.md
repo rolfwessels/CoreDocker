@@ -2,25 +2,70 @@
 
 [![Build Status](https://travis-ci.org/rolfwessels/CoreDocker.svg?branch=master)](https://travis-ci.org/rolfwessels/CoreDocker)
 [![Build status](https://ci.appveyor.com/api/projects/status/tumprt66bbfxb22o?svg=true)](https://ci.appveyor.com/project/rolfwessels/coredocker)
+[![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker/)
 
-Sample project using .net core and docker file.
+This project contains some scafolding code that I use whenever I start a new project. It followes some best practices.
 
- * Better API with integrated website.
- * Add nbuilder back into the mix
- * Decide what to do about logging, still not sold on the injection method
- * Signal-r replacement.
- * Authentication - github or google would be awesome.
+## Features
+ * RESTful web API.
+ * GraphQL (+ authorization + permissions)
+ * Reactjs Dashboad UI integrated
+ * Authorization (OpenId with integrated identity server).
+ * Swagger for API documentation.
+ * MongoDB document storage database.
+ * CI Appvayor && Travis for build automation
+ * Docker files to compile and compose a server
+ * Developed using TDD practices.
+ 
 
- Features
- * Simple Api
- * Authorization
- * Swagger
- * MongoDB
- * CI Appvayor && Travis
- * Unit tests
- * Nbuilder
+## Todo
+ * UI should build docker image.
+ * Api Build docker image with no web.
+ * Link the two for the site.
+ * Zip data
+ * Deploy lambda
+ * Deploy with CDN
+ * Prettier for the website
+ * Security headers ? 
+ * Code coverage in build process.
+ * Code analytics - look at resharper cli tools.
+ * Find and clean unused code. See if we can automate report
+ * Decide what to do about logging, still not sold on the injection method (and log4net not using appsettings.json).
+ * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
+ * Apply some CQRS patterns.
+ * More https://shields.io/#/
+
+## Gettings started with core
+
+```
+git clone https://github.com/rolfwessels/CoreDocker.git
+cd CoreDocker
+dotnet restore -v=q
+# run all tests
+ForEach ($folder in (Get-ChildItem -Path test -Directory)) { dotnet test $folder.FullName -v=q }
+dotnet publish -c Release -o bin/publish src/CoreDocker.Api -v=q
+code .
+
+```
+# Deploy docker files
+
+```
+cd src
+docker-compose build;
+docker-compose up;
+```
+
+Debugging
+
+```
+cd src
+docker-compose up -d;
+docker-compose exec api bash
+```
 
 
+# Themes 
 
-
-
+ * http://coreui.io/
+ * https://github.com/akveo/ngx-admin
+  

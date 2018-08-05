@@ -6,11 +6,11 @@ namespace CoreDocker.Utilities
 {
     public class Settings
     {
-        private readonly IConfigurationRoot _configuration;
+        private readonly IConfiguration _configuration;
 
         private static Lazy<Settings> _instance = new Lazy<Settings>(() => new Settings());
 
-        private Settings(IConfigurationRoot configuration)
+        private Settings(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -32,7 +32,7 @@ namespace CoreDocker.Utilities
         public string MongoDatabase => _configuration["MongoDatabase"]?? "CoreDocker-Sample";
         public string WebBasePath => _configuration["WebBasePath"] ;
         
-        public static void Initialize(IConfigurationRoot configuration)
+        public static void Initialize(IConfiguration configuration)
         {
             _instance = new Lazy<Settings>(() => new Settings(configuration));
         }

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
-using CoreDocker.Shared.Models.Interfaces;
-using CoreDocker.Sdk;
+using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
-using Flurl.Http;
+using CoreDocker.Shared.Models.Shared;
+using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base
 {
@@ -18,33 +18,34 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         #region ICrudController<TModel,TDetailModel> Members
 
-        public Task<TModel> GetById(string id)
+        public async Task<TModel> GetById(string id)
         {
-            var receiveJson = DefaultUrl(RouteHelper.WithId.SetParam("id", id))
-                .GetAsyncAndLog()
-                .ReceiveJson<TModel>();
-            return receiveJson;
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)));
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<TModel> Insert(TDetailModel model)
         {
-            return await DefaultUrl()
-              .PostJsonAsyncAndLog(model)
-              .ReceiveJson<TModel>();
+            var restRequest = new RestRequest(DefaultUrl(),Method.POST);
+            restRequest.AddJsonBody(model);
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<TModel> Update(string id, TDetailModel model)
         {
-            return await DefaultUrl(RouteHelper.WithId.SetParam("id", id))
-            .PutJsonAsyncAndLog(model)
-            .ReceiveJson<TModel>();
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)),Method.PUT);
+            restRequest.AddJsonBody(model);
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<bool> Delete(string id)
         {
-            return await DefaultUrl(RouteHelper.WithId.SetParam("id", id))
-                .DeleteAsyncAndLog()
-                .ReceiveJson<bool>();
+            var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)),Method.DELETE);
+            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<bool>(restRequest);
+            return ValidateResponse(executeAsyncWithLogging);
         }
 
         #endregion

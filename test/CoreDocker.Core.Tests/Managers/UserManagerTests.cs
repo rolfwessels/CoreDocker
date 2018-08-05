@@ -1,10 +1,12 @@
 using System.Linq;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.BaseManagers;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Core.BusinessLogic.Components;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
 using FizzWare.NBuilder.Generators;
@@ -112,19 +114,13 @@ namespace CoreDocker.Core.Tests.Managers
             result.Email.Should().Be("asdf@gmail.com");
         }
 
-        protected override IRepository<User> Repository
-        {
-            get { return _fakeGeneralUnitOfWork.Users; }
-        }
+        protected override IRepository<User> Repository => _fakeGeneralUnitOfWork.Users;
 
         protected override User SampleObject
         {
             get { return Builder<User>.CreateNew().With(x => x.Email = GetRandom.Email()).Build(); }
         }
 
-        protected override BaseManager<User> Manager
-        {
-            get { return _userManager; }
-        }
+        protected override BaseManager<User> Manager => _userManager;
     }
 }

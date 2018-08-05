@@ -1,5 +1,4 @@
-using System;
-using Flurl.Http;
+using CoreDocker.Sdk.RestApi;
 
 namespace CoreDocker.Sdk
 {
@@ -9,11 +8,10 @@ namespace CoreDocker.Sdk
 
         public ConnectionFactory(string urlBase)
         {
-            FlurlHttp.Configure(c => { c.DefaultTimeout = TimeSpan.FromSeconds(30); });
             _urlBase = urlBase;
         }
 
-        public ICoreDockerApi GetConnection()
+        public ICoreDockerClient GetConnection()
         {
             return new CoreDockerClient(_urlBase);
         }

@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
 
-namespace CoreDocker.Core.Mappers
+namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
     {
@@ -12,6 +12,10 @@ namespace CoreDocker.Core.Mappers
             });
         }
 
-        
+        public static void AssertConfigurationIsValid()
+        {
+            Mapper.AssertConfigurationIsValid();
+        }
+
     }
 }

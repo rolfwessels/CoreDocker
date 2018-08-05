@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
-using CoreDocker.Utilities.Helpers;
 
-namespace CoreDocker.Core.DataIntegrity
+namespace CoreDocker.Core.Framework.DataIntegrity
 {
     
     public class DataIntegrityManager : IDataIntegrityManager
@@ -48,23 +47,15 @@ namespace CoreDocker.Core.DataIntegrity
 
         }
 
-        public long FindMissingIntegrityOperators<TDal,TReference>(Assembly assembly)
+        public string[] FindMissingIntegrityOperators<TDal,TReference>(Assembly assembly  )
         {
             
             var allDalTypes = assembly.GetTypes().Where(x => IsOfType(x.GetTypeInfo(), typeof(TDal))).ToArray();
             var allReferences = assembly.GetTypes().Where(x => IsOfType(x.GetTypeInfo(), typeof(TReference))).ToArray();
-            var missing = 0;
-            foreach (var dalType in allDalTypes)
-            {
-                var strings = ScanType(assembly, dalType, allReferences, dalType).ToArray();
-                foreach (var s in strings)
-                {
-                    Console.Out.WriteLine(s);
-                }
-                missing += strings.Length;
-            }   
-
-            return missing;
+            
+            return allDalTypes
+                .SelectMany(dalType => ScanType(assembly, dalType, allReferences, dalType))
+                .ToArray();
         }
 
         private bool IsOfType(TypeInfo x, Type type)
@@ -82,10 +73,9 @@ namespace CoreDocker.Core.DataIntegrity
                     !_integrityUpdatetor.Any(x => x.IsIntegration(className, memberString)))
                 {
                     
-                    yield return String.Format("Missing {0} on {1} " +
-                                               "[ new PropertyIntegrity<{4}, {3}, {2}>" +
-                                               "(u => u.{1}, g => g.{2}s,r => x => x.{1}.Id == r.Id, x=>x.ToReference()) ]"
-                                               , property.Name, memberString, className, property.PropertyType.Name, property.PropertyType.Name.Replace("Reference", ""));
+                    yield return $"Missing {property.Name} on {className.Name} " +
+                                 $"[ new PropertyIntegrity<{property.PropertyType.Name.Replace("Reference", "")}, {property.PropertyType.Name}, {className}>" +
+                                 $"(u => u.{memberString}, g => g.{className}s,r => x => x.{memberString}.Id == r.Id, x=>x.ToReference()) ]";
                 }
                 else
                 {

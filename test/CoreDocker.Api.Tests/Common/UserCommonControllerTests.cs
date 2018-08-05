@@ -1,13 +1,16 @@
 ﻿using System.Linq;
+using CoreDocker.Api.Components.Users;
+using CoreDocker.Api.WebApi.Controllers;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Api.Common;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Users;
+using CoreDocker.Utilities.Tests.Tools;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
 
@@ -19,16 +22,17 @@ namespace CoreDocker.Api.Tests.Common
         private Mock<IUserManager> _mockIUserManager;
         private UserCommonController _projectCommonController;
         private Mock<IRoleManager> _mockIRoleManager;
+        private Mock<IHttpContextAccessor> _mockIHttpContextAccessor;
 
         #region Overrides of BaseCommonControllerTests
 
-        public override void Setup()
+        protected override void Setup()
         {
             _mockIUserManager = new Mock<IUserManager>(MockBehavior.Strict);
             _mockIRoleManager = new Mock<IRoleManager>(MockBehavior.Strict);
+            _mockIHttpContextAccessor = new Mock<IHttpContextAccessor>(MockBehavior.Strict);
             
-            
-            _projectCommonController = new UserCommonController(_mockIUserManager.Object, _mockIRoleManager.Object);
+            _projectCommonController = new UserCommonController(_mockIUserManager.Object, _mockIRoleManager.Object, _mockIHttpContextAccessor.Object);
             
             base.Setup();
         }

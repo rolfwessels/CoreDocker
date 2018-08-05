@@ -1,10 +1,10 @@
-using System.Linq;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
 
-namespace CoreDocker.Core.BusinessLogic.Components
+namespace CoreDocker.Core.Components.Applications
 {
     public class ApplicationManager : BaseManager<Application>, IApplicationManager
     {

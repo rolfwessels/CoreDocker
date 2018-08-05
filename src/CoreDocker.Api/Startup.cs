@@ -1,80 +1,73 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
+using CoreDocker.Api.GraphQl;
+using CoreDocker.Api.Security;
+using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
-using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Utilities;
+using CoreDocker.Utilities.Helpers;
 using log4net;
+using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace CoreDocker.Api
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            Configuration = ReadAppSettings(env);
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("logSettings.xml"));
+            Configuration = configuration;
             Settings.Initialize(Configuration);
         }
 
-        public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container
+        public IConfiguration Configuration { get; }
+        
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
-            services.AddMvc(options => WebApiSetup.Setup(options));
-            SwaggerSetup.Setup(services);
-
+            services.AddGraphQl();
+            services.AddCors();
+            services.UseIndentityService(Configuration);
+            services.AddBearerAuthentication();
+            services.AddMvc(WebApiSetup.Setup);
+            services.AddSwagger();
+            services.AddSignalR();
+            
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
 
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger();
-
-            LogManager.SetLogger(loggerFactory);
-
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            loggerFactory.AddSerilog();
-
-            app.UseMvc();
-            SwaggerSetup.AddUi(app);
-            SimpleFileServer.Initialize(app);
-        }
-
-        #region Private Methods
-
-        private IConfigurationRoot ReadAppSettings(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
-
-            PingController.Env = env.EnvironmentName;
-            if (env.IsEnvironment("Development"))
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {            
+            app.UseCors(policy =>
             {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-//                builder.AddApplicationInsightsSettings(true);
+                policy.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithOrigins(new OpenIdSettings(Configuration).GetOriginList());
+            });
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
             }
 
-
-            builder.AddEnvironmentVariables();
-            return builder.Build();
+            app.UseIndentityService();
+            app.UseBearerAuthentication();
+            app.UseSingalRSetup();
+            app.UseMvc();
+            app.AddGraphQl();
+            app.UseSwagger();
+            SimpleFileServer.Initialize(app);
         }
-
-        #endregion
     }
 }

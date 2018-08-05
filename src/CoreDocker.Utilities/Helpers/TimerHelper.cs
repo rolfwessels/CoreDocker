@@ -15,5 +15,6 @@ namespace CoreDocker.Utilities.Helpers
 
             } while (!result && DateTime.Now < stopTime);
         }
+
     }
 }

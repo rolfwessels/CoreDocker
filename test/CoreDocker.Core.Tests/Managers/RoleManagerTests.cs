@@ -1,8 +1,8 @@
+using CoreDocker.Core.Components.Users;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using CoreDocker.Core.BusinessLogic.Components;
 using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Models.Enums;
+using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Persistance;
 using NUnit.Framework;
 

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using CoreDocker.Dal.Models.Base;
 using FluentAssertions;
-using CoreDocker.Dal.Models.Interfaces;
 using CoreDocker.Dal.Persistance;
 
 namespace CoreDocker.Core.Tests.Helpers

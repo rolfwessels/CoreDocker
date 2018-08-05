@@ -1,8 +1,11 @@
-﻿using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo
+namespace CoreDocker.Dal.MongoDb
 {
 	public class MongoGeneralUnitOfWork : IGeneralUnitOfWork
 	{
@@ -11,6 +14,7 @@ namespace CoreDocker.Dal.Mongo
             Users = new MongoRepository<User>(database);
             Applications = new MongoRepository<Application>(database);
             Projects = new MongoRepository<Project>(database);
+            UserGrants = new MongoRepository<UserGrant>(database);
 	    }
 
 		#region Implementation of IDisposable
@@ -27,6 +31,7 @@ namespace CoreDocker.Dal.Mongo
 		public IRepository<User> Users { get; private set; }
 		public IRepository<Application> Applications { get; private set; }
 	    public IRepository<Project> Projects { get; private set; }
+	    public IRepository<UserGrant> UserGrants { get; private set; }
 	   
 	    #endregion
 

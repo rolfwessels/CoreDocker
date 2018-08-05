@@ -1,19 +1,24 @@
-﻿using System;
+using System;
+using System.Reflection;
 using Autofac;
+using CoreDocker.Core.Components.Projects;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.MessageUtil;
 using FluentValidation;
-using CoreDocker.Core.BusinessLogic.Components;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
-using CoreDocker.Core.MessageUtil;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
-using CoreDocker.Dal.Validation;
 using log4net;
+using UserGrant = CoreDocker.Dal.Models.Users.UserGrant;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
 namespace CoreDocker.Core.Startup
 {
 	public abstract class IocCoreBase
 	{
+	    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		protected void SetupCore(ContainerBuilder builder)
 		{
             SetupMongoDb(builder);
@@ -36,10 +41,9 @@ namespace CoreDocker.Core.Startup
 	        }
 	        catch (Exception e)
 	        {
-	            var logger = LogManager.GetLogger<IocCoreBase>();
-	            logger.Error("IocCoreBase:Delegate " + e.Message, e);
-	            logger.Error(e.Source);
-                logger.Error(e.StackTrace);
+	            _log.Error("IocCoreBase:Delegate " + e.Message, e);
+	            _log.Error(e.Source);
+	            _log.Error(e.StackTrace);
 	            throw;
 	        }
 	    }
@@ -50,6 +54,7 @@ namespace CoreDocker.Core.Startup
             builder.RegisterType<ProjectManager>().As<IProjectManager>();
             builder.RegisterType<RoleManager>().As<IRoleManager>();
             builder.RegisterType<UserManager>().As<IUserManager>();
+            builder.RegisterType<UserGrantManager>().As<IUserGrantManager>();
 		}
 
 	    private static void SetupValidation(ContainerBuilder builder)
@@ -57,6 +62,7 @@ namespace CoreDocker.Core.Startup
             builder.RegisterType<AutofacValidatorFactory>().As<Dal.Validation.IValidatorFactory>();
 	        builder.RegisterType<UserValidator>().As<IValidator<User>>();
 	        builder.RegisterType<ProjectValidator>().As<IValidator<Project>>();
+	        builder.RegisterType<UserGrantValidator>().As<IValidator<UserGrant>>();
 	        builder.RegisterType<UserValidator>().As<IValidator<User>>();
 	    }
 

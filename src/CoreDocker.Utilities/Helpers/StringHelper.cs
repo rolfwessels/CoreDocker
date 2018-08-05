@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -54,6 +55,15 @@ namespace CoreDocker.Utilities.Helpers
         {
             if (value.EndsWith(postFix)) return value;
             return value + postFix;
+        }
+
+        public static string Mask(this string key, int length, string mask = "XXXX")
+        {
+            if (key == null) return key;
+            return key.Substring(0, Math.Min(key.Length, length))+mask;
+
+
+
         }
     }
 }

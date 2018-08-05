@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.Persistance
 {

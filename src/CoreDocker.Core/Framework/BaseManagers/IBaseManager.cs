@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace CoreDocker.Core.BusinessLogic.Components.Interfaces
+namespace CoreDocker.Core.Framework.BaseManagers
 {
     public interface IBaseManager<T>
     {

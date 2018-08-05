@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using CoreDocker.Dal.Models.Interfaces;
+using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;

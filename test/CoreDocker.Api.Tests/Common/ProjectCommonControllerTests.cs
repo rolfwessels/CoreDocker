@@ -1,8 +1,10 @@
-using CoreDocker.Api.Common;
-using CoreDocker.Core.BusinessLogic.Components.Interfaces;
+using CoreDocker.Api.Components.Projects;
+using CoreDocker.Api.WebApi.Controllers;
+using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Reference;
+using CoreDocker.Shared.Models.Projects;
 using Moq;
 using NUnit.Framework;
 
@@ -17,7 +19,7 @@ namespace CoreDocker.Api.Tests.Common
 
         #region Overrides of BaseCommonControllerTests
 
-        public override void Setup()
+        protected override void Setup()
         {
             _mockIProjectManager = new Mock<IProjectManager>(MockBehavior.Strict);
             _projectCommonController = new ProjectCommonController(_mockIProjectManager.Object);

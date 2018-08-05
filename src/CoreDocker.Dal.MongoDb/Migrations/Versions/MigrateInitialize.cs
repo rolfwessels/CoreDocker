@@ -1,11 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Core.BusinessLogic.Components;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models;
+using CoreDocker.Dal.Models.Auth;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using MongoDB.Driver;
 
-namespace CoreDocker.Dal.Mongo.Migrations.Versions
+namespace CoreDocker.Dal.MongoDb.Migrations.Versions
 {
     public class MigrateInitialize : IMigration
     {
@@ -27,7 +30,7 @@ namespace CoreDocker.Dal.Mongo.Migrations.Versions
             var emailIndex = Builders<User>.IndexKeys.Ascending(x => x.Email);
             users.Collection.Indexes.CreateOneAsync(emailIndex).Wait();
 
-			var admin = new User() {Name = "Admin user", Email = "admin", HashedPassword = PasswordHash.CreateHash("admin!")};
+			var admin = new User() {Name = "Admin user", Email = "admin@admin.com", HashedPassword = PasswordHash.CreateHash("admin!")};
             admin.Roles.Add(RoleManager.Admin.Name);
             await users.Add(admin);
 

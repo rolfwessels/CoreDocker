@@ -1,8 +1,8 @@
 using System;
 using CoreDocker.Shared.Models;
-using Flurl.Http;
+using CoreDocker.Shared.Models.Shared;
 
-namespace CoreDocker.Sdk.OAuth
+namespace CoreDocker.Sdk.RestApi.Base
 {
     public class RestClientException : Exception
     {

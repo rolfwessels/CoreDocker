@@ -1,5 +1,5 @@
 
-namespace CoreDocker.Api
+namespace CoreDocker.Api.WebApi
 {
     public class CrossOrginSetup
     {
