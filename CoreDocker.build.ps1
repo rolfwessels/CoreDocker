@@ -10,7 +10,7 @@ properties {
     $buildReportsDirectory =  Join-Path $buildDirectory 'reports'
     $buildPackageDirectory =  Join-Path $buildDirectory 'packages'
     $buildDistDirectory =  Join-Path $buildDirectory 'dist'
-    $buildPublishProjects =  'CoreDocker.Api','CoreDocker.Console'
+    $buildPublishProjects =  'CoreDocker.Api'
     $versions = 'netcoreapp2.0','net46'
     $buildContants = ''
 

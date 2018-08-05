@@ -19,10 +19,7 @@ This project contains some scafolding code that I use whenever I start a new pro
  
 
 ## Todo
- * UI should build docker image.
- * Api Build docker image with no web.
- * Link the two for the site.
- * Zip data
+ * Version the binaries that get built in docker.
  * Deploy lambda
  * Deploy with CDN
  * Prettier for the website
