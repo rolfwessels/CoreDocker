@@ -44,9 +44,21 @@ ForEach ($folder in (Get-ChildItem -Path test -Directory)) { dotnet test $folder
 dotnet publish -c Release -o bin/publish src/CoreDocker.Api -v=q
 code .
 
+
+```
+# Create certificates
+
+see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/
+
+```
+cd src/CoreDocker.Api/Certificates
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout development.key -out development.crt -subj "/CN=localhost" -days 3650
 ```
 
+
+
 # Deploy docker files
+
 
 ```
 cd src
@@ -66,7 +78,8 @@ docker-compose exec api bash
 ```
 cd src\CoreDocker.Api.Lambda
 dotnet build -v=q
-dotnet lambda deploy-function
+dotnet lambda deploy-serverless
+// Stage coredocker-serverless
 ```
 
 

@@ -1,9 +1,7 @@
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Shared;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Ping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +17,7 @@ namespace CoreDocker.Api.WebApi.Controllers
     public class PingController : Controller
     {
         private readonly IGeneralUnitOfWorkFactory _factory;
-        private static readonly string _informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        private static readonly string _informationalVersion = Startup.InformationalVersion();
         private readonly string _environmentName;
 
         public PingController(IGeneralUnitOfWorkFactory factory, IHostingEnvironment environment)

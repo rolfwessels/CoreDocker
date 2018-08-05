@@ -28,6 +28,7 @@ services:
         - MongoConnection=mongodb://db:27017/CoreDocker
         - MongoDatabase=CoreDocker
         - OpenId__Origins=http://localhost:3010,http://localhost:5010
+        - OpenId__HostUrl=http://localhost:5010
         
         ports:
         - 5010:5000

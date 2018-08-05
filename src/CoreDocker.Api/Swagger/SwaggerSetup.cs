@@ -14,10 +14,37 @@ namespace CoreDocker.Api.Swagger
 {
     public static class SwaggerSetup
     {
-        private static string _informationalVersion = Assembly.GetEntryAssembly()
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-            .InformationalVersion;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static string _informationalVersion = Startup.InformationalVersion();
 
+      
+
+        #region Instance
+
+        public static void AddSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(options => SetupAction(options, IocApi.Instance.Resolve<OpenIdSettings>().HostUrl));
+            // todo: Rolf Add Auth response codes
+        }
+
+        public static void UseSwagger(this IApplicationBuilder app)
+        {
+            var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
+            SwaggerBuilderExtensions.UseSwagger(app);
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint(openIdSettings.HostUrl.UriCombine($"/swagger/{GetVersion()}/swagger.json") , $"Main {GetVersion()}");
+                c.OAuthClientId(openIdSettings.ClientName);
+                var clientSecret = openIdSettings.ClientSecret;
+                c.OAuthClientSecret(clientSecret);
+                c.OAuthClientSecret(clientSecret);
+                c.OAuthClientSecret(clientSecret);
+                c.OAuthRealm(openIdSettings.ApiResourceName);
+                c.OAuthAppName("SwaggerAuth");
+            });
+        }
+
+        #endregion
         #region Private Methods
 
         private static string GetVersion()
@@ -25,7 +52,6 @@ namespace CoreDocker.Api.Swagger
             _informationalVersion = _informationalVersion.Split('.').Take(2).StringJoin(".");
             var version = "v" + _informationalVersion;
             return version;
-            ;
         }
 
         private static void SetupAction(SwaggerGenOptions options, string authorizationUrl)
@@ -48,32 +74,6 @@ namespace CoreDocker.Api.Swagger
                 {
                     {scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi}
                 }
-            });
-        }
-
-        #endregion
-
-        #region Instance
-
-        public static void AddSwagger(this IServiceCollection services)
-        {
-            services.AddSwaggerGen(options => SetupAction(options, IocApi.Instance.Resolve<OpenIdSettings>().HostUrl));
-            // todo: Rolf Add Auth response codes
-        }
-
-        public static void UseSwagger(this IApplicationBuilder app)
-        {
-            SwaggerBuilderExtensions.UseSwagger(app);
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"/swagger/{GetVersion()}/swagger.json", $"Main {GetVersion()}");
-                c.OAuthClientId(IocApi.Instance.Resolve<OpenIdSettings>().ClientName);
-                var clientSecret = IocApi.Instance.Resolve<OpenIdSettings>().ClientSecret;
-                c.OAuthClientSecret(clientSecret);
-                c.OAuthClientSecret(clientSecret);
-                c.OAuthClientSecret(clientSecret);
-                c.OAuthRealm(IocApi.Instance.Resolve<OpenIdSettings>().ApiResourceName);
-                c.OAuthAppName("SwaggerAuth");
             });
         }
 

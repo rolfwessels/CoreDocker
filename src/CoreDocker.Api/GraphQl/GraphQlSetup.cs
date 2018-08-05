@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoreDocker.Api.AppStartup;
+using CoreDocker.Api.Security;
 using CoreDocker.Utilities.Helpers;
 using GraphQL;
 using GraphQL.Authorization;
@@ -45,12 +47,12 @@ namespace CoreDocker.Api.GraphQl
             rules.ForEach(x => settings.ValidationRules.Add(x));
             
             app.UseGraphQLHttp<ISchema>(settings);
-            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
+            var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
+            var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
+            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions(){GraphQLEndPoint = uriCombine.PathAndQuery});
         }
 
-
-       
-
+        
         #region Nested type: GraphQLSettings
 
         public class GraphQLSettings

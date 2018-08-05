@@ -69,5 +69,21 @@ namespace CoreDocker.Api
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
         }
+
+        public static string InformationalVersion()
+        {
+            try
+            {
+                return Assembly.GetEntryAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    .InformationalVersion;
+            }
+            catch (Exception e)
+            {
+                ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+                log.Error($"SwaggerSetup:InformationalVersion Failed to get the InformationalVersion  {e.Message}");
+                return "1.0.0";
+            }
+        }
     }
 }
