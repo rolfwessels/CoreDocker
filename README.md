@@ -20,8 +20,6 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 ## Todo
  * Version the binaries that get built in docker. 
- * Deploy lambda 
-    - dotnet new serverless.AspNetCoreWebAPI --name CoreDocker.Api.Lambda --profile default --region eu-west-1
  * Deploy with CDN
  * Prettier for the website
  * Security headers ? 
@@ -79,7 +77,7 @@ docker-compose exec api bash
 ```
 cd src/CoreDocker.Api.Lambda
 dotnet build -v=q
-dotnet lambda deploy-serverless --s3-bucket coredocker-serverless Stage
+dotnet lambda deploy-serverless --s3-bucket coredocker-serverless coredocker-sample
 dotnet lambda delete-serverless Stage
 # Note that there is some circular depenency so you will need to update the origin url manually for now :-(
 

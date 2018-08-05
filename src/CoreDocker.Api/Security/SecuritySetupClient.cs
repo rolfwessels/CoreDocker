@@ -14,15 +14,17 @@ namespace CoreDocker.Api.Security
     {
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
+            
             services.AddDistributedMemoryCache();
             services.AddAuthorization(AddFromActivities);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = IocApi.Instance.Resolve<OpenIdSettings>().HostUrl;
+                    var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
+                    options.Authority = openIdSettings.HostUrl;
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = IocApi.Instance.Resolve<OpenIdSettings>().ApiResourceName;
-                    options.ApiSecret = IocApi.Instance.Resolve<OpenIdSettings>().ApiResourceSecret;
+                    options.ApiName = openIdSettings.ApiResourceName;
+                    options.ApiSecret = openIdSettings.ApiResourceSecret;
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });

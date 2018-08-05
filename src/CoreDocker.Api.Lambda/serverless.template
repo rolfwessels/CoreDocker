@@ -23,8 +23,8 @@
         "Policies": [ "AWSLambdaFullAccess" ],
         "Environment" : {
           "Variables" : {
-            "OpenId__HostUrl" : { "Fn::Sub" : "https://xfk673o0hc.execute-api.${AWS::Region}.amazonaws.com/Prod/" },
-            "OpenId__Origins" : { "Fn::Sub" : "https://xfk673o0hc.execute-api.${AWS::Region}.amazonaws.com" }
+            "OpenId__HostUrl" : { "Fn::Sub" : "https://y6iqsmiv4h.execute-api.${AWS::Region}.amazonaws.com/Prod/" },
+            "OpenId__Origins" : { "Fn::Sub" : "https://y6iqsmiv4h.execute-api.${AWS::Region}.amazonaws.com,http://coredocker-www.s3-website-eu-west-1.amazonaws.com" }
           }
         },
         "Events": {

@@ -29,8 +29,13 @@ namespace CoreDocker.Api.GraphQl
 
         public static void AddGraphQl(this IApplicationBuilder app)
         {
+            var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
+            var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
+
             var settings = new GraphQLHttpOptions
             {
+                Path = uriCombine.PathAndQuery,
+                ExposeExceptions = true,
                 BuildUserContext = ctx =>
                 {
                     var userContext = new GraphQLUserContext
@@ -47,22 +52,12 @@ namespace CoreDocker.Api.GraphQl
             rules.ForEach(x => settings.ValidationRules.Add(x));
             
             app.UseGraphQLHttp<ISchema>(settings);
-            var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
-            var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
+          
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions(){GraphQLEndPoint = uriCombine.PathAndQuery});
         }
 
         
-        #region Nested type: GraphQLSettings
-
-        public class GraphQLSettings
-        {
-            public Func<HttpContext, Task<object>> BuildUserContext { get; set; }
-            public object Root { get; set; }
-            public List<IValidationRule> ValidationRules { get; } = new List<IValidationRule>();
-        }
-
-        #endregion
+       
 
         #region Nested type: GraphQLUserContext
 
