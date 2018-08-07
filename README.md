@@ -19,11 +19,7 @@ This project contains some scafolding code that I use whenever I start a new pro
  
 
 ## Todo
- * UI should build docker image.
- * Api Build docker image with no web.
- * Link the two for the site.
- * Zip data
- * Deploy lambda
+ * Version the binaries that get built in docker. 
  * Deploy with CDN
  * Prettier for the website
  * Security headers ? 
@@ -46,8 +42,22 @@ ForEach ($folder in (Get-ChildItem -Path test -Directory)) { dotnet test $folder
 dotnet publish -c Release -o bin/publish src/CoreDocker.Api -v=q
 code .
 
+
 ```
+# Create certificates
+
+see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/
+
+```
+cd src/CoreDocker.Api/Certificates
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout development.key -out development.crt -subj "/CN=localhost" -days 3650
+openssl pkcs12 -export -out development.pfx -inkey development.key -in development.crt -certfile development.crt
+```
+
+
+
 # Deploy docker files
+
 
 ```
 cd src
@@ -61,6 +71,16 @@ Debugging
 cd src
 docker-compose up -d;
 docker-compose exec api bash
+```
+# Deploy lambda
+
+```
+cd src/CoreDocker.Api.Lambda
+dotnet build -v=q
+dotnet lambda deploy-serverless --s3-bucket coredocker-serverless coredocker-sample
+dotnet lambda delete-serverless Stage
+# Note that there is some circular depenency so you will need to update the origin url manually for now :-(
+
 ```
 
 

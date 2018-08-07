@@ -36,7 +36,7 @@ namespace CoreDocker.Api.Components.Users
                     var validationExceptions = e.InnerExceptions.OfType<ValidationException>().ToArray();
                     if (validationExceptions.Any())
                     {
-                        validationExceptions.ForEach(e1 => LogAndThrowValidation(e1, context));
+                        validationExceptions.ForEach(exception => LogAndThrowValidation(exception, context));
                         return null;
                     }
 
@@ -78,10 +78,11 @@ namespace CoreDocker.Api.Components.Users
         private void LogAndThrowValidation(ValidationException e, ResolveFieldContext<object> context)
         {
             _log.Warn(e.Message, e);
-            throw new ExecutionError(e.Errors.Dump("1").Select(x => x.ErrorMessage).FirstOrDefault(), e)
-            {
-                Code = "VALIDATION"
-            };
+            context.Errors.AddRange(e.Errors.Select(x => new ExecutionError(x.ErrorMessage) {Code = "VALIDATION", Path = context.Path} ));
+//            throw new ExecutionError(e.Errors.Select(x => x.ErrorMessage).FirstOrDefault(), e)
+//            {
+//                Code = "VALIDATION"
+//            };
         }
 
         private void LogAndThrowAggregateValidation(ValidationException e, ResolveFieldContext<object> context)

@@ -72,7 +72,7 @@ namespace CoreDocker.Api.Components.Users
                 "me",
                 Description = "Current user",
                 resolve: safe.Wrap(context => Me(users))
-            ).RequiresAuthorization();
+            ).RequireAuthorization();
 
 
             Field<ListGraphType<RoleSpecification>>(

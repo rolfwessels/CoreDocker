@@ -120,6 +120,32 @@ namespace CoreDocker.Utilities.Tests.Helpers
             uriCombine.Should().Be(null);
         }
 
+        [Test]
+        public void Base64EncodeDecode_GivenGivenNull_ShouldReturnNull()
+        {
+            // arrange
+            string value = null;
+            // action
+            var result = value.Base64Encode();
+            var decoded = result.Base64Decode();
+            // assert
+            result.Should().Be(null);
+            decoded.Should().Be(value);
+        }
+
+        [Test]
+        public void Base64EncodeDecode_GivenGivenValue_ShouldReturnNull()
+        {
+            // arrange
+            string value = "Sample!";
+            // action
+            var result = value.Base64Encode();
+            var decoded = result.Base64Decode();
+            // assert
+            result.Should().Be("U2FtcGxlIQ==");
+            decoded.Should().Be(value);
+        }
+
 
     }
 }

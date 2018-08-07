@@ -85,7 +85,9 @@ namespace CoreDocker.Api.Components.Users
 
         public async Task<UserModel> WhoAmI()
         {
-            var whoAmI = await _userManager.GetUserByEmail(_httpContextAccessor.GetName());
+            var email = _httpContextAccessor.GetName();
+            if (string.IsNullOrEmpty(email)) return null;
+            var whoAmI = await _userManager.GetUserByEmail(email);
             return whoAmI.ToModel();
             
         }

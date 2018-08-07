@@ -10,8 +10,8 @@ properties {
     $buildReportsDirectory =  Join-Path $buildDirectory 'reports'
     $buildPackageDirectory =  Join-Path $buildDirectory 'packages'
     $buildDistDirectory =  Join-Path $buildDirectory 'dist'
-    $buildPublishProjects =  'CoreDocker.Api','CoreDocker.Console'
-    $versions = 'netcoreapp2.0','net46'
+    $buildPublishProjects =  'CoreDocker.Api'
+    $versions = 'netcoreapp2.1','net46'
     $buildContants = ''
 
     $srcDirectory = 'src'
@@ -171,7 +171,11 @@ task clean.database {
 
 task test.run -depends build.restore,build.build   -precondition { return $buildConfiguration -eq 'debug' } {
     mkdir $buildReportsDirectory -ErrorAction SilentlyContinue
-    $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.0/$($_.Name).dll") }) 
+
+    $Env:ASPNETCORE_ENVIRONMENT = "Development"
+    
+    $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.1/$($_.Name).dll") }) 
+    
     if ($env:APPVEYOR_JOB_ID) {
         $tests = $tests | Where-Object { $_ -notlike  '*Sdk.Tests*'}
         write-host "Skip sdk tests. (requires db)" -foreground "yellow"
