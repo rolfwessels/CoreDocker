@@ -19,7 +19,7 @@ namespace CoreDocker.Api.Components.Projects
             Name = "ProjectsMutation";
             var safe = new Safe(_log);
             
-            this.RequiresAuthorization();
+            this.RequireAuthorization();
             Field<ProjectSpecification>(
                 "insert",
                 Description = "add a project",
