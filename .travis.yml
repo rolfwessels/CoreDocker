@@ -1,7 +1,7 @@
 language: csharp
 mono: none
 #match on https://www.microsoft.com/net/download/linux
-dotnet: 2.0.0
+dotnet: 2.1.0
 sudo: required
 dist: trusty
 
