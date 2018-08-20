@@ -5,7 +5,6 @@ WORKDIR /app
 
 COPY CoreDocker.Api/*.csproj ./CoreDocker.Api/
 COPY CoreDocker.Dal/*.csproj ./CoreDocker.Dal/
-COPY CoreDocker.Console/*.csproj ./CoreDocker.Console/
 COPY CoreDocker.Sdk/*.csproj ./CoreDocker.Sdk/
 COPY CoreDocker.Core/*.csproj ./CoreDocker.Core/
 COPY CoreDocker.Shared/*.csproj ./CoreDocker.Shared/
@@ -21,7 +20,6 @@ RUN dotnet restore
 WORKDIR /app
 COPY CoreDocker.Api/ ./CoreDocker.Api/
 COPY CoreDocker.Dal/ ./CoreDocker.Dal/
-COPY CoreDocker.Console/ ./CoreDocker.Console/
 COPY CoreDocker.Sdk/ ./CoreDocker.Sdk/
 COPY CoreDocker.Core/ ./CoreDocker.Core/
 COPY CoreDocker.Shared/ ./CoreDocker.Shared/
