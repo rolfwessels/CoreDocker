@@ -95,7 +95,7 @@ namespace CoreDocker.Dal.MongoDb
 
         public Task<long> Count(Expression<Func<T, bool>> filter)
         {
-            return _mongoCollection.CountAsync(Builders<T>.Filter.Where(filter));
+            return _mongoCollection.CountDocumentsAsync(Builders<T>.Filter.Where(filter));
         }
 
         #endregion
