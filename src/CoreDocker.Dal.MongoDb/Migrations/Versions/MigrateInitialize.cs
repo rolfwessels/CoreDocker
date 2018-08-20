@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Vendor;
+using CoreDocker.Dal.InMemoryCollections;
 using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
@@ -27,8 +28,9 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
 		{
 			var users = new MongoRepository<User>(db);
 
-            var emailIndex = Builders<User>.IndexKeys.Ascending(x => x.Email);
-            users.Collection.Indexes.CreateOneAsync(emailIndex).Wait();
+		    var emailIndex = Builders<User>.IndexKeys;
+		    var createIndexModel = new CreateIndexModel<User>(emailIndex.Ascending(x=>x.Email));
+            users.Collection.Indexes.CreateOneAsync(createIndexModel).Wait();
 
 			var admin = new User() {Name = "Admin user", Email = "admin@admin.com", HashedPassword = PasswordHash.CreateHash("admin!")};
             admin.Roles.Add(RoleManager.Admin.Name);
