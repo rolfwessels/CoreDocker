@@ -1,5 +1,7 @@
 # CoreDocker
 
+![CoreDocker Logo](https://github.com/rolfwessels/CoreDocker/raw/master/logo/coredocker_logo.png)
+
 [![Build Status](https://travis-ci.org/rolfwessels/CoreDocker.svg?branch=master)](https://travis-ci.org/rolfwessels/CoreDocker)
 [![Build status](https://ci.appveyor.com/api/projects/status/tumprt66bbfxb22o?svg=true)](https://ci.appveyor.com/project/rolfwessels/coredocker)
 [![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker/)
@@ -83,6 +85,9 @@ dotnet lambda delete-serverless Stage
 
 ```
 
+# Logo
+
+ * Special thanks to @baranpirincal for the logo. https://github.com/baranpirincal
 
 # Themes 
 
