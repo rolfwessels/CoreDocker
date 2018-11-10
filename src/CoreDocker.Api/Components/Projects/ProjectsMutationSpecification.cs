@@ -78,7 +78,7 @@ namespace CoreDocker.Api.Components.Projects
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.FromResult(new object()));"
+        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.BuildFromHttpContext(new object()));"
       ]
     }
 ] scaffolding */

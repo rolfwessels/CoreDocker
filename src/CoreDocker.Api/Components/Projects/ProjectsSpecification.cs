@@ -78,7 +78,7 @@ namespace CoreDocker.Api.Components.Projects
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "Field<ProjectsSpecification>(\"projects\",resolve: context => Task.FromResult(new object()));"
+        "Field<ProjectsSpecification>(\"projects\",resolve: context => Task.BuildFromHttpContext(new object()));"
       ]
     },
     {
