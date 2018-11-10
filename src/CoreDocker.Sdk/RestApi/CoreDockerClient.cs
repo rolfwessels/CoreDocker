@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
@@ -58,16 +57,6 @@ namespace CoreDocker.Sdk.RestApi
                 throw new GraphQlResponseException(graphQlResponse) ;
             }
             return graphQlResponse;
-        }
-    }
-
-    public class GraphQlResponseException : Exception
-    {
-        public GraphQLResponse GraphQlResponse { get; }
-
-        public GraphQlResponseException(GraphQLResponse graphQlResponse) : base(graphQlResponse.Errors.Select(x=>x.Message).StringJoin())
-        {
-            GraphQlResponse = graphQlResponse;
         }
     }
 }
