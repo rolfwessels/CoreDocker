@@ -24,8 +24,8 @@ namespace CoreDocker.Api.Components.Users
             Field(d => d.Roles).Description("The roles of the user.");
             Field<ListGraphType<StringGraphType>>("activities", resolve: context => Roles(user, context.Source?.Roles));
 //                .Description("The activities that this user is authorized for.");
-            Field(d => d.UpdateDate,true,typeof(OriginalDateGraphType)).Description("The date when the user was last updated.");
-            Field(d => d.CreateDate, type: typeof(OriginalDateGraphType)).Description("The date when the user was created.");
+            Field(d => d.UpdateDate,true,typeof(DateTimeGraphType)).Description("The date when the user was last updated.");
+            Field(d => d.CreateDate, type: typeof(DateTimeGraphType)).Description("The date when the user was created.");
         }
 
         private static async Task<List<string>> Roles(UserCommonController user, List<string> sourceRoles)
