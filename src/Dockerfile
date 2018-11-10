@@ -38,6 +38,7 @@ COPY --from=build-env /app/CoreDocker.Api/out .
 COPY logSettings.xml .
 RUN cat logSettings.xml
 RUN apk add curl
+HEALTHCHECK CMD curl --fail http://localhost:5000/api/ping/hc || exit 1
 #  <file value="C:\temp\Logs\CoreDocker.Api.log" />
 #     <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
 EXPOSE 5000/tcp
