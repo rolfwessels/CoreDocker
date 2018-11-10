@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk AS build-env
+FROM microsoft/dotnet:2.1-sdk-alpine AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
@@ -13,7 +13,6 @@ COPY CoreDocker.Utilities/*.csproj ./CoreDocker.Utilities/
 COPY CoreDocker.Dal.MongoDb/*.csproj ./CoreDocker.Dal.MongoDb/
 
 WORKDIR /app/CoreDocker.Api
-RUN dir
 RUN dotnet restore
 
 # Copy everything else and build
@@ -29,11 +28,10 @@ COPY CoreDocker.Dal.MongoDb/ ./CoreDocker.Dal.MongoDb/
 
 WORKDIR /app/CoreDocker.Api
 RUN dotnet publish -c Release -o out
-RUN ls out
 
 
 # Build runtime image
-FROM microsoft/dotnet:2.0-runtime
+FROM microsoft/dotnet:2.1-runtime-alpine
 
 WORKDIR /app
 COPY --from=build-env /app/CoreDocker.Api/out .

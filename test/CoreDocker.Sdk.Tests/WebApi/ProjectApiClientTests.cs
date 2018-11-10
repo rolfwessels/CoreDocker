@@ -63,7 +63,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
         }
 
         [Test]
-        public async Task GraphQl_QueryWithCountExt_Shouldresult()
+        public async Task GraphQl_QueryWithCountExt_ShouldResult()
         {
             // arrange
             Setup();
