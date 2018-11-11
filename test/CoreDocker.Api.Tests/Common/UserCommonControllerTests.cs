@@ -2,6 +2,7 @@
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Tests.Tools;
@@ -21,6 +22,7 @@ namespace CoreDocker.Api.Tests.Common
         private Mock<IRoleManager> _mockIRoleManager;
         private Mock<IUserManager> _mockIUserManager;
         private UserCommonController _projectCommonController;
+        private Mock<ICommander> _mockICommander;
 
         [Test]
         public void ForgotPassword_GivenEmail_ShouldSendAnEmail()
@@ -58,9 +60,11 @@ namespace CoreDocker.Api.Tests.Common
             _mockIUserManager = new Mock<IUserManager>(MockBehavior.Strict);
             _mockIRoleManager = new Mock<IRoleManager>(MockBehavior.Strict);
             _mockIHttpContextAccessor = new Mock<IHttpContextAccessor>(MockBehavior.Strict);
-
+            _mockICommander = new Mock<ICommander>();
+            
+            
             _projectCommonController = new UserCommonController(_mockIUserManager.Object, _mockIRoleManager.Object,
-                _mockIHttpContextAccessor.Object);
+                _mockIHttpContextAccessor.Object, _mockICommander.Object);
 
             base.Setup();
         }

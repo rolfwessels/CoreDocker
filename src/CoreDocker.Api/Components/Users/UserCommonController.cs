@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CoreDocker.Api.Mappers;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models.Users;
@@ -19,18 +20,31 @@ namespace CoreDocker.Api.Components.Users
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICommander _commander;
         private readonly IRoleManager _roleManager;
         private readonly IUserManager _userManager;
 
         public UserCommonController(IUserManager userManager, IRoleManager roleManager,
-            IHttpContextAccessor httpContextAccessor) : base(userManager)
+            IHttpContextAccessor httpContextAccessor, ICommander commander) : base(userManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _httpContextAccessor = httpContextAccessor;
+            _commander = commander;
         }
 
         #region IUserControllerActions Members
+
+        #region Implementation of ICrudController<UserModel,in UserCreateUpdateModel>
+
+        public override async Task<UserModel> Insert(UserCreateUpdateModel model)
+        {
+            var commandResult = await _commander.Execute(UserCreate.Request.From(_commander.NewId, model.Name, model.Email, model.Password,model.Roles));
+            var user = await _userManager.GetById(commandResult.Id);
+            return user.ToModel();
+        }
+
+        #endregion
 
         public async Task<UserModel> Register(RegisterModel model)
         {

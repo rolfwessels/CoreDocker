@@ -2,6 +2,7 @@
 using System.Reflection;
 using CoreDocker.Dal.Persistence;
 using log4net;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace CoreDocker.Dal.MongoDb
@@ -29,6 +30,8 @@ namespace CoreDocker.Dal.MongoDb
         {
             return _singleConnection.Value;
         }
+
+        public string NewId => ObjectId.GenerateNewId().ToString();
 
         #endregion
 

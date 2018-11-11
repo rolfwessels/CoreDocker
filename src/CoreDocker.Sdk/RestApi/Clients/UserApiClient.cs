@@ -98,7 +98,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return CastHelper.DynamicCastTo<UserModel>(response.Data.users.register);
         }
 
-        public async Task<UserModel> UpdateIt(string id,UserCreateUpdateModel user)
+        public async Task<UserModel> Update(string id,UserCreateUpdateModel user)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {

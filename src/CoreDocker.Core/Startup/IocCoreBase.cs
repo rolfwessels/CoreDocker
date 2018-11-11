@@ -4,12 +4,14 @@ using Autofac;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using FluentValidation;
 using log4net;
+using MediatR;
 using IValidatorFactory = CoreDocker.Dal.Validation.IValidatorFactory;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
@@ -25,6 +27,27 @@ namespace CoreDocker.Core.Startup
             SetupManagers(builder);
             SetupTools(builder);
             SetupValidation(builder);
+            SetupMediator(builder);
+        }
+
+        private void SetupMediator(ContainerBuilder builder)
+        {
+            // mediator itself
+            builder
+                .RegisterType<Mediator>()
+                .As<IMediator>()
+                .InstancePerLifetimeScope();
+
+            // request & notification handlers
+            builder.Register<ServiceFactory>(context =>
+            {
+                var c = context.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+
+            builder.RegisterAssemblyTypes(typeof(IocCoreBase).GetTypeInfo().Assembly)
+                .Where(t => typeof(INotification).IsAssignableFrom(t) || t.IsClosedTypeOf(typeof(IRequestHandler<,>)) || t.IsClosedTypeOf(typeof(INotificationHandler<>)))
+                .AsImplementedInterfaces(); // via assembly scan
         }
 
         protected virtual void SetupMongoDb(ContainerBuilder builder)
@@ -73,6 +96,7 @@ namespace CoreDocker.Core.Startup
         private void SetupTools(ContainerBuilder builder)
         {
             builder.Register(x => Messenger.Default).As<IMessenger>();
+            builder.RegisterType<Commander>().As<ICommander>();
         }
 
         #endregion

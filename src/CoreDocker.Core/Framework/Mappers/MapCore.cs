@@ -1,4 +1,5 @@
 using AutoMapper;
+using CoreDocker.Core.Framework.CommandQuery;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
@@ -8,6 +9,7 @@ namespace CoreDocker.Core.Framework.Mappers
         {
             Mapper.Initialize(cfg =>
             {
+                CreateCommandMap(cfg);
                 CreateProjectMap(cfg);
                 CreateUserMap(cfg);
             });

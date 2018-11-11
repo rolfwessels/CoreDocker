@@ -109,20 +109,7 @@ namespace CoreDocker.Api.Tests.Common
             result.Id.Should().Be(dal.Id);
         }
 
-        [Test]
-        public void Post_GivenProjectId_ShouldAddAProject()
-        {
-            // arrange
-            Setup();
-            var dal = SampleItem;
-            var model = Builder<TDetailModel>.CreateNew().Build();
-            _mockManager.Setup(mc => mc.Insert(It.IsAny<TDal>())).Returns(dal);
-            AddAdditionalMappings(model, dal);
-            // action
-            var result = _commonController.Insert(model).Result;
-            // assert
-            result.Id.Should().Be(dal.Id);
-        }
+       
 
         protected virtual void AddAdditionalMappings(TDetailModel model, TDal dal)
         {

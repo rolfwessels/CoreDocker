@@ -1,3 +1,4 @@
+using System;
 using CoreDocker.Dal.Persistence;
 
 namespace CoreDocker.Dal.InMemoryCollections
@@ -10,6 +11,8 @@ namespace CoreDocker.Dal.InMemoryCollections
         {
             _inMemoryGeneralUnitOfWork = new InMemoryGeneralUnitOfWork();
         }
+
+        public string NewId => Guid.NewGuid().ToString().Substring(0, 26);
 
         #region IGeneralUnitOfWorkFactory Members
 
