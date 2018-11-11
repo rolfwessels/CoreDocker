@@ -7,7 +7,6 @@ namespace CoreDocker.Dal.Persistence
 {
     public interface IGeneralUnitOfWork : IDisposable
     {
-        IRepository<Application> Applications { get; }
         IRepository<Project> Projects { get; }
         IRepository<User> Users { get; }
         IRepository<UserGrant> UserGrants { get; }

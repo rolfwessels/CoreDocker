@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.DataIntegrity;
 using CoreDocker.Core.Framework.Mappers;
+using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Tests.Managers;
 using CoreDocker.Dal.Models.Base;

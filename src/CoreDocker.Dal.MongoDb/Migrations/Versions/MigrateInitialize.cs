@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Vendor;
-using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using MongoDB.Driver;
@@ -15,7 +14,6 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
 
         public async Task Update(IMongoDatabase db)
         {
-            await AddApplications(db);
             await AddUsers(db);
 
 #if DEBUG
@@ -54,15 +52,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
             await users.Add(guest);
         }
 
-        private async Task AddApplications(IMongoDatabase db)
-        {
-            var apps = new MongoRepository<Application>(db);
-            await apps.Add(new Application {Active = true, AllowedOrigin = "*", ClientId = "CoreDocker.Api"});
-            await apps.Add(new Application {Active = true, AllowedOrigin = "*", ClientId = "CoreDocker.Console"});
-            await apps.Add(new Application {Active = true, AllowedOrigin = "*", ClientId = "CoreDocker.App"});
-        }
-
-
+      
         private async Task MockData(IMongoDatabase db)
         {
             var projects = new MongoRepository<Project>(db);

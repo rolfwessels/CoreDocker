@@ -5,7 +5,7 @@ using CoreDocker.Dal.Validation;
 using Moq;
 using NUnit.Framework;
 
-namespace CoreDocker.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Framework.BaseManagers
 {
     [TestFixture]
     public class BaseManagerTests

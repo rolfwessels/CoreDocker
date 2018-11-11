@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.MessageUtil.Models;
+using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;

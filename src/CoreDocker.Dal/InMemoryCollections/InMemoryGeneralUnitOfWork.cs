@@ -17,7 +17,6 @@ namespace CoreDocker.Dal.InMemoryCollections
         public InMemoryGeneralUnitOfWork()
         {
             Users = new FakeRepository<User>();
-            Applications = new FakeRepository<Application>();
             Projects = new FakeRepository<Project>();
             UserGrants = new FakeRepository<UserGrant>();
         }
@@ -39,7 +38,6 @@ namespace CoreDocker.Dal.InMemoryCollections
         #region Implementation of IGeneralUnitOfWork
 
         public IRepository<User> Users { get; }
-        public IRepository<Application> Applications { get; }
         public IRepository<Project> Projects { get; }
         public IRepository<UserGrant> UserGrants { get; }
 
