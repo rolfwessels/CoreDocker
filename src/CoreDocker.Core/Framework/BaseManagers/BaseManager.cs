@@ -31,7 +31,6 @@ namespace CoreDocker.Core.Framework.BaseManagers
         }
     }
 
-
     public abstract class BaseManager<T> : BaseManager, IBaseManager<T> where T : BaseDalModelWithId
     {
         private readonly ILogger _log;

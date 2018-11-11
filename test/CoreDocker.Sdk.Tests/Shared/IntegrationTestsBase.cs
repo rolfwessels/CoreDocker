@@ -60,6 +60,11 @@ namespace CoreDocker.Sdk.Tests.Shared
             return (CoreDockerClient) coreDockerApi;
         }
 
+        protected CoreDockerClient NewClientNotAuthorized()
+        {
+            return (CoreDockerClient)_defaultRequestFactory.Value.GetConnection();
+        }
+
         #endregion
     }
 }

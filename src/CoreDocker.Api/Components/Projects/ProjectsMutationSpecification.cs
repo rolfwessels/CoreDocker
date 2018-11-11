@@ -20,8 +20,8 @@ namespace CoreDocker.Api.Components.Projects
 
             this.RequireAuthorization();
             Field<ProjectSpecification>(
-                "insert",
-                Description = "add a project",
+                "create",
+                Description = "Add a project.",
                 new QueryArguments(
                     new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
                 ),
@@ -33,7 +33,7 @@ namespace CoreDocker.Api.Components.Projects
 
             Field<ProjectSpecification>(
                 "update",
-                Description = "update a project",
+                Description = "Update a project.",
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"},
                     new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
@@ -46,8 +46,8 @@ namespace CoreDocker.Api.Components.Projects
                 })).RequirePermission(Activity.UpdateProject);
 
             Field<BooleanGraphType>(
-                "delete",
-                Description = "permanently remove a project",
+                "remove",
+                Description = "Permanently remove a project.",
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"}
                 ),

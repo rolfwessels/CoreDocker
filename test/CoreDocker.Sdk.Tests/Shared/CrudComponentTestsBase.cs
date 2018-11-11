@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CoreDocker.Sdk.RestApi;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Shared;
 using CoreDocker.Utilities.Helpers;
@@ -82,5 +83,6 @@ namespace CoreDocker.Sdk.Tests.Shared
         {
             return Builder<TDetailModel>.CreateListOfSize(2).All().Build();
         }
+
     }
 }

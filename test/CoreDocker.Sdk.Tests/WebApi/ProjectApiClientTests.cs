@@ -37,7 +37,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
         #endregion
 
         [Test]
-        public async Task GraphQl_Given_Shouldresult()
+        public async Task GraphQl_Given_ShouldResult()
         {
             // arrange
             Setup();
