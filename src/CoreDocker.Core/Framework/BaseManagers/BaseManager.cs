@@ -67,13 +67,10 @@ namespace CoreDocker.Core.Framework.BaseManagers
             var project = await GetById(id);
             if (project != null)
             {
-                _log.Info(string.Format("Remove {1} [{0}]", project, _name));
+                _log.Info($"Remove {_name} [{project}]");
                 var count = await _dataIntegrityManager.GetReferenceCount(project);
                 if (count > 0)
-                    throw new ReferenceException(
-                        string.Format(
-                            "Could not remove {0} [{1}]. It is currently referenced in {2} other data object.",
-                            typeof(T).Name.UnderScoreAndCamelCaseToHumanReadable(), project, count));
+                    throw new ReferenceException($"Could not remove {typeof(T).Name.UnderScoreAndCamelCaseToHumanReadable()} [{project}]. It is currently referenced in {count} other data object.");
                 await Repository.Remove(x => x.Id == id);
                 _messenger.Send(new DalUpdateMessage<T>(project, UpdateTypes.Removed));
             }
@@ -90,7 +87,7 @@ namespace CoreDocker.Core.Framework.BaseManagers
         {
             DefaultModelNormalize(entity);
             await Validate(entity);
-            _log.Info(string.Format("Update {1} [{0}]", entity, _name));
+            _log.Info($"Update {_name} [{entity}]");
             var update = await Repository.Update(x => x.Id == entity.Id, entity);
             _dataIntegrityManager.UpdateAllReferences(update).ContinueWithNoWait(LogUpdate);
             _messenger.Send(new DalUpdateMessage<T>(entity, UpdateTypes.Updated));
@@ -102,7 +99,7 @@ namespace CoreDocker.Core.Framework.BaseManagers
         {
             DefaultModelNormalize(entity);
             await Validate(entity);
-            _log.Info(string.Format("Adding {1} [{0}]", entity, _name));
+            _log.Info($"Adding {_name} [{entity}]");
             var insert = await Repository.Add(entity);
             _messenger.Send(new DalUpdateMessage<T>(entity, UpdateTypes.Inserted));
             return insert;

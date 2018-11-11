@@ -12,38 +12,27 @@ namespace CoreDocker.Utilities.Helpers
             return ns.GetTypes().FirstOrDefault(x => x.Name == typeName);
         }
 
-        public static Type MakeGenericType(Type type, Type reflectionhelpertest)
-        {
-            return type.MakeGenericType(reflectionhelpertest);
-        }
-
 
         public static PropertyInfo GetPropertyInfo<TSource, TType>(Expression<Func<TSource, TType>> propertyLambda)
         {
-            var member = propertyLambda.Body as MemberExpression;
-            if (member == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a method, not a property.",
-                    propertyLambda));
+            if (!(propertyLambda.Body is MemberExpression member))
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a field, not a property.",
-                    propertyLambda));
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
 
             return propInfo;
         }
 
         public static string GetPropertyString<T, TType>(Expression<Func<T, TType>> propertyLambda)
         {
-            var member = propertyLambda.Body as MemberExpression;
-            if (member == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a method, not a property.",
-                    propertyLambda));
+            if (!(propertyLambda.Body is MemberExpression member))
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a field, not a property.",
-                    propertyLambda));
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
             var name = propInfo.Name;
             var e = member.Expression as MemberExpression;
             while (e != null)

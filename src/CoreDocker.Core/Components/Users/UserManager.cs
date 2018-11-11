@@ -45,17 +45,17 @@ namespace CoreDocker.Core.Components.Users
         public async Task<User> GetUserByEmailAndPassword(string email, string password)
         {
             var user = await GetUserByEmail(email);
-            if (user != null && user.HashedPassword != null)
+            if (user?.HashedPassword != null)
             {
                 if (!PasswordHash.ValidatePassword(password, user.HashedPassword))
                 {
                     user = null;
-                    _log.Info(string.Format("Invalid password for user '{0}'", email));
+                    _log.Info($"Invalid password for user '{email}'");
                 }
             }
             else
             {
-                _log.Info(string.Format("Invalid user '{0}'", email));
+                _log.Info($"Invalid user '{email}'");
             }
 
             return user;
@@ -97,8 +97,7 @@ namespace CoreDocker.Core.Components.Users
             await base.Validate(entity);
             var missingRoles = entity.Roles.Where(x => RoleManager.GetRole(x) == null).ToArray();
             if (missingRoles.Any())
-                throw new ArgumentException(string.Format("The following role '{0}' does not exist.",
-                    missingRoles.StringJoin()));
+                throw new ArgumentException($"The following role '{missingRoles.StringJoin()}' does not exist.");
         }
 
         #endregion

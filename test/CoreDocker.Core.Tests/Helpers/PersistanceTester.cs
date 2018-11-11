@@ -51,9 +51,9 @@ namespace CoreDocker.Core.Tests.Helpers
         {
             var compile = func.Compile();
             _testSaved.Add((type, newValue) => compile(type).Should()
-                .Be(compile(type), string.Format("Original value for {0} not saved", func)));
+                .Be(compile(type), $"Original value for {func} not saved"));
             _testUpdated.Add((type, newValue) => compile(type).Should()
-                .Be(compile(type), string.Format("Original value for {0} not saved", func)));
+                .Be(compile(type), $"Original value for {func} not saved"));
         }
     }
 }

@@ -78,8 +78,7 @@ namespace CoreDocker.Core.Tests
                         new Issue
                         {
                             Type = GetType().Name,
-                            Description = string.Format("Expect the file {0} to have a test class somewhere {1}.",
-                                fileNameWithoutExtension, testclassName)
+                            Description = $"Expect the file {fileNameWithoutExtension} to have a test class somewhere {testclassName}."
                         };
             }
 
@@ -105,8 +104,7 @@ namespace CoreDocker.Core.Tests
             public override string ToString()
             {
                 var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine(string.Format("FileName: {0} [ lines : {1} , Issues {2}]", ShortName,
-                    LinesOfCode, Issues.Count));
+                stringBuilder.AppendLine($"FileName: {ShortName} [ lines : {LinesOfCode} , Issues {Issues.Count}]");
                 stringBuilder.AppendLine("----------------");
                 foreach (var issue in Issues) stringBuilder.AppendLine(issue.ToString());
                 stringBuilder.AppendLine("");
@@ -136,7 +134,7 @@ namespace CoreDocker.Core.Tests
             public override string ToString()
             {
                 var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine(string.Format("Issue: {0} ", Description));
+                stringBuilder.AppendLine($"Issue: {Description} ");
                 stringBuilder.AppendLine("");
                 return stringBuilder.ToString();
             }
@@ -165,8 +163,7 @@ namespace CoreDocker.Core.Tests
                         new Issue
                         {
                             Type = GetType().Name,
-                            Description =
-                                string.Format("File should be called {0}.", name.Replace("Test.cs", "Tests.cs"))
+                            Description = $"File should be called {name.Replace("Test.cs", "Tests.cs")}."
                         };
                 var endsWithTest = name.EndsWith("Tests.cs");
                 if (endsWithTest && !fileLines.Any(x => x.Contains(nameNoExtention)))
@@ -174,7 +171,7 @@ namespace CoreDocker.Core.Tests
                         new Issue
                         {
                             Type = GetType().Name,
-                            Description = string.Format("File {0} should contain class {1}.", name, nameNoExtention)
+                            Description = $"File {name} should contain class {nameNoExtention}."
                         };
             }
 

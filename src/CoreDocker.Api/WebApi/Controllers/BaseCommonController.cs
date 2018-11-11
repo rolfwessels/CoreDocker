@@ -19,7 +19,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         public virtual async Task<TModel> Update(string id, TDetailModel model)
         {
             var projectFound = await _manager.GetById(id);
-            if (projectFound == null) throw new Exception(string.Format("Could not find model by id '{0}'", id));
+            if (projectFound == null) throw new Exception($"Could not find model by id '{id}'");
             var project = await ToDal(model, projectFound);
             var saveProject = await _manager.Update(project);
             return ToModel(saveProject);

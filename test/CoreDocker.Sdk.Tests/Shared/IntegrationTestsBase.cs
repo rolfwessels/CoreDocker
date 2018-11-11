@@ -35,7 +35,7 @@ namespace CoreDocker.Sdk.Tests.Shared
         private static string StartHosting()
         {
             var port = new Random().Next(9000, 9999);
-            var address = string.Format("http://localhost:{0}", port);
+            var address = $"http://localhost:{port}";
             Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
 
             var host = new WebHostBuilder()
@@ -46,7 +46,7 @@ namespace CoreDocker.Sdk.Tests.Shared
             host.Build().Start();
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-            _log.Info(string.Format("Starting api on [{0}]", address));
+            _log.Info($"Starting api on [{address}]");
             RestShapHelper.Log = m => { _log.Debug(m); };
             return address;
         }

@@ -12,8 +12,7 @@ namespace CoreDocker.Utilities.Helpers
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
-                    throw new ArgumentException(string.Format("{0} resource does not exist in {1} assembly.",
-                        resourceName, getExecutingAssembly.FullName.Split(',').First()));
+                    throw new ArgumentException($"{resourceName} resource does not exist in {getExecutingAssembly.FullName.Split(',').First()} assembly.");
                 return stream.ReadToString();
             }
         }

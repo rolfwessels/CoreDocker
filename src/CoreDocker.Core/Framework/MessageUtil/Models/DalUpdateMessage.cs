@@ -16,7 +16,7 @@ namespace CoreDocker.Core.Framework.MessageUtil.Models
 
         public override string ToString()
         {
-            return string.Format("UpdateType: {0}, Value: {1}", UpdateType, Value);
+            return $"UpdateType: {UpdateType}, Value: {Value}";
         }
     }
 }

@@ -44,8 +44,7 @@ namespace CoreDocker.Api.Components.Users
         {
             return Task.Run(() =>
             {
-                _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",
-                    email));
+                _log.Warn($"User has called forgot password. We should send him and email to [{email}].");
                 return true;
             });
         }

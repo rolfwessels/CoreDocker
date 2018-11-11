@@ -59,7 +59,7 @@ namespace CoreDocker.Sdk.RestApi.Base
         private static string EnsureHasInlinecount(string oDataQuery)
         {
             if (oDataQuery == null || !oDataQuery.Contains("$inlinecount"))
-                oDataQuery = string.Format("{0}&$inlinecount=allpages", oDataQuery);
+                oDataQuery = $"{oDataQuery}&$inlinecount=allpages";
             return oDataQuery;
         }
 
