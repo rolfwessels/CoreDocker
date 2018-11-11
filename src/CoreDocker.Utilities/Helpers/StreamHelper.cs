@@ -12,8 +12,7 @@ namespace CoreDocker.Utilities.Helpers
 
         public static byte[] ToBytes(this Stream input)
         {
-            var memoryStream = input as MemoryStream;
-            if (memoryStream != null) return memoryStream.ToArray();
+            if (input is MemoryStream memoryStream) return memoryStream.ToArray();
             using (var ms = new MemoryStream())
             {
                 input.Position = 0;
@@ -24,8 +23,7 @@ namespace CoreDocker.Utilities.Helpers
 
         public static MemoryStream ToMemoryStream(this Stream stringValue)
         {
-            var stream = stringValue as MemoryStream;
-            if (stream != null)
+            if (stringValue is MemoryStream stream)
             {
                 stream.Position = 0;
                 return stream;

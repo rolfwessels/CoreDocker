@@ -23,8 +23,7 @@ namespace CoreDocker.Api.WebApi.Filters
         {
             var exception = context.Exception.ToFirstExceptionOfException();
 
-            var apiException = exception as ApiException;
-            if (apiException != null)
+            if (exception is ApiException apiException)
                 RespondWithTheExceptionMessage(context, apiException);
             else if (IsSomeSortOfValidationError(exception))
                 RespondWithBadRequest(context, exception);

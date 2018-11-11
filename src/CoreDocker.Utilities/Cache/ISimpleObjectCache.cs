@@ -6,7 +6,7 @@ namespace CoreDocker.Utilities.Cache
     {
         TValue Get<TValue>(string key, Func<TValue> getValue) where TValue : class;
         TValue GetAndReset<TValue>(string key, Func<TValue> getValue) where TValue : class;
-        TValue Set<TValue>(string value, TValue newvalue);
+        TValue Set<TValue>(string key, TValue value);
         TValue Get<TValue>(string key) where TValue : class;
     }
 }

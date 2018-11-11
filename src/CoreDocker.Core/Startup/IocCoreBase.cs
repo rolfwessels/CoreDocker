@@ -7,7 +7,7 @@ using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using FluentValidation;
 using log4net;
 using IValidatorFactory = CoreDocker.Dal.Validation.IValidatorFactory;
@@ -81,16 +81,16 @@ namespace CoreDocker.Core.Startup
 
         private class AutofacValidatorFactory : ValidatorFactoryBase
         {
-            private readonly Func<IComponentContext> context;
+            private readonly Func<IComponentContext> _context;
 
             public AutofacValidatorFactory(Func<IComponentContext> context)
             {
-                this.context = context;
+                _context = context;
             }
 
             protected override void TryResolve<T>(out IValidator<T> output)
             {
-                context().TryResolve(out output);
+                _context().TryResolve(out output);
             }
         }
 

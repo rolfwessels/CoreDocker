@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+// ReSharper disable InconsistentNaming
 
 namespace CoreDocker.Core.Vendor
 {
@@ -130,9 +131,8 @@ namespace CoreDocker.Core.Vendor
         /// </returns>
         private static byte[] PBKDF2(string password, byte[] salt, int iterations, int outputBytes)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt);
-            pbkdf2.IterationCount = iterations;
-            return pbkdf2.GetBytes(outputBytes);
+            var bytes = new Rfc2898DeriveBytes(password, salt) {IterationCount = iterations};
+            return bytes.GetBytes(outputBytes);
         }
 
         #endregion

@@ -19,7 +19,7 @@ namespace CoreDocker.Sdk.SignalR
         public async Task Send(string message)
         {
             var hubConnection = await EnsureStarted();
-            await hubConnection.SendCoreAsync(SignalRHubUrls.ChatUrlSendCommand, new[] {message});
+            await hubConnection.SendCoreAsync(SignalRHubUrls.ChatUrlSendCommand, new object[] {message});
         }
 
         #endregion

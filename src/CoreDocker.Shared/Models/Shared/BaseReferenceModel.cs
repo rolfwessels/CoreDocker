@@ -18,12 +18,7 @@ namespace CoreDocker.Shared.Models.Shared
             if (obj.GetType() != GetType()) return false;
             return Equals((BaseReferenceModel) obj);
         }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
-
+        
         #endregion
     }
 }

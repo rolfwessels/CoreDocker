@@ -9,7 +9,7 @@ using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
 using CoreDocker.Dal.MongoDb;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
 using GraphQL;
 using GraphQL.Authorization;

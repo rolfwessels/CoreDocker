@@ -1,7 +1,6 @@
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Persistence;
 using FizzWare.NBuilder;
 using Microsoft.Extensions.Logging;

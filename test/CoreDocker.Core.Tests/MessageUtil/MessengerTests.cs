@@ -69,7 +69,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             var o = new object();
             string recieved = null;
             _messenger.Register<SampleMessage>(o, m => recieved = m.Message);
-            _messenger.Unregister<SampleMessage>(o);
+            _messenger.UnRegister<SampleMessage>(o);
             // action
             _messenger.Send(new SampleMessage("String"));
             // assert
@@ -84,7 +84,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             var o = new object();
             string recieved = null;
             _messenger.Register<SampleMessage>(o, m => recieved = m.Message);
-            _messenger.Unregister(o);
+            _messenger.UnRegister(o);
             // action
             _messenger.Send(new SampleMessage("String"));
             // assert

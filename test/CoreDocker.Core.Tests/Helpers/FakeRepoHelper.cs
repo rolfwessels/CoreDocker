@@ -17,7 +17,7 @@ namespace CoreDocker.Core.Tests.Helpers
             items.OfType<IBaseDalModelWithId>().ForEach(x => x.Id = null);
             return items
                 .ForEach(applyUpdate)
-                .Select(x => repository.Add(x))
+                .Select(repository.Add)
                 .Select(x => x.Result)
                 .ToList();
         }

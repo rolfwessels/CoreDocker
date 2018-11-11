@@ -1,4 +1,4 @@
-﻿namespace CoreDocker.Dal.Persistance
+﻿namespace CoreDocker.Dal.Persistence
 {
     public interface IGeneralUnitOfWorkFactory
     {

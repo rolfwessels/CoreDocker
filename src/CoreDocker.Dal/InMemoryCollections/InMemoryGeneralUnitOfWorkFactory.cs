@@ -1,4 +1,4 @@
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 
 namespace CoreDocker.Dal.InMemoryCollections
 {

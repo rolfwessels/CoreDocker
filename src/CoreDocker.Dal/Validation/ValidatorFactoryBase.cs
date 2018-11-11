@@ -16,7 +16,7 @@ namespace CoreDocker.Dal.Validation
         public void ValidateAndThrow<T>(T user)
         {
             var validationRules = GetValidationRules<T>();
-            if (validationRules != null) validationRules.ValidateAndThrow(user);
+            validationRules?.ValidateAndThrow(user);
         }
 
         public IValidator<T> Validator<T>()
@@ -28,8 +28,7 @@ namespace CoreDocker.Dal.Validation
 
         protected IValidator<T> GetValidationRules<T>()
         {
-            IValidator<T> output;
-            TryResolve(out output);
+            TryResolve(out IValidator<T> output);
             return output;
         }
 

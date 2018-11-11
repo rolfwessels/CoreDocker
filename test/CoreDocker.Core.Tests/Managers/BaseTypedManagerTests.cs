@@ -4,7 +4,6 @@ using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;

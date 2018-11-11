@@ -48,7 +48,7 @@ namespace CoreDocker.Utilities.Helpers
         {
             ParameterExpression valueParameterExpression = Expression.Parameter(typeof(TValue));
             Expression targetExpression =
-                expression.Body is UnaryExpression ? ((UnaryExpression)expression.Body).Operand : expression.Body;
+                expression.Body is UnaryExpression unaryExpression ? unaryExpression.Operand : expression.Body;
 
             var assign = Expression.Lambda<Action<TObj, TValue>>
             (

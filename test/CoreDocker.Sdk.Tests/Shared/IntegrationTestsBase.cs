@@ -14,7 +14,7 @@ namespace CoreDocker.Sdk.Tests.Shared
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
         private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        protected static readonly Lazy<string> _hostAddress;
+        protected static readonly Lazy<string> HostAddress;
 
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
@@ -24,8 +24,8 @@ namespace CoreDocker.Sdk.Tests.Shared
         static IntegrationTestsBase()
         {
             RestShapHelper.Log = s => _log.Debug(s);
-            _hostAddress = new Lazy<string>(StartHosting);
-            _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
+            HostAddress = new Lazy<string>(StartHosting);
+            _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(HostAddress.Value));
             _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
             _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
         }

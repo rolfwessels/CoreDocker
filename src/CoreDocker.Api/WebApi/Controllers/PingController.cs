@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models.Ping;
 using Microsoft.AspNetCore.Authorization;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 
 namespace CoreDocker.Core.Framework.DataIntegrity
 {

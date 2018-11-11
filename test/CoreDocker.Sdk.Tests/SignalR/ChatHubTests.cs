@@ -27,7 +27,7 @@ namespace CoreDocker.Sdk.Tests.SignalR
             // arrange
             Setup();
 
-            var hostAddressValue = _hostAddress.Value;
+            var hostAddressValue = HostAddress.Value;
 //            var hostAddressValue = "http://localhost:5000";
             var coreDockerSockets = new CoreDockerSockets(hostAddressValue)
             {

@@ -1,6 +1,6 @@
 using CoreDocker.Core.Framework.DataIntegrity;
 using CoreDocker.Core.Framework.MessageUtil;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
 
 namespace CoreDocker.Core.Framework.BaseManagers

@@ -34,24 +34,22 @@ namespace CoreDocker.Utilities.Cache
 
         public TValue GetAndReset<TValue>(string key, Func<TValue> getValue) where TValue : class
         {
-            CacheHolder values;
-            if (_objectCache.TryGetValue(key, out values))
+            if (_objectCache.TryGetValue(key, out var values))
                 if (!values.IsExpired)
                     return values.AsValue<TValue>();
             return Set(key, getValue());
         }
 
-        public TValue Set<TValue>(string key, TValue newvalue)
+        public TValue Set<TValue>(string key, TValue value)
         {
-            var cacheHolder = new CacheHolder(newvalue, DateTimeOffset.Now.Add(_defaultCacheTime));
+            var cacheHolder = new CacheHolder(value, DateTimeOffset.Now.Add(_defaultCacheTime));
             _objectCache.AddOrUpdate(key, s => cacheHolder, (s, holder) => cacheHolder);
-            return newvalue;
+            return value;
         }
 
         public TValue Get<TValue>(string key) where TValue : class
         {
-            CacheHolder values;
-            if (_objectCache.TryGetValue(key, out values))
+            if (_objectCache.TryGetValue(key, out var values))
                 if (!values.IsExpired)
                     return values.AsValue<TValue>();
                 else
@@ -76,8 +74,7 @@ namespace CoreDocker.Utilities.Cache
                             foreach (var cacheHolder in _objectCache.ToArray())
                                 if (cacheHolder.Value.IsExpired)
                                 {
-                                    CacheHolder ss;
-                                    _objectCache.TryRemove(cacheHolder.Key, out ss);
+                                    _objectCache.TryRemove(cacheHolder.Key, out _);
                                 }
                         });
                     }

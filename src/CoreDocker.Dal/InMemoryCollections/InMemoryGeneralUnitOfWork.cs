@@ -7,7 +7,6 @@ using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Helpers;
 
@@ -268,8 +267,7 @@ namespace CoreDocker.Dal.InMemoryCollections
 
         public bool Remove(T entity)
         {
-            var baseDalModelWithId = entity as IBaseDalModelWithId;
-            if (baseDalModelWithId != null)
+            if (entity is IBaseDalModelWithId baseDalModelWithId)
             {
                 var baseDalModelWithIds =
                   _internalDataList.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);

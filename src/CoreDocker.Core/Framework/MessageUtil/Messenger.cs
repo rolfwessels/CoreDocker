@@ -5,12 +5,12 @@ namespace CoreDocker.Core.Framework.MessageUtil
 {
     public class Messenger : IMessenger
     {
-        private static readonly Lazy<Messenger> _massager;
+        private static readonly Lazy<Messenger> _messenger;
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, Action<object>>> _dictionary;
 
         static Messenger()
         {
-            _massager = new Lazy<Messenger>(() => new Messenger());
+            _messenger = new Lazy<Messenger>(() => new Messenger());
         }
 
         public Messenger()
@@ -18,14 +18,13 @@ namespace CoreDocker.Core.Framework.MessageUtil
             _dictionary = new ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, Action<object>>>();
         }
 
-        public static IMessenger Default => _massager.Value;
+        public static IMessenger Default => _messenger.Value;
 
         #region IMessenger Members
 
         public void Send<T>(T value)
         {
-            ConcurrentDictionary<WeakReference, Action<object>> type;
-            if (_dictionary.TryGetValue(typeof(T), out type))
+            if (_dictionary.TryGetValue(typeof(T), out var type))
                 foreach (var reference in type)
                     if (reference.Key.IsAlive)
                     {
@@ -33,15 +32,14 @@ namespace CoreDocker.Core.Framework.MessageUtil
                     }
                     else
                     {
-                        Action<object> removed;
-                        type.TryRemove(reference.Key, out removed);
+                        type.TryRemove(reference.Key, out _);
                     }
         }
 
         public void Register<T>(object receiver, Action<T> action) where T : class
         {
-            Action<object> value = t => action(t as T);
-            Register(typeof(T), receiver, value);
+            void Value(object t) => action(t as T);
+            Register(typeof(T), receiver, Value);
         }
 
         public void Register(Type type, object receiver, Action<object> action)
@@ -51,44 +49,41 @@ namespace CoreDocker.Core.Framework.MessageUtil
             references.AddOrUpdate(weakReference, action, (k, v) => action);
         }
 
-        public void Unregister<T>(object receiver)
+        public void UnRegister<T>(object receiver)
         {
-            Unregister(typeof(T), receiver);
+            UnRegister(typeof(T), receiver);
         }
 
-        public void Unregister(Type type, object receiver)
+        public void UnRegister(Type type, object receiver)
         {
-            ConcurrentDictionary<WeakReference, Action<object>> typeFound;
-            if (_dictionary.TryGetValue(type, out typeFound))
+            if (_dictionary.TryGetValue(type, out var typeFound))
             {
-                Action<object> action;
                 foreach (var key in typeFound.Keys)
                 {
                     if (!key.IsAlive)
                     {
-                        typeFound.TryRemove(key, out action);
+                        typeFound.TryRemove(key, out _);
                         continue;
                     }
 
-                    if (key.Target == receiver) typeFound.TryRemove(key, out action);
+                    if (key.Target == receiver) typeFound.TryRemove(key, out _);
                 }
             }
         }
 
-        public void Unregister(object receiver)
+        public void UnRegister(object receiver)
         {
             foreach (var type in _dictionary.Values)
             {
-                Action<object> action;
                 foreach (var key in type.Keys)
                 {
                     if (!key.IsAlive)
                     {
-                        type.TryRemove(key, out action);
+                        type.TryRemove(key, out _);
                         continue;
                     }
 
-                    if (key.Target == receiver) type.TryRemove(key, out action);
+                    if (key.Target == receiver) type.TryRemove(key, out _);
                 }
             }
         }

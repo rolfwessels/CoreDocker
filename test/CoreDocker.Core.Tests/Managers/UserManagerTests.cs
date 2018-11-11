@@ -4,7 +4,6 @@ using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Dal.Persistance;
 using CoreDocker.Dal.Persistence;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
