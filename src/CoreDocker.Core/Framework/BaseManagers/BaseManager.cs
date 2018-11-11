@@ -9,6 +9,7 @@ using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
 using CoreDocker.Utilities.Helpers;
 using Microsoft.Extensions.Logging;

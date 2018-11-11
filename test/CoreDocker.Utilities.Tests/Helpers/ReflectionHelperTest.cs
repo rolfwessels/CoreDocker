@@ -8,26 +8,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
     [TestFixture]
     public class ReflectionHelperTest
     {
-//        [Test]
-//        public void FindOfType_GivenAssemblyAndName_ShouldSearchForATypeAndReturnIt()
-//        {
-//            // arrange
-//            // action
-//            var type = ReflectionHelper.FindOfType(typeof(ReflectionHelperTest).Assembly, "ReflectionHelperTest");
-//            // assert
-//            type.Should().Be(typeof (ReflectionHelperTest));
-//        }
-//         
-//        [Test]
-//        public void CreateGenericType_GivenCreateGenericType_Should()
-//        {
-//            // arrange
-//            var genericType = typeof(Task<>);
-//            var ofType = ReflectionHelper.FindOfType(typeof(ReflectionHelperTest).Assembly, "ReflectionHelperTest");// action
-//            var type = ReflectionHelper.MakeGenericType(genericType, ofType);
-//            // assert
-//            type.Should().Be(typeof(Task<ReflectionHelperTest>));
-//        }
+
 
         [Test]
         public void GetMember_GivenExpression_ShouldReturnValue()
@@ -47,6 +28,18 @@ namespace CoreDocker.Utilities.Tests.Helpers
             ReflectionHelper.GetPropertyString<User, MyClass>(x => x.Cl).Should().Be("Cl");
             ReflectionHelper.GetPropertyString<User, string>(x => x.Cl.S1).Should().Be("Cl.S1");
             ReflectionHelper.GetPropertyString<User, string>(x => x.Cl.Cl.S1).Should().Be("Cl.Cl.S1");
+        }
+
+        [Test]
+        public void ExpressionToAssign_GivenUpdate_ShouldSetTheValueOnTheObject()
+        {
+            // arrange
+            var user = new User();
+            var newGuid = Guid.NewGuid();
+            // action
+            ReflectionHelper.ExpressionToAssign(user, x => x.Id, newGuid);
+            // assert
+            user.Id.Should().Be(newGuid);
         }
 
         #region Nested type: MyClass

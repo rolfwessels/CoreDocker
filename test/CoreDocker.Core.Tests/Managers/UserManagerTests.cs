@@ -5,6 +5,7 @@ using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
@@ -63,9 +64,10 @@ namespace CoreDocker.Core.Tests.Managers
         {
             // arrange
             Setup();
-            var user = _fakeGeneralUnitOfWork.Users.AddFake().First();
             const string password = "sample";
-            user.HashedPassword = PasswordHash.CreateHash(password);
+            var user = _fakeGeneralUnitOfWork.Users.AddAFake(x => {
+                x.HashedPassword = PasswordHash.CreateHash(password);
+            });
             // action
             var userFound = _userManager.GetUserByEmailAndPassword(user.Email, password).Result;
             // assert
@@ -77,9 +79,10 @@ namespace CoreDocker.Core.Tests.Managers
         {
             // arrange
             Setup();
-            var user = _fakeGeneralUnitOfWork.Users.AddFake().First();
             const string password = "sample";
-            user.HashedPassword = PasswordHash.CreateHash(password);
+            var user = _fakeGeneralUnitOfWork.Users.AddAFake(x => {
+                x.HashedPassword = PasswordHash.CreateHash(password);
+            });
             // action
             var userFound = _userManager.GetUserByEmailAndPassword(user.Email, password + 123).Result;
             // assert

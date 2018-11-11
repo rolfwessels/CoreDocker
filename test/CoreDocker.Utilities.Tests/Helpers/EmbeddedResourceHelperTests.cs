@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace CoreDocker.Utilities.Tests.Helpers
 {
     [TestFixture]
-    public class EmbededResourceHelperTests
+    public class EmbeddedResourceHelperTests
     {
         [Test]
         public void ReadResource_GivenInvalidResource_ShouldThrowException()
@@ -14,10 +14,8 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // arrange
             const string path = "CoreDocker.Utilities.Tests.Resources.t1.txt";
             // action
-            Action testCall = () => { EmbededResourceHelper.ReadResource(path, typeof(EmbededResourceHelperTests)); };
-            ;
+            Action testCall = () => { EmbededResourceHelper.ReadResource(path, typeof(EmbeddedResourceHelperTests)); };
             // assert
-
             testCall.Should().Throw<ArgumentException>().WithMessage(
                 "CoreDocker.Utilities.Tests.Resources.t1.txt resource does not exist in CoreDocker.Utilities.Tests assembly.");
         }
@@ -28,7 +26,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // arrange
             const string path = "CoreDocker.Utilities.Tests.Resources.t.txt";
             // action
-            var readResource = EmbededResourceHelper.ReadResource(path, typeof(EmbededResourceHelperTests));
+            var readResource = EmbededResourceHelper.ReadResource(path, typeof(EmbeddedResourceHelperTests));
             // assert
             readResource.Should().Be("sample");
         }

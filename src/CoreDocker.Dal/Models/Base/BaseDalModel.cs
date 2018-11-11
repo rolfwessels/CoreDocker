@@ -4,7 +4,7 @@ namespace CoreDocker.Dal.Models.Base
 {
     public abstract class BaseDalModel : IBaseDalModel
     {
-        public BaseDalModel()
+        protected BaseDalModel()
         {
             CreateDate = DateTime.Now;
             UpdateDate = DateTime.Now;

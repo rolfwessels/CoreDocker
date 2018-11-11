@@ -2,6 +2,7 @@ using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using MongoDB.Driver;
 
 namespace CoreDocker.Dal.MongoDb

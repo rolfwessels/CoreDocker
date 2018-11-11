@@ -37,7 +37,7 @@ namespace CoreDocker.Utilities.Cache
             CacheHolder values;
             if (_objectCache.TryGetValue(key, out values))
                 if (!values.IsExpired)
-                    return values.asValue<TValue>();
+                    return values.AsValue<TValue>();
             return Set(key, getValue());
         }
 
@@ -53,7 +53,7 @@ namespace CoreDocker.Utilities.Cache
             CacheHolder values;
             if (_objectCache.TryGetValue(key, out values))
                 if (!values.IsExpired)
-                    return values.asValue<TValue>();
+                    return values.AsValue<TValue>();
                 else
                     StartCleanup();
             return null;
@@ -101,7 +101,7 @@ namespace CoreDocker.Utilities.Cache
 
             public bool IsExpired => DateTime.Now > _expire;
 
-            internal TValue asValue<TValue>() where TValue : class
+            internal TValue AsValue<TValue>() where TValue : class
             {
                 return _value as TValue;
             }

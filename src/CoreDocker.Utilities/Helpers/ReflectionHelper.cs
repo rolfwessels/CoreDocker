@@ -43,5 +43,21 @@ namespace CoreDocker.Utilities.Helpers
 
             return name;
         }
+
+        public static void ExpressionToAssign<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression, TValue value)
+        {
+            ParameterExpression valueParameterExpression = Expression.Parameter(typeof(TValue));
+            Expression targetExpression =
+                expression.Body is UnaryExpression ? ((UnaryExpression)expression.Body).Operand : expression.Body;
+
+            var assign = Expression.Lambda<Action<TObj, TValue>>
+            (
+                Expression.Assign(targetExpression, Expression.Convert(valueParameterExpression, targetExpression.Type)),
+                expression.Parameters.Single(),
+                valueParameterExpression
+            );
+
+            assign.Compile().Invoke(obj, value);
+        }
     }
 }

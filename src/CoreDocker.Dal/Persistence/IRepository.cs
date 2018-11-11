@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Base;
 
-namespace CoreDocker.Dal.Persistance
+namespace CoreDocker.Dal.Persistence
 {
     public interface IRepository<T> where T : IBaseDalModel
     {

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
+using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 
@@ -8,27 +11,33 @@ namespace CoreDocker.Core.Tests.Helpers
 {
     public static class FakeRepoHelper
     {
+        public static IList<T> AddFake<T>(this IRepository<T> repository, int size, Action<T> applyUpdate) where T : IBaseDalModel
+        {
+            var items = Builder<T>.CreateListOfSize(size).WithValidData().Build();
+            items.OfType<IBaseDalModelWithId>().ForEach(x => x.Id = null);
+            return items
+                .ForEach(applyUpdate)
+                .Select(x => repository.Add(x))
+                .Select(x => x.Result)
+                .ToList();
+        }
+
         public static IList<T> AddFake<T>(this IRepository<T> repository, int size = 5) where T : IBaseDalModel
         {
-            var list = new List<T>();
-            for (var i = 0; i < size; i++)
-            {
-                var withValidData = Builder<T>.CreateNew().WithValidData().Build();
-                list.Add(repository.Add(withValidData).Result);
-            }
-
-            return list;
-//            var repoItems = Builder<T>.CreateListOfSize(size).All().WithValidData().Build();
-//            foreach (var item in repoItems)
-//            {
-//                repository.Add(item);
-//            }
-//            return repoItems;
+            return AddFake(repository, size, t => { });
         }
 
         public static T AddAFake<T>(this IRepository<T> repository) where T : IBaseDalModel
         {
-            return repository.Add(Builder<T>.CreateNew().WithValidData().Build()).Result;
+            return AddFake(repository, 1).FirstOrDefault();
         }
+
+
+        public static T AddAFake<T>(this IRepository<T> repository, Action<T> applyUpdate) where T : IBaseDalModel
+        {
+            return AddFake(repository, 1, applyUpdate).FirstOrDefault();
+        }
+
+
     }
 }

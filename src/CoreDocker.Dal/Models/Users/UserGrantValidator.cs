@@ -13,8 +13,7 @@ namespace CoreDocker.Dal.Models.Users
             RuleFor(x => x.User).NotNull()
                 .Must(x => !string.IsNullOrEmpty(x?.Name))
                 .Must(x => !string.IsNullOrEmpty(x?.Email))
-                .WithMessage("User refrence not set or complete");
-            ;
+                .WithMessage("User reference not set or complete");
         }
     }
 }

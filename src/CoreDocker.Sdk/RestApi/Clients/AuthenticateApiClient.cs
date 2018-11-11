@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
@@ -62,7 +63,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
                 var errorMessage = SimpleJson.SimpleJson.DeserializeObject<TokenErrorMessage>(result.Content);
-                throw new Exception($"{errorMessage.Error}[{errorMessage.error_description}]");
+                throw new Exception($"{errorMessage.error}[{errorMessage.error_description}]");
             }
         }
 
@@ -77,9 +78,10 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         #region Nested type: TokenErrorMessage
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         internal class TokenErrorMessage
         {
-            public string Error { get; set; }
+            public string error { get; set; }
             public string error_description { get; set; }
         }
 
