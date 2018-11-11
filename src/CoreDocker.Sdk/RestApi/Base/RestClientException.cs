@@ -1,13 +1,12 @@
 using System;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Shared;
 
 namespace CoreDocker.Sdk.RestApi.Base
 {
     public class RestClientException : Exception
     {
-      
-        public RestClientException(ErrorMessage message, Exception innerException) : base(message.Message, innerException)
+        public RestClientException(ErrorMessage message, Exception innerException) : base(message.Message,
+            innerException)
         {
             FullMessage = message;
         }
@@ -17,6 +16,5 @@ namespace CoreDocker.Sdk.RestApi.Base
         }
 
         public ErrorMessage FullMessage { get; set; }
-        
     }
 }

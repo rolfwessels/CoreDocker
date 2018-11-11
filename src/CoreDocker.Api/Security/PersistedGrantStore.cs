@@ -55,10 +55,8 @@ namespace CoreDocker.Api.Security
         {
             _log.Warn($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
             var byKey = await _userGrantManager.GetByUserId(subjectId);
-            foreach (var userGrant in byKey.Where(x=>x.ClientId == clientId))
-            {
+            foreach (var userGrant in byKey.Where(x => x.ClientId == clientId))
                 await _userGrantManager.Delete(userGrant.Id);
-            }
         }
 
         public async Task RemoveAllAsync(string subjectId, string clientId, string type)
@@ -66,9 +64,7 @@ namespace CoreDocker.Api.Security
             _log.Warn($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
             var byKey = await _userGrantManager.GetByUserId(subjectId);
             foreach (var userGrant in byKey.Where(x => x.ClientId == clientId && x.Type == type))
-            {
                 await _userGrantManager.Delete(userGrant.Id);
-            }
         }
 
         #endregion

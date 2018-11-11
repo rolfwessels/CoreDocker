@@ -2,7 +2,6 @@ using System.Reflection;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models.Users;
-using GraphQL.Authorization;
 using GraphQL.Types;
 using log4net;
 
@@ -17,7 +16,7 @@ namespace CoreDocker.Api.Components.Users
         {
             Name = "UsersMutation";
             var safe = new Safe(_log);
-            
+
             Field<UserSpecification>(
                 "insert",
                 Description = "add a user",
@@ -33,7 +32,7 @@ namespace CoreDocker.Api.Components.Users
                 "register",
                 Description = "register a new user",
                 new QueryArguments(
-                    new QueryArgument<RegisterSpecification> { Name = Value }
+                    new QueryArgument<RegisterSpecification> {Name = Value}
                 ), safe.Wrap(context =>
                 {
                     var user = context.GetArgument<RegisterModel>(Name = Value);
@@ -62,10 +61,7 @@ namespace CoreDocker.Api.Components.Users
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     return userManager.Delete(id);
-                })).RequirePermission(Activity.DeleteUser); 
+                })).RequirePermission(Activity.DeleteUser);
         }
-
-
-
     }
 }

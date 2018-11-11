@@ -1,9 +1,8 @@
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Framework.BaseManagers;
-using FizzWare.NBuilder;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Persistance;
+using FizzWare.NBuilder;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -13,8 +12,8 @@ namespace CoreDocker.Core.Tests.Managers
     [TestFixture]
     public class ProjectManagerTests : BaseTypedManagerTests<Project>
     {
-        private ProjectManager _projectManager;
         private Mock<ILogger<ProjectManager>> _mockLogger;
+        private ProjectManager _projectManager;
 
         #region Setup/Teardown
 

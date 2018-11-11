@@ -1,9 +1,10 @@
-﻿using CoreDocker.Dal.Validation;
+﻿using System.Diagnostics.CodeAnalysis;
+using CoreDocker.Dal.Validation;
 using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Users
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
+    [SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
     public class UserValidator : AbstractValidator<User>
     {
         public UserValidator()

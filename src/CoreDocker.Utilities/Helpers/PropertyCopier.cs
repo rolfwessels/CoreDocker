@@ -50,73 +50,51 @@ namespace CoreDocker.Utilities.Helpers
 
         internal static TTarget Copy(TSource source)
         {
-            if (initializationException != null)
-            {
-                throw initializationException;
-            }
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
+            if (initializationException != null) throw initializationException;
+            if (source == null) throw new ArgumentNullException("source");
             return creator(source);
         }
 
         internal static void Copy(TSource source, TTarget target)
         {
-            if (initializationException != null)
-            {
-                throw initializationException;
-            }
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
-            for (int i = 0; i < sourceProperties.Count; i++)
-            {
+            if (initializationException != null) throw initializationException;
+            if (source == null) throw new ArgumentNullException("source");
+            for (var i = 0; i < sourceProperties.Count; i++)
                 targetProperties[i].SetValue(target, sourceProperties[i].GetValue(source, null), null);
-            }
         }
 
         #region Private Methods
 
         private static Func<TSource, TTarget> BuildCreator()
         {
-            ParameterExpression sourceParameter = Expression.Parameter(typeof (TSource), "source");
+            var sourceParameter = Expression.Parameter(typeof(TSource), "source");
             var bindings = new List<MemberBinding>();
             foreach (
-                PropertyInfo sourceProperty in
-                typeof (TSource).GetRuntimeProperties())
+                var sourceProperty in
+                typeof(TSource).GetRuntimeProperties())
             {
-                if (!sourceProperty.CanRead)
-                {
-                    continue;
-                }
-                PropertyInfo targetProperty = typeof (TTarget).GetRuntimeProperties().FirstOrDefault(x=>x.Name == sourceProperty.Name);
+                if (!sourceProperty.CanRead) continue;
+                var targetProperty = typeof(TTarget).GetRuntimeProperties()
+                    .FirstOrDefault(x => x.Name == sourceProperty.Name);
                 if (targetProperty == null)
-                {
-                    throw new ArgumentException("Property " + sourceProperty.Name + " is not present and accessible in " +
-                                                typeof (TTarget).FullName);
-                }
+                    throw new ArgumentException("Property " + sourceProperty.Name +
+                                                " is not present and accessible in " +
+                                                typeof(TTarget).FullName);
                 if (!targetProperty.CanWrite)
-                {
                     throw new ArgumentException("Property " + sourceProperty.Name + " is not writable in " +
-                                                typeof (TTarget).FullName);
-                }
+                                                typeof(TTarget).FullName);
                 if ((targetProperty.GetSetMethod().Attributes & MethodAttributes.Static) != 0)
-                {
                     throw new ArgumentException("Property " + sourceProperty.Name + " is static in " +
-                                                typeof (TTarget).FullName);
-                }
+                                                typeof(TTarget).FullName);
                 if (targetProperty.PropertyType != sourceProperty.PropertyType)
-                {
                     throw new ArgumentException("Property " + sourceProperty.Name + " has an incompatible type in " +
-                                                typeof (TTarget).FullName);
-                }
+                                                typeof(TTarget).FullName);
                 bindings.Add(Expression.Bind(targetProperty, Expression.Property(sourceParameter, sourceProperty)));
                 sourceProperties.Add(sourceProperty);
                 targetProperties.Add(targetProperty);
             }
-            Expression initializer = Expression.MemberInit(Expression.New(typeof (TTarget)), bindings);
+
+            Expression initializer = Expression.MemberInit(Expression.New(typeof(TTarget)), bindings);
             return Expression.Lambda<Func<TSource, TTarget>>(initializer, sourceParameter).Compile();
         }
 

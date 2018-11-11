@@ -12,22 +12,24 @@ namespace CoreDocker.Sdk.Helpers
         public static Action<string> Log { get; set; } = message => { };
 
         public static Task<IRestResponse<T>> ExecuteAsyncWithLogging<T>(this RestClient client,
-                                                                        RestRequest request) where T : new()
+            RestRequest request) where T : new()
         {
             var taskCompletionSource = new TaskCompletionSource<IRestResponse<T>>();
-            Method method = request.Method;
-            Uri buildUri = client.BuildUri(request);
+            var method = request.Method;
+            var buildUri = client.BuildUri(request);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            string paramsSent = request.Parameters.Where(x => x.Name == "application/json").Select(x => x.Value.ToString()).FirstOrDefault();
-            
+            var paramsSent = request.Parameters.Where(x => x.Name == "application/json").Select(x => x.Value.ToString())
+                .FirstOrDefault();
+
             Log($"Sent {method} {buildUri} [{Truncate(paramsSent, MaxLogLength)}]");
             client.ExecuteAsync<T>(request, response =>
-                {
-                    stopwatch.Stop();
-                    Log($"Response {method} {buildUri} [{stopwatch.ElapsedMilliseconds}ms] [{Truncate(response.Content, MaxLogLength)}]");
-                    taskCompletionSource.SetResult(response);
-                });
+            {
+                stopwatch.Stop();
+                Log(
+                    $"Response {method} {buildUri} [{stopwatch.ElapsedMilliseconds}ms] [{Truncate(response.Content, MaxLogLength)}]");
+                taskCompletionSource.SetResult(response);
+            });
 
             return taskCompletionSource.Task;
         }
@@ -38,6 +40,5 @@ namespace CoreDocker.Sdk.Helpers
             if (value == null) return null;
             return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
         }
-
     }
 }

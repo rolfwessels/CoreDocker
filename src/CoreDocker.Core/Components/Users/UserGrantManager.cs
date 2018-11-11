@@ -9,9 +9,9 @@ namespace CoreDocker.Core.Components.Users
 {
     public class UserGrantManager : BaseManager<UserGrant>, IUserGrantManager
     {
-        public UserGrantManager(BaseManagerArguments baseManagerArguments , ILogger<UserGrantManager> logger ) : base(baseManagerArguments, logger)
+        public UserGrantManager(BaseManagerArguments baseManagerArguments, ILogger<UserGrantManager> logger) : base(
+            baseManagerArguments, logger)
         {
-          
         }
 
         #region Overrides of BaseManager<UserGrant>
@@ -24,7 +24,7 @@ namespace CoreDocker.Core.Components.Users
 
         public Task<UserGrant> GetByKey(string key)
         {
-            return Repository.FindOne(x=>x.Key == key);
+            return Repository.FindOne(x => x.Key == key);
         }
 
         public Task<List<UserGrant>> GetByUserId(string userId)

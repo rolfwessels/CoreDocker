@@ -1,8 +1,8 @@
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.BaseManagers;
-using FizzWare.NBuilder;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
+using FizzWare.NBuilder;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -12,8 +12,8 @@ namespace CoreDocker.Core.Tests.Managers
     [TestFixture]
     public class UserGrantManagerTests : BaseTypedManagerTests<UserGrant>
     {
-        private UserGrantManager _userGrantManager;
         private Mock<ILogger<UserGrantManager>> _mockLogger;
+        private UserGrantManager _userGrantManager;
 
         #region Setup/Teardown
 

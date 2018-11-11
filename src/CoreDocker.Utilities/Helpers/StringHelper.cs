@@ -1,23 +1,20 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CoreDocker.Utilities.Helpers
 {
-
     public static class StringHelper
     {
         public static string UriCombine(this string baseUri, params string[] addition)
         {
-            string uri = baseUri;
-            foreach (string moreUri in addition)
-            {
-                uri = EnsureEndsWith(uri, "/") + EnsureDoesNotStartWith(moreUri, "/");
-            }
+            var uri = baseUri;
+            foreach (var moreUri in addition) uri = EnsureEndsWith(uri, "/") + EnsureDoesNotStartWith(moreUri, "/");
             return uri;
         }
 
-        
+
         public static string ToInitialCase(this string text)
         {
             return text.Substring(0, 1).ToUpper() + text.Substring(1).ToLower();
@@ -25,7 +22,7 @@ namespace CoreDocker.Utilities.Helpers
 
         public static string UnderScoreAndCamelCaseToHumanReadable(this string text)
         {
-            string replace = Regex.Replace(text, "([a-z])([A-Z])", "$1 $2");
+            var replace = Regex.Replace(text, "([a-z])([A-Z])", "$1 $2");
             return replace.Replace("_", " ");
         }
 
@@ -37,17 +34,14 @@ namespace CoreDocker.Utilities.Helpers
 
         public static string StripHtml(this string inputHtml)
         {
-            string stripHtml = Regex.Replace(inputHtml, @"<[^>]+>|&nbsp;", "");
+            var stripHtml = Regex.Replace(inputHtml, @"<[^>]+>|&nbsp;", "");
             return Regex.Replace(stripHtml, @"\s{2,}", " ").Trim();
         }
 
 
         public static string EnsureDoesNotStartWith(this string value, string prefix)
         {
-            if (value.StartsWith(prefix))
-            {
-                return value.Substring(prefix.Length);
-            }
+            if (value.StartsWith(prefix)) return value.Substring(prefix.Length);
             return value;
         }
 
@@ -60,21 +54,21 @@ namespace CoreDocker.Utilities.Helpers
         public static string Mask(this string key, int length, string mask = "XXXX")
         {
             if (key == null) return key;
-            return key.Substring(0, Math.Min(key.Length, length))+mask;
+            return key.Substring(0, Math.Min(key.Length, length)) + mask;
         }
 
         public static string Base64Decode(this string base64EncodedData)
         {
             if (base64EncodedData == null) return null;
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         public static string Base64Encode(this string plainText)
         {
             if (plainText == null) return null;
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
         }
     }
 }

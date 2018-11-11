@@ -6,7 +6,8 @@ namespace CoreDocker.Core.Framework.Mappers
     {
         static MapCore()
         {
-            Mapper.Initialize(cfg => {
+            Mapper.Initialize(cfg =>
+            {
                 CreateProjectMap(cfg);
                 CreateUserMap(cfg);
             });
@@ -16,6 +17,5 @@ namespace CoreDocker.Core.Framework.Mappers
         {
             Mapper.AssertConfigurationIsValid();
         }
-
     }
 }

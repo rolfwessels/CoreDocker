@@ -2,9 +2,7 @@ using System.Reflection;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Dal.Models.Auth;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
-using GraphQL.Authorization;
 using GraphQL.Types;
 using log4net;
 
@@ -12,19 +10,20 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsMutationSpecification : ObjectGraphType<object>
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private const string Value = "project";
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public ProjectsMutationSpecification(ProjectCommonController projectManager)
         {
             Name = "ProjectsMutation";
             var safe = new Safe(_log);
-            
+
             this.RequireAuthorization();
             Field<ProjectSpecification>(
                 "insert",
                 Description = "add a project",
                 new QueryArguments(
-                    new QueryArgument<ProjectCreateUpdateSpecification> { Name = Value }
+                    new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
                 ),
                 safe.Wrap(context =>
                 {
@@ -36,8 +35,8 @@ namespace CoreDocker.Api.Components.Projects
                 "update",
                 Description = "update a project",
                 new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" },
-                    new QueryArgument<ProjectCreateUpdateSpecification> { Name = Value }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"},
+                    new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
                 ),
                 safe.Wrap(context =>
                 {
@@ -50,7 +49,7 @@ namespace CoreDocker.Api.Components.Projects
                 "delete",
                 Description = "permanently remove a project",
                 new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"}
                 ),
                 safe.Wrap(context =>
                 {

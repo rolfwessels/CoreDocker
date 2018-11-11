@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Models.Shared;
 using CoreDocker.Utilities.Helpers;
-using log4net;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.Shared
@@ -54,16 +54,14 @@ namespace CoreDocker.Sdk.Tests.Shared
                 var restResponse = await baseStandardLookups.GetDetail();
                 restResponse.Count().Should().BeGreaterOrEqualTo(0);
             }
+
             var projectModels = await _crudController.Insert(projectModel[0]);
             var savedProject = await _crudController.GetById(projectModels.Id);
             var projectModelLoad = await _crudController.Update(projectModels.Id, projectModel[1]);
             var removed = await _crudController.Delete(projectModels.Id);
             var removedSecond = await _crudController.Delete(projectModels.Id);
-            Action testCall = () =>
-            {
-               _crudController.GetById(projectModels.Id).Wait();
-            };
-           
+            Action testCall = () => { _crudController.GetById(projectModels.Id).Wait(); };
+
             // assert
             savedProject.Should().NotBeNull();
             projectModel[0].Should().BeEquivalentTo(projectModels.DynamicCastTo<TDetailModel>(), CompareConfig);

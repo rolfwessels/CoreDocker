@@ -7,7 +7,7 @@ namespace CoreDocker.Utilities.Cache
     public class SimpleObjectCache : ISimpleObjectCache
     {
         private readonly TimeSpan _defaultCacheTime;
-        private ConcurrentDictionary<string, CacheHolder> _objectCache;
+        private readonly ConcurrentDictionary<string, CacheHolder> _objectCache;
         private DateTime _nextExpiry;
 
         public SimpleObjectCache(TimeSpan defaultCacheTime)
@@ -24,13 +24,11 @@ namespace CoreDocker.Utilities.Cache
             var retrievedValue = Get<TValue>(key);
             if (retrievedValue == null)
             {
-                TValue result = getValue();
-                if (result != null)
-                {
-                    Set(key, result);
-                }
+                var result = getValue();
+                if (result != null) Set(key, result);
                 return result;
             }
+
             return retrievedValue;
         }
 
@@ -38,12 +36,8 @@ namespace CoreDocker.Utilities.Cache
         {
             CacheHolder values;
             if (_objectCache.TryGetValue(key, out values))
-            {
                 if (!values.IsExpired)
-                {
                     return values.asValue<TValue>();
-                }
-            }
             return Set(key, getValue());
         }
 
@@ -58,16 +52,10 @@ namespace CoreDocker.Utilities.Cache
         {
             CacheHolder values;
             if (_objectCache.TryGetValue(key, out values))
-            {
                 if (!values.IsExpired)
-                {
                     return values.asValue<TValue>();
-                }
                 else
-                {
                     StartCleanup();
-                }
-            }
             return null;
         }
 
@@ -78,7 +66,6 @@ namespace CoreDocker.Utilities.Cache
         private void StartCleanup()
         {
             if (DateTime.Now > _nextExpiry)
-            {
                 lock (_objectCache)
                 {
                     if (DateTime.Now > _nextExpiry)
@@ -87,23 +74,24 @@ namespace CoreDocker.Utilities.Cache
                         Task.Run(() =>
                         {
                             foreach (var cacheHolder in _objectCache.ToArray())
-                            {
                                 if (cacheHolder.Value.IsExpired)
                                 {
                                     CacheHolder ss;
                                     _objectCache.TryRemove(cacheHolder.Key, out ss);
                                 }
-                            }
                         });
                     }
                 }
-            }
         }
+
+        #endregion
+
+        #region Nested type: CacheHolder
 
         private class CacheHolder
         {
-            private DateTimeOffset _expire;
-            private object _value;
+            private readonly DateTimeOffset _expire;
+            private readonly object _value;
 
             public CacheHolder(object value, DateTimeOffset expire)
             {
@@ -111,10 +99,7 @@ namespace CoreDocker.Utilities.Cache
                 _expire = expire;
             }
 
-            public bool IsExpired
-            {
-                get { return DateTime.Now > _expire; }
-            }
+            public bool IsExpired => DateTime.Now > _expire;
 
             internal TValue asValue<TValue>() where TValue : class
             {

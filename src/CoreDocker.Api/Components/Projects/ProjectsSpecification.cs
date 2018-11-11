@@ -14,10 +14,11 @@ namespace CoreDocker.Api.Components.Projects
     public class ProjectsSpecification : ObjectGraphType<object>
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public ProjectsSpecification(ProjectCommonController projects)
         {
             var safe = new Safe(_log);
-            var options = new GraphQlQueryOptions<ProjectCommonController, ProjectModel,Project >(projects);
+            var options = new GraphQlQueryOptions<ProjectCommonController, ProjectModel, Project>(projects);
             Name = "Projects";
             Field<ProjectSpecification>(
                 "byId",
@@ -28,7 +29,7 @@ namespace CoreDocker.Api.Components.Projects
                         Description = "id of the project"
                     }
                 ),
-                resolve: safe.Wrap( context => projects.GetById(context.GetArgument<string>("id")))
+                resolve: safe.Wrap(context => projects.GetById(context.GetArgument<string>("id")))
             ).RequirePermission(Activity.ReadProject);
             Field<ListGraphType<ProjectSpecification>>(
                 "all",

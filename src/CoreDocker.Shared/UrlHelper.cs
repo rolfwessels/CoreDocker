@@ -2,7 +2,7 @@
 {
     public static class UrlHelper
     {
-        public static string SetParam(this string baseUrl, string param ,string value)
+        public static string SetParam(this string baseUrl, string param, string value)
         {
             return baseUrl.Replace($"{{{param}}}", value);
         }

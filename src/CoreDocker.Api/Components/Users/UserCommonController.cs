@@ -13,15 +13,17 @@ using Microsoft.AspNetCore.Http;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UserCommonController : BaseCommonController<User, UserModel, UserReferenceModel, UserCreateUpdateModel>,
-                                        IUserControllerActions
+    public class UserCommonController :
+        BaseCommonController<User, UserModel, UserReferenceModel, UserCreateUpdateModel>,
+        IUserControllerActions
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IUserManager _userManager;
-        private readonly IRoleManager _roleManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRoleManager _roleManager;
+        private readonly IUserManager _userManager;
 
-        public UserCommonController(IUserManager userManager, IRoleManager roleManager, IHttpContextAccessor httpContextAccessor) : base(userManager)
+        public UserCommonController(IUserManager userManager, IRoleManager roleManager,
+            IHttpContextAccessor httpContextAccessor) : base(userManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -32,9 +34,9 @@ namespace CoreDocker.Api.Components.Users
 
         public async Task<UserModel> Register(RegisterModel model)
         {
-            User user = model.ToDal();
+            var user = model.ToDal();
             user.Roles.Add(RoleManager.Guest.Name);
-            User savedUser = await _userManager.Save(user, model.Password);
+            var savedUser = await _userManager.Save(user, model.Password);
             return savedUser.ToModel();
         }
 
@@ -42,40 +44,11 @@ namespace CoreDocker.Api.Components.Users
         {
             return Task.Run(() =>
             {
-                _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",email));
+                _log.Warn(string.Format("User has called forgot password. We should send him and email to [{0}].",
+                    email));
                 return true;
             });
         }
-        
-
-        #endregion
-
-        #region Overrides of BaseCommonController<User,UserModel,UserReferenceModel,UserCreateUpdateModel>
-
-        protected override async Task<User> AddAdditionalMappings(UserCreateUpdateModel model, User dal)
-        {
-            
-            var addAdditionalMappings = await base.AddAdditionalMappings(model, dal);
-            
-            if (model.Roles != null && model.Roles.Any())
-            {
-                var roles = await _roleManager.Get();
-                var roleLookup = roles.ToDictionary(x=>x.Name.ToLower());
-                addAdditionalMappings.Roles.Clear();
-                addAdditionalMappings.Roles.AddRange(model.Roles
-                    .Where(x=> roleLookup.ContainsKey(x.ToLower()))
-                    .Select(x=> roleLookup[x.ToLower()])
-                    .Select(x=>x.Name)
-                );
-            }
-            if (!addAdditionalMappings.Roles.Any()) addAdditionalMappings.Roles.Add(RoleManager.Guest.Name);
-
-            return addAdditionalMappings;
-        }
-
-
-
-        #endregion
 
         public async Task<List<RoleModel>> Roles()
         {
@@ -89,7 +62,33 @@ namespace CoreDocker.Api.Components.Users
             if (string.IsNullOrEmpty(email)) return null;
             var whoAmI = await _userManager.GetUserByEmail(email);
             return whoAmI.ToModel();
-            
         }
+
+        #endregion
+
+        #region Overrides of BaseCommonController<User,UserModel,UserReferenceModel,UserCreateUpdateModel>
+
+        protected override async Task<User> AddAdditionalMappings(UserCreateUpdateModel model, User dal)
+        {
+            var addAdditionalMappings = await base.AddAdditionalMappings(model, dal);
+
+            if (model.Roles != null && model.Roles.Any())
+            {
+                var roles = await _roleManager.Get();
+                var roleLookup = roles.ToDictionary(x => x.Name.ToLower());
+                addAdditionalMappings.Roles.Clear();
+                addAdditionalMappings.Roles.AddRange(model.Roles
+                    .Where(x => roleLookup.ContainsKey(x.ToLower()))
+                    .Select(x => roleLookup[x.ToLower()])
+                    .Select(x => x.Name)
+                );
+            }
+
+            if (!addAdditionalMappings.Roles.Any()) addAdditionalMappings.Roles.Add(RoleManager.Guest.Name);
+
+            return addAdditionalMappings;
+        }
+
+        #endregion
     }
 }

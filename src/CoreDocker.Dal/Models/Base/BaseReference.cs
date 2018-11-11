@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CoreDocker.Dal.Models.Base
+﻿namespace CoreDocker.Dal.Models.Base
 {
     public abstract class BaseReference : IBaseReference
     {
@@ -17,7 +15,7 @@ namespace CoreDocker.Dal.Models.Base
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((BaseReference) obj);
         }
 

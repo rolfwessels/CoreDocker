@@ -7,7 +7,6 @@ namespace CoreDocker.Utilities.Tests.Helpers
     [TestFixture]
     public class LogHelperTests
     {
-
         [Test]
         public void Dump_GivenString_ShouldReturnString()
         {
@@ -29,9 +28,5 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // assert
             dump.Should().Be(value);
         }
-
-
-
-         
     }
 }

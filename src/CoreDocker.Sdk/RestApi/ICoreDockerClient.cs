@@ -1,5 +1,4 @@
 using CoreDocker.Sdk.RestApi.Clients;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Auth;
 
 namespace CoreDocker.Sdk.RestApi
@@ -11,6 +10,5 @@ namespace CoreDocker.Sdk.RestApi
         AuthenticateApiClient Authenticate { get; }
         PingApiClient Ping { get; }
         void SetToken(TokenResponseModel data);
-        
     }
 }

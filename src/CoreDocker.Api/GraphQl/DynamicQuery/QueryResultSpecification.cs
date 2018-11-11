@@ -13,9 +13,13 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
                 resolve: ResolveCount);
         }
 
+        #region Private Methods
+
         private object ResolveCount(ResolveFieldContext<IGraphQlQueryOptions> context)
         {
-            return context.Source.Count(); 
+            return context.Source.Count();
         }
+
+        #endregion
     }
 }

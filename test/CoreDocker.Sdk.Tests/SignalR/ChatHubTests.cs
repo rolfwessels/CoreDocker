@@ -8,19 +8,15 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
-
 namespace CoreDocker.Sdk.Tests.SignalR
 {
     [TestFixture]
     public class ChatHubTests : IntegrationTestsBase
     {
-        
-
         #region Setup/Teardown
 
         public void Setup()
         {
-            
         }
 
         #endregion
@@ -30,13 +26,14 @@ namespace CoreDocker.Sdk.Tests.SignalR
         {
             // arrange
             Setup();
-            
+
             var hostAddressValue = _hostAddress.Value;
 //            var hostAddressValue = "http://localhost:5000";
-            var coreDockerSockets = new CoreDockerSockets(hostAddressValue) {
-                    OverrideLogging = builder => builder.AddConsole()
-                };
-            var expected = "hi "+GetRandom.FirstName();
+            var coreDockerSockets = new CoreDockerSockets(hostAddressValue)
+            {
+                OverrideLogging = builder => builder.AddConsole()
+            };
+            var expected = "hi " + GetRandom.FirstName();
 
             // assert
             var list = new List<string>();
@@ -44,12 +41,8 @@ namespace CoreDocker.Sdk.Tests.SignalR
             await coreDockerSockets.Chat.Send(expected);
             await coreDockerSockets.Chat.Send(expected);
             await coreDockerSockets.Chat.Send(expected);
-            list.WaitFor(x=>x.Count > 3);
+            list.WaitFor(x => x.Count > 3);
             list.Should().HaveCount(3).And.Contain(expected);
-
         }
-
-        
     }
-
 }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Vendor;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Helpers;
@@ -17,35 +16,15 @@ namespace CoreDocker.Core.Components.Users
     {
         private readonly ILogger<UserManager> _log;
 
-        public UserManager(BaseManagerArguments baseManagerArguments, ILogger<UserManager> logger) : base(baseManagerArguments, logger)
+        public UserManager(BaseManagerArguments baseManagerArguments, ILogger<UserManager> logger) : base(
+            baseManagerArguments, logger)
         {
             _log = logger;
         }
 
         #region Overrides of BaseManager<User>
 
-        public override Task<User> Save(User entity)
-        {
-            return Save(entity, null);
-        }
-        
-        protected override void DefaultModelNormalize(User user)
-        {
-            user.Email = (user.Email??"").ToLower();
-            user.HashedPassword = user.HashedPassword == null || !user.HashedPassword.StartsWith("1000:")
-                                      ? PasswordHash.CreateHash(user.HashedPassword ?? DateTime.Now.ToString(CultureInfo.InvariantCulture))
-                                      : user.HashedPassword ;
-        }
-
-        protected override async Task Validate(User entity)
-        {
-            await base.Validate(entity);
-            var missingRoles = entity.Roles.Where(x => RoleManager.GetRole(x) == null).ToArray();
-            if (missingRoles.Any())
-            {
-                throw new ArgumentException(string.Format("The following role '{0}' does not exist.", missingRoles.StringJoin()));
-            }
-        }
+        protected override IRepository<User> Repository => _generalUnitOfWork.Users;
 
         #endregion
 
@@ -53,22 +32,19 @@ namespace CoreDocker.Core.Components.Users
 
         public async Task<User> Save(User user, string password)
         {
-            User found = await GetById(user.Id);
+            var found = await GetById(user.Id);
             user.HashedPassword = password != null || found == null
-                                      ? PasswordHash.CreateHash(password ??
-                                                                user.HashedPassword ?? DateTime.Now.ToString(CultureInfo.InvariantCulture))
-                                      : found.HashedPassword;
-            if (found == null)
-            {
-                return await Insert(user);
-            }
+                ? PasswordHash.CreateHash(password ??
+                                          user.HashedPassword ?? DateTime.Now.ToString(CultureInfo.InvariantCulture))
+                : found.HashedPassword;
+            if (found == null) return await Insert(user);
             await Update(user);
             return user;
         }
 
         public async Task<User> GetUserByEmailAndPassword(string email, string password)
         {
-            User user = await GetUserByEmail(email);
+            var user = await GetUserByEmail(email);
             if (user != null && user.HashedPassword != null)
             {
                 if (!PasswordHash.ValidatePassword(password, user.HashedPassword))
@@ -81,6 +57,7 @@ namespace CoreDocker.Core.Components.Users
             {
                 _log.Info(string.Format("Invalid user '{0}'", email));
             }
+
             return user;
         }
 
@@ -92,19 +69,36 @@ namespace CoreDocker.Core.Components.Users
 
         public async Task UpdateLastLoginDate(string email)
         {
-            User userFound = await GetUserByEmail(email);
+            var userFound = await GetUserByEmail(email);
             if (userFound == null) throw new ArgumentException("Invalid email address.");
             userFound.LastLoginDate = DateTime.Now;
-            await  Update(userFound);
+            await Update(userFound);
         }
 
         #endregion
 
         #region Overrides of BaseManager<User>
 
-        protected override IRepository<User> Repository
+        public override Task<User> Save(User entity)
         {
-            get { return _generalUnitOfWork.Users; }
+            return Save(entity, null);
+        }
+
+        protected override void DefaultModelNormalize(User user)
+        {
+            user.Email = (user.Email ?? "").ToLower();
+            user.HashedPassword = user.HashedPassword == null || !user.HashedPassword.StartsWith("1000:")
+                ? PasswordHash.CreateHash(user.HashedPassword ?? DateTime.Now.ToString(CultureInfo.InvariantCulture))
+                : user.HashedPassword;
+        }
+
+        protected override async Task Validate(User entity)
+        {
+            await base.Validate(entity);
+            var missingRoles = entity.Roles.Where(x => RoleManager.GetRole(x) == null).ToArray();
+            if (missingRoles.Any())
+                throw new ArgumentException(string.Format("The following role '{0}' does not exist.",
+                    missingRoles.StringJoin()));
         }
 
         #endregion

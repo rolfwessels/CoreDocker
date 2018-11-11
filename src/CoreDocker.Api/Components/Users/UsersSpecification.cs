@@ -7,7 +7,6 @@ using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
-using GraphQL.Authorization;
 using GraphQL.Types;
 using log4net;
 
@@ -19,7 +18,6 @@ namespace CoreDocker.Api.Components.Users
 
         public UsersSpecification(UserCommonController users)
         {
-
             var safe = new Safe(_log);
             var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);
             Name = "Users";
@@ -84,17 +82,18 @@ namespace CoreDocker.Api.Components.Users
             Field<RoleSpecification>(
                 "role",
                 Description = "All roles",
-                arguments: new QueryArguments(
+                new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>>
                     {
                         Name = "name",
                         Description = "role name"
                     }
                 ),
-                resolve: safe.Wrap(context => LookupRole(users,context.GetArgument<string>("name")))
+                safe.Wrap(context => LookupRole(users, context.GetArgument<string>("name")))
             );
-
         }
+
+        #region Private Methods
 
         private async Task<RoleModel> LookupRole(UserCommonController users, string getArgument)
         {
@@ -103,8 +102,6 @@ namespace CoreDocker.Api.Components.Users
                 string.Equals(x.Name, getArgument, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        #region Private Methods
-
         private static async Task<UserModel> Me(UserCommonController users)
         {
             return await users.WhoAmI();
@@ -112,5 +109,4 @@ namespace CoreDocker.Api.Components.Users
 
         #endregion
     }
-
 }

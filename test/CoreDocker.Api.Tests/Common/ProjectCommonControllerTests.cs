@@ -1,9 +1,7 @@
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Components.Projects;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using Moq;
 using NUnit.Framework;
@@ -11,7 +9,8 @@ using NUnit.Framework;
 namespace CoreDocker.Api.Tests.Common
 {
     [TestFixture]
-    public class ProjectCommonControllerTests : BaseCommonControllerTests<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel, IProjectManager>
+    public class ProjectCommonControllerTests : BaseCommonControllerTests<Project, ProjectModel, ProjectReferenceModel,
+        ProjectCreateUpdateModel, IProjectManager>
     {
         private Mock<IProjectManager> _mockIProjectManager;
         private ProjectCommonController _projectCommonController;
@@ -31,7 +30,8 @@ namespace CoreDocker.Api.Tests.Common
             return _mockIProjectManager;
         }
 
-        protected override BaseCommonController<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel> GetCommonController()
+        protected override BaseCommonController<Project, ProjectModel, ProjectReferenceModel, ProjectCreateUpdateModel>
+            GetCommonController()
         {
             return _projectCommonController;
         }
@@ -43,6 +43,5 @@ namespace CoreDocker.Api.Tests.Common
         }
 
         #endregion
-
     }
 }

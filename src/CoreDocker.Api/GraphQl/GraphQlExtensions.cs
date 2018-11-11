@@ -30,7 +30,7 @@ namespace CoreDocker.Api.GraphQl
         public static bool HasPermission(this IProvideMetadata type, Activity permission)
         {
             var permissions = type.GetMetadata<IEnumerable<Activity>>(PermissionsKey, new List<Activity>());
-            return permissions.Any(x => string.Equals(x, permission));
+            return permissions.Any(x => Equals(x, permission));
         }
 
         public static void RequirePermission(this IProvideMetadata type, Activity permission)

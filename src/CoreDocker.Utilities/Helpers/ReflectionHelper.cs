@@ -17,16 +17,18 @@ namespace CoreDocker.Utilities.Helpers
             return type.MakeGenericType(reflectionhelpertest);
         }
 
-       
+
         public static PropertyInfo GetPropertyInfo<TSource, TType>(Expression<Func<TSource, TType>> propertyLambda)
         {
             var member = propertyLambda.Body as MemberExpression;
             if (member == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a method, not a property.",propertyLambda));
+                throw new ArgumentException(string.Format("Expression '{0}' refers to a method, not a property.",
+                    propertyLambda));
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a field, not a property.",propertyLambda));
+                throw new ArgumentException(string.Format("Expression '{0}' refers to a field, not a property.",
+                    propertyLambda));
 
             return propInfo;
         }
@@ -35,14 +37,16 @@ namespace CoreDocker.Utilities.Helpers
         {
             var member = propertyLambda.Body as MemberExpression;
             if (member == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a method, not a property.", propertyLambda));
+                throw new ArgumentException(string.Format("Expression '{0}' refers to a method, not a property.",
+                    propertyLambda));
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
-                throw new ArgumentException(string.Format("Expression '{0}' refers to a field, not a property.", propertyLambda));
+                throw new ArgumentException(string.Format("Expression '{0}' refers to a field, not a property.",
+                    propertyLambda));
             var name = propInfo.Name;
             var e = member.Expression as MemberExpression;
-            while (e !=null)
+            while (e != null)
             {
                 name = e.Member.Name + '.' + name;
                 e = e.Expression as MemberExpression;

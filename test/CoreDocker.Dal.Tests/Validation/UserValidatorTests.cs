@@ -1,20 +1,17 @@
-﻿using CoreDocker.Utilities.Helpers;
+﻿using System.Linq;
+using CoreDocker.Dal.Models.Users;
+using CoreDocker.Utilities.Helpers;
+using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Validation;
 using NUnit.Framework;
-using System.Linq;
-using CoreDocker.Dal.Models.Users;
-using CoreDocker.Utilities.Tests.TempBuildres;
 
 namespace CoreDocker.Dal.Tests.Validation
 {
     [TestFixture]
     public class UserValidatorTests
     {
-
         private UserValidator _validator;
 
         #region Setup/Teardown
@@ -27,37 +24,11 @@ namespace CoreDocker.Dal.Tests.Validation
         [TearDown]
         public void TearDown()
         {
-
         }
 
         #endregion
 
-        [Test]
-        public void Validate_GiveValidUserData_ShouldNotFail()
-        {
-            // arrange
-            Setup();
-          ISingleObjectBuilder<User> singleObjectBuilder = Builder<User>.CreateNew();
-          var user = singleObjectBuilder.WithValidData().Build();
-          
-            // action
-            var validationResult = _validator.Validate(user);
-            // assert
-            validationResult.Errors.Select(x => x.ErrorMessage).StringJoin().Should().BeEmpty();
-            validationResult.IsValid.Should().BeTrue();
-        }
 
-         
-        [Test]
-        public void Name_GiveNullName_ShouldFail()
-        {
-            // arrange
-            Setup();
-            // assert
-            _validator.ShouldHaveValidationErrorFor(user => user.Name, null as string);
-        }
-
-             
         [Test]
         public void Email_GiveEmptyEmail_ShouldFail()
         {
@@ -66,7 +37,7 @@ namespace CoreDocker.Dal.Tests.Validation
             // assert
             _validator.ShouldHaveValidationErrorFor(user => user.Email, null as string);
         }
-     
+
         [Test]
         public void Email_GiveInvalidEmail_ShouldFail()
         {
@@ -96,6 +67,16 @@ namespace CoreDocker.Dal.Tests.Validation
 
 
         [Test]
+        public void Name_GiveNullName_ShouldFail()
+        {
+            // arrange
+            Setup();
+            // assert
+            _validator.ShouldHaveValidationErrorFor(user => user.Name, null as string);
+        }
+
+
+        [Test]
         public void Validate_GiveInvalidRole_ShouldFail()
         {
             // arrange
@@ -107,6 +88,20 @@ namespace CoreDocker.Dal.Tests.Validation
             // assert
             validationResult.Errors.Select(x => x.ErrorMessage).Should().Contain("'Roles' should not be empty.");
         }
-         
+
+        [Test]
+        public void Validate_GiveValidUserData_ShouldNotFail()
+        {
+            // arrange
+            Setup();
+            var singleObjectBuilder = Builder<User>.CreateNew();
+            var user = singleObjectBuilder.WithValidData().Build();
+
+            // action
+            var validationResult = _validator.Validate(user);
+            // assert
+            validationResult.Errors.Select(x => x.ErrorMessage).StringJoin().Should().BeEmpty();
+            validationResult.IsValid.Should().BeTrue();
+        }
     }
 }

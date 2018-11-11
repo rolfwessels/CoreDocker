@@ -1,25 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using FizzWare.NBuilder;
-using FluentAssertions;
-using CoreDocker.Api.AppStartup;
+﻿using CoreDocker.Api.AppStartup;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Core.Tests.Managers;
-using CoreDocker.Dal.Models;
 using NUnit.Framework;
-using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Api.Tests.DataIntegrity
 {
     [TestFixture]
     public class DataIntegrityManagerIntegrationTests : BaseManagerTests
     {
-        private IUserManager _userManager;
         private IProjectManager _projectManager;
+        private IUserManager _userManager;
 
         #region Setup/Teardown
 
@@ -31,6 +22,7 @@ namespace CoreDocker.Api.Tests.DataIntegrity
         }
 
         #endregion
+
 //        
 //        [Test]
 //        public async Task UpdateAllReferences_GivenObject_ShouldUpdateTheReferences()   
@@ -87,8 +79,5 @@ namespace CoreDocker.Api.Tests.DataIntegrity
 //            ex.ToFirstExceptionOfException().Should().BeOfType<Exception>();
 //            ex.ToFirstExceptionOfException().Message.Should().Be("Could not remove Project [Project: Name1]. It is currently referenced in 1 other data object.");
 //        }
-
-
-       
     }
 }

@@ -14,9 +14,9 @@ namespace CoreDocker.Sdk.Tests.Security
     public class AuthenticateApiClientTests : IntegrationTestsBase
     {
         private ICoreDockerClient _connection;
+        private ICoreDockerClient _connectionAuth;
 
         private ProjectApiClient _projectApiClient;
-        private ICoreDockerClient _connectionAuth;
 
         #region Setup/Teardown
 
@@ -35,6 +35,22 @@ namespace CoreDocker.Sdk.Tests.Security
         }
 
         #endregion
+
+        [Test]
+        public async Task AfterLogin_WhenUsingApi_ShouldGetResults()
+        {
+            // arrange
+            Setup();
+            var pingModel = await _connection.Ping.Get();
+            // action
+            var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
+            _connection.SetToken(data);
+            var projectsEnumerable = await _connection.Projects.Get();
+            // assert
+            pingModel.Environment.ToLower().Should().Be("development"); //??
+            projectsEnumerable.Count().Should().BeGreaterThan(0);
+            await _connection.Projects.Get();
+        }
 
         [Test]
         public async Task CheckForWellKnowConfig_WhenCalled_ShouldHaveResult()
@@ -59,23 +75,6 @@ namespace CoreDocker.Sdk.Tests.Security
             data.AccessToken.Should().NotBeEmpty();
             data.ExpiresIn.Should().BeGreaterThan(30);
             data.TokenType.Should().Be("Bearer");
-        }
-
-        [Test]
-        public async Task AfterLogin_WhenUsingApi_ShouldGetResults()
-        {
-            // arrange
-            Setup();
-            var pingModel = await _connection.Ping.Get();
-            // action
-            var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
-            _connection.SetToken(data);
-            var projectsEnumerable = await _connection.Projects.Get();
-            // assert
-            pingModel.Environment.ToLower().Should().Be("development"); //??
-            projectsEnumerable.Count().Should().BeGreaterThan(0);
-            await _connection.Projects.Get();
-            
         }
     }
 }

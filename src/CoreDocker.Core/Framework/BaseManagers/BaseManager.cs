@@ -31,15 +31,15 @@ namespace CoreDocker.Core.Framework.BaseManagers
         }
     }
 
-    
+
     public abstract class BaseManager<T> : BaseManager, IBaseManager<T> where T : BaseDalModelWithId
     {
         private readonly ILogger _log;
         private readonly string _name;
 
-        protected BaseManager(BaseManagerArguments baseManagerArguments , ILogger logger) : base(baseManagerArguments)
+        protected BaseManager(BaseManagerArguments baseManagerArguments, ILogger logger) : base(baseManagerArguments)
         {
-            _name = typeof (T).Name;
+            _name = typeof(T).Name;
             _log = logger;
         }
 
@@ -64,21 +64,20 @@ namespace CoreDocker.Core.Framework.BaseManagers
 
         public virtual async Task<T> Delete(string id)
         {
-            T project = await GetById(id);
+            var project = await GetById(id);
             if (project != null)
             {
                 _log.Info(string.Format("Remove {1} [{0}]", project, _name));
-                long count = await _dataIntegrityManager.GetReferenceCount(project);
+                var count = await _dataIntegrityManager.GetReferenceCount(project);
                 if (count > 0)
-                {
                     throw new ReferenceException(
                         string.Format(
                             "Could not remove {0} [{1}]. It is currently referenced in {2} other data object.",
-                            typeof (T).Name.UnderScoreAndCamelCaseToHumanReadable(), project, count));
-                }
+                            typeof(T).Name.UnderScoreAndCamelCaseToHumanReadable(), project, count));
                 await Repository.Remove(x => x.Id == id);
                 _messenger.Send(new DalUpdateMessage<T>(project, UpdateTypes.Removed));
             }
+
             return project;
         }
 
@@ -92,20 +91,19 @@ namespace CoreDocker.Core.Framework.BaseManagers
             DefaultModelNormalize(entity);
             await Validate(entity);
             _log.Info(string.Format("Update {1} [{0}]", entity, _name));
-            T update = await Repository.Update(x => x.Id == entity.Id, entity);
+            var update = await Repository.Update(x => x.Id == entity.Id, entity);
             _dataIntegrityManager.UpdateAllReferences(update).ContinueWithNoWait(LogUpdate);
             _messenger.Send(new DalUpdateMessage<T>(entity, UpdateTypes.Updated));
             return update;
         }
 
-        
 
         public async Task<T> Insert(T entity)
         {
             DefaultModelNormalize(entity);
             await Validate(entity);
             _log.Info(string.Format("Adding {1} [{0}]", entity, _name));
-            T insert = await Repository.Add(entity);
+            var insert = await Repository.Add(entity);
             _messenger.Send(new DalUpdateMessage<T>(entity, UpdateTypes.Inserted));
             return insert;
         }
@@ -114,20 +112,9 @@ namespace CoreDocker.Core.Framework.BaseManagers
 
         public virtual async Task<T> Save(T entity)
         {
-            T projectFound = await GetById(entity.Id);
-            if (projectFound == null)
-            {
-                return await Insert(entity);
-            }
+            var projectFound = await GetById(entity.Id);
+            if (projectFound == null) return await Insert(entity);
             return await Update(entity);
-        }
-
-        private void LogUpdate(Task<long> obj)
-        {
-            if (obj.Result > 0)
-            {
-                _log.Info("{0} referenced items have been updated.");
-            }
         }
 
         protected virtual void DefaultModelNormalize(T user)
@@ -140,7 +127,13 @@ namespace CoreDocker.Core.Framework.BaseManagers
             return Task.FromResult(true);
         }
 
-        
+        #region Private Methods
 
+        private void LogUpdate(Task<long> obj)
+        {
+            if (obj.Result > 0) _log.Info("{0} referenced items have been updated.");
+        }
+
+        #endregion
     }
 }

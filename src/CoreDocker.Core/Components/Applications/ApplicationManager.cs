@@ -1,5 +1,4 @@
 using CoreDocker.Core.Framework.BaseManagers;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
@@ -8,14 +7,12 @@ namespace CoreDocker.Core.Components.Applications
 {
     public class ApplicationManager : BaseManager<Application>, IApplicationManager
     {
-        public ApplicationManager(BaseManagerArguments baseManagerArguments , ILogger<ApplicationManager> log ) : base(baseManagerArguments , log)
+        public ApplicationManager(BaseManagerArguments baseManagerArguments, ILogger<ApplicationManager> log) : base(
+            baseManagerArguments, log)
         {
         }
 
-        protected override IRepository<Application> Repository
-        {
-            get { return _generalUnitOfWork.Applications; }
-        }
+        protected override IRepository<Application> Repository => _generalUnitOfWork.Applications;
 
         #region IApplicationManager Members
 

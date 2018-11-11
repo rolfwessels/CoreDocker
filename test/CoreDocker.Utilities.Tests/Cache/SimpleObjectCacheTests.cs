@@ -1,7 +1,7 @@
 ﻿using System;
+using CoreDocker.Utilities.Cache;
 using FluentAssertions;
 using NUnit.Framework;
-using CoreDocker.Utilities.Cache;
 
 namespace CoreDocker.Utilities.Tests.Cache
 {
@@ -25,25 +25,25 @@ namespace CoreDocker.Utilities.Tests.Cache
         #endregion
 
         [Test]
-        public void Get_WhenCacheDoesExistShoudOnlyDoItOnce_ShouldNotGetValue()
-        {
-            // arrange
-            Setup();
-            _simpleObjectCache.Get("value", () => { return "newValue"; });
-            // action
-            string result = _simpleObjectCache.Get("value", () => { return "nootNe"; });
-            // assert
-            result.Should().Be("newValue");
-        }
-
-        [Test]
         public void Get_WhenCacheDoesExist_ShouldNotGetValue()
         {
             // arrange
             Setup();
             _simpleObjectCache.Set("value", "newValue");
             // action
-            string result = _simpleObjectCache.Get("value", () => { return "nootNe"; });
+            var result = _simpleObjectCache.Get("value", () => { return "nootNe"; });
+            // assert
+            result.Should().Be("newValue");
+        }
+
+        [Test]
+        public void Get_WhenCacheDoesExistShoudOnlyDoItOnce_ShouldNotGetValue()
+        {
+            // arrange
+            Setup();
+            _simpleObjectCache.Get("value", () => { return "newValue"; });
+            // action
+            var result = _simpleObjectCache.Get("value", () => { return "nootNe"; });
             // assert
             result.Should().Be("newValue");
         }
@@ -54,7 +54,7 @@ namespace CoreDocker.Utilities.Tests.Cache
             // arrange
             Setup();
             // action
-            string result = _simpleObjectCache.Get("value", () => { return "newValue"; });
+            var result = _simpleObjectCache.Get("value", () => { return "newValue"; });
             // assert
             result.Should().Be("newValue");
         }

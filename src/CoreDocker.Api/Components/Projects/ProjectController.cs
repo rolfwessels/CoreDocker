@@ -6,100 +6,108 @@ using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;
 using CoreDocker.Shared.Interfaces.Shared;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDocker.Api.Components.Projects
 {
-
     /// <summary>
-	///     Api controller for managing all the project
-	/// </summary>
+    ///     Api controller for managing all the project
+    /// </summary>
     [Route(RouteHelper.ProjectController)]
-    public class ProjectController : Controller, IProjectControllerActions, IBaseControllerLookups<ProjectModel, ProjectReferenceModel>
+    public class ProjectController : Controller, IProjectControllerActions,
+        IBaseControllerLookups<ProjectModel, ProjectReferenceModel>
     {
-	    private readonly ProjectCommonController _projectCommonController;
-	    
+        private readonly ProjectCommonController _projectCommonController;
+
         public ProjectController(ProjectCommonController projectCommonController)
         {
             _projectCommonController = projectCommonController;
         }
+
+        #region IBaseControllerLookups<ProjectModel,ProjectReferenceModel> Members
 
         /// <summary>
         ///     Returns list of all the projects as references
         /// </summary>
         /// <returns>
         /// </returns>
-        [HttpGet,AuthorizeActivity(Activity.ReadProject)]
+        [HttpGet]
+        [AuthorizeActivity(Activity.ReadProject)]
         public Task<IEnumerable<ProjectReferenceModel>> Get()
-        {   
+        {
             return _projectCommonController.Get(Request.GetQuery());
         }
 
         /// <summary>
-        /// GetCounter all projects with their detail.
+        ///     GetCounter all projects with their detail.
         /// </summary>
         /// <returns></returns>
-        [HttpGet(RouteHelper.WithDetail),AuthorizeActivity(Activity.ReadProject)]
+        [HttpGet(RouteHelper.WithDetail)]
+        [AuthorizeActivity(Activity.ReadProject)]
         public Task<IEnumerable<ProjectModel>> GetDetail()
-		{
-		    return _projectCommonController.GetDetail(Request.GetQuery());
-		}
+        {
+            return _projectCommonController.GetDetail(Request.GetQuery());
+        }
 
+        #endregion
+
+        #region IProjectControllerActions Members
 
         /// <summary>
-		///     Returns a project by his Id.
-		/// </summary>
-		/// <returns>
-		/// </returns>
-		[HttpGet(RouteHelper.WithId),AuthorizeActivity(Activity.ReadProject)]
-		public Task<ProjectModel> GetById(string id)
-		{
+        ///     Returns a project by his Id.
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        [HttpGet(RouteHelper.WithId)]
+        [AuthorizeActivity(Activity.ReadProject)]
+        public Task<ProjectModel> GetById(string id)
+        {
             return _projectCommonController.GetById(id);
-		}
+        }
 
-	    /// <summary>
-	    ///     Updates an instance of the project item.
-	    /// </summary>
-	    /// <param name="id">The identifier.</param>
-	    /// <param name="model">The project.</param>
-	    /// <returns>
-	    /// </returns>
-		[HttpPut(RouteHelper.WithId),AuthorizeActivity(Activity.UpdateProject) ]
-		public Task<ProjectModel> Update(string id, [FromBody] ProjectCreateUpdateModel model)
-		{
+        /// <summary>
+        ///     Updates an instance of the project item.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="model">The project.</param>
+        /// <returns>
+        /// </returns>
+        [HttpPut(RouteHelper.WithId)]
+        [AuthorizeActivity(Activity.UpdateProject)]
+        public Task<ProjectModel> Update(string id, [FromBody] ProjectCreateUpdateModel model)
+        {
             return _projectCommonController.Update(id, model);
-		}
+        }
 
-	    /// <summary>
-	    ///     Add a new project
-	    /// </summary>
-	    /// <param name="model">The project.</param>
-	    /// <returns>
-	    /// </returns>
-        [HttpPost,AuthorizeActivity(Activity.UpdateProject)]
-		public Task<ProjectModel> Insert([FromBody] ProjectCreateUpdateModel model)
-		{
+        /// <summary>
+        ///     Add a new project
+        /// </summary>
+        /// <param name="model">The project.</param>
+        /// <returns>
+        /// </returns>
+        [HttpPost]
+        [AuthorizeActivity(Activity.UpdateProject)]
+        public Task<ProjectModel> Insert([FromBody] ProjectCreateUpdateModel model)
+        {
             return _projectCommonController.Insert(model);
-		}
+        }
 
-	    /// <summary>
-	    ///     Deletes the specified project.
-	    /// </summary>
-	    /// <param name="id">The identifier.</param>
-	    /// <returns>
-	    /// </returns>
-		[HttpDelete(RouteHelper.WithId),AuthorizeActivity(Activity.DeleteProject)]
-		public Task<bool> Delete(string id)
-		{
+        /// <summary>
+        ///     Deletes the specified project.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        /// </returns>
+        [HttpDelete(RouteHelper.WithId)]
+        [AuthorizeActivity(Activity.DeleteProject)]
+        public Task<bool> Delete(string id)
+        {
             return _projectCommonController.Delete(id);
-		}
+        }
 
-
-
-		
-	}
+        #endregion
+    }
 }
 
 /* scaffolding

@@ -1,22 +1,19 @@
-using System;
-
 namespace CoreDocker.Shared.Models.Shared
 {
-  public class ErrorMessage
-  {
-    
-    public ErrorMessage()
+    public class ErrorMessage
     {
-        Message = String.Empty;
+        public ErrorMessage()
+        {
+            Message = string.Empty;
+        }
+
+        public ErrorMessage(string message)
+        {
+            Message = message;
+        }
+
+        public string Message { get; set; }
+
+        public string AdditionalDetail { get; set; }
     }
-
-    public ErrorMessage(string message)
-    {
-        Message = message;
-    }
-
-    public string Message { get; set; }
-
-    public string AdditionalDetail { get; set; }
-  }
 }

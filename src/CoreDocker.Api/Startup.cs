@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
@@ -10,7 +9,6 @@ using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
 using CoreDocker.Utilities;
-using CoreDocker.Utilities.Helpers;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +29,7 @@ namespace CoreDocker.Api
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             IocApi.Populate(services);
@@ -42,12 +40,12 @@ namespace CoreDocker.Api
             services.AddMvc(WebApiSetup.Setup);
             services.AddSwagger();
             services.AddSignalR();
-            
+
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {            
+        {
             app.UseCors(policy =>
             {
                 policy.AllowAnyMethod()
@@ -56,10 +54,7 @@ namespace CoreDocker.Api
                     .WithOrigins(new OpenIdSettings(Configuration).GetOriginList());
             });
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseIndentityService();
             app.UseBearerAuthentication();
@@ -80,7 +75,7 @@ namespace CoreDocker.Api
             }
             catch (Exception e)
             {
-                ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+                var log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
                 log.Error($"SwaggerSetup:InformationalVersion Failed to get the InformationalVersion  {e.Message}");
                 return "1.0.0";
             }

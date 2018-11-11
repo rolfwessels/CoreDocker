@@ -12,9 +12,7 @@ namespace CoreDocker.Utilities.Helpers
             do
             {
                 result = o(updateModels);
-
             } while (!result && DateTime.Now < stopTime);
         }
-
     }
 }

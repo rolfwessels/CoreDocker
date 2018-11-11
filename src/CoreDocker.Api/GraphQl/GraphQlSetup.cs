@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.GraphQl
 {
-    public static partial class GraphQlSetup
+    public static class GraphQlSetup
     {
         public static void AddGraphQl(this IServiceCollection services)
         {
@@ -37,9 +37,5 @@ namespace CoreDocker.Api.GraphQl
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions {GraphQLEndPoint = uriCombine.PathAndQuery});
         }
-
-#region Nested type: GraphQLUserContext
-
-        #endregion
     }
 }

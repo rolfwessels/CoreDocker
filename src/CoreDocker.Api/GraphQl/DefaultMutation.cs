@@ -7,13 +7,11 @@ namespace CoreDocker.Api.GraphQl
 {
     public class DefaultMutation : ObjectGraphType<object>
     {
-     public DefaultMutation()
+        public DefaultMutation()
         {
             Name = "Mutation";
             Field<ProjectsMutationSpecification>("projects", resolve: context => Task.FromResult(new object()));
             Field<UsersMutationSpecification>("users", resolve: context => Task.FromResult(new object()));
-
         }
-
     }
 }

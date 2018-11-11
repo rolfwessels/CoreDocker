@@ -1,5 +1,4 @@
 using CoreDocker.Core.Framework.BaseManagers;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Persistance;
 using Microsoft.Extensions.Logging;
@@ -8,17 +7,14 @@ namespace CoreDocker.Core.Components.Projects
 {
     public class ProjectManager : BaseManager<Project>, IProjectManager
     {
-        public ProjectManager(BaseManagerArguments baseManagerArguments , ILogger<ProjectManager> logger ) : base(baseManagerArguments, logger)
+        public ProjectManager(BaseManagerArguments baseManagerArguments, ILogger<ProjectManager> logger) : base(
+            baseManagerArguments, logger)
         {
-          
         }
 
         #region Overrides of BaseManager<Project>
 
-        protected override IRepository<Project> Repository
-        {
-            get { return _generalUnitOfWork.Projects; }
-        }
+        protected override IRepository<Project> Repository => _generalUnitOfWork.Projects;
 
         #endregion
     }

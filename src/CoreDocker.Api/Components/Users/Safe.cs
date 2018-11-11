@@ -78,7 +78,8 @@ namespace CoreDocker.Api.Components.Users
         private void LogAndThrowValidation(ValidationException e, ResolveFieldContext<object> context)
         {
             _log.Warn(e.Message, e);
-            context.Errors.AddRange(e.Errors.Select(x => new ExecutionError(x.ErrorMessage) {Code = "VALIDATION", Path = context.Path} ));
+            context.Errors.AddRange(e.Errors.Select(x =>
+                new ExecutionError(x.ErrorMessage) {Code = "VALIDATION", Path = context.Path}));
 //            throw new ExecutionError(e.Errors.Select(x => x.ErrorMessage).FirstOrDefault(), e)
 //            {
 //                Code = "VALIDATION"

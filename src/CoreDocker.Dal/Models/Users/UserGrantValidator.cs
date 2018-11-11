@@ -1,9 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using CoreDocker.Dal.Validation;
 using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Users
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
+    [SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
     public class UserGrantValidator : AbstractValidator<UserGrant>
     {
         public UserGrantValidator()
@@ -13,7 +14,7 @@ namespace CoreDocker.Dal.Models.Users
                 .Must(x => !string.IsNullOrEmpty(x?.Name))
                 .Must(x => !string.IsNullOrEmpty(x?.Email))
                 .WithMessage("User refrence not set or complete");
-                ;
+            ;
         }
     }
 }

@@ -3,24 +3,21 @@ using System.Net;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Shared;
-using CoreDocker.Utilities.Helpers;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace CoreDocker.Sdk.RestApi.Base
 {
-    public  abstract class BaseApiClient
+    public abstract class BaseApiClient
     {
-        protected CoreDockerClient CoreDockerClient;
         private readonly string _baseUrl;
+        protected CoreDockerClient CoreDockerClient;
 
         protected BaseApiClient(CoreDockerClient coreDockerClient, string baseUrl)
         {
             CoreDockerClient = coreDockerClient;
             _baseUrl = baseUrl;
-            
         }
 
         protected virtual string DefaultUrl(string appendToUrl = null)
@@ -37,11 +34,13 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
             if (result.StatusCode != HttpStatusCode.OK)
             {
-                if (string.IsNullOrEmpty(result.Content)) throw new ApplicationException(
-                    $"{result.StatusCode} response contains no data.");
+                if (string.IsNullOrEmpty(result.Content))
+                    throw new ApplicationException(
+                        $"{result.StatusCode} response contains no data.");
                 var errorMessage = JsonConvert.DeserializeObject<ErrorMessage>(result.Content);
                 throw new Exception(errorMessage.Message);
             }
+
             return result.Data;
         }
 

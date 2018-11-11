@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Auth;
 using RestSharp;
 
@@ -26,14 +25,9 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return restRequestAsyncHandle.Data;
         }
 
-        public class Jwks
-        {
-            public List<Dictionary<string, string>> Keys { get; set; }
-        }
-
         public async Task<TokenResponseModel> Login(string adminUser, string adminPassword)
         {
-            var token =  await GetToken(new TokenRequestModel()
+            var token = await GetToken(new TokenRequestModel
             {
                 ClientId = "coredocker.api",
                 ClientSecret = "super_secure_password",
@@ -54,7 +48,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             request.AddParameter("grant_type", tokenRequestModel.GrantType);
             request.AddParameter("scope", "api");
             var restClient = _coreDockerClient.Client;
-            IRestResponse<TokenResponseModel> result =
+            var result =
                 await restClient.ExecuteAsyncWithLogging<TokenResponseModel>(request);
             ValidateTokenResponse(result);
             return result.Data;
@@ -72,10 +66,23 @@ namespace CoreDocker.Sdk.RestApi.Clients
             }
         }
 
+        #region Nested type: Jwks
+
+        public class Jwks
+        {
+            public List<Dictionary<string, string>> Keys { get; set; }
+        }
+
+        #endregion
+
+        #region Nested type: TokenErrorMessage
+
         internal class TokenErrorMessage
         {
             public string Error { get; set; }
             public string error_description { get; set; }
         }
+
+        #endregion
     }
 }

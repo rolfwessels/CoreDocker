@@ -7,14 +7,18 @@ using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Framework.DataIntegrity
 {
-    public class PropertyIntegrity<TDal,TDalReference,TContainer> : IIntegrity where TDal : class where TContainer : IBaseDalModel where TDalReference : class
+    public class PropertyIntegrity<TDal, TDalReference, TContainer> : IIntegrity where TDal : class
+        where TContainer : IBaseDalModel
+        where TDalReference : class
     {
-        private Expression<Func<TContainer, TDalReference>> _property;
-        private readonly Func<IGeneralUnitOfWork, IRepository<TContainer>> _getRepo;
         private readonly Func<TDalReference, Expression<Func<TContainer, bool>>> _filter;
+        private readonly Func<IGeneralUnitOfWork, IRepository<TContainer>> _getRepo;
+        private readonly Expression<Func<TContainer, TDalReference>> _property;
         private readonly Func<TDal, TDalReference> _toReference;
 
-        public PropertyIntegrity(Expression<Func<TContainer, TDalReference>> property, Func<IGeneralUnitOfWork, IRepository<TContainer>> getRepo, Func<TDalReference, Expression<Func<TContainer, bool>>> filter, Func<TDal, TDalReference> toReference)
+        public PropertyIntegrity(Expression<Func<TContainer, TDalReference>> property,
+            Func<IGeneralUnitOfWork, IRepository<TContainer>> getRepo,
+            Func<TDalReference, Expression<Func<TContainer, bool>>> filter, Func<TDal, TDalReference> toReference)
         {
             _property = property;
             _getRepo = getRepo;
@@ -55,18 +59,19 @@ namespace CoreDocker.Core.Framework.DataIntegrity
                 dalReference.Dump("dalReference");
                 return !dalReference.Equals(reference);
             }
+
             return false;
         }
 
         public bool IsIntegration(Type dalType, string property)
         {
-            
             var sameType = dalType.Name == typeof(TContainer).Name;
             if (sameType)
             {
                 var propertyInfo = ReflectionHelper.GetPropertyString(_property);
                 return property == propertyInfo;
             }
+
             return sameType;
         }
 

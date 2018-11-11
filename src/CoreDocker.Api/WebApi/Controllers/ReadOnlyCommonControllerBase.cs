@@ -7,9 +7,12 @@ using CoreDocker.Core.Framework.BaseManagers;
 
 namespace CoreDocker.Api.WebApi.Controllers
 {
-    public abstract class ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel> : IQueryableControllerBase<TDal, TModel>
+    public abstract class
+        ReadOnlyCommonControllerBase<TDal, TModel, TReferenceModel> : IQueryableControllerBase<TDal, TModel>
     {
         protected IBaseManager<TDal> _manager;
+
+        #region IQueryableControllerBase<TDal,TModel> Members
 
         public List<TModel> Query(Func<IQueryable<TDal>, IQueryable<TDal>> apply)
         {
@@ -25,6 +28,8 @@ namespace CoreDocker.Api.WebApi.Controllers
             return queryable.Count();
         }
 
+        #endregion
+
 
         public Task<IEnumerable<TReferenceModel>> Get(string query = null)
         {
@@ -33,7 +38,7 @@ namespace CoreDocker.Api.WebApi.Controllers
 
         public Task<IEnumerable<TModel>> GetDetail(string query = null)
         {
-            return Task.FromResult(ToModelList( _manager.Query()));
+            return Task.FromResult(ToModelList(_manager.Query()));
         }
 
         public async Task<TModel> GetById(string id)

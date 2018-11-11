@@ -1,13 +1,13 @@
-using FizzWare.NBuilder;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
 using System.Linq;
 using CoreDocker.Api.WebApi.Controllers;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Shared.Models.Shared;
 using CoreDocker.Utilities.Tests.Tools;
+using FizzWare.NBuilder;
+using FluentAssertions;
+using Moq;
+using NUnit.Framework;
 
 namespace CoreDocker.Api.Tests.Common
 {
@@ -16,18 +16,17 @@ namespace CoreDocker.Api.Tests.Common
         where TModel : BaseModel
         where TManager : class, IBaseManager<TDal>
     {
-        private Mock<TManager> _mockManager;
         private BaseCommonController<TDal, TModel, TReferenceModel, TDetailModel> _commonController;
+        private Mock<TManager> _mockManager;
+
+        protected virtual TDal SampleItem => Builder<TDal>.CreateNew().Build();
 
 
         protected virtual void Setup()
         {
-           
             _commonController = GetCommonController();
             _mockManager = GetManager();
         }
-
-        protected virtual TDal SampleItem => Builder<TDal>.CreateNew().Build();
 
         protected abstract Mock<TManager> GetManager();
 
@@ -71,7 +70,7 @@ namespace CoreDocker.Api.Tests.Common
             Setup();
             var reference = Builder<TDal>.CreateListOfSize(2).Build();
             _mockManager.Setup(mc => mc.Query())
-                               .Returns(reference.ToList().AsQueryable());
+                .Returns(reference.ToList().AsQueryable());
             // action
             var result = _commonController.GetDetail().Result;
             // assert
@@ -99,9 +98,9 @@ namespace CoreDocker.Api.Tests.Common
             Setup();
             var dal = SampleItem;
             _mockManager.Setup(mc => mc.GetById(dal.Id))
-                               .Returns(dal);
+                .Returns(dal);
             _mockManager.Setup(mc => mc.Update(dal))
-                               .Returns(dal);
+                .Returns(dal);
             var model = Builder<TDetailModel>.CreateNew().Build();
             AddAdditionalMappings(model, dal);
             // action
@@ -127,7 +126,6 @@ namespace CoreDocker.Api.Tests.Common
 
         protected virtual void AddAdditionalMappings(TDetailModel model, TDal dal)
         {
-            
         }
 
 
@@ -143,6 +141,5 @@ namespace CoreDocker.Api.Tests.Common
             // assert
             result.Should().Be(true);
         }
-
     }
 }

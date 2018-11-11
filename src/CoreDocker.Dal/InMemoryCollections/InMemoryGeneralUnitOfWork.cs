@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Utilities.Helpers;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistance;
+using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Dal.InMemoryCollections
 {
@@ -23,6 +22,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             UserGrants = new FakeRepository<UserGrant>();
         }
 
+        #region IGeneralUnitOfWork Members
 
         #region Implementation of IDisposable
 
@@ -31,13 +31,6 @@ namespace CoreDocker.Dal.InMemoryCollections
         }
 
         #endregion
-
-        #region Implementation of IGeneralUnitOfWork
-
-        public IRepository<User> Users { get; private set; }
-        public IRepository<Application> Applications { get; private set; }
-        public IRepository<Project> Projects { get; private set; }
-        public IRepository<UserGrant> UserGrants { get; private set; }
 
         #endregion
 
@@ -51,6 +44,16 @@ namespace CoreDocker.Dal.InMemoryCollections
             {
                 _list = new List<T>();
             }
+
+            #region Private Methods
+
+            private void AddAndSetUpdateDate(T entity)
+            {
+                _list.Add(entity);
+                entity.UpdateDate = DateTime.Now;
+            }
+
+            #endregion
 
             #region Implementation of IRepository<T>
 
@@ -72,28 +75,27 @@ namespace CoreDocker.Dal.InMemoryCollections
             public Task<IEnumerable<T>> AddRange(IEnumerable<T> entities)
             {
                 var addRange = entities as T[] ?? entities.ToArray();
-                foreach (T entity in addRange)
-                {
-                    Add(entity);
-                }
+                foreach (var entity in addRange) Add(entity);
                 return Task.FromResult(entities);
             }
 
 
-            public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update, TType value) where TType : class
+            public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update,
+                TType value) where TType : class
             {
                 var enumerable = _list.Where(filter.Compile()).ToArray();
                 foreach (var v in enumerable)
                 {
                     var type = update.Compile()(v);
-                    PropertyCopy.Copy<TType, TType>(value, type);
+                    PropertyCopy.Copy(value, type);
                 }
+
                 return Task.FromResult(enumerable.LongCount());
             }
 
             public Task<bool> Remove(Expression<Func<T, bool>> filter)
             {
-                T[] array = _list.Where(filter.Compile()).ToArray();
+                var array = _list.Where(filter.Compile()).ToArray();
                 array.ForEach(x => _list.Remove(x));
                 return Task.FromResult(array.Length > 0);
             }
@@ -106,7 +108,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             public Task<T> FindOne(Expression<Func<T, bool>> filter)
             {
                 var predicate = filter.Compile();
-                return Task.FromResult(_list.FirstOrDefault((x) =>
+                return Task.FromResult(_list.FirstOrDefault(x =>
                 {
                     try
                     {
@@ -141,7 +143,7 @@ namespace CoreDocker.Dal.InMemoryCollections
                 var baseDalModelWithId = entity as IBaseDalModelWithId;
                 if (baseDalModelWithId != null)
                 {
-                    IBaseDalModelWithId baseDalModelWithIds =
+                    var baseDalModelWithIds =
                         _list.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
                     if (baseDalModelWithIds != null)
                     {
@@ -149,6 +151,7 @@ namespace CoreDocker.Dal.InMemoryCollections
                         return true;
                     }
                 }
+
                 return _list.Remove(entity);
             }
 
@@ -160,17 +163,16 @@ namespace CoreDocker.Dal.InMemoryCollections
             }
 
             #endregion
-
-            #region Private Methods
-
-            private void AddAndSetUpdateDate(T entity)
-            {
-                _list.Add(entity);
-                entity.UpdateDate = DateTime.Now;
-            }
-
-            #endregion
         }
+
+        #endregion
+
+        #region Implementation of IGeneralUnitOfWork
+
+        public IRepository<User> Users { get; }
+        public IRepository<Application> Applications { get; }
+        public IRepository<Project> Projects { get; }
+        public IRepository<UserGrant> UserGrants { get; }
 
         #endregion
     }

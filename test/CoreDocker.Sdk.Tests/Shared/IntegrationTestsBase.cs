@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using CoreDocker.Api;
-using CoreDocker.Api.AppStartup;
-using CoreDocker.Api.Security;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
 using log4net;
@@ -12,7 +10,6 @@ namespace CoreDocker.Sdk.Tests.Shared
 {
     public class IntegrationTestsBase
     {
-        
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
@@ -31,7 +28,6 @@ namespace CoreDocker.Sdk.Tests.Shared
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(_hostAddress.Value));
             _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
             _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
-            
         }
 
         #region Private Methods
@@ -41,7 +37,7 @@ namespace CoreDocker.Sdk.Tests.Shared
             var port = new Random().Next(9000, 9999);
             var address = string.Format("http://localhost:{0}", port);
             Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
-            
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
@@ -49,12 +45,9 @@ namespace CoreDocker.Sdk.Tests.Shared
                 .UseUrls(address);
             host.Build().Start();
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            
+
             _log.Info(string.Format("Starting api on [{0}]", address));
-            RestShapHelper.Log = m =>
-            {
-                _log.Debug(m);
-            };
+            RestShapHelper.Log = m => { _log.Debug(m); };
             return address;
         }
 

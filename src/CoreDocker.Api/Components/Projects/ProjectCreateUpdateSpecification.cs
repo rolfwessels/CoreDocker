@@ -1,4 +1,3 @@
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 

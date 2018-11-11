@@ -1,7 +1,6 @@
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Shared;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 
 namespace CoreDocker.Sdk.RestApi.Clients
@@ -13,6 +12,5 @@ namespace CoreDocker.Sdk.RestApi.Clients
             : base(dockerClient, RouteHelper.ProjectController)
         {
         }
-
     }
 }

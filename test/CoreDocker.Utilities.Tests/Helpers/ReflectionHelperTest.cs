@@ -1,14 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
+using NUnit.Framework;
 
 namespace CoreDocker.Utilities.Tests.Helpers
 {
     [TestFixture]
     public class ReflectionHelperTest
     {
-
 //        [Test]
 //        public void FindOfType_GivenAssemblyAndName_ShouldSearchForATypeAndReturnIt()
 //        {
@@ -34,7 +33,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
         public void GetMember_GivenExpression_ShouldReturnValue()
         {
             // arrange
-            var member = ReflectionHelper.GetPropertyInfo<User,Guid>(x => x.Id);
+            var member = ReflectionHelper.GetPropertyInfo<User, Guid>(x => x.Id);
             // assert
             member.Name.Should().Be("Id");
             member.PropertyType.Name.Should().Be("Guid");
@@ -50,20 +49,24 @@ namespace CoreDocker.Utilities.Tests.Helpers
             ReflectionHelper.GetPropertyString<User, string>(x => x.Cl.Cl.S1).Should().Be("Cl.Cl.S1");
         }
 
+        #region Nested type: MyClass
 
-        class User
+        private class MyClass
+        {
+            public string S1 { get; set; }
+            public MyClass Cl { get; set; }
+        }
+
+        #endregion
+
+        #region Nested type: User
+
+        private class User
         {
             public Guid Id { get; set; }
-            public MyClass Cl { get; set; }    
+            public MyClass Cl { get; set; }
         }
 
-        class MyClass
-        {
-
-            public string S1 { get; set; }
-            public MyClass Cl { get; set; } 
-        }
+        #endregion
     }
-
-    
 }

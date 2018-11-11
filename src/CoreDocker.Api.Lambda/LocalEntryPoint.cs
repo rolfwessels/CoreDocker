@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace CoreDocker.Api.Lambda
 {
     /// <summary>
-    /// The Main function can be used to run the ASP.NET Core application locally using the Kestrel webserver.
+    ///     The Main function can be used to run the ASP.NET Core application locally using the Kestrel webserver.
     /// </summary>
     public class LocalEntryPoint
     {
@@ -18,9 +13,11 @@ namespace CoreDocker.Api.Lambda
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
+        }
     }
 }

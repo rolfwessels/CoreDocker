@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Users;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
-	{
+    {
         public static void CreateUserMap(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<User, UserReference>();
@@ -15,5 +14,5 @@ namespace CoreDocker.Core.Framework.Mappers
         {
             return Mapper.Map(user, userReference);
         }
-	}
+    }
 }

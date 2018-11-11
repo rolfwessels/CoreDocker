@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.MessageUtil.Models;
-using FizzWare.NBuilder;
-using FluentAssertions;
 using CoreDocker.Core.Tests.Helpers;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistance;
 using CoreDocker.Utilities.Tests.TempBuildres;
+using FizzWare.NBuilder;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
@@ -23,13 +20,26 @@ namespace CoreDocker.Core.Tests.Managers
         {
             // arrange
             Setup();
-            T project = Repository.AddFake().First();
+            var project = Repository.AddFake().First();
             // action
             await Manager.Delete(project.Id);
             // assert
             _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Removed)),
-                                   Times.Once);
+                Times.Once);
             Manager.GetById(project.Id).Result.Should().BeNull();
+        }
+
+        [Test]
+        public virtual async Task Get_WhenCalledWithId_ShouldReturnSingleRecord()
+        {
+            // arrange
+            Setup();
+            var addFake = Repository.AddFake();
+            var guid = addFake.First().Id;
+            // action
+            var result = await Manager.GetById(guid);
+            // assert
+            result.Id.Should().Be(guid);
         }
 
         [Test]
@@ -46,46 +56,18 @@ namespace CoreDocker.Core.Tests.Managers
         }
 
         [Test]
-        public virtual async Task Get_WhenCalledWithId_ShouldReturnSingleRecord()
-        {
-            // arrange
-            Setup();
-            IList<T> addFake = Repository.AddFake();
-            string guid = addFake.First().Id;
-            // action
-            T result = await Manager.GetById(guid);
-            // assert
-            result.Id.Should().Be(guid);
-        }
-
-        [Test]
-        public virtual async Task Save_WhenCalledWithExisting_ShouldCallMessageThatDataWasUpdated()
-        {
-            // arrange
-            Setup();
-            T project = Repository.AddFake().First();
-            // action
-            await Manager.Save(project);
-            // assert
-            _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Updated)),
-                                   Times.Once);
-            _mockIMessenger.Verify(
-                mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Inserted)), Times.Never);
-        }
-
-        [Test]
         public virtual async Task Save_WhenCalledWith_ShouldCallMessageThatDataWasInserted()
         {
             // arrange
             Setup();
-            T project = SampleObject;
+            var project = SampleObject;
             // action
             await Manager.Save(project);
             // assert
             _mockIMessenger.Verify(
                 mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Inserted)), Times.Once);
             _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Updated)),
-                                   Times.Never);
+                Times.Never);
         }
 
         [Test]
@@ -93,9 +75,9 @@ namespace CoreDocker.Core.Tests.Managers
         {
             // arrange
             Setup();
-            T project = SampleObject;
+            var project = SampleObject;
             // action
-            T result = await Manager.Save(project);
+            var result = await Manager.Save(project);
             // assert
             Repository.Count().Result.Should().Be(1L);
             result.Should().NotBeNull();
@@ -106,11 +88,26 @@ namespace CoreDocker.Core.Tests.Managers
         {
             // arrange
             Setup();
-            T project = SampleObject;
+            var project = SampleObject;
             // action
-            T result = await Manager.Save(project);
+            var result = await Manager.Save(project);
             // assert
             result.Id.Should().Be(project.Id);
+        }
+
+        [Test]
+        public virtual async Task Save_WhenCalledWithExisting_ShouldCallMessageThatDataWasUpdated()
+        {
+            // arrange
+            Setup();
+            var project = Repository.AddFake().First();
+            // action
+            await Manager.Save(project);
+            // assert
+            _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Updated)),
+                Times.Once);
+            _mockIMessenger.Verify(
+                mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Inserted)), Times.Never);
         }
 
         protected abstract IRepository<T> Repository { get; }

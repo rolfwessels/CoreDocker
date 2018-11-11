@@ -33,6 +33,15 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Apply some CQRS patterns.
  * More https://shields.io/#/
 
+## Inspection
+
+```
+ dotnet add .\test\CoreDocker.Utilities.Tests\ package JetBrains.ReSharper.CommandLineTools --package-directory .\build\tools
+ build\tools\jetbrains.resharper.commandlinetools\2018.2.3\tools\InspectCode.exe --caches-home="C:\Temp\Cache" -f=html -o="report.html" .\CoreDocker.sln 
+ build\tools\jetbrains.resharper.commandlinetools\2018.2.3\tools\dupfinder.exe --caches-home="C:\Temp\Cache"  -o="duplicates.xml" .\CoreDocker.sln 
+ build\tools\jetbrains.resharper.commandlinetools\2018.2.3\tools\cleanupcode.exe .\CoreDocker.sln 
+```
+
 ## Gettings started with core
 
 ```

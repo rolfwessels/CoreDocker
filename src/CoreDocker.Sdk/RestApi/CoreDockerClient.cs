@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Auth;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Client;
@@ -13,8 +12,8 @@ namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
-        internal RestClient _restClient;
         private readonly GraphQLClient _graphQlClient;
+        internal RestClient _restClient;
 
         public CoreDockerClient(string urlBase)
         {
@@ -28,35 +27,38 @@ namespace CoreDocker.Sdk.RestApi
         }
 
         public RestClient Client => _restClient;
-        
+
         public string UrlBase { get; }
+
+        public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
+        {
+            var graphQlResponse = await _graphQlClient.PostAsync(heroRequest);
+            if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                throw new GraphQlResponseException(graphQlResponse);
+            return graphQlResponse;
+        }
 
         #region Implementation of ICoreDockerApi
 
         public void SetToken(TokenResponseModel data)
         {
             var bearerToken = $"Bearer {data.AccessToken}";
-            _restClient.DefaultParameters.Add(new Parameter() { Type = ParameterType.HttpHeader, Name = "Authorization", Value = bearerToken });
-            _graphQlClient.DefaultRequestHeaders.Add("Authorization",new []{ bearerToken });
+            _restClient.DefaultParameters.Add(new Parameter
+            {
+                Type = ParameterType.HttpHeader,
+                Name = "Authorization",
+                Value = bearerToken
+            });
+            _graphQlClient.DefaultRequestHeaders.Add("Authorization", new[] {bearerToken});
         }
 
         public AuthenticateApiClient Authenticate { get; set; }
         public PingApiClient Ping { get; set; }
-       
+
 
         public ProjectApiClient Projects { get; set; }
         public UserApiClient Users { get; set; }
 
         #endregion
-        
-        public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
-        {
-            var graphQlResponse = await _graphQlClient.PostAsync(heroRequest);
-            if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
-            {
-                throw new GraphQlResponseException(graphQlResponse) ;
-            }
-            return graphQlResponse;
-        }
     }
 }

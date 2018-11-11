@@ -51,15 +51,16 @@ namespace CoreDocker.Sdk.Tests.WebApi
                         }
                     }
                 }
-            "};
+            "
+            };
             // action
             var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
-            List<ProjectModel> personType = CastHelper.DynamicCastTo<List<ProjectModel>>(graphQlResponse.Data.projects.recent);
+            List<ProjectModel> personType =
+                CastHelper.DynamicCastTo<List<ProjectModel>>(graphQlResponse.Data.projects.recent);
             // assert
             personType.Count.Should().BeGreaterOrEqualTo(1).And.BeLessOrEqualTo(4);
             personType.Should().OnlyContain(x => x.Name == null);
             personType.Should().OnlyContain(x => x.Id != null);
-
         }
 
         [Test]
@@ -77,7 +78,8 @@ namespace CoreDocker.Sdk.Tests.WebApi
                         }
                     }
                 }
-            "};
+            "
+            };
             // action
             var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
             object data = graphQlResponse.Data;
@@ -87,7 +89,6 @@ namespace CoreDocker.Sdk.Tests.WebApi
             // assert
             int count = graphQlResponse.Data.projects.query.count;
             count.Should().BeGreaterThan(1);
-
         }
 
         protected override IList<ProjectCreateUpdateModel> GetExampleData()
@@ -96,6 +97,4 @@ namespace CoreDocker.Sdk.Tests.WebApi
                 .DynamicCastTo<List<ProjectCreateUpdateModel>>();
         }
     }
-
-    
 }

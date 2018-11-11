@@ -1,9 +1,6 @@
 using CoreDocker.Core.Components.Users;
-using FizzWare.NBuilder;
-using FluentAssertions;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Auth;
-using CoreDocker.Dal.Persistance;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.Managers
@@ -57,7 +54,6 @@ namespace CoreDocker.Core.Tests.Managers
             var roleByName = _roleManager.GetRoleByName("Guest123123").Result;
             // assert
             roleByName.Should().BeNull();
-
         }
     }
 }

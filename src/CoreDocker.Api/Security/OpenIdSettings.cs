@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using CoreDocker.Core.Framework.Settings;
 using Microsoft.Extensions.Configuration;
 
@@ -12,7 +11,7 @@ namespace CoreDocker.Api.Security
         }
 
         public string HostUrl => ReadConfigValue("HostUrl", "http://localhost:5000");
-        
+
         public string ApiResourceName => ReadConfigValue("ApiResourceName", "api.resource");
 
         public string ApiResourceSecret => ReadConfigValue("ApiResourceSecret", "a98802aa-e4d4-432a-835e-6c856a05d999");

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using NUnit.Framework;
-using FluentAssertions;
 using CoreDocker.Utilities.Helpers;
+using FluentAssertions;
+using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests
 {
@@ -11,13 +11,6 @@ namespace CoreDocker.Core.Tests
     {
         private static readonly CodeSanner _codeSanner;
 
-
-        static CodeScannerTests()
-        {
-            _codeSanner = new CodeSanner();
-
-        }
-
         #region Setup/Teardown
 
         public void Setup()
@@ -25,16 +18,6 @@ namespace CoreDocker.Core.Tests
         }
 
         #endregion
-
-        [Test]
-        public void GetSourcePath_ShouldReturnTheSourceFiles()
-        {
-            // arrange
-            Setup();
-            // action
-            _codeSanner.GetSourcePath().Should().EndWith("\\src");
-            // assert
-        }
 
         [Test]
         [Ignore("not working right")]
@@ -50,14 +33,25 @@ namespace CoreDocker.Core.Tests
                 .GroupBy(x => x.Type)
                 .ToDictionary(x => x.Key, x => x.Count())
                 .Dump("Issue break down");
-            foreach (var fileReport in fileReports.OrderBy(x=>x.LinesOfCode))
-            {
+            foreach (var fileReport in fileReports.OrderBy(x => x.LinesOfCode))
                 Console.Out.WriteLine(fileReport.ToString());
-            }
             fileReports.Should().HaveCount(0);
-
         }
 
-        
+        [Test]
+        public void GetSourcePath_ShouldReturnTheSourceFiles()
+        {
+            // arrange
+            Setup();
+            // action
+            _codeSanner.GetSourcePath().Should().EndWith("\\src");
+            // assert
+        }
+
+
+        static CodeScannerTests()
+        {
+            _codeSanner = new CodeSanner();
+        }
     }
 }

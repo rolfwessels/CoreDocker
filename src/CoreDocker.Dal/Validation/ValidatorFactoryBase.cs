@@ -5,10 +5,8 @@ namespace CoreDocker.Dal.Validation
 {
     public abstract class ValidatorFactoryBase : IValidatorFactory
     {
-        protected ValidatorFactoryBase()
-        {
-        }
-        
+        #region IValidatorFactory Members
+
         public ValidationResult For<T>(T user)
         {
             var validationRules = GetValidationRules<T>();
@@ -25,6 +23,8 @@ namespace CoreDocker.Dal.Validation
         {
             return GetValidationRules<T>();
         }
+
+        #endregion
 
         protected IValidator<T> GetValidationRules<T>()
         {

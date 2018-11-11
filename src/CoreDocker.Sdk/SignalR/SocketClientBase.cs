@@ -8,8 +8,8 @@ namespace CoreDocker.Sdk.SignalR
 {
     public class SocketClientBase
     {
-        private readonly CoreDockerSockets _sockets;
         private readonly Lazy<HubConnection> _connectionBuilder;
+        private readonly CoreDockerSockets _sockets;
         private bool _isStarted;
 
         protected SocketClientBase(CoreDockerSockets sockets)
@@ -35,8 +35,8 @@ namespace CoreDocker.Sdk.SignalR
                 await _connectionBuilder.Value.StartAsync();
                 _isStarted = true;
             }
+
             return _connectionBuilder.Value;
         }
-
     }
 }

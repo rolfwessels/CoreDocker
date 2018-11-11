@@ -8,14 +8,13 @@ using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models.Users;
-using log4net;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using GraphQL.Common.Request;
-using GraphQL.Common.Response;
+using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Sdk.Tests.WebApi
@@ -43,68 +42,111 @@ namespace CoreDocker.Sdk.Tests.WebApi
 
         #endregion
 
+
         [Test]
-        public void Insert_WhenCalledWithInvalidDuplicateEmail_ShouldThrowException()
+        public async Task GraphQl_EnsureCorrectDateFormat_ShouldMatchApiAndDb()
         {
             // arrange
             Setup();
-            var userDetailModel = Builder<UserCreateUpdateModel>.CreateNew().With(x => x.Name = "should fail").Build();
-            // action
-            Action testCall = () => { _crudController.Insert(userDetailModel).Wait(); };
-            // assert
-            testCall.Should().Throw<Exception>().WithMessage("'Email' is not a valid email address.");
-        }
-
-        [Test]
-        public async Task Roles_WhenCalled_ShouldReturnAllRoleInformation()
-        {
-            // arrange
-            Setup();
-            // action
-            var userModel = await _userApiClient.Roles();
-            // assert
-            userModel.Count.Should().BeGreaterOrEqualTo(2);
-            userModel.Select(x => x.Name).Should().Contain("Admin");
-        }
-
-        [Test]
-        public async Task WhoAmI_GivenUserData_ShouldReturn()
-        {
-            // arrange
-            Setup();
-            // action
-            var userModel = await _userApiClient.WhoAmI();
-            // assert
-            userModel.Should().NotBeNull();
-            userModel.Email.Should().StartWith("admin");
-        }
-
-
-        [Test]
-        public async Task GraphQl_QueryMeWithLoggedInUser_ShouldReturnCurrentUserName()
-        {
-            // arrange
-            Setup();
-            var heroRequest = new GraphQLRequest
+            var request = new GraphQLRequest
             {
                 Query = @"
                 {
                     users {
                         me {
-                            name
+                            updateDate
                         }
                     }
                 }
             "
             };
+
             // action
-            var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
+            var graphQlResponse = await _adminConnection.Value.GraphQlPost(request);
+            var userModel = await _adminConnection.Value.Users.WhoAmI();
             object data = graphQlResponse.Data;
             data.Dump("graphQlResponse.Data");
 
             // assert
-            string name = graphQlResponse.Data.users.me.name;
-            name.Should().Be("Admin user");
+            DateTime updateDate = graphQlResponse.Data.users.me.updateDate;
+            var userModelUpdateDate = userModel.UpdateDate;
+            updateDate.ToUniversalTime().Should().Be(userModelUpdateDate.ToUniversalTime());
+        }
+
+        [Test]
+        public async Task GraphQl_EnsureCrud_ShouldCreateUpdateDeleteUser()
+        {
+            // arrange
+            Setup();
+            var userCreate = GetExampleData().First();
+
+            // action
+            var insertResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    insert (user:{{name:""{userCreate.Name.Mask(10, "...")}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+            });
+            string id = insertResponst.Data.users.insert.id;
+            Action testCall = () =>
+            {
+                _adminConnection.Value.GraphQlPost(new GraphQLRequest
+                {
+                    Query = $@"
+                mutation {{
+                  users {{
+                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""asdf@invalid"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+                }).Wait();
+            };
+            testCall.Should().Throw<GraphQlResponseException>();
+
+            var updateResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
+                                id
+                            }}
+                        }}
+                    }}"
+            });
+            string updateId = updateResponst.Data.users.update.id;
+            var deleteResponse = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    delete (id:""{id}"") 
+                        }}
+                    }}"
+            });
+            var deleteResponseTwo = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
+            {
+                Query = $@"
+                mutation {{
+                  users {{
+                    delete (id:""{id}"") 
+                        }}
+                    }}"
+            });
+            bool deleteResults = deleteResponse.Data.users.delete;
+            bool deleteResults1 = deleteResponseTwo.Data.users.delete;
+            // assert
+
+            id.Should().NotBeEmpty();
+            updateId.Should().Be(id);
+            deleteResults.Should().BeTrue();
+            deleteResults1.Should().BeFalse();
         }
 
 
@@ -151,141 +193,58 @@ namespace CoreDocker.Sdk.Tests.WebApi
             // assert
             string name = graphQlResponse.Data.users.me.name;
             name.Should().Be("Guest");
-
         }
 
 
         [Test]
-        public async Task GraphQl_EnsureCorrectDateFormat_ShouldMatchApiAndDb()
+        public async Task GraphQl_QueryMeWithLoggedInUser_ShouldReturnCurrentUserName()
         {
             // arrange
             Setup();
-            var request = new GraphQLRequest
+            var heroRequest = new GraphQLRequest
             {
                 Query = @"
                 {
                     users {
                         me {
-                            updateDate
+                            name
                         }
                     }
                 }
             "
             };
-
             // action
-            var graphQlResponse = await _adminConnection.Value.GraphQlPost(request);
-            var userModel = await _adminConnection.Value.Users.WhoAmI();
+            var graphQlResponse = await _adminConnection.Value.GraphQlPost(heroRequest);
             object data = graphQlResponse.Data;
             data.Dump("graphQlResponse.Data");
-            
+
             // assert
-            DateTime updateDate = graphQlResponse.Data.users.me.updateDate;
-            var userModelUpdateDate = userModel.UpdateDate;
-            updateDate.ToUniversalTime().Should().Be(userModelUpdateDate.ToUniversalTime());
+            string name = graphQlResponse.Data.users.me.name;
+            name.Should().Be("Admin user");
         }
 
         [Test]
-        public void GraphQl_WhenCalledWithInvalidModel_ShouldThrowExceptionWithSomeDetail()
+        public void GraphQl_QueryMeWithNonLoggedInUser_ShouldThrowException()
         {
             // arrange
             Setup();
-            var request = new GraphQLRequest
+            var heroRequest = new GraphQLRequest
             {
                 Query = @"
-                mutation {
-                  users {
-                    insert (user:{name:"""",email:""""}) {
-                                id
-                            }
-                        }
-                    }"
-            };
-            // action
-            Action func = () => _adminConnection.Value.GraphQlPost(request).Wait();
-            var graphQlResponseException = func.Should().Throw<GraphQlResponseException>().And;
-//            graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message == "'Email' is not a valid email address.");
-            graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message.Contains("'Name' must be between 1 and 150 characters"));
-            
-            //graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
-
-            
-        }
-
-        [Test]
-        public async Task GraphQl_EnsureCrud_ShouldCreateUpdateDeleteUser()
-        {
-            // arrange
-            Setup();
-            var userCreate = GetExampleData().First();
-
-            // action
-            var insertResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
-            {
-                Query = $@"
-                mutation {{
-                  users {{
-                    insert (user:{{name:""{userCreate.Name.Mask(10,"...")}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
-                                id
-                            }}
-                        }}
-                    }}"
-            });
-            string id = insertResponst.Data.users.insert.id;
-            Action testCall = () =>
-            {
-                _adminConnection.Value.GraphQlPost(new GraphQLRequest
                 {
-                    Query = $@"
-                mutation {{
-                  users {{
-                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""asdf@invalid"",password:""{userCreate.Password}""}}) {{
-                                id
-                            }}
-                        }}
-                    }}"
-                }).Wait();
+                    users {
+                        me {
+                            name
+                        }
+                    }
+                }
+            "
             };
-            testCall.Should().Throw<GraphQlResponseException>();
-
-            var updateResponst = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
-            {
-                Query = $@"
-                mutation {{
-                  users {{
-                    update (id:""{id}"", user:{{name:""{userCreate.Name}"",email:""{userCreate.Email}"",password:""{userCreate.Password}""}}) {{
-                                id
-                            }}
-                        }}
-                    }}"
-            });
-            string updateId = updateResponst.Data.users.update.id;
-            var deleteResponse = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
-            {
-                Query = $@"
-                mutation {{
-                  users {{
-                    delete (id:""{id}"") 
-                        }}
-                    }}"
-            });var deleteResponseTwo = await _adminConnection.Value.GraphQlPost(new GraphQLRequest
-            {
-                Query = $@"
-                mutation {{
-                  users {{
-                    delete (id:""{id}"") 
-                        }}
-                    }}"
-            });
-            bool deleteResults = deleteResponse.Data.users.delete;
-            bool deleteResults1 = deleteResponseTwo.Data.users.delete;
-            // assert
-
-            id.Should().NotBeEmpty();
-            updateId.Should().Be(id);
-            deleteResults.Should().BeTrue();
-            deleteResults1.Should().BeFalse();
-            
+            // action
+            var adminConnectionValue = (CoreDockerClient) _defaultRequestFactory.Value.GetConnection();
+            Action testCall = () => { adminConnectionValue.GraphQlPost(heroRequest).Wait(); };
+            testCall.Should().Throw<Exception>().WithMessage("Authentication required.")
+                .And.ToFirstExceptionOfException().GetType().Name.Should().Be("GraphQlResponseException");
         }
 
 
@@ -295,7 +254,7 @@ namespace CoreDocker.Sdk.Tests.WebApi
             // arrange
             Setup();
             var userCreate = GetExampleData().First();
-            var newClientNotAuthorized = (CoreDockerClient)  _defaultRequestFactory.Value.GetConnection();
+            var newClientNotAuthorized = (CoreDockerClient) _defaultRequestFactory.Value.GetConnection();
             // action
             var insertResponst = await newClientNotAuthorized.GraphQlPost(new GraphQLRequest
             {
@@ -326,34 +285,73 @@ namespace CoreDocker.Sdk.Tests.WebApi
         }
 
         [Test]
-        public void GraphQl_QueryMeWithNonLoggedInUser_ShouldThrowException()
+        public void GraphQl_WhenCalledWithInvalidModel_ShouldThrowExceptionWithSomeDetail()
         {
             // arrange
             Setup();
-            var heroRequest = new GraphQLRequest
+            var request = new GraphQLRequest
             {
                 Query = @"
-                {
-                    users {
-                        me {
-                            name
+                mutation {
+                  users {
+                    insert (user:{name:"""",email:""""}) {
+                                id
+                            }
                         }
-                    }
-                }
-            "
+                    }"
             };
             // action
-            var adminConnectionValue = (CoreDockerClient) _defaultRequestFactory.Value.GetConnection();
-            Action testCall = () => { adminConnectionValue.GraphQlPost(heroRequest).Wait(); };
-            testCall.Should().Throw<Exception>().WithMessage("Authentication required.")
-                .And.ToFirstExceptionOfException().GetType().Name.Should().Be("GraphQlResponseException");
+            Action func = () => _adminConnection.Value.GraphQlPost(request).Wait();
+            var graphQlResponseException = func.Should().Throw<GraphQlResponseException>().And;
+//            graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message == "'Email' is not a valid email address.");
+            graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x =>
+                x.Message.Contains("'Name' must be between 1 and 150 characters"));
+
+            //graphQlResponseException.GraphQlResponse.Errors.Should().Contain(x=>x.Message == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
         }
-        
+
+        [Test]
+        public void Insert_WhenCalledWithInvalidDuplicateEmail_ShouldThrowException()
+        {
+            // arrange
+            Setup();
+            var userDetailModel = Builder<UserCreateUpdateModel>.CreateNew().With(x => x.Name = "should fail").Build();
+            // action
+            Action testCall = () => { _crudController.Insert(userDetailModel).Wait(); };
+            // assert
+            testCall.Should().Throw<Exception>().WithMessage("'Email' is not a valid email address.");
+        }
+
+        [Test]
+        public async Task Roles_WhenCalled_ShouldReturnAllRoleInformation()
+        {
+            // arrange
+            Setup();
+            // action
+            var userModel = await _userApiClient.Roles();
+            // assert
+            userModel.Count.Should().BeGreaterOrEqualTo(2);
+            userModel.Select(x => x.Name).Should().Contain("Admin");
+        }
+
+        [Test]
+        public async Task WhoAmI_GivenUserData_ShouldReturn()
+        {
+            // arrange
+            Setup();
+            // action
+            var userModel = await _userApiClient.WhoAmI();
+            // assert
+            userModel.Should().NotBeNull();
+            userModel.Email.Should().StartWith("admin");
+        }
+
         #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel,UserReferenceModel>
 
-        protected override EquivalencyAssertionOptions<UserCreateUpdateModel> CompareConfig(EquivalencyAssertionOptions<UserCreateUpdateModel> options)
+        protected override EquivalencyAssertionOptions<UserCreateUpdateModel> CompareConfig(
+            EquivalencyAssertionOptions<UserCreateUpdateModel> options)
         {
-            return base.CompareConfig(options).Excluding(x=>x.Password);
+            return base.CompareConfig(options).Excluding(x => x.Password);
         }
 
         #endregion

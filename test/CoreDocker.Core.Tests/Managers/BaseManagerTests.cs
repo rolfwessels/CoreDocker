@@ -23,7 +23,7 @@ namespace CoreDocker.Core.Tests.Managers
             _mockIValidatorFactory = new Mock<IValidatorFactory>();
             _fakeGeneralUnitOfWork = new InMemoryGeneralUnitOfWork();
             _baseManagerArguments = new BaseManagerArguments(_fakeGeneralUnitOfWork, _mockIMessenger.Object,
-                                                             _mockIValidatorFactory.Object);
+                _mockIValidatorFactory.Object);
         }
 
         [TearDown]
@@ -35,5 +35,4 @@ namespace CoreDocker.Core.Tests.Managers
 
         #endregion
     }
-
 }
