@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.MessageUtil.Models;
-using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
@@ -12,7 +11,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
-namespace CoreDocker.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Framework.BaseManagers
 {
     public abstract class BaseTypedManagerTests<T> : BaseManagerTests where T : BaseDalModelWithId
     {

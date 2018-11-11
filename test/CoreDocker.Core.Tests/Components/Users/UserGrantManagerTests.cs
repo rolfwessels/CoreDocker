@@ -1,5 +1,6 @@
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using FizzWare.NBuilder;

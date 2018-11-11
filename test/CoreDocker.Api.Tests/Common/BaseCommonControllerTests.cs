@@ -91,23 +91,6 @@ namespace CoreDocker.Api.Tests.Common
             result.Id.Should().Be(dal.Id);
         }
 
-        [Test]
-        public void Put_GivenProjectId_ShouldUpdateAGivenProject()
-        {
-            // arrange
-            Setup();
-            var dal = SampleItem;
-            _mockManager.Setup(mc => mc.GetById(dal.Id))
-                .Returns(dal);
-            _mockManager.Setup(mc => mc.Update(dal))
-                .Returns(dal);
-            var model = Builder<TDetailModel>.CreateNew().Build();
-            AddAdditionalMappings(model, dal);
-            // action
-            var result = _commonController.Update(dal.Id, model).Result;
-            // assert
-            result.Id.Should().Be(dal.Id);
-        }
 
        
 
@@ -116,17 +99,5 @@ namespace CoreDocker.Api.Tests.Common
         }
 
 
-        [Test]
-        public void Delete_GivenProjectId_ShouldRemoveProject()
-        {
-            // arrange
-            Setup();
-            var project = SampleItem;
-            _mockManager.Setup(mc => mc.Delete(project.Id)).Returns(project);
-            // action
-            var result = _commonController.Delete(project.Id).Result;
-            // assert
-            result.Should().Be(true);
-        }
     }
 }

@@ -4,7 +4,6 @@ using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Projects
 {
-    [SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
     public class ProjectValidator : AbstractValidator<Project>
     {
         public ProjectValidator()

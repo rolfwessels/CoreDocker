@@ -1,4 +1,3 @@
-using CoreDocker.Core.Framework.DataIntegrity;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
@@ -7,7 +6,6 @@ namespace CoreDocker.Core.Framework.BaseManagers
 {
     public class BaseManagerArguments
     {
-        protected readonly IDataIntegrityManager _dataIntegrityManager;
         protected readonly IGeneralUnitOfWork _generalUnitOfWork;
         protected readonly IMessenger _messenger;
         protected readonly IValidatorFactory _validationFactory;
@@ -18,7 +16,6 @@ namespace CoreDocker.Core.Framework.BaseManagers
             _generalUnitOfWork = generalUnitOfWork;
             _messenger = messenger;
             _validationFactory = validationFactory;
-            _dataIntegrityManager = new DataIntegrityManager(_generalUnitOfWork, IntegrityOperators.Default);
         }
 
         public IGeneralUnitOfWork GeneralUnitOfWork => _generalUnitOfWork;
@@ -27,6 +24,5 @@ namespace CoreDocker.Core.Framework.BaseManagers
 
         public IValidatorFactory ValidationFactory => _validationFactory;
 
-        public IDataIntegrityManager DataIntegrityManager => _dataIntegrityManager;
     }
 }

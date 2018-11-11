@@ -44,6 +44,25 @@ namespace CoreDocker.Api.Components.Users
             return user.ToModel();
         }
 
+        public override async Task<UserModel> Update(string id, UserCreateUpdateModel model)
+        {
+            var commandResult = await _commander.Execute(UserUpdate.Request.From(id, model.Name, model.Password, model.Roles, model.Email));
+            var user = await _userManager.GetById(commandResult.Id);
+            return user.ToModel();
+        }
+
+        #region Overrides of BaseCommonController<User,UserModel,UserReferenceModel,UserCreateUpdateModel>
+
+        public override async Task<bool> Delete(string id)
+        {
+            var user = await _userManager.GetById(id);
+            var exists = user != null;
+            if (exists) await _commander.Execute(UserRemove.Request.From(id));
+            return exists;
+        }
+
+        #endregion
+
         #endregion
 
         public async Task<UserModel> Register(RegisterModel model)

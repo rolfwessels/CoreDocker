@@ -7,6 +7,7 @@ namespace CoreDocker.Dal.Models.Users
 {
     public class User : BaseDalModelWithId
     {
+
         public User()
         {
             Roles = new List<string>();

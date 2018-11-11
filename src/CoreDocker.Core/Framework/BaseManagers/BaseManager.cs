@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Core.Framework.DataIntegrity;
 using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
-using CoreDocker.Utilities.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Framework.BaseManagers
@@ -20,14 +18,12 @@ namespace CoreDocker.Core.Framework.BaseManagers
         protected readonly IGeneralUnitOfWork _generalUnitOfWork;
         protected readonly IMessenger _messenger;
         protected readonly IValidatorFactory _validationFactory;
-        protected IDataIntegrityManager _dataIntegrityManager;
 
         protected BaseManager(BaseManagerArguments baseManagerArguments)
         {
             _generalUnitOfWork = baseManagerArguments.GeneralUnitOfWork;
             _messenger = baseManagerArguments.Messenger;
             _validationFactory = baseManagerArguments.ValidationFactory;
-            _dataIntegrityManager = baseManagerArguments.DataIntegrityManager;
         }
     }
 
@@ -67,9 +63,6 @@ namespace CoreDocker.Core.Framework.BaseManagers
             if (project != null)
             {
                 _log.Info($"Remove {_name} [{project}]");
-                var count = await _dataIntegrityManager.GetReferenceCount(project);
-                if (count > 0)
-                    throw new ReferenceException($"Could not remove {typeof(T).Name.UnderScoreAndCamelCaseToHumanReadable()} [{project}]. It is currently referenced in {count} other data object.");
                 await Repository.Remove(x => x.Id == id);
                 _messenger.Send(new DalUpdateMessage<T>(project, UpdateTypes.Removed));
             }
@@ -88,7 +81,6 @@ namespace CoreDocker.Core.Framework.BaseManagers
             await Validate(entity);
             _log.Info($"Update {_name} [{entity}]");
             var update = await Repository.Update(x => x.Id == entity.Id, entity);
-            _dataIntegrityManager.UpdateAllReferences(update).ContinueWithNoWait(LogUpdate);
             _messenger.Send(new DalUpdateMessage<T>(entity, UpdateTypes.Updated));
             return update;
         }
@@ -123,13 +115,5 @@ namespace CoreDocker.Core.Framework.BaseManagers
             return Task.FromResult(true);
         }
 
-        #region Private Methods
-
-        private void LogUpdate(Task<long> obj)
-        {
-            if (obj.Result > 0) _log.Info("{0} referenced items have been updated.");
-        }
-
-        #endregion
     }
 }

@@ -47,7 +47,6 @@ namespace CoreDocker.Sdk.Tests.GraphQl
             var userUpdate = data.Last();
             // action
             var insert = await _userApiClient.Create(userCreate);
-            
             var update = await _userApiClient.Update(insert.Id, userUpdate);
             var getById = await _userApiClient.ById(insert.Id);
             var allAfterUpdate = await _userApiClient.All();

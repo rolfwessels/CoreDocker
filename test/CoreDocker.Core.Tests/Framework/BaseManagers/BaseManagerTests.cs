@@ -47,10 +47,12 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
 
         #endregion
 
-        protected static EquivalencyAssertionOptions<UserCreate.Request> DefaultCommandExcluding(
-            EquivalencyAssertionOptions<UserCreate.Request> opt)
+        protected static EquivalencyAssertionOptions<T> DefaultCommandExcluding<T>(
+            EquivalencyAssertionOptions<T> opt) where  T : CommandRequestBase
         {
-            return opt.Excluding(x => x.CreatedAt).Excluding(x => x.CorrelationId);
+            return opt
+                .Excluding(x => x.CreatedAt)
+                .Excluding(x => x.CorrelationId);
         }
 
         #region Nested type: FakeValidator
