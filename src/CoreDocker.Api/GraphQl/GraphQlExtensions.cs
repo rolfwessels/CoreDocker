@@ -17,8 +17,8 @@ namespace CoreDocker.Api.GraphQl
 
         public static bool RequiresPermissions(this IProvideMetadata type)
         {
-            var permissions = type.GetMetadata<IEnumerable<Activity>>(PermissionsKey, new List<Activity>());
-            return permissions.Any();
+            var permissions = type?.GetMetadata<IEnumerable<Activity>>(PermissionsKey, new List<Activity>());
+            return permissions != null && permissions.Any();
         }
 
         public static bool CanAccess(this IProvideMetadata type, IEnumerable<Activity> claims)
@@ -54,7 +54,7 @@ namespace CoreDocker.Api.GraphQl
 
         public static bool IsAuthorizationRequire(this IProvideMetadata type)
         {
-            return type.GetMetadata<bool?>(Authorization) ?? false;
+            return type?.GetMetadata<bool?>(Authorization) ?? false;
         }
 
         public static FieldBuilder<TSourceType, TReturnType> RequirePermission<TSourceType, TReturnType>(

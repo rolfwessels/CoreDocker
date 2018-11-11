@@ -11,8 +11,8 @@ namespace CoreDocker.Api.GraphQl
         public DefaultQuery()
         {
             Name = "Query";
-            Field<ProjectsSpecification>("projects", resolve: context => Task.FromResult(new object()));
-            Field<UsersSpecification>("users", resolve: context => Task.FromResult(new object()));
+            Field<ProjectsQuerySpecification>("projects", resolve: context => Task.FromResult(new object()));
+            Field<UsersQuerySpecification>("users", resolve: context => Task.FromResult(new object()));
         }
     }
 }

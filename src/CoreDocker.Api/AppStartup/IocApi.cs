@@ -95,7 +95,7 @@ namespace CoreDocker.Api.AppStartup
 
             /*user*/
             builder.RegisterType<UserSpecification>();
-            builder.RegisterType<UsersSpecification>();
+            builder.RegisterType<UsersQuerySpecification>();
             builder.RegisterType<UserCreateUpdateSpecification>();
             builder.RegisterType<UsersMutationSpecification>();
             builder.RegisterType<RoleSpecification>();
@@ -104,7 +104,7 @@ namespace CoreDocker.Api.AppStartup
             /*project*/
             builder.RegisterType<ProjectSpecification>();
             builder.RegisterType<OpenIdSettings>();
-            builder.RegisterType<ProjectsSpecification>();
+            builder.RegisterType<ProjectsQuerySpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
             builder.RegisterType<ProjectsMutationSpecification>();
 

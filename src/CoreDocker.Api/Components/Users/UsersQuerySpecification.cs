@@ -12,11 +12,11 @@ using log4net;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UsersSpecification : ObjectGraphType<object>
+    public class UsersQuerySpecification : ObjectGraphType<object>
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersSpecification(UserCommonController users)
+        public UsersQuerySpecification(UserCommonController users)
         {
             var safe = new Safe(_log);
             var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);

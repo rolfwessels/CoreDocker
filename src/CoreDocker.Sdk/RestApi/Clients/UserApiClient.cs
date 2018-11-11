@@ -15,13 +15,11 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
         }
 
-        #region Implementation of IUserControllerActions
-
         public async Task<List<UserModel>> All()
         {
             var request = new GraphQLRequest
             {
-                Query = Fragments.User + @"{
+                Query = GraphQlFragments.User + @"{
                     users {
                         all {
                             ...userData
@@ -38,7 +36,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             var request = new GraphQLRequest
             {
                  
-                Query = Fragments.User + @"query ($id: String!) {
+                Query = GraphQlFragments.User + @"query ($id: String!) {
                   users {
                     byId(id: $id) {
                       ...userData
@@ -55,7 +53,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var request = new GraphQLRequest
             {
-                Query = Fragments.User+ @"{
+                Query = GraphQlFragments.User+ @"{
                     users {
                         me {
                             ...userData
@@ -70,7 +68,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = Fragments.User + @"
+                Query = GraphQlFragments.User + @"
                 mutation ($name: String!, $email: String!, $roles: [String], $password: String) {
                   users {
                     insert(user: {name: $name, email: $email, roles: $roles, password: $password}) {
@@ -87,7 +85,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = Fragments.User + @"
+                Query = GraphQlFragments.User + @"
                 mutation ($name: String!, $email: String!, $password: String!) {
                   users {
                     register(user: {name: $name, email: $email, password: $password}) {
@@ -104,7 +102,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = Fragments.User + @"
+                Query = GraphQlFragments.User + @"
                 mutation ($id: String!, $name: String!, $email: String!, $roles: [String], $password: String) {
                   users {
                     update(id: $id, user: {name: $name, email: $email, roles: $roles, password: $password}) {
@@ -152,6 +150,5 @@ namespace CoreDocker.Sdk.RestApi.Clients
         }
 
 
-        #endregion
     }
 }

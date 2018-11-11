@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi;
-using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
@@ -16,7 +15,6 @@ namespace CoreDocker.Sdk.Tests.Security
         private ICoreDockerClient _connection;
         private ICoreDockerClient _connectionAuth;
 
-        private ProjectApiClient _projectApiClient;
 
         #region Setup/Teardown
 
@@ -25,8 +23,7 @@ namespace CoreDocker.Sdk.Tests.Security
             _connection = _defaultRequestFactory.Value.GetConnection();
             _connectionAuth = _defaultRequestFactory.Value.GetConnection();
 //            _connection = new CoreDockerClient("http://localhost:5000");
-//            _connectionAuth = new CoreDockerClient("http://localhost:5000");
-            _projectApiClient = _connection.Projects;
+//            _connectionAuth = new CoreDockerClient("http://localhost:5000");   
         }
 
         [TearDown]
@@ -45,11 +42,10 @@ namespace CoreDocker.Sdk.Tests.Security
             // action
             var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
             _connection.SetToken(data);
-            var projectsEnumerable = await _connection.Projects.Get();
+            var projectsEnumerable = await _connection.Projects.All();
             // assert
             pingModel.Environment.ToLower().Should().Be("development"); //??
             projectsEnumerable.Count().Should().BeGreaterThan(0);
-            await _connection.Projects.Get();
         }
 
         [Test]

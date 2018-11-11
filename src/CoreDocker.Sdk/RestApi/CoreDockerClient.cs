@@ -34,7 +34,11 @@ namespace CoreDocker.Sdk.RestApi
         {
             var graphQlResponse = await _graphQlClient.PostAsync(heroRequest);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+            {
+                graphQlResponse.Dump("graphQlResponse");
                 throw new GraphQlResponseException(graphQlResponse);
+            }
+
             return graphQlResponse;
         }
 

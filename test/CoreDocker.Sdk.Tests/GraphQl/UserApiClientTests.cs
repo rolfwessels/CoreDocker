@@ -15,7 +15,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
 
-namespace CoreDocker.Sdk.Tests.WebApi
+namespace CoreDocker.Sdk.Tests.GraphQl
 {
     [TestFixture]
     [Category("Integration")]
@@ -47,18 +47,11 @@ namespace CoreDocker.Sdk.Tests.WebApi
             var userUpdate = data.Last();
             // action
             var insert = await _userApiClient.Create(userCreate);
-            Action testUpdateValidationFail = () =>
-            {
-                var invalidEmailUser = userCreate.DynamicCastTo<UserCreateUpdateModel>();
-                invalidEmailUser.Email = "test@sdfsd";
-                _userApiClient.UpdateIt(insert.Id, invalidEmailUser).Wait();
-            };
-            testUpdateValidationFail.Should().Throw<GraphQlResponseException>().WithMessage("'Email' is not a valid email address.");
             var update = await _userApiClient.UpdateIt(insert.Id, userUpdate);
             var getById = await _userApiClient.ById(insert.Id);
             var allAfterUpdate = await _userApiClient.All();
-            var deleteResults = await _userApiClient.Remove(insert.Id);
-            var deleteResults1 = await _userApiClient.Remove(insert.Id);
+            var firstDelete = await _userApiClient.Remove(insert.Id);
+            var secondDelete = await _userApiClient.Remove(insert.Id);
 
             // assert
             insert.Should().BeEquivalentTo(userCreate, CompareConfig);
@@ -66,8 +59,8 @@ namespace CoreDocker.Sdk.Tests.WebApi
             getById.Should().BeEquivalentTo(update,r=>r.Excluding(x=>x.UpdateDate));
             allAfterUpdate.Count.Should().BeGreaterThan(0);
             allAfterUpdate.Should().Contain(x => x.Name == update.Name);
-            deleteResults.Should().BeTrue();
-            deleteResults1.Should().BeFalse();
+            firstDelete.Should().BeTrue();
+            secondDelete.Should().BeFalse();
         }
 
         [Test]

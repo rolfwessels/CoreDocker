@@ -11,15 +11,16 @@ using log4net;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectsSpecification : ObjectGraphType<object>
+    public class ProjectsQuerySpecification : ObjectGraphType<object>
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ProjectsSpecification(ProjectCommonController projects)
+        public ProjectsQuerySpecification(ProjectCommonController projects)
         {
             var safe = new Safe(_log);
             var options = new GraphQlQueryOptions<ProjectCommonController, ProjectModel, Project>(projects);
             Name = "Projects";
+
             Field<ProjectSpecification>(
                 "byId",
                 arguments: new QueryArguments(
@@ -31,11 +32,13 @@ namespace CoreDocker.Api.Components.Projects
                 ),
                 resolve: safe.Wrap(context => projects.GetById(context.GetArgument<string>("id")))
             ).RequirePermission(Activity.ReadProject);
+
             Field<ListGraphType<ProjectSpecification>>(
                 "all",
                 Description = "all projects",
                 resolve: safe.Wrap(context => projects.Query(queryable => queryable))
             ).RequirePermission(Activity.ReadProject);
+
             Field<ListGraphType<ProjectSpecification>>(
                 "recent",
                 Description = "recent modified projects",
@@ -53,6 +56,7 @@ namespace CoreDocker.Api.Components.Projects
                             .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
                     ))
             ).RequirePermission(Activity.ReadProject);
+
             Field<QueryResultSpecification>(
                 "query",
                 Description = "query the projects projects",

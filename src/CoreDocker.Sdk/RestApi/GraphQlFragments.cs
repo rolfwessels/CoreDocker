@@ -1,6 +1,6 @@
-namespace CoreDocker.Sdk.RestApi.Clients
+namespace CoreDocker.Sdk.RestApi
 {
-    public class Fragments
+    public class GraphQlFragments
     {
         public static string User = @"fragment userData on User {
                 id,
@@ -11,5 +11,10 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 createDate,
                 updateDate
             } ";
+
+        public static string Project = @"fragment projectData on Project {
+              id
+              name
+            }";
     }
 }

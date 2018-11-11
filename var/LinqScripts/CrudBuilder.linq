@@ -7,12 +7,12 @@
   <Namespace>System.Globalization</Namespace>
 </Query>
 
-string  _location = @"..\..\..\";
-string  _template = @"Project";
-string  _toName = @"UserGrant";
+string  _location = @"..\..\";
+string  _template = @"User";
+string  _toName = @"Project";
 string[]  _fileTypes = new [] { @".cs",".js", ".ts",".html",".scss",".txt",".json", ".less"};
-string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs", "obj\\" , "Enums\\","node_modules",".tmp"};
-string _focus = "Test";
+string[]  _exclude = new [] { @"bower_components" ,".OAuth2.","RequestClientDetailsHelper","Mappers\\MapClient.cs", "obj\\" , "Enums\\","node_modules",".tmp", "build\\"};
+string _focus = "Api";
 string _templateFolder = null ;
 string _toNameFolder = null;
 bool _copyScaffold = false;
@@ -26,7 +26,7 @@ void Main()
 	_toNameFolder = GetFolderName(_toName) ?? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_toName.Humanize().Split(' ').Last().Humanize());
 	
 	var fileReplaces = files.Select(x => new { File = x, Replace = ReplaceAll(x) , Exists = File.Exists(ReplaceAll(x))}).ToList();
-	fileReplaces.Where(x=>x.Exists).Select(x=> x.Replace.Replace(_location,"")).Dump("Existing files");
+	//fileReplaces.Where(x=>x.Exists).Select(x=> x.Replace.Replace(_location,"")).Dump("Existing files");
 	fileReplaces.Where(x => !x.Exists).Select(x => x.Replace.Replace(_location, "")).Dump("Missing files");
 
 	
