@@ -45,21 +45,18 @@ namespace CoreDocker.Sdk.Tests.GraphQl
             var projectCreate = data.First();
             var projectUpdate = data.Last();
             // action
-            var create = await _projectApiClient.Create(projectCreate);
-            var update = await _projectApiClient.Update(create.Id, projectUpdate);
-            var getById = await _projectApiClient.ById(create.Id);
+            var createCommand = await _projectApiClient.Create(projectCreate);
+            var create = await _projectApiClient.ById(createCommand.Id);
+            var updateCommand = await _projectApiClient.Update(create.Id, projectUpdate);
+            var update = await _projectApiClient.ById(create.Id);
             var allAfterUpdate = await _projectApiClient.All();
             var firstDelete = await _projectApiClient.Remove(create.Id);
-            var secondDelete = await _projectApiClient.Remove(create.Id);
 
             // assert
             create.Should().BeEquivalentTo(projectCreate, CompareConfig);
             update.Should().BeEquivalentTo(projectUpdate, CompareConfig);
-            getById.Should().BeEquivalentTo(update,r=>r.Excluding(x=>x.UpdateDate));
             allAfterUpdate.Count.Should().BeGreaterThan(0);
             allAfterUpdate.Should().Contain(x => x.Name == update.Name);
-            firstDelete.Should().BeTrue();
-            secondDelete.Should().BeFalse();
         }
 
         [Test]

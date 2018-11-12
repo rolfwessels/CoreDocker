@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
+using CoreDocker.Core.Components.Projects;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
@@ -14,13 +16,13 @@ namespace CoreDocker.Api.Components.Projects
         private const string Value = "project";
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ProjectsMutationSpecification()
+        public ProjectsMutationSpecification(ICommander commander)
         {
             Name = "ProjectsMutation";
             var safe = new Safe(_log);
 
             this.RequireAuthorization();
-            Field<ProjectSpecification>(
+            Field<CommandResultSpecification>(
                 "create",
                 Description = "Add a project.",
                 new QueryArguments(
@@ -29,10 +31,10 @@ namespace CoreDocker.Api.Components.Projects
                 safe.Wrap(context =>
                 {
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                   throw new NotImplementedException();
+                    return commander.Execute(ProjectCreate.Request.From(commander.NewId, project.Name));
                 })).RequirePermission(Activity.UpdateProject);
 
-            Field<ProjectSpecification>(
+            Field<CommandResultSpecification>(
                 "update",
                 Description = "Update a project.",
                 new QueryArguments(
@@ -43,10 +45,10 @@ namespace CoreDocker.Api.Components.Projects
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    throw new NotImplementedException();
+                    return commander.Execute(ProjectUpdate.Request.From(id, project.Name));
                 })).RequirePermission(Activity.UpdateProject);
 
-            Field<BooleanGraphType>(
+            Field<CommandResultSpecification>(
                 "remove",
                 Description = "Permanently remove a project.",
                 new QueryArguments(
@@ -55,7 +57,7 @@ namespace CoreDocker.Api.Components.Projects
                 safe.Wrap(context =>
                 {
                     var id = context.GetArgument<string>(Name = "id");
-                    throw new NotImplementedException();
+                    return commander.Execute(ProjectRemove.Request.From(id));
                 })).RequirePermission(Activity.DeleteProject);
         }
     }

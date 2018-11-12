@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -78,7 +77,7 @@ namespace CoreDocker.Api.Components.Users
                 "roles",
                 Description = "All roles",
                 resolve: safe.Wrap(context => RoleManager.All.Select(x =>
-                    new RoleModel() {Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList()}))
+                    new RoleModel {Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList()}))
             );
 
             Field<RoleSpecification>(
@@ -93,12 +92,10 @@ namespace CoreDocker.Api.Components.Users
                 ),
                 safe.Wrap(context => RoleManager.GetRole(context.GetArgument<string>("name")))
             );
-
         }
 
         #region Private Methods
 
-       
         private static async Task<UserModel> Me(Task<User> users)
         {
             var user = await users;

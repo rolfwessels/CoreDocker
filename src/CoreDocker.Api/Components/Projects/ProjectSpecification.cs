@@ -1,9 +1,10 @@
+using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectSpecification : ObjectGraphType<ProjectModel>
+    public class ProjectSpecification : ObjectGraphType<Project>
     {
         public ProjectSpecification()
         {
