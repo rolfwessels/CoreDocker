@@ -55,7 +55,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             // action
             await _handler.ProcessCommand(validRequest);
             // assert
-            var user = await _users.FindOne(x => x.Id == validRequest.Id);
+            var user = await _users.FindOne(x => x.Id == validRequest.Id);;
             user.Should().NotBeNull();
         }
 

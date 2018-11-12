@@ -10,6 +10,6 @@ namespace CoreDocker.Core.Components.Users
         Task<UserGrant> GetByKey(string key);
         Task<List<UserGrant>> GetByUserId(string userId);
         Task Insert(UserGrant userGrant);
-        Task Delete(string byKeyId);
+        Task Delete(string id);
     }
 }

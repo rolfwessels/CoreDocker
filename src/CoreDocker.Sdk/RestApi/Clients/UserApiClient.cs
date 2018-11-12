@@ -64,72 +64,74 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return CastHelper.DynamicCastTo<UserModel>(response.Data.users.me);
         }
 
-        public async Task<UserModel> Create(UserCreateUpdateModel user)
+        public async Task<CommandResultModel> Create(UserCreateUpdateModel user)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = GraphQlFragments.User + @"
+                Query = GraphQlFragments.CommandResult + @"
                 mutation ($name: String!, $email: String!, $roles: [String], $password: String) {
                   users {
-                    insert(user: {name: $name, email: $email, roles: $roles, password: $password}) {
-                      ...userData
+                    create(user: {name: $name, email: $email, roles: $roles, password: $password}) {
+                      ...commandResultData
                     }
                   }
                 }",
                 Variables = new { user.Name, user.Email, user.Roles, user.Password }
             });
-            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.insert);
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.create);
         }
 
-        public async Task<UserModel> Register(RegisterModel user)
+        public async Task<CommandResultModel> Register(RegisterModel user)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = GraphQlFragments.User + @"
+                Query = GraphQlFragments.CommandResult + @"
                 mutation ($name: String!, $email: String!, $password: String!) {
                   users {
                     register(user: {name: $name, email: $email, password: $password}) {
-                      ...userData
+                      ...commandResultData
                     }
                   }
                 }",
                 Variables = new { user.Name, user.Email,  user.Password }
             });
-            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.register);
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.register);
         }
 
-        public async Task<UserModel> Update(string id,UserCreateUpdateModel user)
+        public async Task<CommandResultModel> Update(string id,UserCreateUpdateModel user)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = GraphQlFragments.User + @"
+                Query = GraphQlFragments.CommandResult + @"
                 mutation ($id: String!, $name: String!, $email: String!, $roles: [String], $password: String) {
                   users {
                     update(id: $id, user: {name: $name, email: $email, roles: $roles, password: $password}) {
-                      ...userData
+                      ...commandResultData
                     }
                   }
                 }",
                 Variables = new { id, user.Name, user.Email, user.Roles, user.Password}
             });
             
-            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.update);
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.update);
         }
 
-        public async Task<bool> Remove(string id)
+        public async Task<CommandResultModel> Remove(string id)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
-                Query = @"
+                Query = GraphQlFragments.CommandResult + @"
                 mutation ($id: String!) {
                   users {
-                    delete(id: $id)
+                    remove(id: $id) {
+                        ...commandResultData
+                    }
                   }
                 }",
                 Variables = new { id }
             });
 
-            return CastHelper.DynamicCastTo<bool>(response.Data.users.delete);
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.remove);
         }
 
 

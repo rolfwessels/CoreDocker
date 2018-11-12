@@ -35,15 +35,4 @@ namespace CoreDocker.Core.Framework.CommandQuery
 
         public abstract Task ProcessCommand(T request);
     }
-
-   
-
-    public class CommandResult : ICommandProperties
-    {
-        public string CorrelationId { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string Id { get; set; }
-    }
-
-    
 }

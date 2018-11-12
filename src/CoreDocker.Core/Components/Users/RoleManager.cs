@@ -70,7 +70,7 @@ namespace CoreDocker.Core.Components.Users
         public static bool AreValidRoles(List<string> userRoles)
         {
             var roles = _roles.Select(x => x.Name).ToArray();
-            return userRoles.Any(role => !roles.Contains(role));
+            return userRoles.All(role => roles.Contains(role));
         }
     }
 }

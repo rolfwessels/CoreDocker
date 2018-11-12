@@ -34,12 +34,12 @@ namespace CoreDocker.Core.Components.Users
 
         public Task Insert(UserGrant userGrant)
         {
-            throw new System.NotImplementedException();
+            return Repository.Add(userGrant);
         }
 
-        public Task Delete(string byKeyId)
+        public Task Delete(string id)
         {
-            throw new System.NotImplementedException();
+            return Repository.Remove(x=>x.Id == id);
         }
 
         #endregion

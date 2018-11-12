@@ -12,9 +12,14 @@ namespace CoreDocker.Sdk.RestApi
                 updateDate
             } ";
 
-        public static string Project = @"fragment projectData on Project {
+        public const string Project = @"fragment projectData on Project {
               id
               name
-            }";
+            } ";
+
+        public const string CommandResult = @"fragment commandResultData on CommandResult {
+              id
+              correlationId
+            } ";
     }
 }

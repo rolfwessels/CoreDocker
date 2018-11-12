@@ -1,6 +1,7 @@
 ﻿using System;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
+using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users
 {
@@ -26,7 +27,7 @@ namespace CoreDocker.Core.Components.Users
         {
             if (!RoleManager.AreValidRoles(user.Roles))
             {
-                throw new ArgumentException($"One or more role does not exist [{user.Roles.ToString()}]");
+                throw new ArgumentException($"One or more role does not exist [{user.Roles.StringJoin()}]");
             }
         }
     }

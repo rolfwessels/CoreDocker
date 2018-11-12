@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using CoreDocker.Api.Components;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
@@ -70,8 +71,8 @@ namespace CoreDocker.Api.AppStartup
 
         private static void SetupGraphQl(ContainerBuilder builder)
         {
-            builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
-            builder.RegisterType<DocumentWriter>().As<IDocumentWriter>().SingleInstance();
+            
+            builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
             //validation
             //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

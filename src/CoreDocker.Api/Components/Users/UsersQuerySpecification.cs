@@ -67,7 +67,6 @@ namespace CoreDocker.Api.Components.Users
                 safe.Wrap(context => options.Query(context))
             ).RequirePermission(Activity.ReadUsers);
 
-
             Field<UserSpecification>(
                 "me",
                 Description = "Current user",
@@ -78,7 +77,8 @@ namespace CoreDocker.Api.Components.Users
             Field<ListGraphType<RoleSpecification>>(
                 "roles",
                 Description = "All roles",
-                resolve: safe.Wrap(context => RoleManager.All)
+                resolve: safe.Wrap(context => RoleManager.All.Select(x =>
+                    new RoleModel() {Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList()}))
             );
 
             Field<RoleSpecification>(
@@ -93,6 +93,7 @@ namespace CoreDocker.Api.Components.Users
                 ),
                 safe.Wrap(context => RoleManager.GetRole(context.GetArgument<string>("name")))
             );
+
         }
 
         #region Private Methods

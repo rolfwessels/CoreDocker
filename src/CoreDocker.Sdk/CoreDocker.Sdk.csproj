@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoreDocker.Core\CoreDocker.Core.csproj" />
     <ProjectReference Include="..\CoreDocker.Shared\CoreDocker.Shared.csproj" />
     <ProjectReference Include="..\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
   </ItemGroup>

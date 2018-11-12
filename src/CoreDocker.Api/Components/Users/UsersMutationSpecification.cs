@@ -20,8 +20,8 @@ namespace CoreDocker.Api.Components.Users
             Name = "UsersMutation";
             var safe = new Safe(_log);
 
-            Field<UserSpecification>(
-                "insert",
+            Field<CommandResultSpecification>(
+                "create",
                 Description = "add a user",
                 new QueryArguments(
                     new QueryArgument<UserCreateUpdateSpecification> {Name = Value}
@@ -31,7 +31,7 @@ namespace CoreDocker.Api.Components.Users
                     return commander.Execute(UserCreate.Request.From(commander.NewId,user.Name,user.Email,user.Password,user.Roles));
                 })).RequirePermission(Activity.UpdateUsers);
 
-            Field<UserSpecification>(
+            Field<CommandResultSpecification>(
                 "register",
                 Description = "register a new user",
                 new QueryArguments(
@@ -42,7 +42,7 @@ namespace CoreDocker.Api.Components.Users
                     return commander.Execute(UserCreate.Request.From(commander.NewId, user.Name, user.Email, user.Password, new List<string>() {RoleManager.Guest.Name}));
                 }));
 
-            Field<UserSpecification>(
+            Field<CommandResultSpecification>(
                 "update",
                 Description = "update a user",
                 new QueryArguments(
@@ -52,11 +52,11 @@ namespace CoreDocker.Api.Components.Users
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
-                    return commander.Execute(UserUpdate.Request.From(id, user.Name, user.Email, user.Roles, user.Password));
+                    return commander.Execute(UserUpdate.Request.From(id, user.Name, user.Password, user.Roles, user.Email));
                 })).RequirePermission(Activity.UpdateUsers);
 
-            Field<BooleanGraphType>(
-                "delete",
+            Field<CommandResultSpecification>(
+                "remove",
                 Description = "permanently remove a user",
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"}
