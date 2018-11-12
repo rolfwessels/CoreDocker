@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CoreDocker.Dal.Validation;
+﻿using CoreDocker.Dal.Validation;
 using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Users
@@ -13,5 +12,7 @@ namespace CoreDocker.Dal.Models.Users
             RuleFor(x => x.HashedPassword).NotEmpty();
             RuleFor(x => x.Roles).NotEmpty();
         }
+
+      
     }
 }

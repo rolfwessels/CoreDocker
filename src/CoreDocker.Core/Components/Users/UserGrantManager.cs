@@ -32,6 +32,16 @@ namespace CoreDocker.Core.Components.Users
             return Repository.Find(x => x.User.Id == userId);
         }
 
+        public Task Insert(UserGrant userGrant)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task Delete(string byKeyId)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
     }
 }

@@ -35,6 +35,7 @@ namespace CoreDocker.Core.Components.Users
                 using (var connection = _persistance.GetConnection())
                 {
                     _validation.ValidateAndThrow(user);
+                    user.ValidateRolesAndThrow();
                     await connection.Users.Add(user);
                 }
                 await _commander.SendEvent(request.ToEvent());

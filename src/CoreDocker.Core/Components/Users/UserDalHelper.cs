@@ -21,5 +21,13 @@ namespace CoreDocker.Core.Components.Users
         {
             return PasswordHash.CreateHash(password ?? Guid.NewGuid().ToString());
         }
+
+        public static void ValidateRolesAndThrow(this User user)
+        {
+            if (!RoleManager.AreValidRoles(user.Roles))
+            {
+                throw new ArgumentException($"One or more role does not exist [{user.Roles.ToString()}]");
+            }
+        }
     }
 }

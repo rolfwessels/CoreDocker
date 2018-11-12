@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
+using CoreDocker.Api.Mappers;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
@@ -16,10 +18,10 @@ namespace CoreDocker.Api.Components.Users
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersQuerySpecification(UserCommonController users)
+        public UsersQuerySpecification(IUserManager users)
         {
             var safe = new Safe(_log);
-            var options = new GraphQlQueryOptions<UserCommonController, UserModel, User>(users);
+            var options = new GraphQlQueryOptions<IUserManager, UserModel, User>(users);
             Name = "Users";
 
             Field<UserSpecification>(
@@ -69,14 +71,14 @@ namespace CoreDocker.Api.Components.Users
             Field<UserSpecification>(
                 "me",
                 Description = "Current user",
-                resolve: safe.Wrap(context => Me(users))
+                resolve: safe.Wrap(context => Me(GraphQlUserContextHelper.User(context)))
             ).RequireAuthorization();
 
 
             Field<ListGraphType<RoleSpecification>>(
                 "roles",
                 Description = "All roles",
-                resolve: safe.Wrap(context => users.Roles())
+                resolve: safe.Wrap(context => RoleManager.All)
             );
 
             Field<RoleSpecification>(
@@ -89,22 +91,17 @@ namespace CoreDocker.Api.Components.Users
                         Description = "role name"
                     }
                 ),
-                safe.Wrap(context => LookupRole(users, context.GetArgument<string>("name")))
+                safe.Wrap(context => RoleManager.GetRole(context.GetArgument<string>("name")))
             );
         }
 
         #region Private Methods
 
-        private async Task<RoleModel> LookupRole(UserCommonController users, string getArgument)
+       
+        private static async Task<UserModel> Me(Task<User> users)
         {
-            var roleModels = await users.Roles();
-            return roleModels.FirstOrDefault(x =>
-                string.Equals(x.Name, getArgument, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        private static async Task<UserModel> Me(UserCommonController users)
-        {
-            return await users.WhoAmI();
+            var user = await users;
+            return user.ToModel();
         }
 
         #endregion

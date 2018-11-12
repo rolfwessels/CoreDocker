@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
-using CoreDocker.Api.WebApi.Controllers;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.GraphQl.DynamicQuery
 {
     public class GraphQlQueryOptions<TController, TModel, TDal>
-        where TController : IQueryableControllerBase<TDal, TModel>
     {
         private readonly TController _projects;
 
@@ -27,17 +26,20 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
 
         public IGraphQlQueryOptions Query(ResolveFieldContext<object> context)
         {
-            return new DataHolder<TController, TModel, TDal>(this, context);
+            throw new NotImplementedException();
+//            return new DataHolder<TController, TModel, TDal>(this, context);
         }
 
         public List<TModel> BuildQuery(ResolveFieldContext<object> context)
         {
-            return _projects.Query(dals => dals);
+            throw new NotImplementedException();
+            //return _projects.Query(dals => dals);
         }
 
         public int BuildCount(ResolveFieldContext<object> context)
         {
-            return _projects.Count(dals => dals);
+            throw new NotImplementedException();
+            //return _projects.Count(dals => dals);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
@@ -13,7 +14,7 @@ namespace CoreDocker.Api.Components.Projects
         private const string Value = "project";
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ProjectsMutationSpecification(ProjectCommonController projectManager)
+        public ProjectsMutationSpecification()
         {
             Name = "ProjectsMutation";
             var safe = new Safe(_log);
@@ -28,7 +29,7 @@ namespace CoreDocker.Api.Components.Projects
                 safe.Wrap(context =>
                 {
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    return projectManager.Insert(project);
+                   throw new NotImplementedException();
                 })).RequirePermission(Activity.UpdateProject);
 
             Field<ProjectSpecification>(
@@ -42,7 +43,7 @@ namespace CoreDocker.Api.Components.Projects
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    return projectManager.Update(id, project);
+                    throw new NotImplementedException();
                 })).RequirePermission(Activity.UpdateProject);
 
             Field<BooleanGraphType>(
@@ -54,7 +55,7 @@ namespace CoreDocker.Api.Components.Projects
                 safe.Wrap(context =>
                 {
                     var id = context.GetArgument<string>(Name = "id");
-                    return projectManager.Delete(id);
+                    throw new NotImplementedException();
                 })).RequirePermission(Activity.DeleteProject);
         }
     }

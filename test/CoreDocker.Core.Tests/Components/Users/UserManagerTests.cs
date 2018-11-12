@@ -105,17 +105,7 @@ namespace CoreDocker.Core.Tests.Managers
             userFound.Should().BeNull();
         }
 
-        [Test]
-        public void SaveUser_WhenCalledWithUser_ShouldToLowerTheEmail()
-        {
-            // arrange
-            Setup();
-            var user = Builder<User>.CreateNew().With(x => x.Email = "asdf@GMAIL.com").Build();
-            // action
-            var result = _userManager.Save(user).Result;
-            // assert
-            result.Email.Should().Be("asdf@gmail.com");
-        }
+       
 
         protected override IRepository<User> Repository => _fakeGeneralUnitOfWork.Users;
 

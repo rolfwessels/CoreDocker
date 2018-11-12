@@ -114,13 +114,10 @@ namespace CoreDocker.Api.AppStartup
 
         private void SetupCommonControllers(ContainerBuilder builder)
         {
-            builder.RegisterType<UserCommonController>();
-            builder.RegisterType<ProjectCommonController>();
         }
 
         private void SetupTools(ContainerBuilder builder)
         {
-            builder.RegisterType<UserCommonController>();
         }
 
         #endregion

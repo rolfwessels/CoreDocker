@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Auth;
@@ -28,6 +29,8 @@ namespace CoreDocker.Core.Components.Users
                 Guest
             };
         }
+
+        public static List<Role> All => _roles;
 
         #region IRoleManager Members
 
@@ -63,5 +66,11 @@ namespace CoreDocker.Core.Components.Users
         }
 
         #endregion
+
+        public static bool AreValidRoles(List<string> userRoles)
+        {
+            var roles = _roles.Select(x => x.Name).ToArray();
+            return userRoles.Any(role => !roles.Contains(role));
+        }
     }
 }

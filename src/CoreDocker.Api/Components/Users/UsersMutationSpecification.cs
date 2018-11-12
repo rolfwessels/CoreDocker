@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.Reflection;
 using CoreDocker.Api.GraphQl;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models.Users;
 using GraphQL.Types;
@@ -12,7 +15,7 @@ namespace CoreDocker.Api.Components.Users
         private const string Value = "user";
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersMutationSpecification(UserCommonController userManager)
+        public UsersMutationSpecification(ICommander commander)
         {
             Name = "UsersMutation";
             var safe = new Safe(_log);
@@ -25,7 +28,7 @@ namespace CoreDocker.Api.Components.Users
                 ), safe.Wrap(context =>
                 {
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
-                    return userManager.Insert(user);
+                    return commander.Execute(UserCreate.Request.From(commander.NewId,user.Name,user.Email,user.Password,user.Roles));
                 })).RequirePermission(Activity.UpdateUsers);
 
             Field<UserSpecification>(
@@ -36,7 +39,7 @@ namespace CoreDocker.Api.Components.Users
                 ), safe.Wrap(context =>
                 {
                     var user = context.GetArgument<RegisterModel>(Name = Value);
-                    return userManager.Register(user);
+                    return commander.Execute(UserCreate.Request.From(commander.NewId, user.Name, user.Email, user.Password, new List<string>() {RoleManager.Guest.Name}));
                 }));
 
             Field<UserSpecification>(
@@ -49,7 +52,7 @@ namespace CoreDocker.Api.Components.Users
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
-                    return userManager.Update(id, user);
+                    return commander.Execute(UserUpdate.Request.From(id, user.Name, user.Email, user.Roles, user.Password));
                 })).RequirePermission(Activity.UpdateUsers);
 
             Field<BooleanGraphType>(
@@ -60,7 +63,7 @@ namespace CoreDocker.Api.Components.Users
                 ), safe.Wrap(context =>
                 {
                     var id = context.GetArgument<string>(Name = "id");
-                    return userManager.Delete(id);
+                    return commander.Execute(UserRemove.Request.From(id));
                 })).RequirePermission(Activity.DeleteUser);
         }
     }

@@ -30,17 +30,6 @@ namespace CoreDocker.Core.Components.Users
 
         #region IUserManager Members
 
-        public async Task<User> Save(User user, string password)
-        {
-            var found = await GetById(user.Id);
-            user.HashedPassword = password != null || found == null
-                ? PasswordHash.CreateHash(password ??
-                                          user.HashedPassword ?? DateTime.Now.ToString(CultureInfo.InvariantCulture))
-                : found.HashedPassword;
-            if (found == null) return await Insert(user);
-            await Update(user);
-            return user;
-        }
 
         public async Task<User> GetUserByEmailAndPassword(string email, string password)
         {
@@ -72,34 +61,11 @@ namespace CoreDocker.Core.Components.Users
             var userFound = await GetUserByEmail(email);
             if (userFound == null) throw new ArgumentException("Invalid email address.");
             userFound.LastLoginDate = DateTime.Now;
-            await Update(userFound);
+//            await Update(userFound);
         }
 
         #endregion
 
-        #region Overrides of BaseManager<User>
-
-        public override Task<User> Save(User entity)
-        {
-            return Save(entity, null);
-        }
-
-        protected override void DefaultModelNormalize(User user)
-        {
-            user.Email = (user.Email ?? "").ToLower();
-            user.HashedPassword = user.HashedPassword == null || !user.HashedPassword.StartsWith("1000:")
-                ? PasswordHash.CreateHash(user.HashedPassword ?? DateTime.Now.ToString(CultureInfo.InvariantCulture))
-                : user.HashedPassword;
-        }
-
-        protected override async Task Validate(User entity)
-        {
-            await base.Validate(entity);
-            var missingRoles = entity.Roles.Where(x => RoleManager.GetRole(x) == null).ToArray();
-            if (missingRoles.Any())
-                throw new ArgumentException($"The following role '{missingRoles.StringJoin()}' does not exist.");
-        }
-
-        #endregion
+      
     }
 }

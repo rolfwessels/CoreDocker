@@ -1,5 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using CoreDocker.Core.Components.Users;
+using CoreDocker.Dal.Models.Users;
+using CoreDocker.Dal.Persistence;
 using GraphQL.Authorization;
+using GraphQL.Types;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Http;
 
@@ -7,20 +13,38 @@ namespace CoreDocker.Api.GraphQl
 {
     public class GraphQlUserContext : IProvideClaimsPrincipal
     {
-        public ClaimsPrincipal User { get; set; }
+        private readonly Lazy<Task<User>> _lazyUser;
 
-        public static GraphQlUserContext BuildFromHttpContext(HttpContext ctx)
+        public GraphQlUserContext(IUserManager userManager, ClaimsPrincipal ctxUser)
         {
-            var userContext = new GraphQlUserContext
-            {
-                User = ctx.User
-            };
+            User = ctxUser;
+            _lazyUser = new Lazy<Task<User>>(() => userManager.GetById(User.Identity.Name));
+        }
+
+        public ClaimsPrincipal User { get; }
+        public Task<User> CurrentUser => _lazyUser.Value;
+
+        public static GraphQlUserContext BuildFromHttpContext(HttpContext ctx,
+            IUserManager userManager)
+        {
+
+            var userContext = new GraphQlUserContext(userManager, ctx.User);
             return userContext;
         }
 
         public static GraphQlUserContext ReadFromContext(ValidationContext contextUserContext)
         {
             return (GraphQlUserContext) contextUserContext.UserContext;
+        }
+
+    }
+
+    public static class GraphQlUserContextHelper
+    {
+        public static Task<User> User<T>(ResolveFieldContext<T> context)
+        {
+            var graphQlUserContext = (GraphQlUserContext)context.UserContext;
+            return graphQlUserContext.CurrentUser;
         }
     }
 }

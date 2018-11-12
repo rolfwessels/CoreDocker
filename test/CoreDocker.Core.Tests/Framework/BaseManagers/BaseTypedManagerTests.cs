@@ -15,20 +15,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
 {
     public abstract class BaseTypedManagerTests<T> : BaseManagerTests where T : BaseDalModelWithId
     {
-        [Test]
-        public virtual async Task Delete_WhenCalledWithExisting_ShouldCallMessageThatDataWasRemoved()
-        {
-            // arrange
-            Setup();
-            var project = Repository.AddFake().First();
-            // action
-            await Manager.Delete(project.Id);
-            // assert
-            _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Removed)),
-                Times.Once);
-            Manager.GetById(project.Id).Result.Should().BeNull();
-        }
-
+       
         [Test]
         public virtual async Task Get_WhenCalledWithId_ShouldReturnSingleRecord()
         {
@@ -53,61 +40,6 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
             var result = await Manager.Get();
             // assert
             result.Should().HaveCount(expected);
-        }
-
-        [Test]
-        public virtual async Task Save_WhenCalledWith_ShouldCallMessageThatDataWasInserted()
-        {
-            // arrange
-            Setup();
-            var project = SampleObject;
-            // action
-            await Manager.Save(project);
-            // assert
-            _mockIMessenger.Verify(
-                mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Inserted)), Times.Once);
-            _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Updated)),
-                Times.Never);
-        }
-
-        [Test]
-        public virtual async Task Save_WhenCalledWith_ShouldSaveTheRecord()
-        {
-            // arrange
-            Setup();
-            var project = SampleObject;
-            // action
-            var result = await Manager.Save(project);
-            // assert
-            Repository.Count().Result.Should().Be(1L);
-            result.Should().NotBeNull();
-        }
-
-        [Test]
-        public virtual async Task Save_WhenCalledWith_ShouldToLowerTheEmail()
-        {
-            // arrange
-            Setup();
-            var project = SampleObject;
-            // action
-            var result = await Manager.Save(project);
-            // assert
-            result.Id.Should().Be(project.Id);
-        }
-
-        [Test]
-        public virtual async Task Save_WhenCalledWithExisting_ShouldCallMessageThatDataWasUpdated()
-        {
-            // arrange
-            Setup();
-            var project = Repository.AddFake().First();
-            // action
-            await Manager.Save(project);
-            // assert
-            _mockIMessenger.Verify(mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Updated)),
-                Times.Once);
-            _mockIMessenger.Verify(
-                mc => mc.Send(It.Is<DalUpdateMessage<T>>(m => m.UpdateType == UpdateTypes.Inserted)), Times.Never);
         }
 
         protected abstract IRepository<T> Repository { get; }
