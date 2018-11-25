@@ -14,7 +14,7 @@ namespace CoreDocker.Api.Security
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static void UseIndentityService(this IServiceCollection services, IConfiguration conf)
+        public static void UseIdentityService(this IServiceCollection services, IConfiguration conf)
         {
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
             var openIdSettings = new OpenIdSettings(conf);
@@ -27,7 +27,7 @@ namespace CoreDocker.Api.Security
                 .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
         }
 
-        public static void UseIndentityService(this IApplicationBuilder app)
+        public static void UseIdentityService(this IApplicationBuilder app)
         {
             app.UseIdentityServer();
         }
@@ -59,7 +59,7 @@ namespace CoreDocker.Api.Security
                 var fileName = Path.Combine("./Certificates", "development.pfx");
                 if (!File.Exists(fileName))
                     _log.Error(
-                        $"SecuritySetupServer:Certificate Could not load file {fileName} to obtain the certificat.");
+                        $"SecuritySetupServer:Certificate Could not load file {fileName} to obtain the certificate.");
 
                 cert = new X509Certificate2(fileName, "exportpassword");
                 _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");

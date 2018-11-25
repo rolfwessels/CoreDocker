@@ -35,7 +35,7 @@ namespace CoreDocker.Api
             IocApi.Populate(services);
             services.AddGraphQl();
             services.AddCors();
-            services.UseIndentityService(Configuration);
+            services.UseIdentityService(Configuration);
             services.AddBearerAuthentication();
             services.AddMvc(WebApiSetup.Setup);
             services.AddSwagger();
@@ -56,7 +56,7 @@ namespace CoreDocker.Api
 
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-            app.UseIndentityService();
+            app.UseIdentityService();
             app.UseBearerAuthentication();
             app.UseSingalRSetup();
             app.UseMvc();
