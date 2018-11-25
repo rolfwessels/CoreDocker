@@ -1,12 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi;
-using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CoreDocker.Sdk.Tests.Security
+namespace CoreDocker.Api.Tests.Integration
 {
     [TestFixture]
     [Category("Integration")]

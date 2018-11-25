@@ -2,7 +2,7 @@ using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Framework.Mappers;
 using NUnit.Framework;
 
-namespace CoreDocker.Api.Tests.Startup
+namespace CoreDocker.Api.Tests.Mappers
 {
     [TestFixture]
     public class AutoMapperSetupTests

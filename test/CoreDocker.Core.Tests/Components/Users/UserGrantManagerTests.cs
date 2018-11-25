@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CoreDocker.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Components.Users
 {
     [TestFixture]
     public class UserGrantManagerTests : BaseTypedManagerTests<UserGrant>

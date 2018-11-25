@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
-using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
@@ -14,7 +13,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
 
-namespace CoreDocker.Sdk.Tests.GraphQl
+namespace CoreDocker.Api.Tests.Integration
 {
     [TestFixture]
     [Category("Integration")]

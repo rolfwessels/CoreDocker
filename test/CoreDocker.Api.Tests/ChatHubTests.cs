@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.SignalR;
-using CoreDocker.Sdk.Tests.Shared;
 using CoreDocker.Utilities.Helpers;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
-namespace CoreDocker.Sdk.Tests.SignalR
+namespace CoreDocker.Api.Tests
 {
     [TestFixture]
     public class ChatHubTests : IntegrationTestsBase

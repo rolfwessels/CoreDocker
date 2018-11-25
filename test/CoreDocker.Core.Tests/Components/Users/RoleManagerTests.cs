@@ -3,7 +3,7 @@ using CoreDocker.Dal.Models.Auth;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CoreDocker.Core.Tests.Managers
+namespace CoreDocker.Core.Tests.Components.Users
 {
     [TestFixture]
     public class RoleManagerTests

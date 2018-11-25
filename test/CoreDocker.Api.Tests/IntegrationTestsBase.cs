@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Reflection;
-using CoreDocker.Api;
+using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 
-namespace CoreDocker.Sdk.Tests.Shared
+namespace CoreDocker.Api.Tests
 {
     public class IntegrationTestsBase
     {
@@ -37,15 +37,14 @@ namespace CoreDocker.Sdk.Tests.Shared
             var port = new Random().Next(9000, 9999);
             var address = $"http://localhost:{port}";
             Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
-
+            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
-            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+            
             _log.Info($"Starting api on [{address}]");
             RestShapHelper.Log = m => { _log.Debug(m); };
             return address;
@@ -56,7 +55,6 @@ namespace CoreDocker.Sdk.Tests.Shared
         {
             var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
             coreDockerApi.Authenticate.Login(adminAdminCom, adminPassword).Wait();
-            // add the authentication here
             return (CoreDockerClient) coreDockerApi;
         }
 
