@@ -63,6 +63,14 @@ see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-a
 cd src/CoreDocker.Api/Certificates
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout development.key -out development.crt -subj "/CN=localhost" -days 3650
 openssl pkcs12 -export -out development.pfx -inkey development.key -in development.crt -certfile development.crt
+rm development.crt
+rm development.key
+
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout production.key -out production.crt -subj "/CN=localhost" -days 3650
+openssl pkcs12 -export -out production.pfx -inkey production.key -in production.crt -certfile production.crt
+rm production.crt
+rm production.key
+
 ```
 
 

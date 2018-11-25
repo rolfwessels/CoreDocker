@@ -26,6 +26,13 @@ namespace CoreDocker.Api.Security
 
         public string Origins => ReadConfigValue("Origins", "http://localhost:5000");
 
+        public string CertPfx => ReadConfigValue("CertPfx", "development.pfx");
+
+        public string CertPassword => ReadConfigValue("CertPassword", "60053018f4794862a82982640570c552");
+
+        public string CertStoreThumbprint => ReadConfigValue("certStoreThumbprint", "");
+
+
         public string[] GetOriginList()
         {
             return Origins.Split(',').ToArray();

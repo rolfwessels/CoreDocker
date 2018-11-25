@@ -14,12 +14,12 @@ namespace CoreDocker.Api.Security
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static void UseIdentityService(this IServiceCollection services, IConfiguration conf)
+        public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
-            var openIdSettings = new OpenIdSettings(conf);
+            var openIdSettings = new OpenIdSettings(configuration);
             services.AddIdentityServer()
-                .AddSigningCredential(Certificate())
+                .AddSigningCredential(Certificate(openIdSettings.CertPfx,openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
@@ -34,34 +34,36 @@ namespace CoreDocker.Api.Security
 
         #region Private Methods
 
-        private static X509Certificate2 Certificate()
+        private static X509Certificate2 Certificate(string certFile, string password, string certStoreThumbprint)
         {
             X509Certificate2 cert = null;
-            using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            if (!string.IsNullOrEmpty(certStoreThumbprint))
             {
-                certStore.Open(OpenFlags.ReadOnly);
-                var certCollection = certStore.Certificates.Find(
-                    X509FindType.FindByThumbprint,
-                    // Replace below with your cert's thumbprint
-                    "EF255CFED88F0F825008BA9425AB0D469A73B01D",
-                    false);
-                // Get the first cert with the thumbprint
-                if (certCollection.Count > 0)
+                using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                 {
-                    cert = certCollection[0];
-                    _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
+                    certStore.Open(OpenFlags.ReadOnly);
+                    var certCollection = certStore.Certificates.Find(
+                        X509FindType.FindByThumbprint,
+                        certStoreThumbprint,
+                        false);
+                    // Get the first cert with the thumbprint
+                    if (certCollection.Count > 0)
+                    {
+                        cert = certCollection[0];
+                        _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
+                    }
                 }
             }
 
             // Fallback to local file for development
             if (cert == null)
             {
-                var fileName = Path.Combine("./Certificates", "development.pfx");
+                var fileName = Path.Combine("./Certificates", certFile);
                 if (!File.Exists(fileName))
                     _log.Error(
                         $"SecuritySetupServer:Certificate Could not load file {fileName} to obtain the certificate.");
 
-                cert = new X509Certificate2(fileName, "exportpassword");
+                cert = new X509Certificate2(fileName, password);
                 _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
             }
 
