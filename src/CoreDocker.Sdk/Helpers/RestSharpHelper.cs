@@ -6,7 +6,7 @@ using RestSharp;
 
 namespace CoreDocker.Sdk.Helpers
 {
-    public static class RestShapHelper
+    public static class RestSharpHelper
     {
         public static int MaxLogLength { get; set; } = 400;
         public static Action<string> Log { get; set; } = message => { };

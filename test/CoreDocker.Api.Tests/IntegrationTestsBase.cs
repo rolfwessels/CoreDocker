@@ -23,7 +23,7 @@ namespace CoreDocker.Api.Tests
 
         static IntegrationTestsBase()
         {
-            RestShapHelper.Log = s => _log.Debug(s);
+            RestSharpHelper.Log = s => _log.Debug(s);
             HostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(HostAddress.Value));
             _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
@@ -46,7 +46,7 @@ namespace CoreDocker.Api.Tests
             host.Build().Start();
             
             _log.Info($"Starting api on [{address}]");
-            RestShapHelper.Log = m => { _log.Debug(m); };
+            RestSharpHelper.Log = m => { _log.Debug(m); };
             return address;
         }
 
