@@ -7,20 +7,20 @@ using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Components.Users
 {
-    public class UserGrantManager : BaseManager<UserGrant>, IUserGrantManager
+    public class UserGrantLookup : BaseLookup<UserGrant>, IUserGrantLookup
     {
-        public UserGrantManager(BaseManagerArguments baseManagerArguments, ILogger<UserGrantManager> logger) : base(
+        public UserGrantLookup(BaseManagerArguments baseManagerArguments, ILogger<UserGrantLookup> logger) : base(
             baseManagerArguments, logger)
         {
         }
 
-        #region Overrides of BaseManager<UserGrant>
+        #region Overrides of BaseLookup<UserGrant>
 
         protected override IRepository<UserGrant> Repository => _generalUnitOfWork.UserGrants;
 
         #endregion
 
-        #region Implementation of IUserGrantManager
+        #region Implementation of IUserGrantLookup
 
         public Task<UserGrant> GetByKey(string key)
         {

@@ -10,5 +10,11 @@ namespace CoreDocker.Utilities.Helpers
             var values = Enum.GetValues(typeof(T));
             foreach (var value in values) yield return (T) value;
         }
+
+        public static IEnumerable<string> Values<T>()
+        {
+            var values = Enum.GetValues(typeof(T));
+            foreach (var value in values) yield return value.ToString();
+        }
     }
 }

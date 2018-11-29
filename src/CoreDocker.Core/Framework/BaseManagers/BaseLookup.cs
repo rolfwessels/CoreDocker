@@ -13,13 +13,13 @@ using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Framework.BaseManagers
 {
-    public abstract class BaseManager
+    public abstract class BaseLookup
     {
         protected readonly IGeneralUnitOfWork _generalUnitOfWork;
         protected readonly IMessenger _messenger;
         protected readonly IValidatorFactory _validationFactory;
 
-        protected BaseManager(BaseManagerArguments baseManagerArguments)
+        protected BaseLookup(BaseManagerArguments baseManagerArguments)
         {
             _generalUnitOfWork = baseManagerArguments.GeneralUnitOfWork;
             _messenger = baseManagerArguments.Messenger;
@@ -27,11 +27,11 @@ namespace CoreDocker.Core.Framework.BaseManagers
         }
     }
 
-    public abstract class BaseManager<T> : BaseManager, IBaseManager<T> where T : BaseDalModelWithId
+    public abstract class BaseLookup<T> : BaseLookup, IBaseLookup<T> where T : BaseDalModelWithId
     {
         private readonly ILogger _log;
 
-        protected BaseManager(BaseManagerArguments baseManagerArguments, ILogger logger) : base(baseManagerArguments)
+        protected BaseLookup(BaseManagerArguments baseManagerArguments, ILogger logger) : base(baseManagerArguments)
         {
             _log = logger;
         }

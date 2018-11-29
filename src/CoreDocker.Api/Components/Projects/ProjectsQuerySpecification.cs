@@ -4,6 +4,7 @@ using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Core.Components.Projects;
+using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models.Projects;
@@ -16,10 +17,10 @@ namespace CoreDocker.Api.Components.Projects
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ProjectsQuerySpecification(IProjectManager projects)
+        public ProjectsQuerySpecification(IProjectLookup projects)
         {
             var safe = new Safe(_log);
-            var options = new GraphQlQueryOptions<IProjectManager, ProjectModel, Project>(projects);
+            var options = new GraphQlQueryOptions<Project, ProjectPagedLookupOptions>(projects.GetPaged);
             Name = "Projects";
 
             Field<ProjectSpecification>(
@@ -37,32 +38,20 @@ namespace CoreDocker.Api.Components.Projects
             Field<ListGraphType<ProjectSpecification>>(
                 "all",
                 Description = "all projects",
-                resolve: safe.Wrap(context => projects.Query(queryable => queryable))
+                resolve: safe.Wrap(context => options.Query(context))
+            ).RequirePermission(Activity.ReadProject);
+
+            Field<ListGraphType<ProjectSpecification>>(
+                "paged",
+                Description = "all projects paged",
+                resolve: safe.Wrap(context => options.Paged(context))
             ).RequirePermission(Activity.ReadProject);
 
             Field<ListGraphType<ProjectSpecification>>(
                 "recent",
                 Description = "recent modified projects",
-                new QueryArguments(
-                    new QueryArgument<IntGraphType>
-                    {
-                        Name = "first",
-                        Description = "id of the project"
-                    }
-                ),
-                safe.Wrap(context => projects
-                    .Query(queryable =>
-                        queryable
-                            .OrderByDescending(x => x.UpdateDate)
-                            .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
-                    ))
-            ).RequirePermission(Activity.ReadProject);
-
-            Field<QueryResultSpecification>(
-                "query",
-                Description = "query the projects projects",
                 options.GetArguments(),
-                safe.Wrap(context => options.Query(context))
+                safe.Wrap(context => safe.Wrap(x => options.Query(context,new ProjectPagedLookupOptions() {Sort = ProjectPagedLookupOptions.SortOptions.Recent})))
             ).RequirePermission(Activity.ReadProject);
         }
     }

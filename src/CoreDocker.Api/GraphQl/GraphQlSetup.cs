@@ -23,7 +23,7 @@ namespace CoreDocker.Api.GraphQl
                     _.EnableMetrics = false;
                     _.ExposeExceptions = false;
                 })
-                .AddUserContextBuilder(ctx => GraphQlUserContext.BuildFromHttpContext(ctx, IocApi.Instance.Resolve<IUserManager>()))
+                .AddUserContextBuilder(ctx => GraphQlUserContext.BuildFromHttpContext(ctx, IocApi.Instance.Resolve<IUserLookup>()))
                 .AddWebSockets()
                 .AddDataLoader();
         }

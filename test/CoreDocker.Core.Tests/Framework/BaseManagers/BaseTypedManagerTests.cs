@@ -24,7 +24,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
             var addFake = Repository.AddFake();
             var guid = addFake.First().Id;
             // action
-            var result = await Manager.GetById(guid);
+            var result = await Lookup.GetById(guid);
             // assert
             result.Id.Should().Be(guid);
         }
@@ -37,7 +37,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
             const int expected = 2;
             Repository.AddFake(expected);
             // action
-            var result = await Manager.Get();
+            var result = await Lookup.Get();
             // assert
             result.Should().HaveCount(expected);
         }
@@ -46,6 +46,6 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
 
         protected virtual T SampleObject => Builder<T>.CreateNew().WithValidData().Build();
 
-        protected abstract BaseManager<T> Manager { get; }
+        protected abstract BaseLookup<T> Lookup { get; }
     }
 }

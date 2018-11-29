@@ -19,12 +19,12 @@ namespace CoreDocker.Api.Security
     public class UserClaimProvider : IProfileService, IResourceOwnerPasswordValidator
     {
         private readonly IRoleManager _roleManager;
-        private readonly IUserManager _userManager;
+        private readonly IUserLookup _userLookup;
 
 
-        public UserClaimProvider(IUserManager userManager, IRoleManager roleManager)
+        public UserClaimProvider(IUserLookup userLookup, IRoleManager roleManager)
         {
-            _userManager = userManager;
+            _userLookup = userLookup;
             _roleManager = roleManager;
         }
 
@@ -34,7 +34,7 @@ namespace CoreDocker.Api.Security
         {
             var sub = context.Subject.GetSubjectId();
 
-            var user = await _userManager.GetUserByEmail(sub);
+            var user = await _userLookup.GetUserByEmail(sub);
 
             var claims = BuildClaimListForUser(user);
 
@@ -44,7 +44,7 @@ namespace CoreDocker.Api.Security
         public async Task IsActiveAsync(IsActiveContext context)
         {
             var sub = context.Subject.GetSubjectId();
-            var user = await _userManager.GetUserByEmail(sub);
+            var user = await _userLookup.GetUserByEmail(sub);
             context.IsActive = user != null;
         }
 
@@ -56,7 +56,7 @@ namespace CoreDocker.Api.Security
 
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            var user = await _userManager.GetUserByEmailAndPassword(context.UserName, context.Password);
+            var user = await _userLookup.GetUserByEmailAndPassword(context.UserName, context.Password);
             if (user != null)
             {
                 var claims = BuildClaimListForUser(user);

@@ -79,10 +79,10 @@ namespace CoreDocker.Core.Startup
         private static void SetupManagers(ContainerBuilder builder)
         {
             builder.RegisterType<BaseManagerArguments>();
-            builder.RegisterType<ProjectManager>().As<IProjectManager>();
+            builder.RegisterType<ProjectLookup>().As<IProjectLookup>();
             builder.RegisterType<RoleManager>().As<IRoleManager>();
-            builder.RegisterType<UserManager>().As<IUserManager>();
-            builder.RegisterType<UserGrantManager>().As<IUserGrantManager>();
+            builder.RegisterType<UserLookup>().As<IUserLookup>();
+            builder.RegisterType<UserGrantLookup>().As<IUserGrantLookup>();
         }
 
         private static void SetupValidation(ContainerBuilder builder)

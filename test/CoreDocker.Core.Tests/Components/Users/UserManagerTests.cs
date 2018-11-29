@@ -18,16 +18,16 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserManagerTests : BaseTypedManagerTests<User>
     {
-        private Mock<ILogger<UserManager>> _mockLogger;
-        private UserManager _userManager;
+        private Mock<ILogger<UserLookup>> _mockLogger;
+        private UserLookup _userLookup;
 
         #region Setup/Teardown
 
         public override void Setup()
         {
             base.Setup();
-            _mockLogger = new Mock<ILogger<UserManager>>();
-            _userManager = new UserManager(_baseManagerArguments, _mockLogger.Object);
+            _mockLogger = new Mock<ILogger<UserLookup>>();
+            _userLookup = new UserLookup(_baseManagerArguments, _mockLogger.Object);
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             Setup();
             var user = _fakeGeneralUnitOfWork.Users.AddFake().First();
             // action
-            var userFound = _userManager.GetUserByEmail(user.Email + "123").Result;
+            var userFound = _userLookup.GetUserByEmail(user.Email + "123").Result;
             // assert
             userFound.Should().BeNull();
         }
@@ -54,7 +54,7 @@ namespace CoreDocker.Core.Tests.Components.Users
 
 
             // action
-            var userFound = _userManager.GetUserByEmail(user.Email).Result;
+            var userFound = _userLookup.GetUserByEmail(user.Email).Result;
             // assert
             userFound.Should().NotBeNull();
         }
@@ -69,7 +69,7 @@ namespace CoreDocker.Core.Tests.Components.Users
                 x.HashedPassword = PasswordHash.CreateHash(password);
             });
             // action
-            var userFound = _userManager.GetUserByEmailAndPassword(user.Email, password).Result;
+            var userFound = _userLookup.GetUserByEmailAndPassword(user.Email, password).Result;
             // assert
             userFound.Should().NotBeNull();
         }
@@ -84,7 +84,7 @@ namespace CoreDocker.Core.Tests.Components.Users
                 x.HashedPassword = PasswordHash.CreateHash(password);
             });
             // action
-            var userFound = _userManager.GetUserByEmailAndPassword(user.Email, password + 123).Result;
+            var userFound = _userLookup.GetUserByEmailAndPassword(user.Email, password + 123).Result;
             // assert
             userFound.Should().BeNull();
         }
@@ -98,7 +98,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             const string password = "sample";
             user.HashedPassword = PasswordHash.CreateHash(password);
             // action
-            var userFound = _userManager.GetUserByEmailAndPassword(user.Email + "123", password).Result;
+            var userFound = _userLookup.GetUserByEmailAndPassword(user.Email + "123", password).Result;
             // assert
             userFound.Should().BeNull();
         }
@@ -112,6 +112,6 @@ namespace CoreDocker.Core.Tests.Components.Users
             get { return Builder<User>.CreateNew().With(x => x.Email = GetRandom.Email()).Build(); }
         }
 
-        protected override BaseManager<User> Manager => _userManager;
+        protected override BaseLookup<User> Lookup => _userLookup;
     }
 }

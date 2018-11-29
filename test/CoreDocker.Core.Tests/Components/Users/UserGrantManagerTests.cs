@@ -13,16 +13,16 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserGrantManagerTests : BaseTypedManagerTests<UserGrant>
     {
-        private Mock<ILogger<UserGrantManager>> _mockLogger;
-        private UserGrantManager _userGrantManager;
+        private Mock<ILogger<UserGrantLookup>> _mockLogger;
+        private UserGrantLookup _userGrantLookup;
 
         #region Setup/Teardown
 
         public override void Setup()
         {
             base.Setup();
-            _mockLogger = new Mock<ILogger<UserGrantManager>>();
-            _userGrantManager = new UserGrantManager(_baseManagerArguments, _mockLogger.Object);
+            _mockLogger = new Mock<ILogger<UserGrantLookup>>();
+            _userGrantLookup = new UserGrantLookup(_baseManagerArguments, _mockLogger.Object);
         }
 
         #endregion
@@ -31,6 +31,6 @@ namespace CoreDocker.Core.Tests.Components.Users
 
         protected override UserGrant SampleObject => Builder<UserGrant>.CreateNew().Build();
 
-        protected override BaseManager<UserGrant> Manager => _userGrantManager;
+        protected override BaseLookup<UserGrant> Lookup => _userGrantLookup;
     }
 }

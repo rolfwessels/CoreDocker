@@ -13,16 +13,16 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectManagerTests : BaseTypedManagerTests<Project>
     {
-        private Mock<ILogger<ProjectManager>> _mockLogger;
-        private ProjectManager _projectManager;
+        private Mock<ILogger<ProjectLookup>> _mockLogger;
+        private ProjectLookup _projectLookup;
 
         #region Setup/Teardown
 
         public override void Setup()
         {
             base.Setup();
-            _mockLogger = new Mock<ILogger<ProjectManager>>();
-            _projectManager = new ProjectManager(_baseManagerArguments, _mockLogger.Object);
+            _mockLogger = new Mock<ILogger<ProjectLookup>>();
+            _projectLookup = new ProjectLookup(_baseManagerArguments, _mockLogger.Object);
         }
 
         #endregion
@@ -31,6 +31,6 @@ namespace CoreDocker.Core.Tests.Components.Projects
 
         protected override Project SampleObject => Builder<Project>.CreateNew().Build();
 
-        protected override BaseManager<Project> Manager => _projectManager;
+        protected override BaseLookup<Project> Lookup => _projectLookup;
     }
 }

@@ -15,20 +15,20 @@ namespace CoreDocker.Api.GraphQl
     {
         private readonly Lazy<Task<User>> _lazyUser;
 
-        public GraphQlUserContext(IUserManager userManager, ClaimsPrincipal ctxUser)
+        public GraphQlUserContext(IUserLookup userLookup, ClaimsPrincipal ctxUser)
         {
             User = ctxUser;
-            _lazyUser = new Lazy<Task<User>>(() => userManager.GetUserByEmail(User.Identity.Name));
+            _lazyUser = new Lazy<Task<User>>(() => userLookup.GetUserByEmail(User.Identity.Name));
         }
 
         public ClaimsPrincipal User { get; }
         public Task<User> CurrentUser => _lazyUser.Value;
 
         public static GraphQlUserContext BuildFromHttpContext(HttpContext ctx,
-            IUserManager userManager)
+            IUserLookup userLookup)
         {
 
-            var userContext = new GraphQlUserContext(userManager, ctx.User);
+            var userContext = new GraphQlUserContext(userLookup, ctx.User);
             return userContext;
         }
 

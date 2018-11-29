@@ -1,13 +1,14 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
-using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
+using CoreDocker.Utilities.Helpers;
 using GraphQL.Types;
 using log4net;
 
@@ -17,10 +18,10 @@ namespace CoreDocker.Api.Components.Users
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersQuerySpecification(IUserManager users)
+        public UsersQuerySpecification(IUserLookup users )
         {
             var safe = new Safe(_log);
-            var options = new GraphQlQueryOptions<IUserManager, UserModel, User>(users);
+            var options = Options(users);
             Name = "Users";
 
             Field<UserSpecification>(
@@ -38,34 +39,24 @@ namespace CoreDocker.Api.Components.Users
             Field<ListGraphType<UserSpecification>>(
                 "all",
                 Description = "all users",
-                resolve: context => users.Query(queryable => queryable)
+                options.GetArguments(),
+                context => options.Query(context,new UserPagedLookupOptions() {Sort = UserPagedLookupOptions.SortOptions.Name})
+            ).RequirePermission(Activity.ReadUsers);
+
+            Field<ListGraphType<UserSpecification>>(
+                "paged",
+                Description = "all users paged",
+                options.GetArguments(),
+                context => options.Paged(context)
             ).RequirePermission(Activity.ReadUsers);
 
             Field<ListGraphType<UserSpecification>>(
                 "recent",
                 Description = "recent modified users",
-                new QueryArguments(
-                    new QueryArgument<IntGraphType>
-                    {
-                        Name = "first",
-                        Description = "id of the user"
-                    }
-                ),
-                safe.Wrap(context => users
-                    .Query(queryable =>
-                        queryable
-                            .OrderByDescending(x => x.UpdateDate)
-                            .Take(context.HasArgument("first") ? context.GetArgument<int>("first") : 100)
-                    ))
-            ).RequirePermission(Activity.ReadUsers);
-
-            Field<QueryResultSpecification>(
-                "query",
-                Description = "query the projects projects",
                 options.GetArguments(),
-                safe.Wrap(context => options.Query(context))
+                safe.Wrap(context => options.Query(context,new UserPagedLookupOptions() {Sort = UserPagedLookupOptions.SortOptions.Recent}))
             ).RequirePermission(Activity.ReadUsers);
-
+            
             Field<UserSpecification>(
                 "me",
                 Description = "Current user",
@@ -92,6 +83,25 @@ namespace CoreDocker.Api.Components.Users
                 ),
                 safe.Wrap(context => RoleManager.GetRole(context.GetArgument<string>("name")))
             );
+        }
+
+        private static GraphQlQueryOptions<User, UserPagedLookupOptions> Options(IUserLookup users)
+        {
+
+            var graphQlQueryOptions = new GraphQlQueryOptions<User,UserPagedLookupOptions>(users.GetPagedUsers)
+                .AddArgument(new QueryArgument<StringGraphType>
+                {
+                    Name = "search",
+                    Description = "Search by name,email or id"
+                }, (x,c)=>x.Search = c.GetArgument<string>("search"))
+                .AddArgument(new QueryArgument<StringGraphType>
+                {
+                    Name = "sort",
+                    Description = $"Sort by {EnumHelper.Values<UserPagedLookupOptions.SortOptions>().StringJoin()}"
+                }, (x, c) => x.Sort = c.GetArgument<UserPagedLookupOptions.SortOptions>("sort"));
+
+            
+            return graphQlQueryOptions;
         }
 
         #region Private Methods

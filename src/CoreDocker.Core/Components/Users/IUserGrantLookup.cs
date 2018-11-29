@@ -5,7 +5,7 @@ using CoreDocker.Dal.Models.Users;
 
 namespace CoreDocker.Core.Components.Users
 {
-    public interface IUserGrantManager : IBaseManager<UserGrant>
+    public interface IUserGrantLookup : IBaseLookup<UserGrant>
     {
         Task<UserGrant> GetByKey(string key);
         Task<List<UserGrant>> GetByUserId(string userId);

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
@@ -12,24 +13,55 @@ using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Components.Users
 {
-    public class UserManager : BaseManager<User>, IUserManager
+    public class UserLookup : BaseLookup<User>, IUserLookup
     {
-        private readonly ILogger<UserManager> _log;
+        private readonly ILogger<UserLookup> _log;
 
-        public UserManager(BaseManagerArguments baseManagerArguments, ILogger<UserManager> logger) : base(
+        public UserLookup(BaseManagerArguments baseManagerArguments, ILogger<UserLookup> logger) : base(
             baseManagerArguments, logger)
         {
             _log = logger;
         }
 
-        #region Overrides of BaseManager<User>
+        #region Overrides of BaseLookup<User>
 
         protected override IRepository<User> Repository => _generalUnitOfWork.Users;
 
         #endregion
 
-        #region IUserManager Members
+        #region IUserLookup Members
 
+        public Task<PagedList<User>> GetPagedUsers(UserPagedLookupOptions options)
+        {
+            return Task.Run(() =>
+            {
+                var query = _generalUnitOfWork.Users.Query();
+                if (!string.IsNullOrEmpty(options.Search))
+                {
+                    query = query.Where(x =>
+                        x.Id.ToLower().Contains(options.Search.ToLower()) ||
+                        x.Email.ToLower().Contains(options.Search.ToLower()) ||
+                        x.Name.ToLower().Contains(options.Search.ToLower()));
+                }
+                if (options.Sort != null)
+                {
+                    switch (options.Sort)
+                    {
+                        case UserPagedLookupOptions.SortOptions.Name:
+                            query = query.OrderBy(x => x.Name);
+                            break;
+                        case UserPagedLookupOptions.SortOptions.Recent:
+                            query = query.OrderByDescending(x => x.UpdateDate);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                return new PagedList<User>(query, options);
+            });
+
+        }
 
         public async Task<User> GetUserByEmailAndPassword(string email, string password)
         {
