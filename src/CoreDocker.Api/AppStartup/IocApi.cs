@@ -91,6 +91,8 @@ namespace CoreDocker.Api.AppStartup
 
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
+            builder.RegisterType<DefaultSubscription>().SingleInstance();
+            builder.RegisterType<RealTimeNotificationsMessageType>().SingleInstance();
             builder.RegisterType<QueryResultSpecification>().SingleInstance();
             builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 

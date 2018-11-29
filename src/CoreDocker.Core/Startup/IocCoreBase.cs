@@ -6,6 +6,7 @@ using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.MessageUtil;
+using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
@@ -97,6 +98,7 @@ namespace CoreDocker.Core.Startup
         {
             builder.Register(x => Messenger.Default).As<IMessenger>();
             builder.RegisterType<Commander>().As<ICommander>();
+            builder.RegisterType<SubscriptionNotifications>().SingleInstance();
         }
 
         #endregion
