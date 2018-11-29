@@ -2,10 +2,12 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using CoreDocker.Utilities.Helpers;
+using MediatR;
 
 namespace CoreDocker.Core.Framework.Subscriptions
 {
-    public class SubscriptionNotifications 
+    public class SubscriptionNotifications
     {
         private class SubscriptionWithGroup
         {
@@ -16,19 +18,20 @@ namespace CoreDocker.Core.Framework.Subscriptions
 
         #region Implementation of IRealTimeNotificationChannel
 
-        public Task Send( RealTimeNotificationsMessage message)
+        public Task Send(RealTimeNotificationsMessage message)
         {
-            if (message != null) _stream.OnNext(new SubscriptionWithGroup() { Message = message });
+            if (message != null) _stream.OnNext(new SubscriptionWithGroup() {Message = message});
             return Task.CompletedTask;
         }
 
         #endregion
 
-        public IObservable<RealTimeNotificationsMessage> Messages(string channelId)
+        public IObservable<RealTimeNotificationsMessage> Messages()
         {
             return _stream
                 .Select(x => x.Message)
                 .AsObservable();
         }
     }
+
 }

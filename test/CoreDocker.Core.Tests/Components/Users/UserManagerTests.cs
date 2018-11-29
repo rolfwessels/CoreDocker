@@ -15,8 +15,6 @@ using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.Components.Users
 {
-
-
     [TestFixture]
     public class UserManagerTests : BaseTypedManagerTests<User>
     {

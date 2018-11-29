@@ -36,7 +36,7 @@ namespace CoreDocker.Api.GraphQl
         {
             var messageContext = context.UserContext.As<MessageHandlingContext>();
             var user = messageContext.Get<ClaimsPrincipal>("user");
-            return _pub.Messages(channelId);
+            return _pub.Messages();
         }
     }
 
