@@ -8,6 +8,7 @@ using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
+using CoreDocker.Utilities.Tests.Tools;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
@@ -63,12 +64,10 @@ namespace CoreDocker.Api.Tests.Integration
                 getById.Should().BeEquivalentTo(update, r => r.Excluding(x => x.UpdateDate));
                 allAfterUpdate.Count.Should().BeGreaterThan(0);
                 allAfterUpdate.Should().Contain(x => x.Name == update.Name);
+                items.WaitFor(x=>x.Count == 3 ,5000);
                 items.Should().HaveCount(3);
                 items.Last().Event.Should().Be("UserRemoved");
             }
-
-            //            firstDelete.Should().BeTrue();
-            //            secondDelete.Should().BeFalse();
         }
 
        

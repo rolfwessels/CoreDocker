@@ -78,17 +78,10 @@ namespace CoreDocker.Core.Tests.Components.Users
                 action();
                 // assert
                 list.Count.Should().Be(1);
-                NewMethod(list.First(), notification, @event);
+                SubscribeHelper.BasicNotificationValidation(list.First(), notification, @event);
             }
         }
-
-        private static void NewMethod(RealTimeNotificationsMessage realTimeNotificationsMessage, CommandNotificationBase notification, string @event)
-        {
-            realTimeNotificationsMessage.CorrelationId.Should().Be(notification.CorrelationId);
-            realTimeNotificationsMessage.Id.Should().Be(notification.Id);
-            realTimeNotificationsMessage.Event.Should().Be(@event);
-        }
-
+        
         private static T BuildNotification<T>()
         {
             return Builder<T>.CreateNew().WithValidData().Build();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
 using MediatR;
@@ -32,6 +33,13 @@ namespace CoreDocker.Core.Tests.Components.Users
             dictionary.Keys.Dump($"Missing: [{list.Count}]");
             dictionary.Select(notification => $"{type.Name} should implement INotificationHandler<{notification.Key}>.").ToArray().Should().BeEmpty();
 
+        }
+
+        public static void BasicNotificationValidation(RealTimeNotificationsMessage realTimeNotificationsMessage, CommandNotificationBase notification, string @event)
+        {
+            realTimeNotificationsMessage.CorrelationId.Should().Be(notification.CorrelationId);
+            realTimeNotificationsMessage.Id.Should().Be(notification.Id);
+            realTimeNotificationsMessage.Event.Should().Be(@event);
         }
     }
 }
