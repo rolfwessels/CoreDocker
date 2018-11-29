@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -23,15 +23,9 @@
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="3.1.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Reactive.Interfaces">
-      <HintPath>C:\Users\User-pc\.nuget\packages\system.reactive.interfaces\3.1.1\lib\netstandard1.0\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Linq">
-      <HintPath>C:\Users\User-pc\.nuget\packages\system.reactive.linq\3.1.1\lib\netstandard1.3\System.Reactive.Linq.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

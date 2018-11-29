@@ -63,20 +63,19 @@ namespace CoreDocker.Core.Tests.Components.Users
         }
 
 
-        private List<RealTimeNotificationsMessage> BasicTest(Action userupdated1, CommandNotificationBase notification,
+        private List<RealTimeNotificationsMessage> BasicTest(Action action, CommandNotificationBase notification,
             string @event)
-        {
-            throw new NotImplementedException();
-//            var list = new List<RealTimeNotificationsMessage>();
-//            var observable = _subscriptionNotifications.Messages();
-//            using (var disposable = observable.Subscribe(message => list.Add(message)))
-//            {
-//                userupdated1();
-//                // assert
-//                list.Count.Should().Be(1);
-//                NewMethod(list.First(), notification, @event);
-//            }
-//            return list;
+        {   
+            var list = new List<RealTimeNotificationsMessage>();
+            var observable = _subscriptionNotifications.Messages();
+            using (var disposable = observable.Subscribe(message => list.Add(message)))
+            {
+                action();
+                // assert
+                list.Count.Should().Be(1);
+                NewMethod(list.First(), notification, @event);
+            }
+            return list;
         }
 
         private static void NewMethod(RealTimeNotificationsMessage realTimeNotificationsMessage, CommandNotificationBase notification, string @event)

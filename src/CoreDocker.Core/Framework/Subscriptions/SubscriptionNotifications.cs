@@ -2,8 +2,6 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using CoreDocker.Utilities.Helpers;
-using MediatR;
 
 namespace CoreDocker.Core.Framework.Subscriptions
 {
