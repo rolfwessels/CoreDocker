@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Client;
+using GraphQL.Client.Http;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
 using RestSharp;
@@ -12,7 +14,7 @@ namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
-        private readonly GraphQLClient _graphQlClient;
+        private readonly GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
         public CoreDockerClient(string urlBase)
@@ -23,7 +25,7 @@ namespace CoreDocker.Sdk.RestApi
             Projects = new ProjectApiClient(this);
             Users = new UserApiClient(this);
             Ping = new PingApiClient(this);
-            _graphQlClient = new GraphQLClient(UrlBase.UriCombine("/graphql"));
+            _graphQlClient = new GraphQLHttpClient(UrlBase.UriCombine("/graphql"));
         }
 
         public RestClient Client => _restClient;
@@ -32,7 +34,7 @@ namespace CoreDocker.Sdk.RestApi
 
         public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
         {
-            var graphQlResponse = await _graphQlClient.PostAsync(heroRequest);
+            var graphQlResponse = await _graphQlClient.SendQueryAsync(heroRequest);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
             {
                 graphQlResponse.Dump("graphQlResponse");
@@ -64,5 +66,33 @@ namespace CoreDocker.Sdk.RestApi
         public UserApiClient Users { get; set; }
 
         #endregion
+
+        public async Task<IDisposable> SendSubscribeAsync(string query, Action<GraphQLResponse> callback)
+        {
+#pragma warning disable 618
+            var subscriptionResult = await _graphQlClient.SendSubscribeAsync(query);
+#pragma warning restore 618
+            subscriptionResult.OnReceive += callback;
+            return subscriptionResult;
+        }
+
+        public  Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
+        {
+            return SendSubscribeAsync(@"subscription { generalEvents{id,event,correlationId}}", response =>
+            {
+                var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
+                callback(dynamicCastTo, response);
+            });
+
+        }
+
+        public class RealTimeEvent
+        {
+            public string Id { get; set; }
+            public string Event { get; set; }
+            public string CorrelationId { get; set; }
+            public string Exception { get; set; }
+
+        }
     }
 }

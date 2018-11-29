@@ -13,6 +13,7 @@ using FizzWare.NBuilder.Generators;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace CoreDocker.Api.Tests.Integration
 {
@@ -44,25 +45,33 @@ namespace CoreDocker.Api.Tests.Integration
             var data = GetExampleData();
             var userCreate = data.First();
             var userUpdate = data.Last();
-            // action
-            var insertCommand = await _userApiClient.Create(userCreate);
-            var insert = await _userApiClient.ById(insertCommand.Id);
-            var updateCommand = await _userApiClient.Update(insert.Id, userUpdate);
-            var update = await _userApiClient.ById(insertCommand.Id);
-            var getById = await _userApiClient.ById(insert.Id);
-            var allAfterUpdate = await _userApiClient.All();
-            var firstDelete = await _userApiClient.Remove(insert.Id);
+            var items = new List<CoreDockerClient.RealTimeEvent>();
+            using (await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt)))
+            {
+                // action
+                var insertCommand = await _userApiClient.Create(userCreate);
+                var insert = await _userApiClient.ById(insertCommand.Id);
+                var updateCommand = await _userApiClient.Update(insert.Id, userUpdate);
+                var update = await _userApiClient.ById(insertCommand.Id);
+                var getById = await _userApiClient.ById(insert.Id);
+                var allAfterUpdate = await _userApiClient.All();
+                var firstDelete = await _userApiClient.Remove(insert.Id);
 
-            // assert
-            insert.Should().BeEquivalentTo(userCreate, CompareConfig);
-            update.Should().BeEquivalentTo(userUpdate, CompareConfig);
-            getById.Should().BeEquivalentTo(update,r=>r.Excluding(x=>x.UpdateDate));
-            allAfterUpdate.Count.Should().BeGreaterThan(0);
-            allAfterUpdate.Should().Contain(x => x.Name == update.Name);
-//            firstDelete.Should().BeTrue();
-//            secondDelete.Should().BeFalse();
+                // assert
+                insert.Should().BeEquivalentTo(userCreate, CompareConfig);
+                update.Should().BeEquivalentTo(userUpdate, CompareConfig);
+                getById.Should().BeEquivalentTo(update, r => r.Excluding(x => x.UpdateDate));
+                allAfterUpdate.Count.Should().BeGreaterThan(0);
+                allAfterUpdate.Should().Contain(x => x.Name == update.Name);
+                items.Should().HaveCount(3);
+                items.Last().Event.Should().Be("UserRemoved");
+            }
+
+            //            firstDelete.Should().BeTrue();
+            //            secondDelete.Should().BeFalse();
         }
 
+       
         [Test]
         public void Create_GivenInvalidModel_ShouldFail()
         {
@@ -91,6 +100,7 @@ namespace CoreDocker.Api.Tests.Integration
                 .WithMessage("You are not authorized to run this query.");
         }
 
+
         [Test]
         public void Me_GivenNoUser_ShouldFail()
         {
@@ -102,6 +112,18 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
                 .WithMessage("Authentication required.");
+        }
+
+        [Test]
+        public async Task Me_GivenAdminUser_ShouldNotFail()
+        {
+            // arrange
+            Setup();
+
+            // action
+            var userModel = await _adminConnection.Value.Users.Me();
+            // action
+            userModel.Email.Should().Contain("@");
         }
 
 

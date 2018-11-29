@@ -34,8 +34,8 @@ namespace CoreDocker.Api.GraphQl
 
         private IObservable<RealTimeNotificationsMessage> Subscribe(ResolveEventStreamContext context, string channelId)
         {
-            var messageContext = context.UserContext.As<MessageHandlingContext>();
-            var user = messageContext.Get<ClaimsPrincipal>("user");
+//            var messageContext = context.UserContext.As<MessageHandlingContext>();
+//            var user = messageContext.Get<ClaimsPrincipal>("user");
             return _pub.Messages();
         }
     }

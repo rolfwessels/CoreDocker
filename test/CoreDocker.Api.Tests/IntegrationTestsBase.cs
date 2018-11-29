@@ -30,6 +30,8 @@ namespace CoreDocker.Api.Tests
             _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
         }
 
+        public CoreDockerClient AdminClient() => _adminConnection.Value;
+        public CoreDockerClient GuestClient() => _guestConnection.Value;
         #region Private Methods
 
         private static string StartHosting()

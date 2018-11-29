@@ -11,9 +11,9 @@ namespace CoreDocker.Api.GraphQl
 
         public INodeVisitor Validate(ValidationContext context)
         {
-            var task = GraphQlUserContext.ReadFromContext(context);
+            var userContext = GraphQlUserContext.ReadFromContext(context);
 
-            var claimsPrincipal = task.User ?? new ClaimsPrincipal();
+            var claimsPrincipal =  userContext?.User ?? new ClaimsPrincipal();
             var authenticated = claimsPrincipal?.IsAuthenticated() ?? false;
 
             return new EnterLeaveListener(_ =>

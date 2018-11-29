@@ -94,7 +94,7 @@ namespace CoreDocker.Api.Security
             };
             var selectMany = user.Roles.Select(r => _roleManager.GetRoleByName(r).Result).SelectMany(x => x.Activities)
                 .Distinct().ToList();
-            foreach (var claim in selectMany) claims.Add(new Claim(JwtClaimTypes.Role, ToPolicyName(claim).Dump("a")));
+            foreach (var claim in selectMany) claims.Add(new Claim(JwtClaimTypes.Role, ToPolicyName(claim)));
 
             return claims;
         }

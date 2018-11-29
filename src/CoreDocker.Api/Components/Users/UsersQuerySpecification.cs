@@ -96,10 +96,10 @@ namespace CoreDocker.Api.Components.Users
 
         #region Private Methods
 
-        private static async Task<UserModel> Me(Task<User> users)
+        private static async Task<User> Me(Task<User> users)
         {
             var user = await users;
-            return user.ToModel();
+            return user;
         }
 
         #endregion

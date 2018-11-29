@@ -6,7 +6,6 @@ using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
-using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -32,12 +31,18 @@ namespace CoreDocker.Core.Tests.Components.Users
         #endregion
 
         [Test]
+        public void Scan_GivenUserRealTimeEventHandler_ShouldNotBeMissingAnyNotifications()
+        {
+            Setup();
+            SubscribeHelper.NotificationScanner(typeof(UserRealTimeEventHandler));
+        }
+
+        [Test]
         public void Handle_GivenUserUpdateNotification_ShouldNotifyOfUserChange()   
         {
             // arrange
             Setup();
             var notification = BuildNotification<UserUpdate.Notification>();
-            
             // action
             BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "UserUpdated");
         }
@@ -63,19 +68,18 @@ namespace CoreDocker.Core.Tests.Components.Users
         }
 
 
-        private List<RealTimeNotificationsMessage> BasicTest(Action action, CommandNotificationBase notification,
+        private void BasicTest(Action action, CommandNotificationBase notification,
             string @event)
         {   
             var list = new List<RealTimeNotificationsMessage>();
             var observable = _subscriptionNotifications.Messages();
-            using (var disposable = observable.Subscribe(message => list.Add(message)))
+            using (observable.Subscribe(message => list.Add(message)))
             {
                 action();
                 // assert
                 list.Count.Should().Be(1);
                 NewMethod(list.First(), notification, @event);
             }
-            return list;
         }
 
         private static void NewMethod(RealTimeNotificationsMessage realTimeNotificationsMessage, CommandNotificationBase notification, string @event)

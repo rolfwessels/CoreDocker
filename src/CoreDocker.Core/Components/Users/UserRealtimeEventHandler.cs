@@ -1,10 +1,7 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Subscriptions;
-using CoreDocker.Dal.Models.Users;
 using MediatR;
 
 namespace CoreDocker.Core.Components.Users

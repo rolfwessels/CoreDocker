@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.Stores;
@@ -36,38 +37,46 @@ namespace CoreDocker.Api.Security
 
         private static X509Certificate2 Certificate(string certFile, string password, string certStoreThumbprint)
         {
-            X509Certificate2 cert = null;
-            if (!string.IsNullOrEmpty(certStoreThumbprint))
+            try
             {
-                using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+                X509Certificate2 cert = null;
+                if (!string.IsNullOrEmpty(certStoreThumbprint))
                 {
-                    certStore.Open(OpenFlags.ReadOnly);
-                    var certCollection = certStore.Certificates.Find(
-                        X509FindType.FindByThumbprint,
-                        certStoreThumbprint,
-                        false);
-                    // Get the first cert with the thumbprint
-                    if (certCollection.Count > 0)
+                    using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                     {
-                        cert = certCollection[0];
-                        _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
+                        certStore.Open(OpenFlags.ReadOnly);
+                        var certCollection = certStore.Certificates.Find(
+                            X509FindType.FindByThumbprint,
+                            certStoreThumbprint,
+                            false);
+                        // Get the first cert with the thumbprint
+                        if (certCollection.Count > 0)
+                        {
+                            cert = certCollection[0];
+                            _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
+                        }
                     }
                 }
-            }
 
-            // Fallback to local file for development
-            if (cert == null)
+                // Fallback to local file for development
+                if (cert == null)
+                {
+                    var fileName = Path.Combine("./Certificates", certFile);
+                    if (!File.Exists(fileName))
+                        _log.Error(
+                            $"SecuritySetupServer:Certificate Could not load file {fileName} to obtain the certificate.");
+
+                    cert = new X509Certificate2(fileName, password);
+                    _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                }
+
+                return cert;
+            }
+            catch (Exception e)
             {
-                var fileName = Path.Combine("./Certificates", certFile);
-                if (!File.Exists(fileName))
-                    _log.Error(
-                        $"SecuritySetupServer:Certificate Could not load file {fileName} to obtain the certificate.");
-
-                cert = new X509Certificate2(fileName, password);
-                _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                _log.Error($"SecuritySetupServer:Certificate {e.Message}");
+                throw;
             }
-
-            return cert;
         }
 
         #endregion
