@@ -63,11 +63,12 @@ namespace CoreDocker.Api.Security
                 {
                     var fileName = Path.Combine("./Certificates", certFile);
                     if (!File.Exists(fileName))
-                        _log.Error(
-                            $"SecuritySetupServer:Certificate Could not load file {fileName} to obtain the certificate.");
-
-                    cert = new X509Certificate2(fileName, password);
-                    _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                        _log.Error($"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
+                    else
+                    {
+                        cert = new X509Certificate2(fileName, password);
+                        _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                    }
                 }
 
                 return cert;
