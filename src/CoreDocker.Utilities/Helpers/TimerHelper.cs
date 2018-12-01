@@ -4,7 +4,7 @@ namespace CoreDocker.Utilities.Helpers
 {
     public static class TimerHelper
     {
-        public static void WaitFor<T>(this T updateModels, Func<T, bool> o, int timeOut = 500)
+        public static T WaitFor<T>(this T updateModels, Func<T, bool> o, int timeOut = 500)
         {
             var stopTime = DateTime.Now.AddMilliseconds(timeOut);
             var result = false;
@@ -13,6 +13,8 @@ namespace CoreDocker.Utilities.Helpers
             {
                 result = o(updateModels);
             } while (!result && DateTime.Now < stopTime);
+
+            return updateModels;
         }
     }
 }
