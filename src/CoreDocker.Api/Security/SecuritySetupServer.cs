@@ -19,7 +19,10 @@ namespace CoreDocker.Api.Security
         {
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
             var openIdSettings = new OpenIdSettings(configuration);
-            services.AddIdentityServer()
+            _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
+            services.AddIdentityServer(x => {
+                    x.PublicOrigin = openIdSettings.HostUrl;
+            })
                 .AddSigningCredential(Certificate(openIdSettings.CertPfx,openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
@@ -39,47 +42,48 @@ namespace CoreDocker.Api.Security
         {
             try
             {
-                X509Certificate2 cert = null;
+            X509Certificate2 cert = null;
                 if (!string.IsNullOrEmpty(certStoreThumbprint))
-                {
+            {
                     using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                     {
-                        certStore.Open(OpenFlags.ReadOnly);
+                certStore.Open(OpenFlags.ReadOnly);
                         var certCollection = certStore.Certificates.Find(
-                            X509FindType.FindByThumbprint,
+                    X509FindType.FindByThumbprint,
                             certStoreThumbprint,
-                            false);
-                        // Get the first cert with the thumbprint
-                        if (certCollection.Count > 0)
-                        {
-                            cert = certCollection[0];
-                            _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
-                        }
-                    }
+                    false);
+                // Get the first cert with the thumbprint
+                if (certCollection.Count > 0)
+                {
+                    cert = certCollection[0];
+                    _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
+                }
+            }
                 }
 
-                // Fallback to local file for development
-                if (cert == null)
-                {
+            // Fallback to local file for development
+            if (cert == null)
+            {
                     var fileName = Path.Combine("./Certificates", certFile);
-                    if (!File.Exists(fileName))
+                if (!File.Exists(fileName))
                         _log.Error($"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
                     else
-                    {
+                {
                         cert = new X509Certificate2(fileName, password);
-                        _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
-                    }
+                _log.Info($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+            }
                 }
 
-                return cert;
-            }
-            catch (Exception e)
-            {
+            return cert;
+        }
+
+        public static void UseIdentityService(this IApplicationBuilder app)
+        {
                 _log.Error($"SecuritySetupServer:Certificate {e.Message}");
                 throw;
             }
         }
 
         #endregion
-    }
+        }
 }
