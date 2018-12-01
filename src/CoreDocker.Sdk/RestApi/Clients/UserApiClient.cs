@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
+using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Common.Request;
@@ -15,20 +17,20 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
         }
 
-        public async Task<List<UserModel>> All()
+        public async Task<List<UserModel>> List()
         {
             var request = new GraphQLRequest
             {
                 Query = GraphQlFragments.User + @"{
                     users {
-                        all {
+                        list {
                             ...userData
                         }
                     }
                 }"
             };
             var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<List<UserModel>>(response.Data.users.all);
+            return CastHelper.DynamicCastTo<List<UserModel>>(response.Data.users.list);
         }
 
         public async Task<UserModel> ById(string id)
@@ -152,5 +154,22 @@ namespace CoreDocker.Sdk.RestApi.Clients
         }
 
 
+        public async Task<PagedListModel<UserModel>> Paged(int? first = null)
+        {
+            var request = new GraphQLRequest
+            {
+                Query = GraphQlFragments.User + @"query ($first: Int){
+                    users {
+                        paged(first:$first) {
+                            count,
+                            items {...userData}
+                        }
+                    }
+                }",
+                Variables = new { first }
+            };
+            var response = await CoreDockerClient.GraphQlPost(request);
+            return CastHelper.DynamicCastTo<PagedListModel<UserModel>>(response.Data.users.paged);
+        }
     }
 }

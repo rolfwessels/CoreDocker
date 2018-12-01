@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
+using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
@@ -22,21 +23,38 @@ namespace CoreDocker.Sdk.RestApi.Clients
             {
                 Query = GraphQlFragments.Project + @"{
                     projects {
-                        all {
+                        list {
                             ...projectData
                         }
                     }
                 }"
             };
             var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<List<ProjectModel>>(response.Data.projects.all);
+            return CastHelper.DynamicCastTo<List<ProjectModel>>(response.Data.projects.list);
+        }
+
+        public async Task<PagedListModel<ProjectModel>> Paged(int? first = null)
+        {
+            var request = new GraphQLRequest
+            {
+                Query = GraphQlFragments.Project + @"query ($first: Int){
+                    projects {
+                        paged(first:$first) {
+                            count,
+                            items {...projectData}
+                        }
+                    }
+                }",
+                Variables = new {first}
+            };
+            var response = await CoreDockerClient.GraphQlPost(request);
+            return CastHelper.DynamicCastTo<PagedListModel<ProjectModel>>(response.Data.projects.paged);
         }
 
         public async Task<ProjectModel> ById(string id)
         {
             var request = new GraphQLRequest
             {
-                 
                 Query = GraphQlFragments.Project + @"query ($id: String!) {
                   projects {
                     byId(id: $id) {
@@ -62,12 +80,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { project.Name }
+                Variables = new {project.Name}
             });
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.create);
         }
-        
-        public async Task<CommandResultModel> Update(string id,ProjectCreateUpdateModel project)
+
+        public async Task<CommandResultModel> Update(string id, ProjectCreateUpdateModel project)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
@@ -79,9 +97,9 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { id, project.Name }
+                Variables = new {id, project.Name}
             });
-            
+
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.update);
         }
 
@@ -97,12 +115,10 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { id }
+                Variables = new {id}
             });
 
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.remove);
         }
-
-
     }
 }

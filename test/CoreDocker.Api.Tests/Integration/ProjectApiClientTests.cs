@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Sdk.RestApi;
@@ -11,6 +12,7 @@ using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using log4net;
 using NUnit.Framework;
 
 namespace CoreDocker.Api.Tests.Integration
@@ -19,6 +21,7 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class ProjectApiClientTests : IntegrationTestsBase
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private ProjectApiClient _projectApiClient;
 
         #region Setup/Teardown
@@ -38,6 +41,7 @@ namespace CoreDocker.Api.Tests.Integration
         [Test]
         public async Task ProjectCrud_GivenInsertUpdateDelete_ShouldBeValid()
         {
+            
             // arrange
             Setup();
             var data = GetExampleData();
@@ -49,6 +53,7 @@ namespace CoreDocker.Api.Tests.Integration
             var updateCommand = await _projectApiClient.Update(create.Id, projectUpdate);
             var update = await _projectApiClient.ById(create.Id);
             var allAfterUpdate = await _projectApiClient.All();
+            var paged = await _projectApiClient.Paged(1);
             var firstDelete = await _projectApiClient.Remove(create.Id);
 
             // assert
@@ -56,6 +61,8 @@ namespace CoreDocker.Api.Tests.Integration
             update.Should().BeEquivalentTo(projectUpdate, CompareConfig);
             allAfterUpdate.Count.Should().BeGreaterThan(0);
             allAfterUpdate.Should().Contain(x => x.Name == update.Name);
+            paged.Items.Should().HaveCountLessOrEqualTo(1);
+            paged.Count.Should().BeGreaterThan(paged.Items.Count);
         }
 
         [Test]

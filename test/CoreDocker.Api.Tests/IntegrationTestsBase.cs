@@ -3,6 +3,7 @@ using System.Reflection;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
+using CoreDocker.Utilities.Tests;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 

@@ -5,6 +5,7 @@ using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models.Projects;
@@ -36,24 +37,41 @@ namespace CoreDocker.Api.Components.Projects
             ).RequirePermission(Activity.ReadProject);
 
             Field<ListGraphType<ProjectSpecification>>(
-                "all",
+                "list",
                 Description = "all projects",
+                options.GetArguments(),
                 resolve: safe.Wrap(context => options.Query(context))
             ).RequirePermission(Activity.ReadProject);
 
-            Field<ListGraphType<ProjectSpecification>>(
+            Field<PagedListGraphType<Project,ProjectSpecification>>(
                 "paged",
                 Description = "all projects paged",
+                options.GetArguments(),
                 resolve: safe.Wrap(context => options.Paged(context))
             ).RequirePermission(Activity.ReadProject);
 
-            Field<ListGraphType<ProjectSpecification>>(
-                "recent",
-                Description = "recent modified projects",
-                options.GetArguments(),
-                safe.Wrap(context => safe.Wrap(x => options.Query(context,new ProjectPagedLookupOptions() {Sort = ProjectPagedLookupOptions.SortOptions.Recent})))
+        }
+
+        //PagedList<TDal>
+    }
+
+    public class PagedListGraphType<TDal, TGt> : ObjectGraphType<PagedList<TDal>> where TGt : IGraphType
+    {
+        public PagedListGraphType()
+        {
+            Name = $"{typeof(TDal).Name}PagedList";
+            Field<ListGraphType<TGt>>(
+                "items",
+                Description = "All projects paged.",
+                new QueryArguments(), context => context.Source.Items
+            ).RequirePermission(Activity.ReadProject);
+            Field<IntGraphType>(
+                "count",
+                Description = "The total count.",
+                new QueryArguments(), context => context.Source.Count
             ).RequirePermission(Activity.ReadProject);
         }
+    
     }
 }
 

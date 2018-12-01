@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Core.Components.Users;
@@ -37,26 +38,19 @@ namespace CoreDocker.Api.Components.Users
             ).RequirePermission(Activity.ReadUsers);
 
             Field<ListGraphType<UserSpecification>>(
-                "all",
+                "list",
                 Description = "all users",
                 options.GetArguments(),
                 context => options.Query(context,new UserPagedLookupOptions() {Sort = UserPagedLookupOptions.SortOptions.Name})
             ).RequirePermission(Activity.ReadUsers);
 
-            Field<ListGraphType<UserSpecification>>(
+            Field<PagedListGraphType<User,UserSpecification>>(
                 "paged",
                 Description = "all users paged",
                 options.GetArguments(),
                 context => options.Paged(context)
             ).RequirePermission(Activity.ReadUsers);
-
-            Field<ListGraphType<UserSpecification>>(
-                "recent",
-                Description = "recent modified users",
-                options.GetArguments(),
-                safe.Wrap(context => options.Query(context,new UserPagedLookupOptions() {Sort = UserPagedLookupOptions.SortOptions.Recent}))
-            ).RequirePermission(Activity.ReadUsers);
-            
+   
             Field<UserSpecification>(
                 "me",
                 Description = "Current user",

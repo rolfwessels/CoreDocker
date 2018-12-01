@@ -9,6 +9,8 @@ using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
@@ -94,6 +96,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<DefaultSubscription>().SingleInstance();
             builder.RegisterType<RealTimeNotificationsMessageType>().SingleInstance();
             builder.RegisterType<QueryResultSpecification>().SingleInstance();
+            
             builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
             /*user*/
@@ -103,6 +106,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<UsersMutationSpecification>();
             builder.RegisterType<RoleSpecification>();
             builder.RegisterType<RegisterSpecification>();
+            builder.RegisterType<PagedListGraphType<User, UserSpecification>>();
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();
@@ -110,6 +114,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<ProjectsQuerySpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
             builder.RegisterType<ProjectsMutationSpecification>();
+            builder.RegisterType<PagedListGraphType<Project, ProjectSpecification>>().SingleInstance();
 
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();

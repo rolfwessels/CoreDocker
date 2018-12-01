@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\CoreDocker.Utilities.Tests\logSettings.xml" Link="logSettings.xml" />
     <Content Include="..\..\src\CoreDocker.Api\Certificates\development.pfx" Link="Certificates\development.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -41,6 +40,12 @@
 
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

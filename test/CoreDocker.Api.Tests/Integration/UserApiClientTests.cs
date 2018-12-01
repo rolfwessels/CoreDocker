@@ -55,7 +55,8 @@ namespace CoreDocker.Api.Tests.Integration
                 var updateCommand = await _userApiClient.Update(insert.Id, userUpdate);
                 var update = await _userApiClient.ById(insertCommand.Id);
                 var getById = await _userApiClient.ById(insert.Id);
-                var allAfterUpdate = await _userApiClient.All();
+                var allAfterUpdate = await _userApiClient.List();
+                var paged = await _userApiClient.Paged();
                 var firstDelete = await _userApiClient.Remove(insert.Id);
 
                 // assert
