@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using CoreDocker.Dal.Models;
 
 namespace CoreDocker.Dal.Validation
 {
@@ -10,6 +9,4 @@ namespace CoreDocker.Dal.Validation
         void ValidateAndThrow<T>(T user);
         IValidator<T> Validator<T>();
     }
-
-    
 }

@@ -14,7 +14,6 @@ namespace CoreDocker.Api.Security
     {
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
-            
             services.AddDistributedMemoryCache();
             services.AddAuthorization(AddFromActivities);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
@@ -29,25 +28,27 @@ namespace CoreDocker.Api.Security
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });
         }
-       
 
+        public static void UseBearerAuthentication(this IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+        }
+
+        #region Private Methods
 
         private static void AddFromActivities(AuthorizationOptions options)
         {
             EnumHelper.ToArray<Activity>()
                 .ForEach(activity =>
                 {
-                    options.AddPolicy(UserClaimProvider.ToPolicyName(activity), policyAdmin => {
-                        policyAdmin.RequireClaim(JwtClaimTypes.Role, UserClaimProvider.ToPolicyName(activity));
-                    });
+                    options.AddPolicy(UserClaimProvider.ToPolicyName(activity),
+                        policyAdmin =>
+                        {
+                            policyAdmin.RequireClaim(JwtClaimTypes.Role, UserClaimProvider.ToPolicyName(activity));
+                        });
                 });
-            
         }
 
-        public static void UseBearerAuthentication(this IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-        }
+        #endregion
     }
 }
-

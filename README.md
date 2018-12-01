@@ -33,6 +33,15 @@ This project contains some scafolding code that I use whenever I start a new pro
  * Apply some CQRS patterns.
  * More https://shields.io/#/
 
+## Inspection
+
+```
+ dotnet add .\test\CoreDocker.Utilities.Tests\ package JetBrains.ReSharper.CommandLineTools --package-directory .\build\tools
+ build\tools\jetbrains.resharper.commandlinetools\2018.2.3\tools\InspectCode.exe --caches-home="C:\Temp\Cache" -f=html -o="report.html" .\CoreDocker.sln 
+ build\tools\jetbrains.resharper.commandlinetools\2018.2.3\tools\dupfinder.exe --caches-home="C:\Temp\Cache"  -o="duplicates.xml" .\CoreDocker.sln 
+ build\tools\jetbrains.resharper.commandlinetools\2018.2.3\tools\cleanupcode.exe .\CoreDocker.sln 
+```
+
 ## Gettings started with core
 
 ```
@@ -54,6 +63,14 @@ see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-a
 cd src/CoreDocker.Api/Certificates
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout development.key -out development.crt -subj "/CN=localhost" -days 3650
 openssl pkcs12 -export -out development.pfx -inkey development.key -in development.crt -certfile development.crt
+rm development.crt
+rm development.key
+
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout production.key -out production.crt -subj "/CN=localhost" -days 3650
+openssl pkcs12 -export -out production.pfx -inkey production.key -in production.crt -certfile production.crt
+rm production.crt
+rm production.key
+
 ```
 
 

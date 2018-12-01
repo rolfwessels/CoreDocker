@@ -1,56 +1,175 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
-using CoreDocker.Shared.Interfaces.Shared;
 using CoreDocker.Shared.Models;
+using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
-using RestSharp;
+using CoreDocker.Utilities.Helpers;
+using GraphQL.Common.Request;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
-    public class UserApiClient : BaseCrudApiClient<UserModel, UserCreateUpdateModel, UserReferenceModel>,
-                                 IUserControllerActions
+    public class UserApiClient : BaseApiClient
     {
-        
-
         public UserApiClient(CoreDockerClient dockerClient)
             : base(dockerClient, RouteHelper.UserController)
         {
         }
 
-        #region Implementation of IUserControllerActions
-
-        public async Task<UserModel> Register(RegisterModel user)
+        public async Task<List<UserModel>> List()
         {
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerRegister),Method.POST);
-            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<UserModel>(restRequest);
-            return ValidateResponse(executeAsyncWithLogging);
+            var request = new GraphQLRequest
+            {
+                Query = GraphQlFragments.User + @"{
+                    users {
+                        list {
+                            ...userData
+                        }
+                    }
+                }"
+            };
+            var response = await CoreDockerClient.GraphQlPost(request);
+            return CastHelper.DynamicCastTo<List<UserModel>>(response.Data.users.list);
         }
 
-        public async Task<bool> ForgotPassword(string email)
+        public async Task<UserModel> ById(string id)
         {
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerForgotPassword.SetParam("email", email)));
-            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<bool> (restRequest);
-            return ValidateResponse(executeAsyncWithLogging);
+            var request = new GraphQLRequest
+            {
+                 
+                Query = GraphQlFragments.User + @"query ($id: String!) {
+                  users {
+                    byId(id: $id) {
+                      ...userData
+                    }
+                  }
+                }",
+                Variables = new {id}
+            };
+            var response = await CoreDockerClient.GraphQlPost(request);
+            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.byId);
         }
 
-        public async Task<UserModel> WhoAmI()
+        public async Task<UserModel> Me()
         {
+            var request = new GraphQLRequest
+            {
+                Query = GraphQlFragments.User+ @"{
+                    users {
+                        me {
+                            ...userData
+                        }
+                    }
+                }"};
+            var response = await CoreDockerClient.GraphQlPost(request);
+            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.me);
+        }
+
+        public async Task<CommandResultModel> Create(UserCreateUpdateModel user)
+        {
+            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            {
+                Query = GraphQlFragments.CommandResult + @"
+                mutation ($name: String!, $email: String!, $roles: [String], $password: String) {
+                  users {
+                    create(user: {name: $name, email: $email, roles: $roles, password: $password}) {
+                      ...commandResultData
+                    }
+                  }
+                }",
+                Variables = new { user.Name, user.Email, user.Roles, user.Password }
+            });
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.create);
+        }
+
+        public async Task<CommandResultModel> Register(RegisterModel user)
+        {
+            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            {
+                Query = GraphQlFragments.CommandResult + @"
+                mutation ($name: String!, $email: String!, $password: String!) {
+                  users {
+                    register(user: {name: $name, email: $email, password: $password}) {
+                      ...commandResultData
+                    }
+                  }
+                }",
+                Variables = new { user.Name, user.Email,  user.Password }
+            });
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.register);
+        }
+
+        public async Task<CommandResultModel> Update(string id,UserCreateUpdateModel user)
+        {
+            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            {
+                Query = GraphQlFragments.CommandResult + @"
+                mutation ($id: String!, $name: String!, $email: String!, $roles: [String], $password: String) {
+                  users {
+                    update(id: $id, user: {name: $name, email: $email, roles: $roles, password: $password}) {
+                      ...commandResultData
+                    }
+                  }
+                }",
+                Variables = new { id, user.Name, user.Email, user.Roles, user.Password}
+            });
             
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerWhoAmI));
-            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<UserModel>(restRequest);
-            return ValidateResponse(executeAsyncWithLogging);
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.update);
         }
+
+        public async Task<CommandResultModel> Remove(string id)
+        {
+            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            {
+                Query = GraphQlFragments.CommandResult + @"
+                mutation ($id: String!) {
+                  users {
+                    remove(id: $id) {
+                        ...commandResultData
+                    }
+                  }
+                }",
+                Variables = new { id }
+            });
+
+            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.remove);
+        }
+
 
         public async Task<List<RoleModel>> Roles()
         {
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.UserControllerRoles));
-            var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<List<RoleModel>>(restRequest);
-            return ValidateResponse(executeAsyncWithLogging);
+            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            {
+                Query = @"{
+                  users {
+                    roles {
+                      name
+                      activities
+                    }
+                  }
+                }"
+            });
+            return CastHelper.DynamicCastTo<List<RoleModel>>(response.Data.users.roles);
         }
 
-        #endregion
+
+        public async Task<PagedListModel<UserModel>> Paged(int? first = null)
+        {
+            var request = new GraphQLRequest
+            {
+                Query = GraphQlFragments.User + @"query ($first: Int){
+                    users {
+                        paged(first:$first) {
+                            count,
+                            items {...userData}
+                        }
+                    }
+                }",
+                Variables = new { first }
+            };
+            var response = await CoreDockerClient.GraphQlPost(request);
+            return CastHelper.DynamicCastTo<PagedListModel<UserModel>>(response.Data.users.paged);
+        }
     }
 }

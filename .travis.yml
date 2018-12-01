@@ -33,8 +33,6 @@ script:
   - popd
   - pushd test/CoreDocker.Dal.Tests && dotnet test 
   - popd
-  - pushd test/CoreDocker.Sdk.Tests && dotnet test 
-  - popd
   - pushd test/CoreDocker.Api.Tests && dotnet test 
   - popd
 

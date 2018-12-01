@@ -4,6 +4,11 @@
     {
         public string Name { get; set; }
 
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id} {nameof(Name)}: {Name}";
+        }
+
         #region Equality members
 
         protected bool Equals(BaseReferenceWithName other)
@@ -23,15 +28,10 @@
         {
             unchecked
             {
-                return (base.GetHashCode()*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                return (base.GetHashCode() * 397) ^ (Name != null ? Name.GetHashCode() : 0);
             }
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id} {nameof(Name)}: {Name}";
-        }
     }
 }

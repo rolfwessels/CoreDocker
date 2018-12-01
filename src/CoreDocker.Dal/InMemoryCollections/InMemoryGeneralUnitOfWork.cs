@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Utilities.Helpers;
-using CoreDocker.Dal.Models;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
+using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Dal.InMemoryCollections
 {
@@ -18,11 +17,11 @@ namespace CoreDocker.Dal.InMemoryCollections
         public InMemoryGeneralUnitOfWork()
         {
             Users = new FakeRepository<User>();
-            Applications = new FakeRepository<Application>();
             Projects = new FakeRepository<Project>();
             UserGrants = new FakeRepository<UserGrant>();
         }
 
+        #region IGeneralUnitOfWork Members
 
         #region Implementation of IDisposable
 
@@ -32,144 +31,259 @@ namespace CoreDocker.Dal.InMemoryCollections
 
         #endregion
 
+        #endregion
+
+
+
         #region Implementation of IGeneralUnitOfWork
 
-        public IRepository<User> Users { get; private set; }
-        public IRepository<Application> Applications { get; private set; }
-        public IRepository<Project> Projects { get; private set; }
-        public IRepository<UserGrant> UserGrants { get; private set; }
+        public IRepository<User> Users { get; }
+        public IRepository<Project> Projects { get; }
+        public IRepository<UserGrant> UserGrants { get; }
+
+        #endregion
+    }
+
+
+    public class FakeRepository<T> : IRepository<T> where T : IBaseDalModel
+    {
+        private readonly List<T> _internalDataList;
+
+        public FakeRepository()
+        {
+            _internalDataList = new List<T>();
+        }
+
+        public List<T> InternalDataList => _internalDataList;
+
+        #region Private Methods
+
+        private void AddAndSetUpdateDate(T entity)
+        {
+            _internalDataList.Add(entity.DynamicCastTo<T>());
+            entity.UpdateDate = DateTime.Now;
+        }
 
         #endregion
 
-        #region Nested type: FakeRepository
+        #region Implementation of IRepository<T>
 
-        public class FakeRepository<T> : IRepository<T> where T : IBaseDalModel
+        public IQueryable<T> Query()
         {
-            private readonly List<T> _list;
+            return _internalDataList.AsQueryable();
+        }
 
-            public FakeRepository()
+        public Task<T> Add(T entity)
+        {
+            entity.CreateDate = DateTime.Now;
+            if (entity is IBaseDalModelWithId baseDalModelWithId && string.IsNullOrEmpty(baseDalModelWithId.Id)) baseDalModelWithId.Id = BuildId();
+            AddAndSetUpdateDate(entity);
+            return Task.FromResult(entity);
+        }
+
+        private static string BuildId()
+        {
+            return Guid.NewGuid().ToString("n").ToLower().Substring(0, 24);
+        }
+
+
+        public Task<IEnumerable<T>> AddRange(IEnumerable<T> entities)
+        {
+            var addRange = entities as T[] ?? entities.ToArray();
+            foreach (var entity in addRange) Add(entity);
+
+            return Task.FromResult(entities);
+        }
+
+
+        public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update, TType value)
+          where TType : class
+        {
+            var enumerable = _internalDataList.Where(filter.Compile()).ToArray();
+            foreach (var v in enumerable)
             {
-                _list = new List<T>();
+                ReflectionHelper.ExpressionToAssign(v, update, value);
             }
 
-            #region Implementation of IRepository<T>
+            return Task.FromResult(enumerable.LongCount());
+        }
 
-            public IQueryable<T> Query()
+        public Task<bool> Remove(Expression<Func<T, bool>> filter)
+        {
+            var array = _internalDataList.Where(filter.Compile()).ToArray();
+            array.ForEach(x => _internalDataList.Remove(x));
+            return Task.FromResult(array.Length > 0);
+        }
+
+        public async Task<List<T>> Find(Expression<Func<T, bool>> filter)
+        {
+            var fromResult = await FindInternal(filter);
+            return fromResult.DynamicCastTo<List<T>>();
+        }
+
+        private Task<List<T>> FindInternal(Expression<Func<T, bool>> filter)
+        {
+            return Task.FromResult(_internalDataList.Where(filter.Compile()).ToList());
+        }
+
+        public async Task<T> FindOne(Expression<Func<T, bool>> filter)
+        {
+            var list = await FindInternal(filter);
+            return list.DynamicCastTo<List<T>>().FirstOrDefault();
+        }
+
+        public Task<long> Count()
+        {
+            return Task.FromResult(_internalDataList.LongCount());
+        }
+
+        public Task<long> Count(Expression<Func<T, bool>> filter)
+        {
+            return Task.FromResult(_internalDataList.Where(filter.Compile()).LongCount());
+        }
+
+        public async Task<long> UpdateMany(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd)
+        {
+            var list = await FindInternal(filter);
+            var updateCalls = new UpdateCalls<T>(list);
+            upd(updateCalls);
+            return list.LongCount();
+        }
+
+        public async Task<long> UpdateOne(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd)
+        {
+            var list = (await FindInternal(filter)).Take(1).ToList();
+            var updateCalls = new UpdateCalls<T>(list);
+            upd(updateCalls);
+            return list.LongCount();
+        }
+
+        public async Task<long> Upsert(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd)
+        {
+            var list = (await FindInternal(filter)).Take(1).ToList();
+            if (!list.Any())
             {
-                return _list.AsQueryable();
+                var instance = Activator.CreateInstance<T>();
+                _internalDataList.Add(instance);
+                list.Add(instance);
+            }
+            var updateCalls = new UpdateCalls<T>(list);
+            upd(updateCalls);
+            return list.Count;
+        }
+
+        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd, bool isUpsert = false)
+        {
+            var list = (await FindInternal(filter)).Take(1).ToList();
+            if (isUpsert && !list.Any())
+            {
+                var instance = Activator.CreateInstance<T>();
+                _internalDataList.Add(instance);
+                list.Add(instance);
+            }
+            var updateCalls = new UpdateCalls<T>(list);
+            upd(updateCalls);
+            return list.First();
+        }
+
+        public class UpdateCalls<TClass> : IUpdateCalls<TClass>
+        {
+            private readonly List<TClass> _list;
+
+            public UpdateCalls(List<TClass> list)
+            {
+                _list = list;
             }
 
-            public Task<T> Add(T entity)
-            {
-                entity.CreateDate = DateTime.Now;
-                var baseDalModelWithId = entity as IBaseDalModelWithId;
-                if (baseDalModelWithId != null) baseDalModelWithId.Id = Guid.NewGuid().ToString("n");
-                AddAndSetUpdateDate(entity);
-                return Task.FromResult(entity);
-            }
+            #region Implementation of IUpdateCalls<TClass>
 
-
-            public Task<IEnumerable<T>> AddRange(IEnumerable<T> entities)
+            public IUpdateCalls<TClass> Set<TType>(Expression<Func<TClass, TType>> expression, TType value)
             {
-                var addRange = entities as T[] ?? entities.ToArray();
-                foreach (T entity in addRange)
+                foreach (var item in _list)
                 {
-                    Add(entity);
+                    AssignNewValue(item, expression, value);
                 }
-                return Task.FromResult(entities);
+                return this;
             }
 
-
-            public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update, TType value) where TType : class
+            public IUpdateCalls<TClass> SetOnInsert<TT>(Expression<Func<TClass, TT>> expression, TT value)
             {
-                var enumerable = _list.Where(filter.Compile()).ToArray();
-                foreach (var v in enumerable)
+                foreach (var item in _list)
                 {
-                    var type = update.Compile()(v);
-                    PropertyCopy.Copy<TType, TType>(value, type);
+                    AssignNewValue(item, expression, value);
                 }
-                return Task.FromResult(enumerable.LongCount());
+                return this;
             }
 
-            public Task<bool> Remove(Expression<Func<T, bool>> filter)
+            public IUpdateCalls<TClass> Inc(Expression<Func<TClass, int>> expression, int value)
             {
-                T[] array = _list.Where(filter.Compile()).ToArray();
-                array.ForEach(x => _list.Remove(x));
-                return Task.FromResult(array.Length > 0);
-            }
-
-            public Task<List<T>> Find(Expression<Func<T, bool>> filter)
-            {
-                return Task.FromResult(_list.Where(filter.Compile()).ToList());
-            }
-
-            public Task<T> FindOne(Expression<Func<T, bool>> filter)
-            {
-                var predicate = filter.Compile();
-                return Task.FromResult(_list.FirstOrDefault((x) =>
+                var compile = expression.Compile();
+                foreach (var item in _list)
                 {
-                    try
-                    {
-                        return predicate(x);
-                    }
-                    catch (NullReferenceException)
-                    {
-                        return false;
-                    }
-                }));
-            }
-
-            public Task<long> Count()
-            {
-                return Task.FromResult(_list.LongCount());
-            }
-
-            public Task<long> Count(Expression<Func<T, bool>> filter)
-            {
-                return Task.FromResult(_list.Where(filter.Compile()).LongCount());
-            }
-
-            public Task<T> Update(Expression<Func<T, bool>> filter, T entity)
-            {
-                Remove(filter);
-                AddAndSetUpdateDate(entity);
-                return Task.FromResult(entity);
-            }
-
-            public bool Remove(T entity)
-            {
-                var baseDalModelWithId = entity as IBaseDalModelWithId;
-                if (baseDalModelWithId != null)
-                {
-                    IBaseDalModelWithId baseDalModelWithIds =
-                        _list.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
-                    if (baseDalModelWithIds != null)
-                    {
-                        _list.Remove((T) baseDalModelWithIds);
-                        return true;
-                    }
+                    var i = compile(item);
+                    AssignNewValue(item, expression, i += value);
                 }
-                return _list.Remove(entity);
+
+                return this;
             }
 
-            public T Update(T entity, object t)
+            public IUpdateCalls<TClass> Inc(Expression<Func<TClass, long>> expression, long value)
             {
-                Remove(entity);
-                AddAndSetUpdateDate(entity);
-                return entity;
+                var compile = expression.Compile();
+                foreach (var item in _list)
+                {
+                    var i = compile(item);
+                    AssignNewValue(item, expression, i += value);
+                }
+
+                return this;
             }
+
+            public IUpdateCalls<TClass> Push<TT>(Expression<Func<TClass, IEnumerable<TT>>> expression, TT value)
+            {
+                throw new NotImplementedException();
+            }
+
+
 
             #endregion
 
-            #region Private Methods
 
-            private void AddAndSetUpdateDate(T entity)
+
+            public static void AssignNewValue<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression, TValue value)
             {
-                _list.Add(entity);
-                entity.UpdateDate = DateTime.Now;
+                ReflectionHelper.ExpressionToAssign(obj, expression, value);
+            }
+        }
+
+        public Task<T> Update(Expression<Func<T, bool>> filter, T entity)
+        {
+            Remove(filter);
+            AddAndSetUpdateDate(entity);
+            return Task.FromResult(entity);
+        }
+
+        public bool Remove(T entity)
+        {
+            if (entity is IBaseDalModelWithId baseDalModelWithId)
+            {
+                var baseDalModelWithIds =
+                  _internalDataList.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
+                if (baseDalModelWithIds != null)
+                {
+                    _internalDataList.Remove((T)baseDalModelWithIds);
+                    return true;
+                }
             }
 
-            #endregion
+            return _internalDataList.Remove(entity);
+        }
+
+        public T Update(T entity, object t)
+        {
+            Remove(entity);
+            AddAndSetUpdateDate(entity);
+            return entity;
         }
 
         #endregion

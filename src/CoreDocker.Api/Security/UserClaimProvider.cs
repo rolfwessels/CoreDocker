@@ -16,15 +16,15 @@ using IdentityServer4.Validation;
 
 namespace CoreDocker.Api.Security
 {
-    public class UserClaimProvider : IProfileService , IResourceOwnerPasswordValidator
+    public class UserClaimProvider : IProfileService, IResourceOwnerPasswordValidator
     {
         private readonly IRoleManager _roleManager;
-        private readonly IUserManager _userManager;
+        private readonly IUserLookup _userLookup;
 
 
-        public UserClaimProvider(IUserManager userManager, IRoleManager roleManager)
+        public UserClaimProvider(IUserLookup userLookup, IRoleManager roleManager)
         {
-            _userManager = userManager;
+            _userLookup = userLookup;
             _roleManager = roleManager;
         }
 
@@ -34,8 +34,8 @@ namespace CoreDocker.Api.Security
         {
             var sub = context.Subject.GetSubjectId();
 
-            var user = await _userManager.GetUserByEmail(sub);
-            
+            var user = await _userLookup.GetUserByEmail(sub);
+
             var claims = BuildClaimListForUser(user);
 
             context.IssuedClaims = claims;
@@ -44,30 +44,38 @@ namespace CoreDocker.Api.Security
         public async Task IsActiveAsync(IsActiveContext context)
         {
             var sub = context.Subject.GetSubjectId();
-            var user = await _userManager.GetUserByEmail(sub);
+            var user = await _userLookup.GetUserByEmail(sub);
             context.IsActive = user != null;
         }
 
         #endregion
 
+        #region IResourceOwnerPasswordValidator Members
 
         #region Implementation of IResourceOwnerPasswordValidator
 
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            var user = await _userManager.GetUserByEmailAndPassword(context.UserName, context.Password);
+            var user = await _userLookup.GetUserByEmailAndPassword(context.UserName, context.Password);
             if (user != null)
             {
                 var claims = BuildClaimListForUser(user);
                 context.Result = new GrantValidationResult(
-                    subject: user.Id,
-                    authenticationMethod: "password",
-                    claims: claims
+                    user.Id,
+                    "password",
+                    claims
                 );
             }
         }
 
         #endregion
+
+        #endregion
+
+        public static string ToPolicyName(Activity claim)
+        {
+            return claim.ToString().ToLower();
+        }
 
         #region Private Methods
 
@@ -84,18 +92,11 @@ namespace CoreDocker.Api.Security
                     ? new Claim(JwtClaimTypes.Role, RoleManager.Admin.Name)
                     : new Claim(JwtClaimTypes.Role, RoleManager.Guest.Name)
             };
-            var selectMany = user.Roles.Select(r => _roleManager.GetRoleByName(r).Result).SelectMany(x => x.Activities).Distinct().ToList();
-            foreach (var claim in selectMany)
-            {
-                claims.Add(new Claim(JwtClaimTypes.Role, ToPolicyName(claim).Dump("a")));
-            }
-            
-            return claims;
-        }
+            var selectMany = user.Roles.Select(r => _roleManager.GetRoleByName(r).Result).SelectMany(x => x.Activities)
+                .Distinct().ToList();
+            foreach (var claim in selectMany) claims.Add(new Claim(JwtClaimTypes.Role, ToPolicyName(claim)));
 
-        public static string ToPolicyName(Activity claim)
-        {
-            return claim.ToString().ToLower();
+            return claims;
         }
 
         #endregion

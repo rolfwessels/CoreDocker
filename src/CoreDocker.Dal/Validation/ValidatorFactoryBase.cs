@@ -5,10 +5,8 @@ namespace CoreDocker.Dal.Validation
 {
     public abstract class ValidatorFactoryBase : IValidatorFactory
     {
-        protected ValidatorFactoryBase()
-        {
-        }
-        
+        #region IValidatorFactory Members
+
         public ValidationResult For<T>(T user)
         {
             var validationRules = GetValidationRules<T>();
@@ -18,7 +16,7 @@ namespace CoreDocker.Dal.Validation
         public void ValidateAndThrow<T>(T user)
         {
             var validationRules = GetValidationRules<T>();
-            if (validationRules != null) validationRules.ValidateAndThrow(user);
+            validationRules?.ValidateAndThrow(user);
         }
 
         public IValidator<T> Validator<T>()
@@ -26,10 +24,11 @@ namespace CoreDocker.Dal.Validation
             return GetValidationRules<T>();
         }
 
+        #endregion
+
         protected IValidator<T> GetValidationRules<T>()
         {
-            IValidator<T> output;
-            TryResolve(out output);
+            TryResolve(out IValidator<T> output);
             return output;
         }
 

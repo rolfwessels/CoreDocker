@@ -1,14 +1,13 @@
 using System.Linq;
-using NUnit.Framework;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
+using NUnit.Framework;
 
 namespace CoreDocker.Utilities.Tests.Helpers
 {
     [TestFixture]
     public class ObjectPoolTests
     {
-        
         #region Setup/Teardown
 
         public void Setup()
@@ -29,7 +28,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
             Setup();
             var counter = 0;
             var maxObjects = 2;
-            var objectPool = new ObjectPool<Sample>(() => new Sample() { Name = "Name" + counter++ }, maxObjects);
+            var objectPool = new ObjectPool<Sample>(() => new Sample {Name = "Name" + counter++}, maxObjects);
             // action
             var samples = Enumerable.Range(0, 20).Select(x => objectPool.Get()).ToArray();
             // assert

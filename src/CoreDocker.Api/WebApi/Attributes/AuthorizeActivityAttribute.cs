@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using CoreDocker.Api.Security;
 using CoreDocker.Dal.Models.Auth;
@@ -7,22 +6,20 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Attributes
 {
- 
-
-    public class AuthorizeActivityAttribute : AuthorizeAttribute 
+    public class AuthorizeActivityAttribute : AuthorizeAttribute
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AuthorizeActivityAttribute() : base()
+        public AuthorizeActivityAttribute()
         {
         }
 
         public AuthorizeActivityAttribute(Activity activities) : base(UserClaimProvider.ToPolicyName(activities))
-		{
-			Activities = activities;
-		}
+        {
+            Activities = activities;
+        }
 
-		public Activity Activities { get; }
+        public Activity Activities { get; }
 
 
         #region Overrides of AuthorizeAttribute
@@ -44,7 +41,6 @@ namespace CoreDocker.Api.WebApi.Attributes
 //			return isAuthorized;
 //		}
 
-		#endregion
-
-	}
+        #endregion
+    }
 }

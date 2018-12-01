@@ -3,7 +3,6 @@ using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Users
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
     public class UserValidator : AbstractValidator<User>
     {
         public UserValidator()
@@ -13,5 +12,7 @@ namespace CoreDocker.Dal.Models.Users
             RuleFor(x => x.HashedPassword).NotEmpty();
             RuleFor(x => x.Roles).NotEmpty();
         }
+
+      
     }
 }

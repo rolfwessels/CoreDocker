@@ -1,21 +1,18 @@
-using CoreDocker.Utilities.Helpers;
-using FizzWare.NBuilder;
-using FluentAssertions;
-using FluentValidation.TestHelper;
-using CoreDocker.Dal.Models;
-using CoreDocker.Dal.Validation;
-using NUnit.Framework;
 using System.Linq;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
+using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
+using FluentAssertions;
+using FluentValidation.TestHelper;
+using NUnit.Framework;
 
 namespace CoreDocker.Dal.Tests.Validation
 {
     [TestFixture]
     public class ProjectValidatorTests
     {
-
         private ProjectValidator _validator;
 
         #region Setup/Teardown
@@ -28,10 +25,28 @@ namespace CoreDocker.Dal.Tests.Validation
         [TearDown]
         public void TearDown()
         {
-
         }
 
         #endregion
+
+        [Test]
+        public void Name_GiveLongString_ShouldFail()
+        {
+            // arrange
+            Setup();
+            // assert
+            _validator.ShouldHaveValidationErrorFor(project => project.Name, GetRandom.String(200));
+        }
+
+
+        [Test]
+        public void Name_GiveNullName_ShouldFail()
+        {
+            // arrange
+            Setup();
+            // assert
+            _validator.ShouldHaveValidationErrorFor(project => project.Name, null as string);
+        }
 
         [Test]
         public void Validate_GiveValidProjectData_ShouldNotFail()
@@ -45,27 +60,5 @@ namespace CoreDocker.Dal.Tests.Validation
             validationResult.Errors.Select(x => x.ErrorMessage).StringJoin().Should().BeEmpty();
             validationResult.IsValid.Should().BeTrue();
         }
-
-         
-        [Test]
-        public void Name_GiveNullName_ShouldFail()
-        {
-            // arrange
-            Setup();
-            // assert
-            _validator.ShouldHaveValidationErrorFor(project => project.Name, null as string);
-        }
-
-        [Test]
-        public void Name_GiveLongString_ShouldFail()
-        {
-            // arrange
-            Setup();
-            // assert
-            _validator.ShouldHaveValidationErrorFor(project => project.Name, GetRandom.String(200));
-        }
-
-        
-         
     }
 }

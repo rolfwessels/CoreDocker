@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+// ReSharper disable InconsistentNaming
 
 namespace CoreDocker.Core.Vendor
 {
@@ -63,7 +64,7 @@ namespace CoreDocker.Core.Vendor
             csprng.GetBytes(salt);
 
             // Hash the password and encode the parameters
-            byte[] hash = PBKDF2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
+            var hash = PBKDF2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
             return PBKDF2_ITERATIONS + ":" +
                    Convert.ToBase64String(salt) + ":" +
                    Convert.ToBase64String(hash);
@@ -81,12 +82,12 @@ namespace CoreDocker.Core.Vendor
         {
             // Extract the parameters from the hash
             char[] delimiter = {':'};
-            string[] split = correctHash.Split(delimiter);
-            int iterations = Int32.Parse(split[ITERATION_INDEX]);
-            byte[] salt = Convert.FromBase64String(split[SALT_INDEX]);
-            byte[] hash = Convert.FromBase64String(split[PBKDF2_INDEX]);
+            var split = correctHash.Split(delimiter);
+            var iterations = int.Parse(split[ITERATION_INDEX]);
+            var salt = Convert.FromBase64String(split[SALT_INDEX]);
+            var hash = Convert.FromBase64String(split[PBKDF2_INDEX]);
 
-            byte[] testHash = PBKDF2(password, salt, iterations, hash.Length);
+            var testHash = PBKDF2(password, salt, iterations, hash.Length);
             return SlowEquals(hash, testHash);
         }
 
@@ -108,8 +109,8 @@ namespace CoreDocker.Core.Vendor
         /// </returns>
         private static bool SlowEquals(byte[] a, byte[] b)
         {
-            uint diff = (uint) a.Length ^ (uint) b.Length;
-            for (int i = 0; i < a.Length && i < b.Length; i++)
+            var diff = (uint) a.Length ^ (uint) b.Length;
+            for (var i = 0; i < a.Length && i < b.Length; i++)
                 diff |= (uint) (a[i] ^ b[i]);
             return diff == 0;
         }
@@ -130,9 +131,8 @@ namespace CoreDocker.Core.Vendor
         /// </returns>
         private static byte[] PBKDF2(string password, byte[] salt, int iterations, int outputBytes)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt);
-            pbkdf2.IterationCount = iterations;
-            return pbkdf2.GetBytes(outputBytes);
+            var bytes = new Rfc2898DeriveBytes(password, salt) {IterationCount = iterations};
+            return bytes.GetBytes(outputBytes);
         }
 
         #endregion

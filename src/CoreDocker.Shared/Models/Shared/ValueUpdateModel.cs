@@ -2,23 +2,14 @@
 {
     public class ValueUpdateModel<T>
     {
-        private readonly UpdateTypeCodes _updateType;
-        private readonly T _value;
-
         public ValueUpdateModel(T value, UpdateTypeCodes updateType)
         {
-            _value = value;
-            _updateType = updateType;
+            Value = value;
+            UpdateType = updateType;
         }
 
-        public T Value
-        {
-            get { return _value; }
-        }
+        public T Value { get; }
 
-        public UpdateTypeCodes UpdateType
-        {
-            get { return _updateType; }
-        }
+        public UpdateTypeCodes UpdateType { get; }
     }
 }

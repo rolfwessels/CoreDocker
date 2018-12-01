@@ -18,6 +18,8 @@ namespace CoreDocker.Utilities.Tests.Tools
             return LazySourcePath.Value;
         }
 
+        #region Private Methods
+
         private static string SourceBasePath()
         {
             return @"D:\Work\home\pception\src\Pception.Website\dist";
@@ -33,5 +35,6 @@ namespace CoreDocker.Utilities.Tests.Tools
 //            return path;
         }
 
+        #endregion
     }
 }

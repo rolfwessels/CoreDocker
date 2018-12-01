@@ -2,14 +2,17 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using CoreDocker.Api.Components;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
+using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.MongoDb;
-using CoreDocker.Dal.Persistance;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
 using GraphQL;
 using GraphQL.Authorization;
@@ -42,12 +45,36 @@ namespace CoreDocker.Api.AppStartup
             Container = builder.Build();
         }
 
+        public static void Populate(IServiceCollection services)
+        {
+            if (_isInitialized) throw new Exception("Need to call Populate before first instance call.");
+            _services = services;
+        }
+
+        #region Overrides of IocCoreBase
+
+        protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
+        {
+            _log.Info($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
+            try
+            {
+                return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
+            }
+            catch (Exception e)
+            {
+                _log.Error($"Error connecting to the database:{e.Message}", e);
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
         private static void SetupGraphQl(ContainerBuilder builder)
         {
-            builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
-            builder.RegisterType<DocumentWriter>().As<IDocumentWriter>().SingleInstance();
-
-            builder.RegisterType<OriginalDateGraphType>().SingleInstance();
+            
+            builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
             //validation
             //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -66,67 +93,39 @@ namespace CoreDocker.Api.AppStartup
 
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
+            builder.RegisterType<DefaultSubscription>().SingleInstance();
+            builder.RegisterType<RealTimeNotificationsMessageType>().SingleInstance();
             builder.RegisterType<QueryResultSpecification>().SingleInstance();
+            
             builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
             /*user*/
             builder.RegisterType<UserSpecification>();
-            builder.RegisterType<UsersSpecification>();
+            builder.RegisterType<UsersQuerySpecification>();
             builder.RegisterType<UserCreateUpdateSpecification>();
             builder.RegisterType<UsersMutationSpecification>();
             builder.RegisterType<RoleSpecification>();
             builder.RegisterType<RegisterSpecification>();
+            builder.RegisterType<PagedListGraphType<User, UserSpecification>>();
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();
             builder.RegisterType<OpenIdSettings>();
-            builder.RegisterType<ProjectsSpecification>();
+            builder.RegisterType<ProjectsQuerySpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
             builder.RegisterType<ProjectsMutationSpecification>();
-            
+            builder.RegisterType<PagedListGraphType<Project, ProjectSpecification>>().SingleInstance();
 
-         
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
         }
 
-        public static void Populate(IServiceCollection services)
-        {
-            if (_isInitialized) throw new Exception("Need to call Populate before first instance call.");
-            _services = services;
-        }
-
-        #region Overrides of IocCoreBase
-
-        protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
-        {
-            
-            _log.Info($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
-            try
-            {
-                return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
-            }
-            catch (Exception e)
-            {
-                _log.Error($"Error connecting to the database:{e.Message}", e);
-                throw;
-            }
-        }
-
-        #endregion
-
-        #region Private Methods
-
         private void SetupCommonControllers(ContainerBuilder builder)
         {
-            builder.RegisterType<UserCommonController>();
-            builder.RegisterType<ProjectCommonController>();
-
         }
 
         private void SetupTools(ContainerBuilder builder)
         {
-            builder.RegisterType<UserCommonController>();
         }
 
         #endregion
@@ -146,6 +145,7 @@ namespace CoreDocker.Api.AppStartup
                         _isInitialized = true;
                     }
                 }
+
                 return _instance;
             }
         }

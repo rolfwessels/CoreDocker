@@ -12,11 +12,14 @@ namespace CoreDocker.Dal.MongoDb
     public class MongoMappers
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public void InitializeMappers()
         {
             SetupDataTimeSerializer();
             SetupMapping();
         }
+
+        #region Private Methods
 
         private static void SetupMapping()
         {
@@ -29,7 +32,7 @@ namespace CoreDocker.Dal.MongoDb
             {
                 cm.MapIdProperty(c => c.Id)
                     .SetIdGenerator(StringObjectIdGenerator.Instance)
-                .SetSerializer(new StringSerializer(BsonType.ObjectId));
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
             });
         }
 
@@ -42,8 +45,10 @@ namespace CoreDocker.Dal.MongoDb
             }
             catch (Exception e)
             {
-                _log.Error("MongoMappers:InitializeMappers " + e.Message,e);
+                _log.Error("MongoMappers:InitializeMappers " + e.Message, e);
             }
         }
+
+        #endregion
     }
 }

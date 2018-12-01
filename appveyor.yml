@@ -1,11 +1,10 @@
 os: Visual Studio 2017
 
-
+services:
+  - mongodb
 install:
 
 build_script:
-  # dotnet info
-  - ps: dotnet --info
   - ps: dotnet --info
   - ps: ./go test
   - ps: $wc = New-Object 'System.Net.WebClient'

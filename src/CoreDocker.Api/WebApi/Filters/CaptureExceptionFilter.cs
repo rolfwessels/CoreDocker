@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Reflection;
-using FluentValidation;
-using CoreDocker.Shared.Models;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
 using CoreDocker.Api.WebApi.Exceptions;
 using CoreDocker.Shared.Models.Shared;
-using log4net;
 using CoreDocker.Utilities.Helpers;
+using FluentValidation;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CoreDocker.Api.WebApi.Filters
 {
@@ -22,30 +21,27 @@ namespace CoreDocker.Api.WebApi.Filters
 
         public override Task OnExceptionAsync(ExceptionContext context)
         {
-            Exception exception = context.Exception.ToFirstExceptionOfException();
+            var exception = context.Exception.ToFirstExceptionOfException();
 
-            var apiException = exception as ApiException;
-            if (apiException != null)
-            {
+            if (exception is ApiException apiException)
                 RespondWithTheExceptionMessage(context, apiException);
-            }
             else if (IsSomeSortOfValidationError(exception))
-            {
                 RespondWithBadRequest(context, exception);
-            }
             else if (exception is ValidationException)
-            {
                 RespondWithValidationRequest(context, exception as ValidationException);
-            }
             else
-            {
                 RespondWithInternalServerException(context, exception);
-            }
             return base.OnExceptionAsync(context);
         }
 
         #endregion
-        
+
+        public bool IsSomeSortOfValidationError(Exception exception)
+        {
+            return exception is System.ComponentModel.DataAnnotations.ValidationException ||
+                   exception is ArgumentException;
+        }
+
         #region Private Methods
 
         private void RespondWithTheExceptionMessage(ExceptionContext context, ApiException exception)
@@ -60,16 +56,11 @@ namespace CoreDocker.Api.WebApi.Filters
             context.Result = CreateResponse(HttpStatusCode.BadRequest, errorMessage);
         }
 
-        public bool IsSomeSortOfValidationError(Exception exception)
-        {
-            return exception is System.ComponentModel.DataAnnotations.ValidationException ||
-                   exception is ArgumentException;
-        }
-
         private void RespondWithValidationRequest(ExceptionContext context,
             ValidationException validationException)
         {
-            var errorMessage =new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault());
+            var errorMessage =
+                new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault());
             context.Result = CreateResponse(HttpStatusCode.BadRequest, errorMessage);
         }
 
@@ -86,7 +77,7 @@ namespace CoreDocker.Api.WebApi.Filters
         }
 
         private IActionResult CreateResponse(HttpStatusCode httpStatusCode, object errorMessage)
-        {   
+        {
             return new ObjectResult(errorMessage) {StatusCode = (int) httpStatusCode};
         }
 

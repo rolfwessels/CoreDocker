@@ -8,20 +8,22 @@ namespace CoreDocker.Sdk.SignalR
 {
     public class ChatSocketClient : SocketClientBase, IChatHub
     {
-     
-        public ChatSocketClient(CoreDockerSockets sockets):base(sockets)
+        public ChatSocketClient(CoreDockerSockets sockets) : base(sockets)
         {
-           
         }
+
+        #region IChatHub Members
 
         #region Implementation of IChatHub
 
         public async Task Send(string message)
         {
             var hubConnection = await EnsureStarted();
-            await hubConnection.SendCoreAsync(SignalRHubUrls.ChatUrlSendCommand, new[] {message});
+            await hubConnection.SendCoreAsync(SignalRHubUrls.ChatUrlSendCommand, new object[] {message});
         }
-        
+
+        #endregion
+
         #endregion
 
         public async Task OnReceived(Action<string> action)

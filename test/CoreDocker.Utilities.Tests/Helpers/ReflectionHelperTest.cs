@@ -1,7 +1,7 @@
 ﻿using System;
-using NUnit.Framework;
 using CoreDocker.Utilities.Helpers;
 using FluentAssertions;
+using NUnit.Framework;
 
 namespace CoreDocker.Utilities.Tests.Helpers
 {
@@ -9,32 +9,12 @@ namespace CoreDocker.Utilities.Tests.Helpers
     public class ReflectionHelperTest
     {
 
-//        [Test]
-//        public void FindOfType_GivenAssemblyAndName_ShouldSearchForATypeAndReturnIt()
-//        {
-//            // arrange
-//            // action
-//            var type = ReflectionHelper.FindOfType(typeof(ReflectionHelperTest).Assembly, "ReflectionHelperTest");
-//            // assert
-//            type.Should().Be(typeof (ReflectionHelperTest));
-//        }
-//         
-//        [Test]
-//        public void CreateGenericType_GivenCreateGenericType_Should()
-//        {
-//            // arrange
-//            var genericType = typeof(Task<>);
-//            var ofType = ReflectionHelper.FindOfType(typeof(ReflectionHelperTest).Assembly, "ReflectionHelperTest");// action
-//            var type = ReflectionHelper.MakeGenericType(genericType, ofType);
-//            // assert
-//            type.Should().Be(typeof(Task<ReflectionHelperTest>));
-//        }
 
         [Test]
         public void GetMember_GivenExpression_ShouldReturnValue()
         {
             // arrange
-            var member = ReflectionHelper.GetPropertyInfo<User,Guid>(x => x.Id);
+            var member = ReflectionHelper.GetPropertyInfo<User, Guid>(x => x.Id);
             // assert
             member.Name.Should().Be("Id");
             member.PropertyType.Name.Should().Be("Guid");
@@ -50,20 +30,36 @@ namespace CoreDocker.Utilities.Tests.Helpers
             ReflectionHelper.GetPropertyString<User, string>(x => x.Cl.Cl.S1).Should().Be("Cl.Cl.S1");
         }
 
+        [Test]
+        public void ExpressionToAssign_GivenUpdate_ShouldSetTheValueOnTheObject()
+        {
+            // arrange
+            var user = new User();
+            var newGuid = Guid.NewGuid();
+            // action
+            ReflectionHelper.ExpressionToAssign(user, x => x.Id, newGuid);
+            // assert
+            user.Id.Should().Be(newGuid);
+        }
 
-        class User
+        #region Nested type: MyClass
+
+        private class MyClass
+        {
+            public string S1 { get; set; }
+            public MyClass Cl { get; set; }
+        }
+
+        #endregion
+
+        #region Nested type: User
+
+        private class User
         {
             public Guid Id { get; set; }
-            public MyClass Cl { get; set; }    
+            public MyClass Cl { get; set; }
         }
 
-        class MyClass
-        {
-
-            public string S1 { get; set; }
-            public MyClass Cl { get; set; } 
-        }
+        #endregion
     }
-
-    
 }

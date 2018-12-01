@@ -10,6 +10,7 @@ namespace CoreDocker.Api.GraphQl
         {
             Query = resolver.Resolve<DefaultQuery>();
             Mutation = resolver.Resolve<DefaultMutation>();
+            Subscription = resolver.Resolve<DefaultSubscription>();
         }
     }
 }

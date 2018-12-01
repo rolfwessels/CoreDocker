@@ -7,24 +7,19 @@ namespace CoreDocker.Utilities.Helpers
     {
         public static Exception ToSimpleException(this AggregateException exception)
         {
-            if (exception.InnerExceptions.Count == 1)
-            {
-                return exception.InnerExceptions.First();
-            }
+            if (exception.InnerExceptions.Count == 1) return exception.InnerExceptions.First();
             return new Exception(exception.InnerExceptions.Select(x => x.Message).StringJoin(), exception);
         }
 
         public static string ToSingleExceptionString(this Exception exception)
         {
-            var aggregateException = exception as AggregateException;
-            Exception simpleException = aggregateException != null ? aggregateException.ToSimpleException() : exception;
+            var simpleException = exception is AggregateException aggregateException ? aggregateException.ToSimpleException() : exception;
             return simpleException.Message + Environment.NewLine + simpleException.StackTrace;
         }
 
         public static Exception ToFirstExceptionOfException(this Exception exception)
         {
-            var aggregateException = exception as AggregateException;
-            if (aggregateException != null) return aggregateException.ToSimpleException();
+            if (exception is AggregateException aggregateException) return aggregateException.ToSimpleException();
             return exception;
         }
     }

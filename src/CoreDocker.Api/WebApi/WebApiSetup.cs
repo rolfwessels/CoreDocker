@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDocker.Api.WebApi
 {
-  public class WebApiSetup
-  {
-    public static void Setup(MvcOptions config)
+    public class WebApiSetup
     {
-      config.Filters.Add(new CaptureExceptionFilter());
+        public static void Setup(MvcOptions config)
+        {
+            config.Filters.Add(new CaptureExceptionFilter());
+        }
     }
-  }
 }

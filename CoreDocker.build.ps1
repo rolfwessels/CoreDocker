@@ -39,7 +39,7 @@ task test -depends clean.binobj,build.restore,test.run  -Description "Builds and
 task full -depends test,build,deploy.zip -Description "Versions builds and creates distributions"
 task package -depends version,build,deploy.package -Description "Creates packages that could be user for deployments"
 task deploy -depends version,build,deploy.api,deploy.service -Description "Deploy the files to webserver using msdeploy"
-task appveyor -depends clean.binobj,build,deploy.zip -Description "Runs tests and deploys zip"
+task appveyor -depends clean.binobj,build,deploy.zip -Description "Builds Zip"
 task prerequisite -depends prerequisite.choco,prerequisite.dotnet  -Description "Install all prerequisites"
 #
 # task depends
@@ -173,13 +173,8 @@ task test.run -depends build.restore,build.build   -precondition { return $build
     mkdir $buildReportsDirectory -ErrorAction SilentlyContinue
 
     $Env:ASPNETCORE_ENVIRONMENT = "Development"
-    
     $tests = (Get-ChildItem test | % { Join-Path $_.FullName -ChildPath ("bin/Debug/netcoreapp2.1/$($_.Name).dll") }) 
-    
-    if ($env:APPVEYOR_JOB_ID) {
-        $tests = $tests | Where-Object { $_ -notlike  '*Sdk.Tests*'}
-        write-host "Skip sdk tests. (requires db)" -foreground "yellow"
-    }
+
     dotnet vstest /logger:trx $tests 
     Remove-Item $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue
     Move-Item testresults\*.trx $buildReportsDirectory\result.trx -ErrorAction SilentlyContinue

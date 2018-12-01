@@ -8,9 +8,7 @@ namespace CoreDocker.Api.SignalR
     {
         public static void UseSingalRSetup(this IApplicationBuilder app)
         {
-            app.UseSignalR(routes => {
-                routes.MapHub<ChatHub>(SignalRHubUrls.ChatUrl);
-            });
+            app.UseSignalR(routes => { routes.MapHub<ChatHub>(SignalRHubUrls.ChatUrl); });
         }
     }
 }

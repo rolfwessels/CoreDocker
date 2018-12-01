@@ -1,10 +1,11 @@
+using System;
 using System.Reflection;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
+using CoreDocker.Core.Components.Projects;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
-using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
-using GraphQL.Authorization;
 using GraphQL.Types;
 using log4net;
 
@@ -12,50 +13,51 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsMutationSpecification : ObjectGraphType<object>
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private const string Value = "project";
-        public ProjectsMutationSpecification(ProjectCommonController projectManager)
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public ProjectsMutationSpecification(ICommander commander)
         {
             Name = "ProjectsMutation";
             var safe = new Safe(_log);
-            
+
             this.RequireAuthorization();
-            Field<ProjectSpecification>(
-                "insert",
-                Description = "add a project",
+            Field<CommandResultSpecification>(
+                "create",
+                Description = "Add a project.",
                 new QueryArguments(
-                    new QueryArgument<ProjectCreateUpdateSpecification> { Name = Value }
+                    new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
                 ),
                 safe.Wrap(context =>
                 {
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    return projectManager.Insert(project);
+                    return commander.Execute(ProjectCreate.Request.From(commander.NewId, project.Name));
                 })).RequirePermission(Activity.UpdateProject);
 
-            Field<ProjectSpecification>(
+            Field<CommandResultSpecification>(
                 "update",
-                Description = "update a project",
+                Description = "Update a project.",
                 new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" },
-                    new QueryArgument<ProjectCreateUpdateSpecification> { Name = Value }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"},
+                    new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
                 ),
                 safe.Wrap(context =>
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    return projectManager.Update(id, project);
+                    return commander.Execute(ProjectUpdate.Request.From(id, project.Name));
                 })).RequirePermission(Activity.UpdateProject);
 
-            Field<BooleanGraphType>(
-                "delete",
-                Description = "permanently remove a project",
+            Field<CommandResultSpecification>(
+                "remove",
+                Description = "Permanently remove a project.",
                 new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"}
                 ),
                 safe.Wrap(context =>
                 {
                     var id = context.GetArgument<string>(Name = "id");
-                    return projectManager.Delete(id);
+                    return commander.Execute(ProjectRemove.Request.From(id));
                 })).RequirePermission(Activity.DeleteProject);
         }
     }
@@ -78,7 +80,7 @@ namespace CoreDocker.Api.Components.Projects
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.FromResult(new object()));"
+        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.BuildFromHttpContext(new object()));"
       ]
     }
 ] scaffolding */

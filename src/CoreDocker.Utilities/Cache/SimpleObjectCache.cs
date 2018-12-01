@@ -7,7 +7,7 @@ namespace CoreDocker.Utilities.Cache
     public class SimpleObjectCache : ISimpleObjectCache
     {
         private readonly TimeSpan _defaultCacheTime;
-        private ConcurrentDictionary<string, CacheHolder> _objectCache;
+        private readonly ConcurrentDictionary<string, CacheHolder> _objectCache;
         private DateTime _nextExpiry;
 
         public SimpleObjectCache(TimeSpan defaultCacheTime)
@@ -24,50 +24,36 @@ namespace CoreDocker.Utilities.Cache
             var retrievedValue = Get<TValue>(key);
             if (retrievedValue == null)
             {
-                TValue result = getValue();
-                if (result != null)
-                {
-                    Set(key, result);
-                }
+                var result = getValue();
+                if (result != null) Set(key, result);
                 return result;
             }
+
             return retrievedValue;
         }
 
         public TValue GetAndReset<TValue>(string key, Func<TValue> getValue) where TValue : class
         {
-            CacheHolder values;
-            if (_objectCache.TryGetValue(key, out values))
-            {
+            if (_objectCache.TryGetValue(key, out var values))
                 if (!values.IsExpired)
-                {
-                    return values.asValue<TValue>();
-                }
-            }
+                    return values.AsValue<TValue>();
             return Set(key, getValue());
         }
 
-        public TValue Set<TValue>(string key, TValue newvalue)
+        public TValue Set<TValue>(string key, TValue value)
         {
-            var cacheHolder = new CacheHolder(newvalue, DateTimeOffset.Now.Add(_defaultCacheTime));
+            var cacheHolder = new CacheHolder(value, DateTimeOffset.Now.Add(_defaultCacheTime));
             _objectCache.AddOrUpdate(key, s => cacheHolder, (s, holder) => cacheHolder);
-            return newvalue;
+            return value;
         }
 
         public TValue Get<TValue>(string key) where TValue : class
         {
-            CacheHolder values;
-            if (_objectCache.TryGetValue(key, out values))
-            {
+            if (_objectCache.TryGetValue(key, out var values))
                 if (!values.IsExpired)
-                {
-                    return values.asValue<TValue>();
-                }
+                    return values.AsValue<TValue>();
                 else
-                {
                     StartCleanup();
-                }
-            }
             return null;
         }
 
@@ -78,7 +64,6 @@ namespace CoreDocker.Utilities.Cache
         private void StartCleanup()
         {
             if (DateTime.Now > _nextExpiry)
-            {
                 lock (_objectCache)
                 {
                     if (DateTime.Now > _nextExpiry)
@@ -87,23 +72,23 @@ namespace CoreDocker.Utilities.Cache
                         Task.Run(() =>
                         {
                             foreach (var cacheHolder in _objectCache.ToArray())
-                            {
                                 if (cacheHolder.Value.IsExpired)
                                 {
-                                    CacheHolder ss;
-                                    _objectCache.TryRemove(cacheHolder.Key, out ss);
+                                    _objectCache.TryRemove(cacheHolder.Key, out _);
                                 }
-                            }
                         });
                     }
                 }
-            }
         }
+
+        #endregion
+
+        #region Nested type: CacheHolder
 
         private class CacheHolder
         {
-            private DateTimeOffset _expire;
-            private object _value;
+            private readonly DateTimeOffset _expire;
+            private readonly object _value;
 
             public CacheHolder(object value, DateTimeOffset expire)
             {
@@ -111,12 +96,9 @@ namespace CoreDocker.Utilities.Cache
                 _expire = expire;
             }
 
-            public bool IsExpired
-            {
-                get { return DateTime.Now > _expire; }
-            }
+            public bool IsExpired => DateTime.Now > _expire;
 
-            internal TValue asValue<TValue>() where TValue : class
+            internal TValue AsValue<TValue>() where TValue : class
             {
                 return _value as TValue;
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
@@ -38,8 +37,15 @@ namespace CoreDocker.Api.Security
                             DisplayName = "Standard api access"
                         }
                     },
-                    UserClaims = { JwtClaimTypes.Role , JwtClaimTypes.GivenName , IdentityServerConstants.StandardScopes.Email , JwtClaimTypes.Id, JwtClaimTypes.Name }
-                },
+                    UserClaims =
+                    {
+                        JwtClaimTypes.Role,
+                        JwtClaimTypes.GivenName,
+                        IdentityServerConstants.StandardScopes.Email,
+                        JwtClaimTypes.Id,
+                        JwtClaimTypes.Name
+                    }
+                }
             };
         }
 
@@ -53,7 +59,7 @@ namespace CoreDocker.Api.Security
                     ClientId = openIdSettings.ClientName,
                     RequireConsent = false,
                     AccessTokenType = AccessTokenType.Reference,
-                    AccessTokenLifetime = (int)TimeSpan.FromDays(1).TotalSeconds, // 10 minutes, default 60 minutes
+                    AccessTokenLifetime = (int) TimeSpan.FromDays(1).TotalSeconds, // 10 minutes, default 60 minutes
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
                     {
@@ -66,7 +72,7 @@ namespace CoreDocker.Api.Security
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
-                        openIdSettings.HostUrl.UriCombine("/Unauthorized") 
+                        openIdSettings.HostUrl.UriCombine("/Unauthorized")
                     },
                     AllowedCorsOrigins = openIdSettings.GetOriginList(),
                     AllowedScopes = new List<string>
@@ -76,7 +82,5 @@ namespace CoreDocker.Api.Security
                 }
             };
         }
-
-       
     }
 }

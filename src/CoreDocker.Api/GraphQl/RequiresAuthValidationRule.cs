@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using System.Threading.Tasks;
 using GraphQL.Language.AST;
 using GraphQL.Validation;
 using IdentityServer4.Extensions;
@@ -12,10 +11,9 @@ namespace CoreDocker.Api.GraphQl
 
         public INodeVisitor Validate(ValidationContext context)
         {
-            var task = (Task<GraphQlSetup.GraphQLUserContext>) context.UserContext;
+            var userContext = GraphQlUserContext.ReadFromContext(context);
 
-
-            var claimsPrincipal = task.Result?.User ?? new ClaimsPrincipal();
+            var claimsPrincipal =  userContext?.User ?? new ClaimsPrincipal();
             var authenticated = claimsPrincipal?.IsAuthenticated() ?? false;
 
             return new EnterLeaveListener(_ =>

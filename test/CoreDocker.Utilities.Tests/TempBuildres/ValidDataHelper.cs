@@ -31,7 +31,8 @@ namespace CoreDocker.Utilities.Tests.TempBuildres
             if (user != null)
             {
                 user.Name = GetRandom.FirstName() + " " + GetRandom.LastName();
-                user.Email = (Regex.Replace(user.Name.ToLower(),"[^a-z]","")+GetRandom.NumericString(3) + "@nomailmail.com").ToLower();
+                user.Email = (Regex.Replace(user.Name.ToLower(), "[^a-z]", "") + GetRandom.NumericString(3) +
+                              "@nomailmail.com").ToLower();
                 user.HashedPassword = GetRandom.String(20);
                 user.Roles.Add("Guest");
             }

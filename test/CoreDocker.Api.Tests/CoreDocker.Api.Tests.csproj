@@ -12,27 +12,40 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\..\src\CoreDocker.Api\Certificates\development.pfx" Link="Certificates\development.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\CoreDocker.Api\CoreDocker.Api.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Core\CoreDocker.Core.csproj" />
+    <ProjectReference Include="..\..\src\CoreDocker.Sdk\CoreDocker.Sdk.csproj" />
     <ProjectReference Include="..\CoreDocker.Utilities.Tests\CoreDocker.Utilities.Tests.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
     <ProjectReference Include="..\CoreDocker.Core.Tests\CoreDocker.Core.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="Moq" Version="4.9.0" />
-    <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="FluentAssertions" Version="5.4.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Moq" Version="4.10.0" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="FluentAssertions" Version="5.5.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
