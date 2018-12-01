@@ -3,7 +3,6 @@ using System.Reflection;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
-using CoreDocker.Utilities.Tests;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
 
@@ -16,7 +15,6 @@ namespace CoreDocker.Api.Tests
         public const string AdminUser = "admin@admin.com";
         private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         protected static readonly Lazy<string> HostAddress;
-
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
         protected static Lazy<CoreDockerClient> _adminConnection;
