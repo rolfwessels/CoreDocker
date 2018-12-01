@@ -71,7 +71,6 @@ namespace CoreDocker.Core.Components.Users
                 if (id == null) throw new ArgumentNullException(nameof(id));
                 if (name == null) throw new ArgumentNullException(nameof(name));
                 if (email == null) throw new ArgumentNullException(nameof(email));
-                if (password == null) throw new ArgumentNullException(nameof(password));
                 if (roles == null || !roles.Any()) throw new ArgumentNullException(nameof(roles));
 
                 return new Request

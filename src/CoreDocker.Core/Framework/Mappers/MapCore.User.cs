@@ -1,11 +1,6 @@
-﻿using System;
-using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Core.Vendor;
-using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
@@ -44,9 +39,11 @@ namespace CoreDocker.Core.Framework.Mappers
             return Mapper.Map(user, userReference);
         }
 
-        public static User ToDao(this UserCreate.Request user, User userReference = null)
+        public static User ToDao(this UserCreate.Request request, User user = null)
         {
-            return Mapper.Map(user, userReference);
+            var map = Mapper.Map(request, user);
+            map.HashedPassword = UserDalHelper.SetPassword(request.Password);
+            return map;
         }
 
         public static UserCreate.Notification ToEvent(this UserCreate.Request user, UserCreate.Notification userReference = null)
@@ -54,9 +51,9 @@ namespace CoreDocker.Core.Framework.Mappers
             return Mapper.Map(user, userReference);
         }
 
-        public static User ToDao(this UserUpdate.Request user, User userReference = null)
+        public static User ToDao(this UserUpdate.Request request, User user = null)
         {
-            return Mapper.Map(user, userReference);
+            return Mapper.Map(request, user);
         }
 
         public static UserUpdate.Notification ToEvent(this UserUpdate.Request user, UserUpdate.Notification userReference = null)
