@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Components.Users;
@@ -38,6 +38,6 @@ namespace CoreDocker.Api.GraphQl
             app.UseGraphQL<ISchema>();
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions {GraphQLEndPoint = uriCombine.PathAndQuery});
+                }
         }
-    }
 }

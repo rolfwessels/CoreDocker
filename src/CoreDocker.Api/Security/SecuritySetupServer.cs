@@ -19,8 +19,10 @@ namespace CoreDocker.Api.Security
         {
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
             var openIdSettings = new OpenIdSettings(configuration);
-            services.AddIdentityServer()
-                .AddSigningCredential(Certificate(openIdSettings.CertPfx,openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
+            _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
+            services.AddIdentityServer(x => { x.PublicOrigin = openIdSettings.HostUrl; })
+                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword,
+                    openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
@@ -41,7 +43,6 @@ namespace CoreDocker.Api.Security
             {
                 X509Certificate2 cert = null;
                 if (!string.IsNullOrEmpty(certStoreThumbprint))
-                {
                     using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                     {
                         certStore.Open(OpenFlags.ReadOnly);
@@ -56,14 +57,16 @@ namespace CoreDocker.Api.Security
                             _log.Info($"Successfully loaded cert from registry: {cert.Thumbprint}");
                         }
                     }
-                }
 
                 // Fallback to local file for development
                 if (cert == null)
                 {
                     var fileName = Path.Combine("./Certificates", certFile);
                     if (!File.Exists(fileName))
-                        _log.Error($"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
+                    {
+                        _log.Error(
+                            $"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
+                    }
                     else
                     {
                         cert = new X509Certificate2(fileName, password);
@@ -73,7 +76,7 @@ namespace CoreDocker.Api.Security
 
                 return cert;
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 _log.Error($"SecuritySetupServer:Certificate {e.Message}");
                 throw;
