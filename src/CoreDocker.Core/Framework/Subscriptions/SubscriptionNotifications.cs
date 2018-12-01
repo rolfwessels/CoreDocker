@@ -12,7 +12,7 @@ namespace CoreDocker.Core.Framework.Subscriptions
             public RealTimeNotificationsMessage Message { get; set; }
         }
 
-        private readonly ISubject<SubscriptionWithGroup> _stream = new ReplaySubject<SubscriptionWithGroup>();
+        private readonly ISubject<SubscriptionWithGroup> _stream = new ReplaySubject<SubscriptionWithGroup>(0);
 
         #region Implementation of IRealTimeNotificationChannel
 

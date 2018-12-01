@@ -56,7 +56,7 @@ namespace CoreDocker.Api.Tests.Integration
                 var update = await _userApiClient.ById(insertCommand.Id);
                 var getById = await _userApiClient.ById(insert.Id);
                 var allAfterUpdate = await _userApiClient.List();
-                var paged = await _userApiClient.Paged();
+                var paged = await _userApiClient.Paged(2);
                 var firstDelete = await _userApiClient.Remove(insert.Id);
 
                 // assert
@@ -65,6 +65,8 @@ namespace CoreDocker.Api.Tests.Integration
                 getById.Should().BeEquivalentTo(update, r => r.Excluding(x => x.UpdateDate));
                 allAfterUpdate.Count.Should().BeGreaterThan(0);
                 allAfterUpdate.Should().Contain(x => x.Name == update.Name);
+                paged.Count.Should().BeGreaterOrEqualTo(paged.Items.Count);
+                paged.Items.Count.Should().BeLessOrEqualTo(2);
 //                items.WaitFor(x=>x.Count == 3 ,5000);
 //                items.Should().HaveCount(3);
 //                items.Last().Event.Should().Be("UserRemoved");

@@ -9,7 +9,9 @@ namespace CoreDocker.Core.Framework.CommandQuery
     {
         public PagedList(IQueryable<T> queryable, PagedLookupOptionsBase optionsIncludeCount)
         {
-            Items = queryable.Take(optionsIncludeCount.First).ToList();
+            Items = optionsIncludeCount.First == 0 
+                ? new List<T>() 
+                : queryable.Take(optionsIncludeCount.First).ToList();
             Count = -1;
             if (optionsIncludeCount.IncludeCount)
             {

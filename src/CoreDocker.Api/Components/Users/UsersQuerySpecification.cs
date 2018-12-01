@@ -57,7 +57,6 @@ namespace CoreDocker.Api.Components.Users
                 resolve: safe.Wrap(context => Me(GraphQlUserContextHelper.User(context)))
             ).RequireAuthorization();
 
-
             Field<ListGraphType<RoleSpecification>>(
                 "roles",
                 Description = "All roles",

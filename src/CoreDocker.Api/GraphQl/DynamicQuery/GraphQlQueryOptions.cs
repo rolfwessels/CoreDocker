@@ -35,7 +35,13 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
         public Task<PagedList<TDal>> Paged(ResolveFieldContext<object> context, TOptions options = null)
         {
             options = options ?? new TOptions();
-            options.IncludeCount = context.FieldAst.SelectionSet.Children.OfType<GraphQL.Language.AST.Field>().Select(x=>x.Name).Contains("count");
+            var childrenFields = context.FieldAst.SelectionSet.Children.OfType<GraphQL.Language.AST.Field>().Select(x=>x.Name).ToArray();
+            options.IncludeCount = childrenFields.Contains("count");
+            if (options.IncludeCount && !childrenFields.Contains("items"))
+            {
+                options.First = 0;
+            }
+
             foreach (var arg in _args)
             {
                 if (context.HasArgument(arg.Argument.Name))
