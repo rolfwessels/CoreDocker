@@ -51,6 +51,7 @@ namespace CoreDocker.Api
                 policy.AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
+                    .SetPreflightMaxAge(TimeSpan.FromMinutes(10)) // Cache the OPTIONS calls.
                     .WithOrigins(new OpenIdSettings(Configuration).GetOriginList());
             });
 
