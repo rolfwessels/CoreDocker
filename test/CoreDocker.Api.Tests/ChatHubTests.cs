@@ -40,7 +40,7 @@ namespace CoreDocker.Api.Tests
             await coreDockerSockets.Chat.Send(expected);
             await coreDockerSockets.Chat.Send(expected);
             await coreDockerSockets.Chat.Send(expected);
-            
+
             list.WaitFor(x => x.Count > 3, 10000).Should().HaveCount(3).And.Contain(expected);
         }
     }

@@ -39,7 +39,7 @@ namespace CoreDocker.Core.Components.Users
 
         public Task Delete(string id)
         {
-            return Repository.Remove(x=>x.Id == id);
+            return Repository.Remove(x => x.Id == id);
         }
 
         #endregion

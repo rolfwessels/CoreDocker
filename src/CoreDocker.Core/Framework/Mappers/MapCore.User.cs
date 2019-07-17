@@ -46,7 +46,8 @@ namespace CoreDocker.Core.Framework.Mappers
             return map;
         }
 
-        public static UserCreate.Notification ToEvent(this UserCreate.Request user, UserCreate.Notification userReference = null)
+        public static UserCreate.Notification ToEvent(this UserCreate.Request user,
+            UserCreate.Notification userReference = null)
         {
             return Mapper.Map(user, userReference);
         }
@@ -56,7 +57,8 @@ namespace CoreDocker.Core.Framework.Mappers
             return Mapper.Map(request, user);
         }
 
-        public static UserUpdate.Notification ToEvent(this UserUpdate.Request user, UserUpdate.Notification userReference = null)
+        public static UserUpdate.Notification ToEvent(this UserUpdate.Request user,
+            UserUpdate.Notification userReference = null)
         {
             return Mapper.Map(user, userReference);
         }

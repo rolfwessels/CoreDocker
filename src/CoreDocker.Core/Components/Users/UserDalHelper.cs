@@ -5,9 +5,8 @@ using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users
 {
-    public  static class UserDalHelper
+    public static class UserDalHelper
     {
-
         public static bool IsPassword(this User user, string password)
         {
             return PasswordHash.ValidatePassword(password, user.HashedPassword);

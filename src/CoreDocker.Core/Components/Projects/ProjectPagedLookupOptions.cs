@@ -1,4 +1,4 @@
-    using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Core.Framework.CommandQuery;
 
 namespace CoreDocker.Core.Components.Projects
 {

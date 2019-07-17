@@ -43,7 +43,8 @@ namespace CoreDocker.Core.Tests.Components.Users
             Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
-                .And.Errors.Should().Contain(x => x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
+                .And.Errors.Should().Contain(x =>
+                    x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
         }
 
         [Test]
@@ -55,7 +56,8 @@ namespace CoreDocker.Core.Tests.Components.Users
             // action
             await _handler.ProcessCommand(validRequest);
             // assert
-            var user = await _users.FindOne(x => x.Id == validRequest.Id);;
+            var user = await _users.FindOne(x => x.Id == validRequest.Id);
+            ;
             user.Should().NotBeNull();
         }
 
@@ -104,7 +106,7 @@ namespace CoreDocker.Core.Tests.Components.Users
 
         public UserUpdate.Request GetValidRequest()
         {
-            var existingUser = _fakeGeneralUnitOfWork.Users.AddAFake(x=> UserDalHelper.SetPassword(x, "existingpass"));
+            var existingUser = _fakeGeneralUnitOfWork.Users.AddAFake(x => UserDalHelper.SetPassword(x, "existingpass"));
             var userUpdateUpdateModels = Builder<User>.CreateNew()
                 .WithValidData()
                 .With(x => x.Id = existingUser.Id)
@@ -113,7 +115,5 @@ namespace CoreDocker.Core.Tests.Components.Users
             userUpdateUpdateModels.Password = "tes";
             return userUpdateUpdateModels;
         }
-
-       
     }
 }

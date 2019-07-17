@@ -52,7 +52,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
             await users.Add(guest);
         }
 
-      
+
         private async Task MockData(IMongoDatabase db)
         {
             var projects = new MongoRepository<Project>(db);

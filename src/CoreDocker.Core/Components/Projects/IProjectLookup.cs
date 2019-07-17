@@ -8,6 +8,5 @@ namespace CoreDocker.Core.Components.Projects
     public interface IProjectLookup : IBaseLookup<Project>
     {
         Task<PagedList<Project>> GetPaged(ProjectPagedLookupOptions options);
-        
     }
 }

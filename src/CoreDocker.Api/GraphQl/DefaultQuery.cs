@@ -6,7 +6,6 @@ using GraphQL.Types;
 
 namespace CoreDocker.Api.GraphQl
 {
-
     public class DefaultQuery : ObjectGraphType<object>
     {
         public DefaultQuery()
@@ -14,7 +13,6 @@ namespace CoreDocker.Api.GraphQl
             Name = "Query";
             Field<ProjectsQuerySpecification>("projects", resolve: context => Task.FromResult(new object()));
             Field<UsersQuerySpecification>("users", resolve: context => Task.FromResult(new object()));
-            
         }
     }
 }

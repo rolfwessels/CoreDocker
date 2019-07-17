@@ -54,7 +54,5 @@ namespace CoreDocker.Core.Tests.Components.Users
                 .DynamicCastTo<UserRemove.Request>();
             return userDeleteUpdateModels;
         }
-
-       
     }
 }

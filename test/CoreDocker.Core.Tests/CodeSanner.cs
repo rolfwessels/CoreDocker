@@ -78,7 +78,8 @@ namespace CoreDocker.Core.Tests
                         new Issue
                         {
                             Type = GetType().Name,
-                            Description = $"Expect the file {fileNameWithoutExtension} to have a test class somewhere {testclassName}."
+                            Description =
+                                $"Expect the file {fileNameWithoutExtension} to have a test class somewhere {testclassName}."
                         };
             }
 

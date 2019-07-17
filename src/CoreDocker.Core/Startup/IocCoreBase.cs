@@ -47,7 +47,8 @@ namespace CoreDocker.Core.Startup
             });
 
             builder.RegisterAssemblyTypes(typeof(IocCoreBase).GetTypeInfo().Assembly)
-                .Where(t => typeof(INotification).IsAssignableFrom(t) || t.IsClosedTypeOf(typeof(IRequestHandler<,>)) || t.IsClosedTypeOf(typeof(INotificationHandler<>)))
+                .Where(t => typeof(INotification).IsAssignableFrom(t) || t.IsClosedTypeOf(typeof(IRequestHandler<,>)) ||
+                            t.IsClosedTypeOf(typeof(INotificationHandler<>)))
                 .AsImplementedInterfaces(); // via assembly scan
         }
 

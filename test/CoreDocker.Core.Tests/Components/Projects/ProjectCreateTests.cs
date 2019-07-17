@@ -24,7 +24,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
         public override void Setup()
         {
             base.Setup();
-            _handler = new ProjectCreate.Handler(_inMemoryGeneralUnitOfWorkFactory, FakeValidator.New<ProjectValidator>(),
+            _handler = new ProjectCreate.Handler(_inMemoryGeneralUnitOfWorkFactory,
+                FakeValidator.New<ProjectValidator>(),
                 _mockICommander.Object);
             _projects = _fakeGeneralUnitOfWork.Projects;
         }
@@ -37,12 +38,13 @@ namespace CoreDocker.Core.Tests.Components.Projects
             // arrange
             Setup();
             var validRequest = GetValidRequest();
-            validRequest.Name="";
+            validRequest.Name = "";
             // action
             Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
-                .And.Errors.Should().Contain(x => x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
+                .And.Errors.Should().Contain(x =>
+                    x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
         }
 
         [Test]
@@ -68,7 +70,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
             await _handler.ProcessCommand(validRequest);
             // assert
             var project = await _projects.FindOne(x => x.Id == validRequest.Id);
-            project.Should().BeEquivalentTo(validRequest,DefaultCommandExcluding);
+            project.Should().BeEquivalentTo(validRequest, DefaultCommandExcluding);
         }
 
         public ProjectCreate.Request GetValidRequest()

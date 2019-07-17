@@ -76,14 +76,13 @@ namespace CoreDocker.Sdk.RestApi
             return subscriptionResult;
         }
 
-        public  Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
+        public Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
         {
             return SendSubscribeAsync(@"subscription { generalEvents{id,event,correlationId}}", response =>
             {
                 var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
                 callback(dynamicCastTo, response);
             });
-
         }
 
         public class RealTimeEvent
@@ -92,7 +91,6 @@ namespace CoreDocker.Sdk.RestApi
             public string Event { get; set; }
             public string CorrelationId { get; set; }
             public string Exception { get; set; }
-
         }
     }
 }

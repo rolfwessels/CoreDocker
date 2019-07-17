@@ -11,7 +11,8 @@ namespace CoreDocker.Core.Tests.Helpers
 {
     public static class FakeRepoHelper
     {
-        public static IList<T> AddFake<T>(this IRepository<T> repository, int size, Action<T> applyUpdate) where T : IBaseDalModel
+        public static IList<T> AddFake<T>(this IRepository<T> repository, int size, Action<T> applyUpdate)
+            where T : IBaseDalModel
         {
             var items = Builder<T>.CreateListOfSize(size).WithValidData().Build();
             items.OfType<IBaseDalModelWithId>().ForEach(x => x.Id = null);
@@ -37,7 +38,5 @@ namespace CoreDocker.Core.Tests.Helpers
         {
             return AddFake(repository, 1, applyUpdate).FirstOrDefault();
         }
-
-
     }
 }

@@ -8,8 +8,6 @@ namespace CoreDocker.Utilities.Tests.Helpers
     [TestFixture]
     public class ReflectionHelperTest
     {
-
-
         [Test]
         public void GetMember_GivenExpression_ShouldReturnValue()
         {

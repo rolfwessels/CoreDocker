@@ -3,6 +3,6 @@
     public interface IGeneralUnitOfWorkFactory
     {
         IGeneralUnitOfWork GetConnection();
-        string NewId { get;  }
+        string NewId { get; }
     }
 }

@@ -21,7 +21,8 @@ namespace CoreDocker.Api.GraphQl
                 Arguments = new QueryArguments(),
                 Type = typeof(RealTimeNotificationsMessageType),
                 Resolver = new FuncFieldResolver<RealTimeNotificationsMessage>(Resolver),
-                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context => Subscribe(context, context.GetArgument<string>("channelId")))
+                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context =>
+                    Subscribe(context, context.GetArgument<string>("channelId")))
             });
         }
 

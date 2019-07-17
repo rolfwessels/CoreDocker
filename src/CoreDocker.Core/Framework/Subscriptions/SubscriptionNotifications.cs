@@ -31,5 +31,4 @@ namespace CoreDocker.Core.Framework.Subscriptions
                 .AsObservable();
         }
     }
-
 }

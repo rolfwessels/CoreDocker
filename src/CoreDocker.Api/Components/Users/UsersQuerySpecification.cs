@@ -19,7 +19,7 @@ namespace CoreDocker.Api.Components.Users
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersQuerySpecification(IUserLookup users )
+        public UsersQuerySpecification(IUserLookup users)
         {
             var safe = new Safe(_log);
             var options = Options(users);
@@ -41,16 +41,17 @@ namespace CoreDocker.Api.Components.Users
                 "list",
                 Description = "all users",
                 options.GetArguments(),
-                context => options.Query(context,new UserPagedLookupOptions() {Sort = UserPagedLookupOptions.SortOptions.Name})
+                context => options.Query(context,
+                    new UserPagedLookupOptions() {Sort = UserPagedLookupOptions.SortOptions.Name})
             ).RequirePermission(Activity.ReadUsers);
 
-            Field<PagedListGraphType<User,UserSpecification>>(
+            Field<PagedListGraphType<User, UserSpecification>>(
                 "paged",
                 Description = "all users paged",
                 options.GetArguments(),
                 context => options.Paged(context)
             ).RequirePermission(Activity.ReadUsers);
-   
+
             Field<UserSpecification>(
                 "me",
                 Description = "Current user",
@@ -80,20 +81,19 @@ namespace CoreDocker.Api.Components.Users
 
         private static GraphQlQueryOptions<User, UserPagedLookupOptions> Options(IUserLookup users)
         {
-
-            var graphQlQueryOptions = new GraphQlQueryOptions<User,UserPagedLookupOptions>(users.GetPagedUsers)
+            var graphQlQueryOptions = new GraphQlQueryOptions<User, UserPagedLookupOptions>(users.GetPagedUsers)
                 .AddArgument(new QueryArgument<StringGraphType>
                 {
                     Name = "search",
                     Description = "Search by name,email or id"
-                }, (x,c)=>x.Search = c.GetArgument<string>("search"))
+                }, (x, c) => x.Search = c.GetArgument<string>("search"))
                 .AddArgument(new QueryArgument<StringGraphType>
                 {
                     Name = "sort",
                     Description = $"Sort by {EnumHelper.Values<UserPagedLookupOptions.SortOptions>().StringJoin()}"
                 }, (x, c) => x.Sort = c.GetArgument<UserPagedLookupOptions.SortOptions>("sort"));
 
-            
+
             return graphQlQueryOptions;
         }
 

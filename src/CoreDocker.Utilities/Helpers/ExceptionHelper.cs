@@ -13,7 +13,9 @@ namespace CoreDocker.Utilities.Helpers
 
         public static string ToSingleExceptionString(this Exception exception)
         {
-            var simpleException = exception is AggregateException aggregateException ? aggregateException.ToSimpleException() : exception;
+            var simpleException = exception is AggregateException aggregateException
+                ? aggregateException.ToSimpleException()
+                : exception;
             return simpleException.Message + Environment.NewLine + simpleException.StackTrace;
         }
 

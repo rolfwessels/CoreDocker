@@ -23,6 +23,5 @@ namespace CoreDocker.Core.Framework.BaseManagers
         public IMessenger Messenger => _messenger;
 
         public IValidatorFactory ValidationFactory => _validationFactory;
-
     }
 }

@@ -56,7 +56,7 @@ namespace CoreDocker.Core.Framework.BaseManagers
 
         public Task<IQueryable<T>> Query(Func<IQueryable<T>, IQueryable<T>> query)
         {
-            return Task.Run(()=> query(Repository.Query()));
+            return Task.Run(() => query(Repository.Query()));
         }
 
         public IQueryable<T> Query()

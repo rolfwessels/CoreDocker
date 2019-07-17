@@ -31,6 +31,7 @@ namespace CoreDocker.Api.Tests
 
         public CoreDockerClient AdminClient() => _adminConnection.Value;
         public CoreDockerClient GuestClient() => _guestConnection.Value;
+
         #region Private Methods
 
         private static string StartHosting()
@@ -45,7 +46,7 @@ namespace CoreDocker.Api.Tests
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
-            
+
             _log.Info($"Starting api on [{address}]");
             RestSharpHelper.Log = m => { _log.Debug(m); };
             return address;
@@ -61,7 +62,7 @@ namespace CoreDocker.Api.Tests
 
         protected CoreDockerClient NewClientNotAuthorized()
         {
-            return (CoreDockerClient)_defaultRequestFactory.Value.GetConnection();
+            return (CoreDockerClient) _defaultRequestFactory.Value.GetConnection();
         }
 
         #endregion

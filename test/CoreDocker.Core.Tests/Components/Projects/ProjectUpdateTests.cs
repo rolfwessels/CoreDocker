@@ -25,7 +25,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
         public override void Setup()
         {
             base.Setup();
-            _handler = new ProjectUpdate.Handler(_inMemoryGeneralUnitOfWorkFactory, FakeValidator.New<ProjectValidator>(),
+            _handler = new ProjectUpdate.Handler(_inMemoryGeneralUnitOfWorkFactory,
+                FakeValidator.New<ProjectValidator>(),
                 _mockICommander.Object);
             _projects = _fakeGeneralUnitOfWork.Projects;
         }
@@ -43,7 +44,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
-                .And.Errors.Should().Contain(x => x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
+                .And.Errors.Should().Contain(x =>
+                    x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
         }
 
         [Test]
@@ -55,7 +57,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
             // action
             await _handler.ProcessCommand(validRequest);
             // assert
-            var project = await _projects.FindOne(x => x.Id == validRequest.Id);;
+            var project = await _projects.FindOne(x => x.Id == validRequest.Id);
+            ;
             project.Should().NotBeNull();
         }
 
@@ -83,7 +86,5 @@ namespace CoreDocker.Core.Tests.Components.Projects
                 .DynamicCastTo<ProjectUpdate.Request>();
             return projectUpdateUpdateModels;
         }
-
-       
     }
 }

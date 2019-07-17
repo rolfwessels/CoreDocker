@@ -21,7 +21,8 @@ namespace CoreDocker.Api.Components.Users
             Field(d => d.Name).Description("The name of the user.");
             Field(d => d.Email).Description("The email of the user.");
             Field(d => d.Roles).Description("The roles of the user.");
-            Field<ListGraphType<StringGraphType>>("activities", resolve: context => Roles(context.Source?.Roles), description: "The activities that this user is authorized for.");
+            Field<ListGraphType<StringGraphType>>("activities", resolve: context => Roles(context.Source?.Roles),
+                description: "The activities that this user is authorized for.");
             Field(d => d.UpdateDate, true, typeof(DateTimeGraphType))
                 .Description("The date when the user was last updated.");
             Field(d => d.CreateDate, type: typeof(DateTimeGraphType))
@@ -33,10 +34,10 @@ namespace CoreDocker.Api.Components.Users
         private static List<string> Roles(List<string> sourceRoles)
         {
             var roles = sourceRoles.Select(RoleManager.GetRole)
-                .Where(x=> x!=null)
+                .Where(x => x != null)
                 .SelectMany(x => x.Activities)
                 .Distinct()
-                .Select(x=>x.ToString())
+                .Select(x => x.ToString())
                 .OrderBy(x => x)
                 .ToList();
             return roles;

@@ -65,7 +65,8 @@ namespace CoreDocker.Core.Tests.Components.Users
             // arrange
             Setup();
             const string password = "sample";
-            var user = _fakeGeneralUnitOfWork.Users.AddAFake(x => {
+            var user = _fakeGeneralUnitOfWork.Users.AddAFake(x =>
+            {
                 x.HashedPassword = PasswordHash.CreateHash(password);
             });
             // action
@@ -80,7 +81,8 @@ namespace CoreDocker.Core.Tests.Components.Users
             // arrange
             Setup();
             const string password = "sample";
-            var user = _fakeGeneralUnitOfWork.Users.AddAFake(x => {
+            var user = _fakeGeneralUnitOfWork.Users.AddAFake(x =>
+            {
                 x.HashedPassword = PasswordHash.CreateHash(password);
             });
             // action
@@ -103,7 +105,6 @@ namespace CoreDocker.Core.Tests.Components.Users
             userFound.Should().BeNull();
         }
 
-       
 
         protected override IRepository<User> Repository => _fakeGeneralUnitOfWork.Users;
 

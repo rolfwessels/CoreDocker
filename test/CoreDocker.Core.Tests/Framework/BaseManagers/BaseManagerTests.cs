@@ -48,7 +48,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
         #endregion
 
         protected static EquivalencyAssertionOptions<T> DefaultCommandExcluding<T>(
-            EquivalencyAssertionOptions<T> opt) where  T : CommandRequestBase
+            EquivalencyAssertionOptions<T> opt) where T : CommandRequestBase
         {
             return opt
                 .Excluding(x => x.CreatedAt)

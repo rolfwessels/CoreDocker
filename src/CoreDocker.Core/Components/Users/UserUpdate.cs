@@ -38,17 +38,17 @@ namespace CoreDocker.Core.Components.Users
                 {
                     var foundUser = await connection.Users.FindOrThrow(request.Id);
                     var updatedUser = request.ToDao(foundUser);
-             
-                    
-                    
+
+
                     _validation.ValidateAndThrow(updatedUser);
-                    await connection.Users.UpdateOne(x=>x.Id == foundUser.Id, calls => calls
-                        .Set(x=>x.Name, updatedUser.Name)
-                        .Set(x=>x.Email, updatedUser.Email)
-                        .Set(x=>x.HashedPassword, updatedUser.HashedPassword)
-                        .Set(x=>x.Roles, updatedUser.Roles)
+                    await connection.Users.UpdateOne(x => x.Id == foundUser.Id, calls => calls
+                        .Set(x => x.Name, updatedUser.Name)
+                        .Set(x => x.Email, updatedUser.Email)
+                        .Set(x => x.HashedPassword, updatedUser.HashedPassword)
+                        .Set(x => x.Roles, updatedUser.Roles)
                     );
                 }
+
                 await _commander.SendEvent(request.ToEvent());
             }
 

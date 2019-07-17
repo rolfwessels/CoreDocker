@@ -37,6 +37,7 @@ namespace CoreDocker.Core.Components.Projects
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
                         x.Name.ToLower().Contains(options.Search.ToLower()));
                 }
+
                 if (options.Sort != null)
                 {
                     switch (options.Sort)
@@ -51,6 +52,7 @@ namespace CoreDocker.Core.Components.Projects
                             throw new ArgumentOutOfRangeException();
                     }
                 }
+
                 return new PagedList<Project>(query, options);
             });
         }

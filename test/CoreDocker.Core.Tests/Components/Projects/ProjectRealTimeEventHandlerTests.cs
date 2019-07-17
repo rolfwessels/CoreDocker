@@ -45,17 +45,19 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var notification = BuildNotification<ProjectCreate.Notification>();
             // action
-            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "ProjectCreated", _subscriptionNotifications);
+            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "ProjectCreated", _subscriptionNotifications);
         }
 
         [Test]
-        public void Handle_GivenProjectUpdateNotification_ShouldNotifyOfProjectChange()   
+        public void Handle_GivenProjectUpdateNotification_ShouldNotifyOfProjectChange()
         {
             // arrange
             Setup();
             var notification = BuildNotification<ProjectUpdate.Notification>();
             // action
-            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "ProjectUpdated", _subscriptionNotifications);
+            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "ProjectUpdated", _subscriptionNotifications);
         }
 
         [Test]
@@ -65,13 +67,14 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var notification = BuildNotification<ProjectRemove.Notification>();
             // action
-            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "ProjectRemoved", _subscriptionNotifications);
+            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "ProjectRemoved", _subscriptionNotifications);
         }
 
 
         public void BasicTest(Action action, CommandNotificationBase notification,
             string @event, SubscriptionNotifications subscriptionNotifications)
-        {   
+        {
             var list = new List<RealTimeNotificationsMessage>();
             var observable = subscriptionNotifications.Messages();
             using (observable.Subscribe(message => list.Add(message)))

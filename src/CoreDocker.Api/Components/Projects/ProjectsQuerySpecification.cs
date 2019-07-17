@@ -43,13 +43,12 @@ namespace CoreDocker.Api.Components.Projects
                 resolve: safe.Wrap(context => options.Query(context))
             ).RequirePermission(Activity.ReadProject);
 
-            Field<PagedListGraphType<Project,ProjectSpecification>>(
+            Field<PagedListGraphType<Project, ProjectSpecification>>(
                 "paged",
                 Description = "all projects paged",
                 options.GetArguments(),
                 resolve: safe.Wrap(context => options.Paged(context))
             ).RequirePermission(Activity.ReadProject);
-
         }
 
         //PagedList<TDal>
@@ -71,7 +70,6 @@ namespace CoreDocker.Api.Components.Projects
                 new QueryArguments(), context => context.Source.Count
             ).RequirePermission(Activity.ReadProject);
         }
-    
     }
 }
 
