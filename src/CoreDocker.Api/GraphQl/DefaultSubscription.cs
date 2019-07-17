@@ -3,7 +3,6 @@ using System.Security.Claims;
 using CoreDocker.Core.Framework.Subscriptions;
 using GraphQL;
 using GraphQL.Resolvers;
-using GraphQL.Server.Transports.Subscriptions.Abstractions;
 using GraphQL.Subscription;
 using GraphQL.Types;
 
