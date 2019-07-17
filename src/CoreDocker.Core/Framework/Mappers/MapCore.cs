@@ -7,6 +7,7 @@ namespace CoreDocker.Core.Framework.Mappers
     {
         static MapCore()
         {
+            
             Mapper.Initialize(cfg =>
             {
                 CreateCommandMap(cfg);

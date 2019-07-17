@@ -62,7 +62,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 if (string.IsNullOrEmpty(result.Content))
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
-                var errorMessage = SimpleJson.SimpleJson.DeserializeObject<TokenErrorMessage>(result.Content);
+                var errorMessage = SimpleJson.DeserializeObject<TokenErrorMessage>(result.Content);
                 throw new Exception($"{errorMessage.error}[{errorMessage.error_description}]");
             }
         }
