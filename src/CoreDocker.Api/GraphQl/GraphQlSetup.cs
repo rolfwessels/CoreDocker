@@ -2,14 +2,13 @@
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Components.Users;
- using CoreDocker.Utilities.Helpers;
+using CoreDocker.Utilities.Helpers;
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace CoreDocker.Api.GraphQl
 {
     public static class GraphQlSetup
@@ -32,7 +31,7 @@ namespace CoreDocker.Api.GraphQl
             var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
             var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
 
-            app.UseWebSockets();
+            
 //            app.UseGraphQLWebSockets<ISchema>();
             app.UseGraphQL<ISchema>();
 
