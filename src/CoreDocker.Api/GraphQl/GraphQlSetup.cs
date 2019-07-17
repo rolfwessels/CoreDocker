@@ -22,7 +22,7 @@ namespace CoreDocker.Api.GraphQl
                     _.ExposeExceptions = false;
                 })
                 .AddUserContextBuilder(ctx => GraphQlUserContext.BuildFromHttpContext(ctx, IocApi.Instance.Resolve<IUserLookup>()))
-//                .AddWebSockets()
+                .AddWebSockets()
                 .AddDataLoader();
         }
 
@@ -32,7 +32,7 @@ namespace CoreDocker.Api.GraphQl
             var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
 
             
-//            app.UseGraphQLWebSockets<ISchema>();
+            app.UseGraphQLWebSockets<ISchema>();
             app.UseGraphQL<ISchema>();
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions {GraphQLEndPoint = uriCombine.PathAndQuery});
