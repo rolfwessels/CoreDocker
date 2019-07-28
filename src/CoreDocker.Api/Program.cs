@@ -1,8 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using CoreDocker.Core.Framework.Logging;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Hosting;
+using ILogger = Serilog.ILogger;
 
 namespace CoreDocker.Api
 {
@@ -11,12 +19,28 @@ namespace CoreDocker.Api
         public static void Main(string[] args)
         {
             Console.Title = "CoreDocker.Api";
-            BuildWebHost(args).Run();
+            
+            Log.Logger = LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
+                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.log", fileSizeLimitBytes: 10 * LoggingHelper.MB, rollOnFileSizeLimit:true)
+                .WriteTo.Console(LogEventLevel.Information)
+                //.ReadFrom.Configuration(BaseSettings.Config)
+                .CreateLogger());
+
+            try
+            {
+                BuildWebHost(args).Run();
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
+                .ConfigureServices((context, collection) =>
+                        collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
                 .UseKestrel()
                 .UseUrls(args.FirstOrDefault() ?? "http://*:5000")
                 .ConfigureAppConfiguration(SettingsFileReaderHelper)

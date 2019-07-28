@@ -1,14 +1,11 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Core.Components.Projects;
-using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
 using Serilog;
 
@@ -16,10 +13,10 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsQuerySpecification : ObjectGraphType<object>
     {
-
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         public ProjectsQuerySpecification(IProjectLookup projects)
         {
-            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
+            var safe = new Safe(_log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
             var options = new GraphQlQueryOptions<Project, ProjectPagedLookupOptions>(projects.GetPaged);
             Name = "Projects";
 

@@ -15,6 +15,8 @@ namespace CoreDocker.Api.WebApi.Filters
 {
     public class CaptureExceptionFilter : ExceptionFilterAttribute
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
 
         #region Overrides of ExceptionFilterAttribute
 
@@ -68,7 +70,7 @@ namespace CoreDocker.Api.WebApi.Filters
             const HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
             var errorMessage =
                 new ErrorMessage("An internal system error has occurred. The developers have been notified.");
-            Log.Error(exception.Message, exception);
+            _log.Error(exception.Message, exception);
 #if DEBUG
             errorMessage.AdditionalDetail = exception.Message;
 #endif

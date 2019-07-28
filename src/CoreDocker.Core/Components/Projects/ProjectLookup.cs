@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Components.Projects
 {
     public class ProjectLookup : BaseLookup<Project>, IProjectLookup
     {
-        public ProjectLookup(BaseManagerArguments baseManagerArguments, ILogger<ProjectLookup> logger) : base(
-            baseManagerArguments, logger)
+        public ProjectLookup(BaseManagerArguments baseManagerArguments) : base(baseManagerArguments)
         {
         }
 

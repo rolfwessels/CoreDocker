@@ -9,8 +9,6 @@ using CoreDocker.Dal.Persistence;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using Moq;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.Components.Users
@@ -18,7 +16,6 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserManagerTests : BaseTypedManagerTests<User>
     {
-        private Mock<ILogger<UserLookup>> _mockLogger;
         private UserLookup _userLookup;
 
         #region Setup/Teardown
@@ -26,8 +23,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         public override void Setup()
         {
             base.Setup();
-            _mockLogger = new Mock<ILogger<UserLookup>>();
-            _userLookup = new UserLookup(_baseManagerArguments, _mockLogger.Object);
+            _userLookup = new UserLookup(_baseManagerArguments);
         }
 
         #endregion

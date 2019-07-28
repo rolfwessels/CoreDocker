@@ -13,12 +13,14 @@ namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupServer
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
 
         public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
             var openIdSettings = new OpenIdSettings(configuration);
-            Log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
+            _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
             services.AddIdentityServer(x => { x.PublicOrigin = openIdSettings.HostUrl; })
                 .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword,
                     openIdSettings.CertStoreThumbprint))
@@ -53,7 +55,7 @@ namespace CoreDocker.Api.Security
                         if (certCollection.Count > 0)
                         {
                             cert = certCollection[0];
-                            Log.Information($"Successfully loaded cert from registry: {cert.Thumbprint}");
+                            _log.Information($"Successfully loaded cert from registry: {cert.Thumbprint}");
                         }
                     }
 
@@ -63,13 +65,13 @@ namespace CoreDocker.Api.Security
                     var fileName = Path.Combine("./Certificates", certFile);
                     if (!File.Exists(fileName))
                     {
-                        Log.Error(
+                        _log.Error(
                             $"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
                     }
                     else
                     {
                         cert = new X509Certificate2(fileName, password);
-                        Log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                        _log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
                     }
                 }
 
@@ -77,7 +79,7 @@ namespace CoreDocker.Api.Security
             }
             catch (Exception e)
             {
-                Log.Error($"SecuritySetupServer:Certificate {e.Message}");
+                _log.Error($"SecuritySetupServer:Certificate {e.Message}");
                 throw;
             }
         }

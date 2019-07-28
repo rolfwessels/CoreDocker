@@ -17,10 +17,11 @@ namespace CoreDocker.Api.Components.Users
 {
     public class UsersQuerySpecification : ObjectGraphType<object>
     {
-        
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public UsersQuerySpecification(IUserLookup users)
         {
-            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
+            var safe = new Safe(_log);
             var options = Options(users);
             Name = "Users";
 

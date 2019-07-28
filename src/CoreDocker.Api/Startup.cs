@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
@@ -8,16 +7,11 @@ using CoreDocker.Api.Security;
 using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
-using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Utilities;
-using CoreDocker.Utilities.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 
 namespace CoreDocker.Api
 {
@@ -25,13 +19,6 @@ namespace CoreDocker.Api
     {
         public Startup(IConfiguration configuration)
         {
-            Log.Logger = LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
-                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.log", fileSizeLimitBytes: 100000)
-                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                //.ReadFrom.Configuration(BaseSettings.Config)
-                .CreateLogger());
-            
-
             Configuration = configuration;
             Settings.Initialize(Configuration);
         }

@@ -67,7 +67,7 @@ namespace CoreDocker.Api.Components.Users
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message, e);
+                    _log.Error(e.Message, e);
                     throw;
                 }
             };

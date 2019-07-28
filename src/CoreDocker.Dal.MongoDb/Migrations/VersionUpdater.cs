@@ -10,6 +10,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations
 {
     public class VersionUpdater
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly object _locker = new object();
         private readonly IMigration[] _updates;
 
@@ -35,7 +36,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations
                     }
 
                     stopwatch.Stop();
-                    Log.Information(
+                    _log.Information(
                         $"Found {versions.Count} database updates in database and {_updates.Length} in code. Update took [{stopwatch.ElapsedMilliseconds}]");
                 }
             });
@@ -49,7 +50,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations
             var version = versions.FirstOrDefault(x => x.Id == i);
             if (version == null)
             {
-                Log.Information($"Running version update {migrateInitialize.GetType().Name}");
+                _log.Information($"Running version update {migrateInitialize.GetType().Name}");
                 await RunTheUpdate(migrateInitialize, db);
                 var dbVersion1 = new DbVersion {Id = i, Name = migrateInitialize.GetType().Name};
                 await repository.Add(dbVersion1);
@@ -58,12 +59,12 @@ namespace CoreDocker.Dal.MongoDb.Migrations
 
         private async Task RunTheUpdate(IMigration migrateInitialize, IMongoDatabase db)
         {
-            Log.Information($"Starting {migrateInitialize.GetType().Name} db update");
+            _log.Information($"Starting {migrateInitialize.GetType().Name} db update");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             await migrateInitialize.Update(db);
             stopwatch.Stop();
-            Log.Information($"Done {migrateInitialize.GetType().Name} in {stopwatch.ElapsedMilliseconds}ms");
+            _log.Information($"Done {migrateInitialize.GetType().Name} in {stopwatch.ElapsedMilliseconds}ms");
         }
 
         #endregion

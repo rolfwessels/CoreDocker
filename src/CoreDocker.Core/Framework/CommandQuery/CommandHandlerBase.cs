@@ -11,6 +11,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
 {
     public abstract class CommandHandlerBase<T> : IRequestHandler<T, CommandResult> where T : CommandRequestBase
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region IRequestHandler<T,CommandResult> Members
 
@@ -25,7 +26,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"CommandHandlerBase:Handle {e.Message}");
+                    _log.Error($"CommandHandlerBase:Handle {e.Message}");
                     throw;
                 }
             }

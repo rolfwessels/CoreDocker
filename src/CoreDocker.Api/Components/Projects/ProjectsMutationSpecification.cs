@@ -13,12 +13,13 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsMutationSpecification : ObjectGraphType<object>
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private const string Value = "project";
 
         public ProjectsMutationSpecification(ICommander commander)
         {
             Name = "ProjectsMutation";
-            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
+            var safe = new Safe(_log);
 
             this.RequireAuthorization();
             Field<CommandResultSpecification>(

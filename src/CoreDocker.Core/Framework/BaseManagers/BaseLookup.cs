@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Framework.MessageUtil;
-using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
-using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Framework.BaseManagers
 {
@@ -29,11 +26,8 @@ namespace CoreDocker.Core.Framework.BaseManagers
 
     public abstract class BaseLookup<T> : BaseLookup, IBaseLookup<T> where T : BaseDalModelWithId
     {
-        private readonly ILogger _log;
-
-        protected BaseLookup(BaseManagerArguments baseManagerArguments, ILogger logger) : base(baseManagerArguments)
+        protected BaseLookup(BaseManagerArguments baseManagerArguments) : base(baseManagerArguments)
         {
-            _log = logger;
         }
 
         protected abstract IRepository<T> Repository { get; }

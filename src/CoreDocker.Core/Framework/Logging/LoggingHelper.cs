@@ -22,5 +22,7 @@ namespace CoreDocker.Core.Framework.Logging
 
             return Log.Logger;
         }
+
+        public const int MB = 1048576;
     }
 }

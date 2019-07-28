@@ -11,6 +11,7 @@ namespace CoreDocker.Dal.MongoDb
 {
     public class MongoMappers
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public void InitializeMappers()
         {
@@ -44,7 +45,7 @@ namespace CoreDocker.Dal.MongoDb
             }
             catch (Exception e)
             {
-                Log.Error("MongoMappers:InitializeMappers " + e.Message, e);
+                _log.Error("MongoMappers:InitializeMappers " + e.Message, e);
             }
         }
 

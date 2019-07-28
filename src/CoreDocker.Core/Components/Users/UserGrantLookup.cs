@@ -10,7 +10,7 @@ namespace CoreDocker.Core.Components.Users
     public class UserGrantLookup : BaseLookup<UserGrant>, IUserGrantLookup
     {
         public UserGrantLookup(BaseManagerArguments baseManagerArguments, ILogger<UserGrantLookup> logger) : base(
-            baseManagerArguments, logger)
+            baseManagerArguments)
         {
         }
 

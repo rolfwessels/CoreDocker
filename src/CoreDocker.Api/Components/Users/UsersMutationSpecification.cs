@@ -12,12 +12,13 @@ namespace CoreDocker.Api.Components.Users
 {
     public class UsersMutationSpecification : ObjectGraphType<object>
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private const string Value = "user";
 
         public UsersMutationSpecification(ICommander commander)
         {
             Name = "UsersMutation";
-            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
+            var safe = new Safe(_log);
 
             Field<CommandResultSpecification>(
                 "create",

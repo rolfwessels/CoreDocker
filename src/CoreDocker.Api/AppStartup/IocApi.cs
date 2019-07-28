@@ -31,7 +31,7 @@ namespace CoreDocker.Api.AppStartup
         private static readonly object _locker = new object();
         private static IocApi _instance;
         private static IServiceCollection _services;
-
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         public IocApi()
         {
             var builder = new ContainerBuilder();
@@ -54,14 +54,14 @@ namespace CoreDocker.Api.AppStartup
 
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
-            Log.Information($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
+            _log.Information($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
             try
             {
                 return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
             }
             catch (Exception e)
             {
-                Log.Error($"Error connecting to the database:{e.Message}", e);
+                _log.Error($"Error connecting to the database:{e.Message}", e);
                 throw;
             }
         }

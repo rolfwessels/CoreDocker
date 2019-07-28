@@ -22,7 +22,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
         {
             base.Setup();
             _mockLogger = new Mock<ILogger<ProjectLookup>>();
-            _projectLookup = new ProjectLookup(_baseManagerArguments, _mockLogger.Object);
+            _projectLookup = new ProjectLookup(_baseManagerArguments);
         }
 
         #endregion

@@ -13,6 +13,8 @@ namespace CoreDocker.Api.Security
 {
     public class PersistedGrantStore : IPersistedGrantStore
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IUserGrantLookup _userGrantLookup;
         private readonly IUserLookup _userLookup;
 
@@ -52,7 +54,7 @@ namespace CoreDocker.Api.Security
 
         public async Task RemoveAllAsync(string subjectId, string clientId)
         {
-            Log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
+            _log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
             var byKey = await _userGrantLookup.GetByUserId(subjectId);
             foreach (var userGrant in byKey.Where(x => x.ClientId == clientId))
                 await _userGrantLookup.Delete(userGrant.Id);
@@ -60,7 +62,7 @@ namespace CoreDocker.Api.Security
 
         public async Task RemoveAllAsync(string subjectId, string clientId, string type)
         {
-            Log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
+            _log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
             var byKey = await _userGrantLookup.GetByUserId(subjectId);
             foreach (var userGrant in byKey.Where(x => x.ClientId == clientId && x.Type == type))
                 await _userGrantLookup.Delete(userGrant.Id);

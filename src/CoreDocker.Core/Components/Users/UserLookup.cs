@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace CoreDocker.Core.Components.Users
 {
     public class UserLookup : BaseLookup<User>, IUserLookup
     {
-        private readonly ILogger<UserLookup> _log;
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UserLookup(BaseManagerArguments baseManagerArguments, ILogger<UserLookup> logger) : base(
-            baseManagerArguments, logger)
+        public UserLookup(BaseManagerArguments baseManagerArguments) : base(
+            baseManagerArguments)
         {
-            _log = logger;
         }
 
         #region Overrides of BaseLookup<User>
@@ -69,12 +68,12 @@ namespace CoreDocker.Core.Components.Users
                 if (!PasswordHash.ValidatePassword(password, user.HashedPassword))
                 {
                     user = null;
-                    Log.Information($"Invalid password for user '{email}'");
+                    _log.Information($"Invalid password for user '{email}'");
                 }
             }
             else
             {
-                Log.Information($"Invalid user '{email}'");
+                _log.Information($"Invalid user '{email}'");
             }
 
             return user;

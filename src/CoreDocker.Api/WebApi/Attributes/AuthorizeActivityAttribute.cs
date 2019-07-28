@@ -31,7 +31,7 @@ namespace CoreDocker.Api.WebApi.Attributes
 //				var identity = actionContext.RequestContext.Principal.Identity as ClaimsIdentity;
 //				if (identity == null)
 //				{
-//					Log.Error("User not authorized because we were expecting a ClaimsIdentity");
+//					_log.Error("User not authorized because we were expecting a ClaimsIdentity");
 //					return false;
 //				}
 //			    var roleName = identity.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();

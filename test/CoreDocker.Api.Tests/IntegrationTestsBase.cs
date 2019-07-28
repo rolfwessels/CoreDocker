@@ -6,11 +6,15 @@ using CoreDocker.Sdk.RestApi;
 using CoreDocker.Utilities.Tests;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog.Hosting;
 
 namespace CoreDocker.Api.Tests
 {
     public class IntegrationTestsBase
     {
+
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
@@ -40,15 +44,17 @@ namespace CoreDocker.Api.Tests
             var address = $"http://localhost:{port}";
             Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
             TestLoggingHelper.EnsureExists();
-            var forContext = Log.ForContext(typeof(IntegrationTestsBase));
             var host = new WebHostBuilder()
                 .UseKestrel()
+                .ConfigureServices((context, collection) =>
+                    collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);
             host.Build().Start();
 
             Log.Information($"Starting api on [{address}]");
+            var forContext = Log.ForContext(typeof(RestSharpHelper));
             RestSharpHelper.Log = m => { forContext.Debug(m); };
             return address;
         }
