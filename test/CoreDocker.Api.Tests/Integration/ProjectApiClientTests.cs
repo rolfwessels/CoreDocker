@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +12,7 @@ using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using log4net;
+using Serilog;
 using NUnit.Framework;
 
 namespace CoreDocker.Api.Tests.Integration
@@ -21,7 +21,6 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class ProjectApiClientTests : IntegrationTestsBase
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private ProjectApiClient _projectApiClient;
 
         #region Setup/Teardown

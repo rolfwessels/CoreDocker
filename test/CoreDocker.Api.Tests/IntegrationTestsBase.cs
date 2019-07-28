@@ -3,7 +3,8 @@ using System.Reflection;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
-using log4net;
+using CoreDocker.Utilities.Tests;
+using Serilog;
 using Microsoft.AspNetCore.Hosting;
 
 namespace CoreDocker.Api.Tests
@@ -13,7 +14,6 @@ namespace CoreDocker.Api.Tests
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
-        private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         protected static readonly Lazy<string> HostAddress;
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
@@ -22,7 +22,7 @@ namespace CoreDocker.Api.Tests
 
         static IntegrationTestsBase()
         {
-            RestSharpHelper.Log = s => _log.Debug(s);
+            RestSharpHelper.Log = Log.Debug;
             HostAddress = new Lazy<string>(StartHosting);
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(HostAddress.Value));
             _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
@@ -39,7 +39,8 @@ namespace CoreDocker.Api.Tests
             var port = new Random().Next(9000, 9999);
             var address = $"http://localhost:{port}";
             Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
-            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            TestLoggingHelper.EnsureExists();
+            var forContext = Log.ForContext(typeof(IntegrationTestsBase));
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
@@ -47,8 +48,8 @@ namespace CoreDocker.Api.Tests
                 .UseUrls(address);
             host.Build().Start();
 
-            _log.Info($"Starting api on [{address}]");
-            RestSharpHelper.Log = m => { _log.Debug(m); };
+            Log.Information($"Starting api on [{address}]");
+            RestSharpHelper.Log = m => { forContext.Debug(m); };
             return address;
         }
 
