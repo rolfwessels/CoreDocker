@@ -12,7 +12,5 @@ namespace CoreDocker.Dal.Models.Users
             RuleFor(x => x.HashedPassword).NotEmpty();
             RuleFor(x => x.Roles).NotEmpty();
         }
-
-      
     }
 }

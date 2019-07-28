@@ -24,8 +24,6 @@ namespace CoreDocker.Utilities.Tests
 
         public static void LoadRepo()
         {
-            
-           
         }
 
         // [SetUp]

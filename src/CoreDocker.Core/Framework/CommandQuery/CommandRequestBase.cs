@@ -9,7 +9,6 @@ namespace CoreDocker.Core.Framework.CommandQuery
         {
             CorrelationId = Guid.NewGuid().ToString();
             CreatedAt = DateTime.Now.ToUniversalTime();
-
         }
 
         public override string ToString()

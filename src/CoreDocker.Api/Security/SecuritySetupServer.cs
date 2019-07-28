@@ -76,7 +76,7 @@ namespace CoreDocker.Api.Security
 
                 return cert;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _log.Error($"SecuritySetupServer:Certificate {e.Message}");
                 throw;

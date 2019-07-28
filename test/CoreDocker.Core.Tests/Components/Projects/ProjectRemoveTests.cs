@@ -54,7 +54,5 @@ namespace CoreDocker.Core.Tests.Components.Projects
                 .DynamicCastTo<ProjectRemove.Request>();
             return projectDeleteUpdateModels;
         }
-
-       
     }
 }

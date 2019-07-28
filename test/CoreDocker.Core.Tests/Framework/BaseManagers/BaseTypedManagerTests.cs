@@ -15,7 +15,6 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
 {
     public abstract class BaseTypedManagerTests<T> : BaseManagerTests where T : BaseDalModelWithId
     {
-       
         [Test]
         public virtual async Task Get_WhenCalledWithId_ShouldReturnSingleRecord()
         {

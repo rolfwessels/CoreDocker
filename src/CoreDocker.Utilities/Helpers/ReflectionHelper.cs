@@ -44,7 +44,8 @@ namespace CoreDocker.Utilities.Helpers
             return name;
         }
 
-        public static void ExpressionToAssign<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression, TValue value)
+        public static void ExpressionToAssign<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression,
+            TValue value)
         {
             ParameterExpression valueParameterExpression = Expression.Parameter(typeof(TValue));
             Expression targetExpression =
@@ -52,7 +53,8 @@ namespace CoreDocker.Utilities.Helpers
 
             var assign = Expression.Lambda<Action<TObj, TValue>>
             (
-                Expression.Assign(targetExpression, Expression.Convert(valueParameterExpression, targetExpression.Type)),
+                Expression.Assign(targetExpression,
+                    Expression.Convert(valueParameterExpression, targetExpression.Type)),
                 expression.Parameters.Single(),
                 valueParameterExpression
             );

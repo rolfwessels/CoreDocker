@@ -38,13 +38,14 @@ namespace CoreDocker.Core.Tests.Components.Users
         }
 
         [Test]
-        public void Handle_GivenUserUpdateNotification_ShouldNotifyOfUserChange()   
+        public void Handle_GivenUserUpdateNotification_ShouldNotifyOfUserChange()
         {
             // arrange
             Setup();
             var notification = BuildNotification<UserUpdate.Notification>();
             // action
-            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "UserUpdated");
+            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "UserUpdated");
         }
 
         [Test]
@@ -54,7 +55,8 @@ namespace CoreDocker.Core.Tests.Components.Users
             Setup();
             var notification = BuildNotification<UserCreate.Notification>();
             // action
-            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "UserCreated");
+            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "UserCreated");
         }
 
         [Test]
@@ -64,13 +66,14 @@ namespace CoreDocker.Core.Tests.Components.Users
             Setup();
             var notification = BuildNotification<UserRemove.Notification>();
             // action
-            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification, "UserRemoved");
+            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "UserRemoved");
         }
 
 
         private void BasicTest(Action action, CommandNotificationBase notification,
             string @event)
-        {   
+        {
             var list = new List<RealTimeNotificationsMessage>();
             var observable = _subscriptionNotifications.Messages();
             using (observable.Subscribe(message => list.Add(message)))
@@ -81,7 +84,7 @@ namespace CoreDocker.Core.Tests.Components.Users
                 SubscribeHelper.BasicNotificationValidation(list.First(), notification, @event);
             }
         }
-        
+
         private static T BuildNotification<T>()
         {
             return Builder<T>.CreateNew().WithValidData().Build();

@@ -86,7 +86,7 @@ namespace CoreDocker.Dal.Tests.Validation
             // action
             var validationResult = _validator.Validate(user);
             // assert
-            validationResult.Errors.Select(x => x.ErrorMessage).Should().Contain("'Roles' should not be empty.");
+            validationResult.Errors.Select(x => x.ErrorMessage).Should().Contain("'Roles' must not be empty.");
         }
 
         [Test]

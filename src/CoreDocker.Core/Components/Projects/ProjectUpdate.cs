@@ -36,10 +36,11 @@ namespace CoreDocker.Core.Components.Projects
                     var foundProject = await connection.Projects.FindOrThrow(request.Id);
                     var updatedProject = request.ToDao(foundProject);
                     _validation.ValidateAndThrow(updatedProject);
-                    await connection.Projects.UpdateOne(x=>x.Id == foundProject.Id, calls => calls
-                        .Set(x=>x.Name, updatedProject.Name)
+                    await connection.Projects.UpdateOne(x => x.Id == foundProject.Id, calls => calls
+                        .Set(x => x.Name, updatedProject.Name)
                     );
                 }
+
                 await _commander.SendEvent(request.ToEvent());
             }
 

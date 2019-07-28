@@ -7,6 +7,5 @@ namespace CoreDocker.Core.Framework.BaseManagers
     {
         Task<List<T>> Get();
         Task<T> GetById(string id);
-        
     }
 }

@@ -22,7 +22,9 @@ namespace CoreDocker.Utilities.Helpers
         {
             var index0 = _counter % _size;
             Interlocked.Increment(ref _counter);
-            return _generalUnitOfWorks[index0] != null ? _generalUnitOfWorks[index0] : (_generalUnitOfWorks[index0] = _getGeneralUnitOfWork());
+            return _generalUnitOfWorks[index0] != null
+                ? _generalUnitOfWorks[index0]
+                : (_generalUnitOfWorks[index0] = _getGeneralUnitOfWork());
         }
     }
 }

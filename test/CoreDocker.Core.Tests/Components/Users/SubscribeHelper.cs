@@ -22,20 +22,22 @@ namespace CoreDocker.Core.Tests.Components.Users
             foreach (var notification in allNotifications)
             {
                 var notificationHandler = typeof(INotificationHandler<>).MakeGenericType(notification);
-                if (!type.GetInterfaces().Contains(notificationHandler) && !excludeNotifications.Contains(notification.Name))
+                if (!type.GetInterfaces().Contains(notificationHandler) &&
+                    !excludeNotifications.Contains(notification.Name))
                 {
-
                     list.Add(notification);
                 }
             }
-            // assert
-            var dictionary = list.ToDictionary(x => x.FullName.Split(".").Last().Replace("+","."));
-            dictionary.Keys.Dump($"Missing: [{list.Count}]");
-            dictionary.Select(notification => $"{type.Name} should implement INotificationHandler<{notification.Key}>.").ToArray().Should().BeEmpty();
 
+            // assert
+            var dictionary = list.ToDictionary(x => x.FullName.Split(".").Last().Replace("+", "."));
+            dictionary.Keys.Dump($"Missing: [{list.Count}]");
+            dictionary.Select(notification => $"{type.Name} should implement INotificationHandler<{notification.Key}>.")
+                .ToArray().Should().BeEmpty();
         }
 
-        public static void BasicNotificationValidation(RealTimeNotificationsMessage realTimeNotificationsMessage, CommandNotificationBase notification, string @event)
+        public static void BasicNotificationValidation(RealTimeNotificationsMessage realTimeNotificationsMessage,
+            CommandNotificationBase notification, string @event)
         {
             realTimeNotificationsMessage.CorrelationId.Should().Be(notification.CorrelationId);
             realTimeNotificationsMessage.Id.Should().Be(notification.Id);

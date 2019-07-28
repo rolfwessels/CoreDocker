@@ -34,7 +34,6 @@ namespace CoreDocker.Dal.InMemoryCollections
         #endregion
 
 
-
         #region Implementation of IGeneralUnitOfWork
 
         public IRepository<User> Users { get; }
@@ -76,7 +75,8 @@ namespace CoreDocker.Dal.InMemoryCollections
         public Task<T> Add(T entity)
         {
             entity.CreateDate = DateTime.Now;
-            if (entity is IBaseDalModelWithId baseDalModelWithId && string.IsNullOrEmpty(baseDalModelWithId.Id)) baseDalModelWithId.Id = BuildId();
+            if (entity is IBaseDalModelWithId baseDalModelWithId && string.IsNullOrEmpty(baseDalModelWithId.Id))
+                baseDalModelWithId.Id = BuildId();
             AddAndSetUpdateDate(entity);
             return Task.FromResult(entity);
         }
@@ -96,8 +96,9 @@ namespace CoreDocker.Dal.InMemoryCollections
         }
 
 
-        public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update, TType value)
-          where TType : class
+        public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update,
+            TType value)
+            where TType : class
         {
             var enumerable = _internalDataList.Where(filter.Compile()).ToArray();
             foreach (var v in enumerable)
@@ -167,12 +168,14 @@ namespace CoreDocker.Dal.InMemoryCollections
                 _internalDataList.Add(instance);
                 list.Add(instance);
             }
+
             var updateCalls = new UpdateCalls<T>(list);
             upd(updateCalls);
             return list.Count;
         }
 
-        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd, bool isUpsert = false)
+        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd,
+            bool isUpsert = false)
         {
             var list = (await FindInternal(filter)).Take(1).ToList();
             if (isUpsert && !list.Any())
@@ -181,6 +184,7 @@ namespace CoreDocker.Dal.InMemoryCollections
                 _internalDataList.Add(instance);
                 list.Add(instance);
             }
+
             var updateCalls = new UpdateCalls<T>(list);
             upd(updateCalls);
             return list.First();
@@ -203,6 +207,7 @@ namespace CoreDocker.Dal.InMemoryCollections
                 {
                     AssignNewValue(item, expression, value);
                 }
+
                 return this;
             }
 
@@ -212,6 +217,7 @@ namespace CoreDocker.Dal.InMemoryCollections
                 {
                     AssignNewValue(item, expression, value);
                 }
+
                 return this;
             }
 
@@ -244,13 +250,11 @@ namespace CoreDocker.Dal.InMemoryCollections
                 throw new NotImplementedException();
             }
 
-
-
             #endregion
 
 
-
-            public static void AssignNewValue<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression, TValue value)
+            public static void AssignNewValue<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression,
+                TValue value)
             {
                 ReflectionHelper.ExpressionToAssign(obj, expression, value);
             }
@@ -268,10 +272,10 @@ namespace CoreDocker.Dal.InMemoryCollections
             if (entity is IBaseDalModelWithId baseDalModelWithId)
             {
                 var baseDalModelWithIds =
-                  _internalDataList.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
+                    _internalDataList.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
                 if (baseDalModelWithIds != null)
                 {
-                    _internalDataList.Remove((T)baseDalModelWithIds);
+                    _internalDataList.Remove((T) baseDalModelWithIds);
                     return true;
                 }
             }

@@ -37,7 +37,6 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var request = new GraphQLRequest
             {
-                 
                 Query = GraphQlFragments.User + @"query ($id: String!) {
                   users {
                     byId(id: $id) {
@@ -55,13 +54,14 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var request = new GraphQLRequest
             {
-                Query = GraphQlFragments.User+ @"{
+                Query = GraphQlFragments.User + @"{
                     users {
                         me {
                             ...userData
                         }
                     }
-                }"};
+                }"
+            };
             var response = await CoreDockerClient.GraphQlPost(request);
             return CastHelper.DynamicCastTo<UserModel>(response.Data.users.me);
         }
@@ -78,7 +78,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { user.Name, user.Email, user.Roles, user.Password }
+                Variables = new {user.Name, user.Email, user.Roles, user.Password}
             });
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.create);
         }
@@ -95,12 +95,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { user.Name, user.Email,  user.Password }
+                Variables = new {user.Name, user.Email, user.Password}
             });
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.register);
         }
 
-        public async Task<CommandResultModel> Update(string id,UserCreateUpdateModel user)
+        public async Task<CommandResultModel> Update(string id, UserCreateUpdateModel user)
         {
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
@@ -112,9 +112,9 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { id, user.Name, user.Email, user.Roles, user.Password}
+                Variables = new {id, user.Name, user.Email, user.Roles, user.Password}
             });
-            
+
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.update);
         }
 
@@ -130,7 +130,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                   }
                 }",
-                Variables = new { id }
+                Variables = new {id}
             });
 
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.remove);
@@ -166,7 +166,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                         }
                     }
                 }",
-                Variables = new { first }
+                Variables = new {first}
             };
             var response = await CoreDockerClient.GraphQlPost(request);
             return CastHelper.DynamicCastTo<PagedListModel<UserModel>>(response.Data.users.paged);

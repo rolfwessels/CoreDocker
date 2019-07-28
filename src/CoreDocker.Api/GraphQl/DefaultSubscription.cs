@@ -3,7 +3,6 @@ using System.Security.Claims;
 using CoreDocker.Core.Framework.Subscriptions;
 using GraphQL;
 using GraphQL.Resolvers;
-using GraphQL.Server.Transports.Subscriptions.Abstractions;
 using GraphQL.Subscription;
 using GraphQL.Types;
 
@@ -22,7 +21,8 @@ namespace CoreDocker.Api.GraphQl
                 Arguments = new QueryArguments(),
                 Type = typeof(RealTimeNotificationsMessageType),
                 Resolver = new FuncFieldResolver<RealTimeNotificationsMessage>(Resolver),
-                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context => Subscribe(context, context.GetArgument<string>("channelId")))
+                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context =>
+                    Subscribe(context, context.GetArgument<string>("channelId")))
             });
         }
 

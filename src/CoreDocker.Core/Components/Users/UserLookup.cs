@@ -43,6 +43,7 @@ namespace CoreDocker.Core.Components.Users
                         x.Email.ToLower().Contains(options.Search.ToLower()) ||
                         x.Name.ToLower().Contains(options.Search.ToLower()));
                 }
+
                 if (options.Sort != null)
                 {
                     switch (options.Sort)
@@ -60,7 +61,6 @@ namespace CoreDocker.Core.Components.Users
 
                 return new PagedList<User>(query, options);
             });
-
         }
 
         public async Task<User> GetUserByEmailAndPassword(string email, string password)
@@ -97,7 +97,5 @@ namespace CoreDocker.Core.Components.Users
         }
 
         #endregion
-
-      
     }
 }

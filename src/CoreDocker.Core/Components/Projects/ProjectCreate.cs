@@ -37,6 +37,7 @@ namespace CoreDocker.Core.Components.Projects
                     _validation.ValidateAndThrow(project);
                     await connection.Projects.Add(project);
                 }
+
                 await _commander.SendEvent(request.ToEvent());
             }
 
@@ -59,7 +60,7 @@ namespace CoreDocker.Core.Components.Projects
         public class Request : CommandRequestBase
         {
             public string Name { get; set; }
-            
+
             public static Request From(string id, string name)
             {
                 if (id == null) throw new ArgumentNullException(nameof(id));

@@ -7,7 +7,8 @@ namespace CoreDocker.Dal.Persistence
 {
     public static class RepositoryHelper
     {
-        public static async Task<T> FindOrThrow<T>(this IRepository<T> repo, string requestId) where T : IBaseDalModelWithId
+        public static async Task<T> FindOrThrow<T>(this IRepository<T> repo, string requestId)
+            where T : IBaseDalModelWithId
         {
             var foundUser = await repo.FindOne(x => x.Id == requestId);
 

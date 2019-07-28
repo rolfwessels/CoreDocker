@@ -28,7 +28,8 @@ namespace CoreDocker.Api.Components.Users
                 ), safe.Wrap(context =>
                 {
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
-                    return commander.Execute(UserCreate.Request.From(commander.NewId,user.Name,user.Email,user.Password,user.Roles));
+                    return commander.Execute(UserCreate.Request.From(commander.NewId, user.Name, user.Email,
+                        user.Password, user.Roles));
                 })).RequirePermission(Activity.UpdateUsers);
 
             Field<CommandResultSpecification>(
@@ -39,7 +40,8 @@ namespace CoreDocker.Api.Components.Users
                 ), safe.Wrap(context =>
                 {
                     var user = context.GetArgument<RegisterModel>(Name = Value);
-                    return commander.Execute(UserCreate.Request.From(commander.NewId, user.Name, user.Email, user.Password, new List<string>() {RoleManager.Guest.Name}));
+                    return commander.Execute(UserCreate.Request.From(commander.NewId, user.Name, user.Email,
+                        user.Password, new List<string>() {RoleManager.Guest.Name}));
                 }));
 
             Field<CommandResultSpecification>(
@@ -52,7 +54,8 @@ namespace CoreDocker.Api.Components.Users
                 {
                     var id = context.GetArgument<string>(Name = "id");
                     var user = context.GetArgument<UserCreateUpdateModel>(Name = Value);
-                    return commander.Execute(UserUpdate.Request.From(id, user.Name, user.Password, user.Roles, user.Email));
+                    return commander.Execute(UserUpdate.Request.From(id, user.Name, user.Password, user.Roles,
+                        user.Email));
                 })).RequirePermission(Activity.UpdateUsers);
 
             Field<CommandResultSpecification>(

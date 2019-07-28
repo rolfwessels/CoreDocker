@@ -26,7 +26,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
 
         public async Task<CommandResult> Execute<T>(T @from) where T : CommandRequestBase
         {
-           return await _mediator.Send(@from);
+            return await _mediator.Send(@from);
         }
 
         #endregion

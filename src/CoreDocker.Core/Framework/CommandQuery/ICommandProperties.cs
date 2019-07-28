@@ -6,6 +6,6 @@ namespace CoreDocker.Core.Framework.CommandQuery
     {
         string CorrelationId { get; set; }
         string Id { get; set; }
-        DateTime CreatedAt { get; set; }    
+        DateTime CreatedAt { get; set; }
     }
 }

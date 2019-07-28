@@ -6,13 +6,13 @@ namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
     {
-
         private static void CreateCommandMap(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<CommandRequestBase, CommandResult>();
         }
 
-        public static CommandResult ToCommandResult(this CommandRequestBase project, CommandResult projectReference = null)    
+        public static CommandResult ToCommandResult(this CommandRequestBase project,
+            CommandResult projectReference = null)
         {
             return Mapper.Map(project, projectReference);
         }

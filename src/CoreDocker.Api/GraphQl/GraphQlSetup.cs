@@ -1,8 +1,7 @@
-﻿ using System;
+﻿using System;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Helpers;
 using GraphQL;
 using GraphQL.Server;
@@ -23,7 +22,8 @@ namespace CoreDocker.Api.GraphQl
                     _.EnableMetrics = false;
                     _.ExposeExceptions = false;
                 })
-                .AddUserContextBuilder(ctx => GraphQlUserContext.BuildFromHttpContext(ctx, IocApi.Instance.Resolve<IUserLookup>()))
+                .AddUserContextBuilder(ctx =>
+                    GraphQlUserContext.BuildFromHttpContext(ctx, IocApi.Instance.Resolve<IUserLookup>()))
                 .AddWebSockets()
                 .AddDataLoader();
         }
@@ -32,12 +32,9 @@ namespace CoreDocker.Api.GraphQl
         {
             var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
             var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
-
-            app.UseWebSockets();
             app.UseGraphQLWebSockets<ISchema>();
             app.UseGraphQL<ISchema>();
-
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions {GraphQLEndPoint = uriCombine.PathAndQuery});
-                }
         }
+    }
 }

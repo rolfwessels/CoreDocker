@@ -73,7 +73,6 @@ namespace CoreDocker.Api.AppStartup
 
         private static void SetupGraphQl(ContainerBuilder builder)
         {
-            
             builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
             //validation
@@ -96,7 +95,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<DefaultSubscription>().SingleInstance();
             builder.RegisterType<RealTimeNotificationsMessageType>().SingleInstance();
             builder.RegisterType<QueryResultSpecification>().SingleInstance();
-            
+
             builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
             /*user*/

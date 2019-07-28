@@ -73,7 +73,7 @@ namespace CoreDocker.Api.Tests.Integration
             }
         }
 
-       
+
         [Test]
         public void Create_GivenInvalidModel_ShouldFail()
         {

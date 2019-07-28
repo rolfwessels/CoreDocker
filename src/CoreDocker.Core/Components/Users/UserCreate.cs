@@ -38,6 +38,7 @@ namespace CoreDocker.Core.Components.Users
                     user.ValidateRolesAndThrow();
                     await connection.Users.Add(user);
                 }
+
                 await _commander.SendEvent(request.ToEvent());
             }
 

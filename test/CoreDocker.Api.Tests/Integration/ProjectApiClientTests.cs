@@ -41,7 +41,6 @@ namespace CoreDocker.Api.Tests.Integration
         [Test]
         public async Task ProjectCrud_GivenInsertUpdateDelete_ShouldBeValid()
         {
-            
             // arrange
             Setup();
             var data = GetExampleData();
@@ -86,12 +85,15 @@ namespace CoreDocker.Api.Tests.Integration
             Setup();
             var invalidEmailProject = GetExampleData().First();
             // action
-            Action testUpdateValidationFail = () => { _guestConnection.Value.Projects.Create(invalidEmailProject).Wait(); };
+            Action testUpdateValidationFail = () =>
+            {
+                _guestConnection.Value.Projects.Create(invalidEmailProject).Wait();
+            };
             // action
             testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
                 .WithMessage("You are not authorized to run this query.");
         }
-        
+
         #region Overrides of CrudComponentTestsBase<ProjectModel,ProjectCreateUpdateModel,ProjectReferenceModel>
 
         protected EquivalencyAssertionOptions<ProjectCreateUpdateModel> CompareConfig(

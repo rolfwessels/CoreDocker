@@ -13,7 +13,7 @@ namespace CoreDocker.Api.GraphQl
         {
             var userContext = GraphQlUserContext.ReadFromContext(context);
 
-            var claimsPrincipal =  userContext?.User ?? new ClaimsPrincipal();
+            var claimsPrincipal = userContext?.User ?? new ClaimsPrincipal();
             var authenticated = claimsPrincipal?.IsAuthenticated() ?? false;
 
             return new EnterLeaveListener(_ =>
