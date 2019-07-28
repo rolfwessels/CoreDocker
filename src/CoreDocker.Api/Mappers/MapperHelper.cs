@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Api.Mappers

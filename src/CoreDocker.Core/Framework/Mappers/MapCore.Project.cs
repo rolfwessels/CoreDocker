@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models.Projects;
 

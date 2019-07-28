@@ -1,4 +1,4 @@
-namespace CoreDocker.Sdk.SignalR
+﻿namespace CoreDocker.Sdk.SignalR
 {
     public interface ICoreDockerSockets
     {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using Autofac;
 using CoreDocker.Core.Components.Projects;
@@ -11,7 +11,7 @@ using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using FluentValidation;
-using log4net;
+using Serilog;
 using MediatR;
 using IValidatorFactory = CoreDocker.Dal.Validation.IValidatorFactory;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
@@ -20,7 +20,6 @@ namespace CoreDocker.Core.Startup
 {
     public abstract class IocCoreBase
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected void SetupCore(ContainerBuilder builder)
         {
@@ -70,9 +69,9 @@ namespace CoreDocker.Core.Startup
             }
             catch (Exception e)
             {
-                _log.Error("IocCoreBase:Delegate " + e.Message, e);
-                _log.Error(e.Source);
-                _log.Error(e.StackTrace);
+                Log.Error("IocCoreBase:Delegate " + e.Message, e);
+                Log.Error(e.Source);
+                Log.Error(e.StackTrace);
                 throw;
             }
         }

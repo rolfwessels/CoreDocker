@@ -1,4 +1,4 @@
-namespace CoreDocker.Core.Framework.Subscriptions
+﻿namespace CoreDocker.Core.Framework.Subscriptions
 {
     public class RealTimeNotificationsMessage
     {

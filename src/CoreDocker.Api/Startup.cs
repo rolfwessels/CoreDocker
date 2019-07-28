@@ -9,12 +9,12 @@ using CoreDocker.Api.SignalR;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
 using CoreDocker.Utilities;
-using log4net;
-using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
 
 namespace CoreDocker.Api
 {
@@ -22,8 +22,12 @@ namespace CoreDocker.Api
     {
         public Startup(IConfiguration configuration)
         {
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            XmlConfigurator.Configure(logRepository, new FileInfo("logSettings.xml"));
+            new LoggerConfiguration().MinimumLevel.Debug()
+                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.log", fileSizeLimitBytes:100000)
+                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
+                //.ReadFrom.Configuration(BaseSettings.Config)
+                .CreateLogger(); ;
+
             Configuration = configuration;
             Settings.Initialize(Configuration);
         }
@@ -67,19 +71,10 @@ namespace CoreDocker.Api
         }
 
         public static string InformationalVersion()
-        {
-            try
-            {
-                return Assembly.GetEntryAssembly()
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    .InformationalVersion;
-            }
-            catch (Exception e)
-            {
-                var log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-                log.Error($"SwaggerSetup:InformationalVersion Failed to get the InformationalVersion  {e.Message}");
-                return "1.0.0";
-            }
+        {   
+            return Assembly.GetEntryAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;   
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using AutoMapper;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Shared.Models.Shared;

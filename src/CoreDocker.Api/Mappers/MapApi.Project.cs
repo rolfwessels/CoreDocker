@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models.Projects;

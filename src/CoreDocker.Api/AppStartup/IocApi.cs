@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -19,7 +19,7 @@ using GraphQL.Authorization;
 using GraphQL.Http;
 using GraphQL.Types;
 using GraphQL.Validation;
-using log4net;
+using Serilog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +27,6 @@ namespace CoreDocker.Api.AppStartup
 {
     public class IocApi : IocCoreBase
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static bool _isInitialized;
         private static readonly object _locker = new object();
         private static IocApi _instance;
@@ -55,14 +54,14 @@ namespace CoreDocker.Api.AppStartup
 
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
-            _log.Info($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
+            Log.Information($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
             try
             {
                 return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
             }
             catch (Exception e)
             {
-                _log.Error($"Error connecting to the database:{e.Message}", e);
+                Log.Error($"Error connecting to the database:{e.Message}", e);
                 throw;
             }
         }

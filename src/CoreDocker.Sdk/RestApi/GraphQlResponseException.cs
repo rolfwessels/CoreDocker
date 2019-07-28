@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Common.Response;

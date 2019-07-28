@@ -1,4 +1,4 @@
-using GraphQL.Types;
+﻿using GraphQL.Types;
 
 namespace CoreDocker.Api.GraphQl.DynamicQuery
 {

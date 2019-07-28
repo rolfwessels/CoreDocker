@@ -1,4 +1,4 @@
-namespace CoreDocker.Api
+﻿namespace CoreDocker.Api
 {
     internal class Constants
     {

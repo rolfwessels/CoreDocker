@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
@@ -6,15 +6,15 @@ using CoreDocker.Utilities.Helpers;
 using FluentValidation;
 using GraphQL;
 using GraphQL.Types;
-using log4net;
+using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class Safe
     {
-        private readonly ILog _log;
+        private readonly ILogger _log;
 
-        public Safe(ILog log)
+        public Safe(ILogger log)
         {
             _log = log;
         }
@@ -67,7 +67,7 @@ namespace CoreDocker.Api.Components.Users
                 }
                 catch (Exception e)
                 {
-                    _log.Error(e.Message, e);
+                    Log.Error(e.Message, e);
                     throw;
                 }
             };
@@ -77,7 +77,7 @@ namespace CoreDocker.Api.Components.Users
 
         private void LogAndThrowValidation(ValidationException e, ResolveFieldContext<object> context)
         {
-            _log.Warn(e.Message, e);
+            _log.Warning(e.Message, e);
             context.Errors.AddRange(e.Errors.Select(x =>
                 new ExecutionError(x.ErrorMessage) {Code = "VALIDATION", Path = context.Path}));
 //            throw new ExecutionError(e.Errors.Select(x => x.ErrorMessage).FirstOrDefault(), e)
@@ -88,7 +88,7 @@ namespace CoreDocker.Api.Components.Users
 
         private void LogAndThrowAggregateValidation(ValidationException e, ResolveFieldContext<object> context)
         {
-            _log.Warn(e.Message, e);
+            _log.Warning(e.Message, e);
             var errors = e.Errors.Select(err => new ExecutionError(err.ErrorMessage, e)
             {
                 Code = "VALIDATION"
@@ -98,7 +98,7 @@ namespace CoreDocker.Api.Components.Users
 
         private void LogAndThrowValidation(ReferenceException e, ResolveFieldContext<object> context)
         {
-            _log.Warn(e.Message, e);
+            _log.Warning(e.Message, e);
             throw new ExecutionError(e.Message, e)
             {
                 Code = "VALIDATION"

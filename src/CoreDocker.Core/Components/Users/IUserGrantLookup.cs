@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Users;

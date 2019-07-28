@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -11,17 +11,16 @@ using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
 using GraphQL.Types;
-using log4net;
+using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class UsersQuerySpecification : ObjectGraphType<object>
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+        
         public UsersQuerySpecification(IUserLookup users)
         {
-            var safe = new Safe(_log);
+            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
             var options = Options(users);
             Name = "Users";
 

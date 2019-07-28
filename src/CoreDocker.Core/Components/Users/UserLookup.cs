@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
-using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Helpers;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CoreDocker.Core.Components.Users
 {
@@ -71,12 +69,12 @@ namespace CoreDocker.Core.Components.Users
                 if (!PasswordHash.ValidatePassword(password, user.HashedPassword))
                 {
                     user = null;
-                    _log.Info($"Invalid password for user '{email}'");
+                    Log.Information($"Invalid password for user '{email}'");
                 }
             }
             else
             {
-                _log.Info($"Invalid user '{email}'");
+                Log.Information($"Invalid user '{email}'");
             }
 
             return user;

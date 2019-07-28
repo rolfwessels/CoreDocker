@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Security.Claims;
 using CoreDocker.Core.Framework.Subscriptions;
 using GraphQL;

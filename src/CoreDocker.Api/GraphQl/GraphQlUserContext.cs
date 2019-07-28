@@ -11,14 +11,13 @@ using GraphQL;
 using GraphQL.Authorization;
 using GraphQL.Types;
 using GraphQL.Validation;
-using log4net;
+using Serilog;
 using Microsoft.AspNetCore.Http;
 
 namespace CoreDocker.Api.GraphQl
 {
     public class GraphQlUserContext : IProvideClaimsPrincipal
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Lazy<Task<User>> _lazyUser;
 
         public GraphQlUserContext(IUserLookup userLookup, ClaimsPrincipal ctxUser)

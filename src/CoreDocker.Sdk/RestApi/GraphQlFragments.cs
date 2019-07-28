@@ -1,4 +1,4 @@
-namespace CoreDocker.Sdk.RestApi
+﻿namespace CoreDocker.Sdk.RestApi
 {
     public class GraphQlFragments
     {

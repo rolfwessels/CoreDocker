@@ -1,4 +1,4 @@
-using CoreDocker.Core.Framework.CommandQuery;
+﻿using CoreDocker.Core.Framework.CommandQuery;
 using GraphQL.Types;
 
 namespace CoreDocker.Api.Components

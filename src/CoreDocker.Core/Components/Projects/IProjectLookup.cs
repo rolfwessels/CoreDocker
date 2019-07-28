@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Projects;

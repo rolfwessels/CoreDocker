@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace CoreDocker.Core.Framework.BaseManagers
 {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
@@ -7,19 +7,18 @@ using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models.Projects;
 using GraphQL.Types;
-using log4net;
+using Serilog;
 
 namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsMutationSpecification : ObjectGraphType<object>
     {
         private const string Value = "project";
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public ProjectsMutationSpecification(ICommander commander)
         {
             Name = "ProjectsMutation";
-            var safe = new Safe(_log);
+            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
 
             this.RequireAuthorization();
             Field<CommandResultSpecification>(

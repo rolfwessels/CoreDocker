@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using CoreDocker.Dal.Persistence;
-using log4net;
+using Serilog;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -9,7 +9,6 @@ namespace CoreDocker.Dal.MongoDb
 {
     public class MongoConnectionFactory : IGeneralUnitOfWorkFactory
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly Lazy<IGeneralUnitOfWork> _singleConnection;
 

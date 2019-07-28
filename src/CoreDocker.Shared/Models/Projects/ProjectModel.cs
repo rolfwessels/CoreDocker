@@ -1,4 +1,4 @@
-using CoreDocker.Shared.Models.Shared;
+﻿using CoreDocker.Shared.Models.Shared;
 
 namespace CoreDocker.Shared.Models.Projects
 {

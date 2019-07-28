@@ -7,7 +7,7 @@ using CoreDocker.Api.WebApi.Exceptions;
 using CoreDocker.Shared.Models.Shared;
 using CoreDocker.Utilities.Helpers;
 using FluentValidation;
-using log4net;
+using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -15,7 +15,6 @@ namespace CoreDocker.Api.WebApi.Filters
 {
     public class CaptureExceptionFilter : ExceptionFilterAttribute
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Overrides of ExceptionFilterAttribute
 
@@ -69,7 +68,7 @@ namespace CoreDocker.Api.WebApi.Filters
             const HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
             var errorMessage =
                 new ErrorMessage("An internal system error has occurred. The developers have been notified.");
-            _log.Error(exception.Message, exception);
+            Log.Error(exception.Message, exception);
 #if DEBUG
             errorMessage.AdditionalDetail = exception.Message;
 #endif

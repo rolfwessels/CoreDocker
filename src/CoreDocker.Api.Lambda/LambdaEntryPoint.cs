@@ -1,4 +1,4 @@
-using Amazon.Lambda.AspNetCoreServer;
+﻿using Amazon.Lambda.AspNetCoreServer;
 using Microsoft.AspNetCore.Hosting;
 
 namespace CoreDocker.Api.Lambda

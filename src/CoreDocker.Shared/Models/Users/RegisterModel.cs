@@ -1,4 +1,4 @@
-namespace CoreDocker.Shared.Models.Users
+﻿namespace CoreDocker.Shared.Models.Users
 {
     public class RegisterModel
     {

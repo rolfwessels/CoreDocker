@@ -1,4 +1,4 @@
-using CoreDocker.Core.Framework.MessageUtil;
+﻿using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
 

@@ -3,20 +3,20 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.Mappers;
-using log4net;
+using Serilog;
 using MediatR;
+using Serilog.Context;
 
 namespace CoreDocker.Core.Framework.CommandQuery
 {
     public abstract class CommandHandlerBase<T> : IRequestHandler<T, CommandResult> where T : CommandRequestBase
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region IRequestHandler<T,CommandResult> Members
 
         public async Task<CommandResult> Handle(T request, CancellationToken cancellationToken)
         {
-            using (LogicalThreadContext.Stacks["NDC"].Push($"Topic:{request}|"))
+            using (LogContext.PushProperty("Topic", request))
             {
                 try
                 {
@@ -25,7 +25,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
                 }
                 catch (Exception e)
                 {
-                    _log.Error($"CommandHandlerBase:Handle {e.Message}");
+                    Log.Error($"CommandHandlerBase:Handle {e.Message}");
                     throw;
                 }
             }

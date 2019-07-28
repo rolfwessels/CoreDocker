@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Interfaces.Base;

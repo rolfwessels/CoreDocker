@@ -1,4 +1,4 @@
-namespace CoreDocker.Api.GraphQl.DynamicQuery
+﻿namespace CoreDocker.Api.GraphQl.DynamicQuery
 {
     public interface IGraphQlQueryOptions
     {

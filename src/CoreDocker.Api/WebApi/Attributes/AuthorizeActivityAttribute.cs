@@ -1,14 +1,13 @@
-using System.Reflection;
+﻿using System.Reflection;
 using CoreDocker.Api.Security;
 using CoreDocker.Dal.Models.Auth;
-using log4net;
+using Serilog;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Attributes
 {
     public class AuthorizeActivityAttribute : AuthorizeAttribute
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public AuthorizeActivityAttribute()
         {
@@ -32,7 +31,7 @@ namespace CoreDocker.Api.WebApi.Attributes
 //				var identity = actionContext.RequestContext.Principal.Identity as ClaimsIdentity;
 //				if (identity == null)
 //				{
-//					_log.Error("User not authorized because we were expecting a ClaimsIdentity");
+//					Log.Error("User not authorized because we were expecting a ClaimsIdentity");
 //					return false;
 //				}
 //			    var roleName = identity.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();

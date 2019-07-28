@@ -1,4 +1,4 @@
-namespace CoreDocker.Shared.Models.Shared
+﻿namespace CoreDocker.Shared.Models.Shared
 {
     public class ErrorMessage
     {

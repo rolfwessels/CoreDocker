@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -6,13 +6,12 @@ using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 using GraphQL.Types;
-using log4net;
+using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class UserSpecification : ObjectGraphType<User>
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public UserSpecification()
         {

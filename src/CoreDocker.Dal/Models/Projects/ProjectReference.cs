@@ -1,4 +1,4 @@
-using CoreDocker.Dal.Models.Base;
+﻿using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.Models.Projects
 {

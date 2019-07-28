@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Core.Components.Users;
@@ -6,19 +6,18 @@ using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models.Users;
 using GraphQL.Types;
-using log4net;
+using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class UsersMutationSpecification : ObjectGraphType<object>
     {
         private const string Value = "user";
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public UsersMutationSpecification(ICommander commander)
         {
             Name = "UsersMutation";
-            var safe = new Safe(_log);
+            var safe = new Safe(Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType));
 
             Field<CommandResultSpecification>(
                 "create",

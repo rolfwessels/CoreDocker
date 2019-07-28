@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Utilities.Helpers;
 

@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Reflection;
 using CoreDocker.Dal.Models.Base;
-using log4net;
+using Serilog;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -11,7 +11,6 @@ namespace CoreDocker.Dal.MongoDb
 {
     public class MongoMappers
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public void InitializeMappers()
         {
@@ -45,7 +44,7 @@ namespace CoreDocker.Dal.MongoDb
             }
             catch (Exception e)
             {
-                _log.Error("MongoMappers:InitializeMappers " + e.Message, e);
+                Log.Error("MongoMappers:InitializeMappers " + e.Message, e);
             }
         }
 
