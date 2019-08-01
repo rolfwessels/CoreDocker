@@ -14,11 +14,9 @@ using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
-using GraphQL;
-using GraphQL.Authorization;
-using GraphQL.Http;
-using GraphQL.Types;
-using GraphQL.Validation;
+using FluentValidation;
+using HotChocolate;
+using Microsoft.AspNetCore.Authorization;
 using Serilog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,19 +73,17 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
             //validation
-            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.RegisterType<RequiresAuthValidationRule>().As<IValidationRule>();
-//            builder.RegisterType<AuthorizationValidationRule>().As<IValidationRule>();
-            builder.RegisterType<AuthorizationEvaluator>().As<IAuthorizationEvaluator>().SingleInstance();
-
-            builder.Register(s =>
-            {
-                var authSettings = new AuthorizationSettings();
-
-                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim("role", "Admin"));
-
-                return authSettings;
-            });
+//            builder.RegisterType<AuthorizationEvaluator>().As<IAuthorizationEvaluator>().SingleInstance();
+//
+//            builder.Register(s =>
+//            {
+//                var authSettings = new AuthorizationSettings();
+//
+//                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim("role", "Admin"));
+//
+//                return authSettings;
+//            });
 
             builder.RegisterType<DefaultQuery>().SingleInstance();
             builder.RegisterType<DefaultMutation>().SingleInstance();
