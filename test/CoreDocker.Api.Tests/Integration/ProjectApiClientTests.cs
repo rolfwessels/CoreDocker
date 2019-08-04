@@ -92,7 +92,7 @@ namespace CoreDocker.Api.Tests.Integration
             };
             // action
             testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
-                .WithMessage("You are not authorized to run this query.");
+                .WithMessage("The current user is not authorized to access this resource.");
         }
 
         #region Overrides of CrudComponentTestsBase<ProjectModel,ProjectCreateUpdateModel,ProjectReferenceModel>

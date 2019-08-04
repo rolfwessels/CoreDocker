@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
-using CoreDocker.Api.Components.Users;
+﻿using System.Reflection;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Serilog;
 
 namespace CoreDocker.Api.Components.Projects
 {
     
-    public class ProjectsQuerySpecification : ObjectType<object>
+    public class ProjectsQuerySpecification : ObjectType<ProjectsQuerySpecification.ProjectQuery>
     {
         private readonly IProjectLookup _projects;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
@@ -24,7 +20,8 @@ namespace CoreDocker.Api.Components.Projects
             _projects = projects;
         }
 
-        protected override void Configure(IObjectTypeDescriptor<object> descriptor )
+       
+        protected override void Configure(IObjectTypeDescriptor<ProjectQuery> descriptor )
         {
             var options = new GraphQlQueryOptions<Project, ProjectPagedLookupOptions>(_projects.GetPaged);   
             Name = "Projects";
@@ -42,6 +39,10 @@ namespace CoreDocker.Api.Components.Projects
                 .Type<PagedListGraphType<Project,ProjectSpecification>>()
                 .Resolver(x=> options.Paged(x))
                 .RequirePermission(Activity.ReadProject);
+        }
+
+        public class ProjectQuery
+        {
         }
     }
 }

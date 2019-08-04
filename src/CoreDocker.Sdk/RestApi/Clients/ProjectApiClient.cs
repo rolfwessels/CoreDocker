@@ -32,7 +32,6 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }"
             };
             var response = await CoreDockerClient.GraphQlPost(request);
-            LogHelper.Dump(response.Data.projects.paged, "----------------------------------------------------------");
             
             return CastHelper.DynamicCastTo<List<ProjectModel>>(response.Data.projects.paged.items);
         }

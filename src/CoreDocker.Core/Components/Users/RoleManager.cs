@@ -72,5 +72,10 @@ namespace CoreDocker.Core.Components.Users
             var roles = _roles.Select(x => x.Name).ToArray();
             return userRoles.All(role => roles.Contains(role));
         }
+
+        public static string[] GetRoles(Activity permission)
+        {
+            return _roles.Where(x => x.Activities.Contains(permission)).Select(x => x.Name).ToArray();
+        }
     }
 }

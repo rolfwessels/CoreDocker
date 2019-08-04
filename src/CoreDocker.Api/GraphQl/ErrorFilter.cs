@@ -40,12 +40,12 @@ namespace CoreDocker.Api.GraphQl
             }
             
             _log.Error(BuildMessage(error), error.Exception);
-            return error.WithCode(error.Exception.GetType().Name.Replace("Exception",""));
+            return error.WithCode(error.Exception?.GetType().Name.Replace("Exception","")?? error.Code);
         }
 
         private static string BuildMessage(IError error)
         {
-            return $"{error.Path.StringJoin(">")}:{error.Exception.Message}";
+            return $"{error.Path.StringJoin(">")}:{error.Exception?.Message ?? error.Message}";
         }
 
         private IError LogAndThrowValidation(IError error, ValidationException validationException = null)

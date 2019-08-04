@@ -113,7 +113,7 @@ namespace CoreDocker.Api.Tests.Integration
             Action testUpdateValidationFail = () => { newConnection.Users.Me().Wait(); };
             // action
             testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
-                .WithMessage("Authentication required.");
+                .WithMessage("The current user is not authorized to access this resource.");
         }
 
         [Test]

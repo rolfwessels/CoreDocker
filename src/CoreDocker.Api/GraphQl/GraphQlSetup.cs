@@ -22,7 +22,8 @@ namespace CoreDocker.Api.GraphQl
             return SchemaBuilder.New()
                 .AddQueryType<DefaultQuery>()
                 .AddMutationType<DefaultMutation>()
-//                .AddSubscriptionType<DefaultSubscription>()
+                .AddAuthorizeDirectiveType()
+                //                .AddSubscriptionType<DefaultSubscription>()
                 .AddServices(sp)
                 .Create();
         }

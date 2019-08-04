@@ -16,7 +16,7 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
                 .RequirePermission(Activity.ReadProject);
 
             descriptor.Field("count")
-                .Description( "The total count.")
+                .Description("The total item count.")
                 .Type<LongType>()
                 .Resolver(x => x.Parent<PagedList<TDal>>().Count)
                 .RequirePermission(Activity.ReadProject);
