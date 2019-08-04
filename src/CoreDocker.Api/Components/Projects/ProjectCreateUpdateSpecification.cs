@@ -8,7 +8,8 @@ namespace CoreDocker.Api.Components.Projects
         protected override void Configure(IInputObjectTypeDescriptor<ProjectCreateUpdateModel> descriptor )
         {
             Name = "ProjectCreateUpdate";
-            descriptor.Field(d => d.Name).Description("The name of the project.");
+            descriptor.Field(d => d.Name)
+                .Type<NonNullType<StringType>>().Description("The name of the project.");
         }
     }
 }
