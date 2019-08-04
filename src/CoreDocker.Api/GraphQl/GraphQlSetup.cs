@@ -4,6 +4,7 @@ using CoreDocker.Api.Security;
 using CoreDocker.Utilities.Helpers;
 using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.Execution.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,15 +16,18 @@ namespace CoreDocker.Api.GraphQl
         {
             services.AddGraphQL(sp => SchemaBuilder.New()
                 .AddQueryType<DefaultQuery>()
+                .AddMutationType<DefaultMutation>()
+                .AddSubscriptionType<DefaultSubscription>()
                 .AddServices(sp)
-                .Create());
+                .Create(), new QueryExecutionOptions {TracingPreference = TracingPreference.Always});
         }
 
         public static void AddGraphQl(this IApplicationBuilder app)
         {
             var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
             var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
-            app.UseGraphQL(uriCombine.PathAndQuery);
+            app.UseGraphQL(uriCombine.PathAndQuery) ;
+            app.UsePlayground(); 
         }
     }
 }

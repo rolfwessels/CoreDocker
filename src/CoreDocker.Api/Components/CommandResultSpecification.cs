@@ -1,16 +1,16 @@
 ﻿using CoreDocker.Core.Framework.CommandQuery;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components
 {
-    public class CommandResultSpecification : ObjectGraphType<CommandResult>
+    public class CommandResultSpecification : ObjectType<CommandResult>
     {
-        public CommandResultSpecification()
+        protected override void Configure(IObjectTypeDescriptor<CommandResult> descriptor )
         {
             Name = "CommandResult";
-            Field(d => d.CorrelationId).Description("Command correlation id.");
-            Field(d => d.Id, true).Description("The id of the command.");
-            Field(d => d.CreatedAt, type: typeof(DateTimeGraphType)).Description("When command was created.");
+            descriptor.Field(d => d.CorrelationId).Description("Command correlation id.");
+            descriptor.Field(d => d.Id).Type<StringType>().Description("The id of the command.");
+            descriptor.Field(d => d.CreatedAt).Type<NonNullType<DateTimeType>>().Description("When command was created.");
         }
     }
 }

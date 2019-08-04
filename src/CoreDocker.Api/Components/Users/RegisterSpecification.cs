@@ -1,16 +1,16 @@
 ﻿using CoreDocker.Shared.Models.Users;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class RegisterSpecification : InputObjectGraphType<RegisterModel>
+    public class RegisterSpecification : InputObjectType<RegisterModel>
     {
-        public RegisterSpecification()
+        protected override void Configure(IInputObjectTypeDescriptor<RegisterModel> descriptor )
         {
             Name = "Register";
-            Field(d => d.Name).Description("The name of the user.");
-            Field(d => d.Email).Description("The email of the user.");
-            Field(d => d.Password).Description("The password of the user.");
+            descriptor.Field(d => d.Name).Description("The name of the user.");
+            descriptor.Field(d => d.Email).Description("The email of the user.");
+            descriptor.Field(d => d.Password).Description("The password of the user.");
         }
     }
 }

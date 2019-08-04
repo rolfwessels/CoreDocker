@@ -1,17 +1,17 @@
 ﻿using CoreDocker.Shared.Models.Users;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UserCreateUpdateSpecification : InputObjectGraphType<UserCreateUpdateModel>
+    public class UserCreateUpdateSpecification : InputObjectType<UserCreateUpdateModel>
     {
-        public UserCreateUpdateSpecification()
+        protected override void Configure(IInputObjectTypeDescriptor<UserCreateUpdateModel> descriptor )
         {
             Name = "UserCreateUpdate";
-            Field(d => d.Name).Description("The name of the user.");
-            Field(d => d.Email).Description("The email of the user.");
-            Field(d => d.Roles, true).Description("The users roles.");
-            Field(d => d.Password, true).Description("The password of the user.");
+            descriptor.Field(d => d.Name).Description("The name of the user.");
+            descriptor.Field(d => d.Email).Description("The email of the user.");
+            descriptor.Field(d => d.Roles).Description("The users roles.");
+            descriptor.Field(d => d.Password).Description("The password of the user.");
         }
     }
 }

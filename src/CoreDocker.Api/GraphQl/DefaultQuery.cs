@@ -1,18 +1,16 @@
-﻿using System.Threading.Tasks;
-using CoreDocker.Api.Components.Projects;
+﻿using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
-using CoreDocker.Dal.Models.Users;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.GraphQl
 {
-    public class DefaultQuery : ObjectGraphType<object>
+    public class DefaultQuery : ObjectType
     {
-        public DefaultQuery()
+        protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             Name = "Query";
-            Field<ProjectsQuerySpecification>("projects", resolve: context => Task.FromResult(new object()));
-            Field<UsersQuerySpecification>("users", resolve: context => Task.FromResult(new object()));
+            descriptor.Field("projects").Type<ProjectsQuerySpecification>();
+            descriptor.Field("users").Type<UsersQuerySpecification>();
         }
     }
 }
