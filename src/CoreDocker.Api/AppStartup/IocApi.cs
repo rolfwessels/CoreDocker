@@ -73,7 +73,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
             //validation
-            builder.RegisterType<RequiresAuthValidationRule>().As<IValidationRule>();
+            
 //            builder.RegisterType<AuthorizationEvaluator>().As<IAuthorizationEvaluator>().SingleInstance();
 //
 //            builder.Register(s =>
@@ -85,13 +85,13 @@ namespace CoreDocker.Api.AppStartup
 //                return authSettings;
 //            });
 
-            builder.RegisterType<DefaultQuery>().SingleInstance();
-            builder.RegisterType<DefaultMutation>().SingleInstance();
-            builder.RegisterType<DefaultSubscription>().SingleInstance();
-            builder.RegisterType<RealTimeNotificationsMessageType>().SingleInstance();
-            builder.RegisterType<QueryResultSpecification>().SingleInstance();
+            builder.RegisterType<ErrorFilter>().As<IErrorFilter>();
+            builder.RegisterType<DefaultQuery>();
+            builder.RegisterType<DefaultMutation>();
+            builder.RegisterType<DefaultSubscription>();
+            builder.RegisterType<RealTimeNotificationsMessageType>();
+            builder.RegisterType<QueryResultSpecification>();
 
-            builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
             /*user*/
             builder.RegisterType<UserSpecification>();
@@ -100,15 +100,14 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<UsersMutationSpecification>();
             builder.RegisterType<RoleSpecification>();
             builder.RegisterType<RegisterSpecification>();
-            builder.RegisterType<PagedListGraphType<User, UserSpecification>>();
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();
             builder.RegisterType<OpenIdSettings>();
             builder.RegisterType<ProjectsQuerySpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
+            builder.RegisterType<ProjectsMutation>();
             builder.RegisterType<ProjectsMutationSpecification>();
-            builder.RegisterType<PagedListGraphType<Project, ProjectSpecification>>().SingleInstance();
 
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();

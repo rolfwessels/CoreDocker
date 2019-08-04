@@ -9,8 +9,13 @@ namespace CoreDocker.Api.GraphQl
         protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             Name = "Query";
-            descriptor.Field("projects").Type<ProjectsQuerySpecification>();
-            descriptor.Field("users").Type<UsersQuerySpecification>();
+            descriptor.Field("xas").Type<StringType>().Resolver(x => "");
+            descriptor.Field("projects")
+                .Type<ProjectsQuerySpecification>()
+                .Resolver(x => new object());
+//                .Resolver(x=>x.Resolver<ProjectsQuerySpecification>());
+//            descriptor.Field("users").Type<UsersQuerySpecification>()
+//                .Resolver(x => x.Resolver<UsersQuerySpecification>());
         }
     }
 }

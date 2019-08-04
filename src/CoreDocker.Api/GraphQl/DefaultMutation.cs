@@ -10,8 +10,10 @@ namespace CoreDocker.Api.GraphQl
         protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             Name = "Mutation";
-            descriptor.Field("projects").Type<ProjectsMutationSpecification>();
-            descriptor.Field("users").Type<UsersMutationSpecification>();
+            descriptor.Field("projects").Type<ProjectsMutationSpecification>()
+                .Resolver(x => x.Resolver<ProjectsMutation>());
+//            descriptor.Field("users").Type<UsersMutationSpecification>()
+//                .Resolver(x => x.Resolver<UsersMutationSpecification>());
         }
     }
 }
