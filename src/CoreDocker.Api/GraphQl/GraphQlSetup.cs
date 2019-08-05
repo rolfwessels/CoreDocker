@@ -1,9 +1,14 @@
 ﻿using System;
+using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Components.Users;
+using CoreDocker.Api.Security;
+using CoreDocker.Utilities.Helpers;
 using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Subscriptions;
 using HotChocolate.Execution;
 using HotChocolate.Execution.Configuration;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +19,7 @@ namespace CoreDocker.Api.GraphQl
 
         public static void AddGraphQl(this IServiceCollection services)
         {
+            services.AddInMemorySubscriptionProvider();
             services.AddGraphQL(SchemaFactory,ConfigureBuilder);
         }
 
@@ -23,7 +29,7 @@ namespace CoreDocker.Api.GraphQl
                 .AddQueryType<DefaultQuery>()
                 .AddMutationType<DefaultMutation>()
                 .AddAuthorizeDirectiveType()
-                //                .AddSubscriptionType<DefaultSubscription>()
+                .AddSubscriptionType<DefaultSubscription>()
                 .AddServices(sp)
                 .Create();
         }
@@ -41,10 +47,11 @@ namespace CoreDocker.Api.GraphQl
 
         public static void AddGraphQl(this IApplicationBuilder app)
         {
-//            var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
-//            var uriCombine = new Uri(openIdSettings.HostUrl.UriCombine("/graphql"));
-            var pathString = "/graphql";
+            var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
+            var pathString = new Uri(openIdSettings.HostUrl.UriCombine("/graphql")).AbsolutePath;
             app.UseGraphQL(pathString) ;
+            
+            app.UseGraphQLSubscriptions(new SubscriptionMiddlewareOptions() {Path = pathString.UriCombine("ws")});
             app.UsePlayground(pathString, "/ui/playground"); 
         }
     }

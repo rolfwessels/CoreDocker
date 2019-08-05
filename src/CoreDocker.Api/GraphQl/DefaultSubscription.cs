@@ -1,26 +1,38 @@
-﻿using System;
-using CoreDocker.Core.Framework.Subscriptions;
+﻿using CoreDocker.Core.Framework.Subscriptions;
+using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 
 namespace CoreDocker.Api.GraphQl
 {
-    public class DefaultSubscription : ObjectType
+    public class Subscription
+    {
+        public RealTimeNotificationsMessage OnDefaultEvent(IEventMessage message)
+        {
+            return (RealTimeNotificationsMessage)message.Payload;
+        }
+    }
+
+    public class DefaultSubscription : ObjectType<Subscription>
     {
         private readonly SubscriptionNotifications _pub;
 
-        public DefaultSubscription(SubscriptionNotifications pub)
+        protected override void Configure(IObjectTypeDescriptor<Subscription> descriptor)
         {
-            _pub = pub;
-//            AddField(new EventStreamFieldType
-//            {
-//                Name = "generalEvents",
-//                Arguments = new QueryArguments(),
-//                Type = typeof(RealTimeNotificationsMessageType),
-//                Resolver = new FuncFieldResolver<RealTimeNotificationsMessage>(Resolver),
-//                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context =>
-//                    Subscribe(context, context.GetArgument<string>("channelId")))
-//            });
+            descriptor.Field(t => t.OnDefaultEvent(default(IEventMessage)))
+                .Type<NonNullType<RealTimeNotificationsMessageType>>();
+
+            //            AddField(new EventStreamFieldType
+            //            {
+            //                Name = "generalEvents",
+            //                Arguments = new QueryArguments(),
+            //                Type = typeof(RealTimeNotificationsMessageType),
+            //                Resolver = new FuncFieldResolver<RealTimeNotificationsMessage>(Resolver),
+            //                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context =>
+            //                    Subscribe(context, context.GetArgument<string>("channelId")))
+            //            });
         }
+
+
 //
 //        private RealTimeNotificationsMessage Resolver(ResolveFieldContext context)
 //        {
@@ -38,11 +50,6 @@ namespace CoreDocker.Api.GraphQl
 
     public class RealTimeNotificationsMessageType : ObjectType<RealTimeNotificationsMessage>
     {
-        public RealTimeNotificationsMessageType()
-        {
-//            descriptor.Field(d => d.Id).Description("The id of the item to be created if created.");
-//            descriptor.Field(d => d.Event).Description("The name notification.");
-//            descriptor.Field(d => d.CorrelationId).Description("The correlation Id for given command.");
-        }
+        
     }
 }

@@ -46,31 +46,25 @@ namespace CoreDocker.Api.Tests.Integration
             var data = GetExampleData();
             var userCreate = data.First();
             var userUpdate = data.Last();
-            var items = new List<CoreDockerClient.RealTimeEvent>();
-//            using (await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt)))
-            {
-                // action
-                var insertCommand = await _userApiClient.Create(userCreate);
-                var insert = await _userApiClient.ById(insertCommand.Id);
-                var updateCommand = await _userApiClient.Update(insert.Id, userUpdate);
-                var update = await _userApiClient.ById(insertCommand.Id);
-                var getById = await _userApiClient.ById(insert.Id);
-                var allAfterUpdate = await _userApiClient.List();
-                var paged = await _userApiClient.Paged(2);
-                var firstDelete = await _userApiClient.Remove(insert.Id);
 
-                // assert
-                insert.Should().BeEquivalentTo(userCreate, CompareConfig);
-                update.Should().BeEquivalentTo(userUpdate, CompareConfig);
-                getById.Should().BeEquivalentTo(update, r => r.Excluding(x => x.UpdateDate));
-                allAfterUpdate.Count.Should().BeGreaterThan(0);
-                allAfterUpdate.Should().Contain(x => x.Name == update.Name);
-                paged.Count.Should().BeGreaterOrEqualTo(paged.Items.Count);
-                paged.Items.Count.Should().BeLessOrEqualTo(2);
-//                items.WaitFor(x=>x.Count == 3 ,5000);
-//                items.Should().HaveCount(3);
-//                items.Last().Event.Should().Be("UserRemoved");
-            }
+            // action
+            var insertCommand = await _userApiClient.Create(userCreate);
+            var insert = await _userApiClient.ById(insertCommand.Id);
+            var updateCommand = await _userApiClient.Update(insert.Id, userUpdate);
+            var update = await _userApiClient.ById(insertCommand.Id);
+            var getById = await _userApiClient.ById(insert.Id);
+            var allAfterUpdate = await _userApiClient.List();
+            var paged = await _userApiClient.Paged(2);
+            var firstDelete = await _userApiClient.Remove(insert.Id);
+
+            // assert
+            insert.Should().BeEquivalentTo(userCreate, CompareConfig);
+            update.Should().BeEquivalentTo(userUpdate, CompareConfig);
+            getById.Should().BeEquivalentTo(update, r => r.Excluding(x => x.UpdateDate));
+            allAfterUpdate.Count.Should().BeGreaterThan(0);
+            allAfterUpdate.Should().Contain(x => x.Name == update.Name);
+            paged.Count.Should().BeGreaterOrEqualTo(paged.Items.Count);
+            paged.Items.Count.Should().BeLessOrEqualTo(2);
         }
 
 
