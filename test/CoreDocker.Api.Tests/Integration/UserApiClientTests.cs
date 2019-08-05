@@ -99,7 +99,7 @@ namespace CoreDocker.Api.Tests.Integration
             Action testUpdateValidationFail = () => { _guestConnection.Value.Users.Create(invalidEmailUser).Wait(); };
             // action
             testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
-                .WithMessage("You are not authorized to run this query.");
+                .WithMessage("The current user is not authorized to access this resource.");
         }
 
 

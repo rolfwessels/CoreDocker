@@ -46,7 +46,7 @@ namespace CoreDocker.Api.Components.Users
             descriptor.Field("me")
                 .Description("Current user")
                 .Type<UserSpecification>()
-                .Resolver(context => Me(GraphQlUserContextHelper.GetUser(context)))
+                .Resolver(context => Me(context.GetUser()))
                 .RequireAuthorization();
 
             descriptor.Field("roles")
@@ -75,7 +75,7 @@ namespace CoreDocker.Api.Components.Users
         private static async Task<User> Me(Task<User> users)
         {
             var user = await users;
-            return user;
+            return user.Dump("0000000000User");
         }
 
         #endregion
