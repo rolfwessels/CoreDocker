@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using CoreDocker.Core.Framework.BaseManagers;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Helpers;
 using FluentValidation;
 using HotChocolate;
@@ -38,7 +39,17 @@ namespace CoreDocker.Api.GraphQl
             {
                 return LogAndThrowValidation(error, exception);
             }
-            
+
+            if (error.Exception is ArgumentException)
+            {
+                return LogAndThrowValidation(error);
+            }
+
+            if (error.Exception is ArgumentNullException)
+            {
+                return LogAndThrowValidation(error);
+            }
+
             _log.Error(BuildMessage(error), error.Exception);
             return error.WithCode(error.Exception?.GetType().Name.Replace("Exception","")?? error.Code);
         }
