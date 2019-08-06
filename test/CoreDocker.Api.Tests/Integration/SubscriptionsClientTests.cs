@@ -48,13 +48,12 @@ namespace CoreDocker.Api.Tests.Integration
             Setup();
             var userCreate = GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
-            "1".Dump("-------------------------------------------------------------------------------------------1");
             
-            var sendSubscribeGeneralEventsAsync = await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt));
-            "1".Dump("-------------------------------------------------------------------------------------------1");
+            var subscriptions = await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt));
 
-            using (sendSubscribeGeneralEventsAsync)
+            using (subscriptions)
             {
+                await Task.Delay(100);
 //                // action
                 var insertCommand = await _userApiClient.Create(userCreate);
                 var insert = await _userApiClient.ById(insertCommand.Id);
@@ -62,12 +61,13 @@ namespace CoreDocker.Api.Tests.Integration
 //
 //                // assert
                 var expected = 2;
-                items.WaitFor(x=>x.Count == expected ,3000);
+                items.WaitFor(x=>x.Count == expected ,1000);
                 items.Should().HaveCount(expected);
                 items.Last().Event.Should().Be("UserRemoved");
+                subscriptions.Dispose();
             }
 
-            sendSubscribeGeneralEventsAsync.Should().NotBeNull();
+            subscriptions.Should().NotBeNull();
         }
 
 

@@ -64,9 +64,9 @@ namespace CoreDocker.Api.GraphQl
 
         protected override void Configure(IObjectTypeDescriptor<RealTimeNotificationsMessage> descriptor)
         {
-            descriptor.Field(x => x.Id);
-            descriptor.Field(x => x.CorrelationId);
-            descriptor.Field(x => x.Event);
+            descriptor.Field(x => x.Id).Type<NonNullType<StringType>>();
+            descriptor.Field(x => x.CorrelationId).Type<NonNullType<StringType>>();
+            descriptor.Field(x => x.Event).Type<NonNullType<StringType>>();
             descriptor.Field(x => x.Exception);
         }
 

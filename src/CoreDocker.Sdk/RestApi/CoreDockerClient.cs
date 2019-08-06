@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
 using CoreDocker.Utilities.Helpers;
+using GraphQL.Client;
 using GraphQL.Client.Http;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
@@ -46,27 +47,30 @@ namespace CoreDocker.Sdk.RestApi
             return graphQlResponse;
         }
 
-        public async Task<IDisposable> SendSubscribeAsync(string query, Action<GraphQLResponse> callback)
+        private void SubscriptionCallback(GraphQLResponse obj, Action<GraphQLResponse> callback)
         {
-            _log.Debug("***** Start SendSubscribeAsync");
-#pragma warning disable 618
-            var subscriptionResult = await _graphQlClient.SendSubscribeAsync(query);
-#pragma warning restore 618
-            _log.Debug("***** Done SendSubscribeAsync");
-            //            subscriptionResult.OnReceive += callback;
-            return subscriptionResult;
+            if (obj == null)
+            {
+                _log.Error($"CoreDockerClient:SubscriptionCallback Subscription value is null");
+            }
+            else
+            {
+                callback(obj);
+            }
         }
 
         public async Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
         {
-            var eventsAsync = await SendSubscribeAsync(
-                @"subscription { onDefaultEvent{id,event,correlationId}}", response =>
-                {
-                    _log.Debug("***** something");
-                    var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
-                    callback(dynamicCastTo, response);
-                });
-            return new SafeDisposeWrapper(eventsAsync);
+#pragma warning disable 618
+            IGraphQLSubscriptionResult subscriptionResult = await _graphQlClient.SendSubscribeAsync(@"subscription { onDefaultEvent{id,event,correlationId}}");
+#pragma warning restore 618
+            subscriptionResult.OnReceive += response1 => SubscriptionCallback(response1, response =>
+            {
+                _log.Debug("***** something +" + response);
+                var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
+                callback(dynamicCastTo, response);
+            });
+            return new SafeDisposeWrapper(subscriptionResult);
         }
 
         #region Nested type: RealTimeEvent
