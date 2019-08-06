@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace CoreDocker.Utilities.Helpers
@@ -20,5 +21,7 @@ namespace CoreDocker.Utilities.Helpers
             Console.Out.WriteLine(description + ":" + val.Dump());
             return val;
         }
+
+        
     }
 }

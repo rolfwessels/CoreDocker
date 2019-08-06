@@ -54,6 +54,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>C:\Users\User-pc\.nuget\packages\nunit\3.12.0\lib\netstandard2.0\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Certificates\development.crt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -6,17 +6,12 @@ using CoreDocker.Api.Components;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
-using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
-using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
-using FluentValidation;
 using HotChocolate;
-using Microsoft.AspNetCore.Authorization;
 using Serilog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +31,6 @@ namespace CoreDocker.Api.AppStartup
             SetupCore(builder);
             SetupCommonControllers(builder);
             SetupGraphQl(builder);
-
             SetupTools(builder);
             builder.Populate(_services);
             Container = builder.Build();
@@ -72,23 +66,12 @@ namespace CoreDocker.Api.AppStartup
         {
             builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
-            //validation
-            
-//            builder.RegisterType<AuthorizationEvaluator>().As<IAuthorizationEvaluator>().SingleInstance();
-//
-//            builder.Register(s =>
-//            {
-//                var authSettings = new AuthorizationSettings();
-//
-//                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim("role", "Admin"));
-//
-//                return authSettings;
-//            });
-
             builder.RegisterType<ErrorFilter>().As<IErrorFilter>();
+
             builder.RegisterType<DefaultQuery>();
             builder.RegisterType<DefaultMutation>();
-            builder.RegisterType<DefaultSubscription>();
+            builder.RegisterType<DefaultSubscription>().SingleInstance();
+            builder.RegisterType<Subscription>().SingleInstance();
             builder.RegisterType<RealTimeNotificationsMessageType>();
 
 

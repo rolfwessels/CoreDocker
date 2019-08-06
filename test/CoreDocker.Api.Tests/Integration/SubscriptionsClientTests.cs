@@ -7,6 +7,8 @@ using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
+using CoreDocker.Utilities.Tests;
+using CoreDocker.Utilities.Tests.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using CoreDocker.Utilities.Tests.Tools;
 using FizzWare.NBuilder;
@@ -28,6 +30,7 @@ namespace CoreDocker.Api.Tests.Integration
 
         protected void Setup()
         {
+            TestLoggingHelper.EnsureExists();
             _userApiClient = _adminConnection.Value.Users;
         }
 
@@ -45,19 +48,26 @@ namespace CoreDocker.Api.Tests.Integration
             Setup();
             var userCreate = GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
-            using (await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt)))
+            "1".Dump("-------------------------------------------------------------------------------------------1");
+            
+            var sendSubscribeGeneralEventsAsync = await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt));
+            "1".Dump("-------------------------------------------------------------------------------------------1");
+
+            using (sendSubscribeGeneralEventsAsync)
             {
 //                // action
                 var insertCommand = await _userApiClient.Create(userCreate);
                 var insert = await _userApiClient.ById(insertCommand.Id);
-//                await _userApiClient.Remove(insert.Id);
+                await _userApiClient.Remove(insert.Id);
 //
 //                // assert
                 var expected = 2;
-                items.WaitFor(x=>x.Count == expected ,5000);
+                items.WaitFor(x=>x.Count == expected ,3000);
                 items.Should().HaveCount(expected);
                 items.Last().Event.Should().Be("UserRemoved");
             }
+
+            sendSubscribeGeneralEventsAsync.Should().NotBeNull();
         }
 
 
