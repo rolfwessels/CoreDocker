@@ -35,14 +35,14 @@ namespace CoreDocker.Api.GraphQl
                 .Create();
         }
 
-        private static IQueryExecutionBuilder ConfigureBuilder(IQueryExecutionBuilder builder)
+        private static void ConfigureBuilder(IQueryExecutionBuilder builder)
         {
             var queryExecutionOptionsAccessor = new QueryExecutionOptions
             {
                 TracingPreference = TracingPreference.Always,
                 IncludeExceptionDetails = true
             };
-            return builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
+            builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
                 .AddErrorFilter<ErrorFilter>();
         }
 
@@ -51,8 +51,6 @@ namespace CoreDocker.Api.GraphQl
             var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
             var pathString = new Uri(openIdSettings.HostUrl.UriCombine("/graphql")).AbsolutePath;
             app.UseGraphQL(pathString);
-
-//            app.UseGraphQLSubscriptions(new SubscriptionMiddlewareOptions() {Path = pathString.UriCombine("ws")});
             app.UseGraphQLSubscriptions(new SubscriptionMiddlewareOptions() {Path = pathString});
             app.UsePlayground(new PlaygroundOptions()
                 {
