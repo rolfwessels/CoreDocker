@@ -35,14 +35,14 @@ namespace CoreDocker.Api.GraphQl
                 .Create();
         }
 
-        private static void ConfigureBuilder(IQueryExecutionBuilder builder)
+        private static IQueryExecutionBuilder ConfigureBuilder(IQueryExecutionBuilder builder)
         {
             var queryExecutionOptionsAccessor = new QueryExecutionOptions
             {
                 TracingPreference = TracingPreference.Always,
                 IncludeExceptionDetails = true
             };
-            builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
+            return builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
                 .AddErrorFilter<ErrorFilter>();
         }
 
