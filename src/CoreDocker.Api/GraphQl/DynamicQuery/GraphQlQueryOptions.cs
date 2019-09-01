@@ -1,77 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Utilities.Helpers;
-using GraphQL.Types;
+using HotChocolate.Resolvers;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.GraphQl.DynamicQuery
 {
     public class GraphQlQueryOptions<TDal, TOptions> where TDal : IBaseDalModel
         where TOptions : PagedLookupOptionsBase, new()
     {
+        private const int DefaultLimit = 1000;
+        private readonly List<ArgBase> _args;
         private readonly Func<TOptions, Task<PagedList<TDal>>> _lookup;
-        private List<Arg> _args;
 
 
         public GraphQlQueryOptions(Func<TOptions, Task<PagedList<TDal>>> lookup)
         {
             _lookup = lookup;
-            _args = new List<Arg>();
-            AddArgument(new QueryArgument<IntGraphType>
+            _args = new List<ArgBase>
             {
-                Name = "first",
-                Description = "Set the limit to return."
-            }, (options, context) => options.First = context.GetArgument<int>("first"));
+                new Arg<IntType>("first", "Set the limit to return.",
+                    (options, context) => options.First = context.Argument<int?>("first") ?? DefaultLimit),
+                new Arg<BooleanType>("includeCount", "Select to return the count of the items.",
+                    (options, context) => options.IncludeCount = context.Argument<bool>("includeCount"))
+            };
         }
 
-        public class Arg
-        {
-            public QueryArgument Argument { get; set; }
-            public Action<TOptions, ResolveFieldContext<object>> Apply { get; set; }
-        }
 
-        public Task<PagedList<TDal>> Paged(ResolveFieldContext<object> context, TOptions options = null)
+        public Task<PagedList<TDal>> Paged(IResolverContext context, TOptions options = null)
         {
             options = options ?? new TOptions();
-            var childrenFields = context.FieldAst.SelectionSet.Children.OfType<GraphQL.Language.AST.Field>()
-                .Select(x => x.Name).ToArray();
-            options.IncludeCount = childrenFields.Contains("count");
-            if (options.IncludeCount && !childrenFields.Contains("items"))
-            {
-                options.First = 0;
-            }
 
-            foreach (var arg in _args)
-            {
-                if (context.HasArgument(arg.Argument.Name))
-                    arg.Apply(options, context);
-            }
+            foreach (var arg in _args) arg.Apply(options, context);
 
             return _lookup(options);
         }
-
-        public async Task<List<TDal>> Query(ResolveFieldContext<object> context, TOptions options = null)
+        
+        public IEnumerable<TDal> Query(IResolverContext resolverContext)
         {
-            var options1 = options ?? new TOptions();
-            options1.IncludeCount = false;
-            var paged = await Paged(context, options1);
-            return paged.Items;
+            var options1 = new TOptions();
+            return _lookup(options1).Result.Items;
         }
 
-
-        public GraphQlQueryOptions<TDal, TOptions> AddArgument(QueryArgument queryArguments,
-            Action<TOptions, ResolveFieldContext<object>> apply)
+        public IObjectFieldDescriptor AddArguments(IObjectFieldDescriptor description)
         {
-            _args.Add(new Arg() {Argument = queryArguments, Apply = apply});
+            foreach (var argBase in _args) argBase.Apply(description);
+
+            return description;
+        }
+
+        public GraphQlQueryOptions<TDal, TOptions> AddArguments<TIn>(string name, string description, Action<TOptions, IResolverContext> applyArgument) where TIn : IInputType
+        {
+            _args.Add(new Arg<TIn>(name,description,applyArgument));
             return this;
         }
 
-        public QueryArguments GetArguments()
+        #region Nested type: Arg
+
+        public class Arg<TIn> : ArgBase where TIn : IInputType
         {
-            return new QueryArguments(_args.Select(x => x.Argument));
+            public Arg(string name, string description, Action<TOptions, IResolverContext> applyArgument)
+            {
+                Name = name;
+                Description = description;
+                ApplyArgument = applyArgument;
+            }
+
+            public override void Apply(IObjectFieldDescriptor description)
+            {
+                description.Argument(Name, x => x.Type<TIn>().Description(Description));
+            }
         }
+
+        #endregion
+
+        #region Nested type: ArgBase
+
+        public abstract class ArgBase
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public Action<TOptions, IResolverContext> ApplyArgument { get; set; }
+            public abstract void Apply(IObjectFieldDescriptor description);
+
+            public void Apply(TOptions description, IResolverContext context)
+            {
+                ApplyArgument(description, context);
+            }
+        }
+
+        #endregion
     }
 }

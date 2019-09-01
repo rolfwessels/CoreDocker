@@ -22,6 +22,11 @@ namespace CoreDocker.Api.Mappers
             return GetInstance().Map(user, model);
         }
 
+        public static RoleModel ToModel(this Role user, RoleModel model = null)
+        {
+            return GetInstance().Map(user, model);
+        }
+
         public static IEnumerable<UserReferenceModel> ToReferenceModelList(IEnumerable<User> users)
         {
             return GetInstance().Map<IEnumerable<User>, IEnumerable<UserReferenceModel>>(users);

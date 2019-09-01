@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
@@ -9,11 +10,13 @@ using GraphQL.Client.Http;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
 using RestSharp;
+using Serilog;
 
 namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
@@ -44,6 +47,75 @@ namespace CoreDocker.Sdk.RestApi
             return graphQlResponse;
         }
 
+        private void SubscriptionCallback(GraphQLResponse obj, Action<GraphQLResponse> callback)
+        {
+            if (obj == null)
+            {
+                _log.Error($"CoreDockerClient:SubscriptionCallback Subscription value is null");
+            }
+            else
+            {
+                callback(obj);
+            }
+        }
+
+        public async Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
+        {
+#pragma warning disable 618
+            IGraphQLSubscriptionResult subscriptionResult = await _graphQlClient.SendSubscribeAsync(@"subscription { onDefaultEvent{id,event,correlationId}}");
+#pragma warning restore 618
+            subscriptionResult.OnReceive += response1 => SubscriptionCallback(response1, response =>
+            {
+                _log.Debug("***** something +" + response);
+                var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
+                callback(dynamicCastTo, response);
+            });
+            return new SafeDisposeWrapper(subscriptionResult);
+        }
+
+        #region Nested type: RealTimeEvent
+
+        public class RealTimeEvent
+        {
+            public string Id { get; set; }
+            public string Event { get; set; }
+            public string CorrelationId { get; set; }
+            public string Exception { get; set; }
+        }
+
+        #endregion
+
+        #region Nested type: SafeDisposeWrapper
+
+        public class SafeDisposeWrapper : IDisposable
+        {
+            private static readonly ILogger Logger = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+            private readonly IDisposable _disposable;
+
+            public SafeDisposeWrapper(IDisposable disposable)
+            {
+                _disposable = disposable;
+            }
+
+            #region IDisposable Members
+
+            public void Dispose()
+            {
+                try
+                {
+                    _disposable.Dispose();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"SafeDisposeWrapper:Dispose {e.Message}");
+                }
+            }
+
+            #endregion
+        }
+
+        #endregion
+
         #region Implementation of ICoreDockerApi
 
         public void SetToken(TokenResponseModel data)
@@ -66,31 +138,5 @@ namespace CoreDocker.Sdk.RestApi
         public UserApiClient Users { get; set; }
 
         #endregion
-
-        public async Task<IDisposable> SendSubscribeAsync(string query, Action<GraphQLResponse> callback)
-        {
-#pragma warning disable 618
-            var subscriptionResult = await _graphQlClient.SendSubscribeAsync(query);
-#pragma warning restore 618
-            subscriptionResult.OnReceive += callback;
-            return subscriptionResult;
-        }
-
-        public Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
-        {
-            return SendSubscribeAsync(@"subscription { generalEvents{id,event,correlationId}}", response =>
-            {
-                var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
-                callback(dynamicCastTo, response);
-            });
-        }
-
-        public class RealTimeEvent
-        {
-            public string Id { get; set; }
-            public string Event { get; set; }
-            public string CorrelationId { get; set; }
-            public string Exception { get; set; }
-        }
     }
 }

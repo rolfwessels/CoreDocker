@@ -23,14 +23,14 @@ namespace CoreDocker.Sdk.RestApi.Clients
             {
                 Query = GraphQlFragments.User + @"{
                     users {
-                        list {
-                            ...userData
+                        paged() {
+                            items {...userData}
                         }
                     }
                 }"
             };
             var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<List<UserModel>>(response.Data.users.list);
+            return CastHelper.DynamicCastTo<List<UserModel>>(response.Data.users.paged.items);
         }
 
         public async Task<UserModel> ById(string id)
@@ -160,7 +160,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             {
                 Query = GraphQlFragments.User + @"query ($first: Int){
                     users {
-                        paged(first:$first) {
+                        paged(first:$first, includeCount: true) {
                             count,
                             items {...userData}
                         }

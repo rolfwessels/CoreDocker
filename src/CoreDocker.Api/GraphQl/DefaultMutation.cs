@@ -1,17 +1,19 @@
 ﻿using System.Threading.Tasks;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.GraphQl
 {
-    public class DefaultMutation : ObjectGraphType<object>
+    public class DefaultMutation : ObjectType
     {
-        public DefaultMutation()
+        protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             Name = "Mutation";
-            Field<ProjectsMutationSpecification>("projects", resolve: context => Task.FromResult(new object()));
-            Field<UsersMutationSpecification>("users", resolve: context => Task.FromResult(new object()));
+            descriptor.Field("projects").Type<ProjectsMutationSpecification>()
+                .Resolver(x => x.Resolver<ProjectsMutation>());
+            descriptor.Field("users").Type<UsersMutationSpecification>()
+                .Resolver(x => x.Resolver<UsersMutation>());
         }
     }
 }

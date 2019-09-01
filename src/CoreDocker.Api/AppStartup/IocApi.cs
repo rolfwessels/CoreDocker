@@ -6,19 +6,12 @@ using CoreDocker.Api.Components;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.GraphQl;
-using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Api.Security;
 using CoreDocker.Core.Startup;
-using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
-using GraphQL;
-using GraphQL.Authorization;
-using GraphQL.Http;
-using GraphQL.Types;
-using GraphQL.Validation;
+using HotChocolate;
 using Serilog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +31,6 @@ namespace CoreDocker.Api.AppStartup
             SetupCore(builder);
             SetupCommonControllers(builder);
             SetupGraphQl(builder);
-
             SetupTools(builder);
             builder.Populate(_services);
             Container = builder.Build();
@@ -74,28 +66,14 @@ namespace CoreDocker.Api.AppStartup
         {
             builder.RegisterType<CommandResultSpecification>().SingleInstance();
 
-            //validation
-            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            builder.RegisterType<RequiresAuthValidationRule>().As<IValidationRule>();
-//            builder.RegisterType<AuthorizationValidationRule>().As<IValidationRule>();
-            builder.RegisterType<AuthorizationEvaluator>().As<IAuthorizationEvaluator>().SingleInstance();
+            builder.RegisterType<ErrorFilter>().As<IErrorFilter>();
 
-            builder.Register(s =>
-            {
-                var authSettings = new AuthorizationSettings();
-
-                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim("role", "Admin"));
-
-                return authSettings;
-            });
-
-            builder.RegisterType<DefaultQuery>().SingleInstance();
-            builder.RegisterType<DefaultMutation>().SingleInstance();
+            builder.RegisterType<DefaultQuery>();
+            builder.RegisterType<DefaultMutation>();
             builder.RegisterType<DefaultSubscription>().SingleInstance();
-            builder.RegisterType<RealTimeNotificationsMessageType>().SingleInstance();
-            builder.RegisterType<QueryResultSpecification>().SingleInstance();
+            builder.RegisterType<Subscription>().SingleInstance();
+            builder.RegisterType<RealTimeNotificationsMessageType>();
 
-            builder.RegisterType<DefaultSchema>().As<ISchema>().SingleInstance();
 
             /*user*/
             builder.RegisterType<UserSpecification>();
@@ -104,15 +82,14 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<UsersMutationSpecification>();
             builder.RegisterType<RoleSpecification>();
             builder.RegisterType<RegisterSpecification>();
-            builder.RegisterType<PagedListGraphType<User, UserSpecification>>();
 
             /*project*/
             builder.RegisterType<ProjectSpecification>();
             builder.RegisterType<OpenIdSettings>();
             builder.RegisterType<ProjectsQuerySpecification>();
             builder.RegisterType<ProjectCreateUpdateSpecification>();
+            builder.RegisterType<ProjectsMutation>();
             builder.RegisterType<ProjectsMutationSpecification>();
-            builder.RegisterType<PagedListGraphType<Project, ProjectSpecification>>().SingleInstance();
 
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();

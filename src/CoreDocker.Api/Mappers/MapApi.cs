@@ -22,7 +22,7 @@ namespace CoreDocker.Api.Mappers
 
         public static ValueUpdateModel<TModel> ToValueUpdateModel<T, TModel>(this DalUpdateMessage<T> updateMessage)
         {
-            return new ValueUpdateModel<TModel>(Mapper.Instance.Map<T, TModel>(updateMessage.Value),
+            return new ValueUpdateModel<TModel>(GetInstance().Map<T, TModel>(updateMessage.Value),
                 (UpdateTypeCodes) updateMessage.UpdateType);
         }
 

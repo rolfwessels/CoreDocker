@@ -1,64 +1,29 @@
-﻿using System;
-using System.Reflection;
-using CoreDocker.Api.Components.Users;
-using CoreDocker.Api.GraphQl;
-using CoreDocker.Core.Components.Projects;
-using CoreDocker.Core.Framework.CommandQuery;
+﻿using CoreDocker.Api.GraphQl;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Shared.Models.Projects;
-using GraphQL.Types;
-using Serilog;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectsMutationSpecification : ObjectGraphType<object>
+    public class ProjectsMutationSpecification : ObjectType<ProjectsMutation>
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private const string Value = "project";
-
-        public ProjectsMutationSpecification(ICommander commander)
+        protected override void Configure(IObjectTypeDescriptor<ProjectsMutation> descriptor)
         {
             Name = "ProjectsMutation";
-            var safe = new Safe(_log);
+            descriptor.Field(t => t.Create(default(ProjectCreateUpdateModel)))
+                .Type<CommandResultSpecification>()
+                .Description("Add a project.")
+                .RequirePermission(Activity.UpdateProject);
 
-            this.RequireAuthorization();
-            Field<CommandResultSpecification>(
-                "create",
-                Description = "Add a project.",
-                new QueryArguments(
-                    new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
-                ),
-                safe.Wrap(context =>
-                {
-                    var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    return commander.Execute(ProjectCreate.Request.From(commander.NewId, project.Name));
-                })).RequirePermission(Activity.UpdateProject);
+            descriptor.Field(t => t.Update(default(string), default(ProjectCreateUpdateModel)))
+                .Type<CommandResultSpecification>()
+                .Description("Update a project.")
+                .RequirePermission(Activity.UpdateProject);
 
-            Field<CommandResultSpecification>(
-                "update",
-                Description = "Update a project.",
-                new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"},
-                    new QueryArgument<ProjectCreateUpdateSpecification> {Name = Value}
-                ),
-                safe.Wrap(context =>
-                {
-                    var id = context.GetArgument<string>(Name = "id");
-                    var project = context.GetArgument<ProjectCreateUpdateModel>(Name = Value);
-                    return commander.Execute(ProjectUpdate.Request.From(id, project.Name));
-                })).RequirePermission(Activity.UpdateProject);
-
-            Field<CommandResultSpecification>(
-                "remove",
-                Description = "Permanently remove a project.",
-                new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"}
-                ),
-                safe.Wrap(context =>
-                {
-                    var id = context.GetArgument<string>(Name = "id");
-                    return commander.Execute(ProjectRemove.Request.From(id));
-                })).RequirePermission(Activity.DeleteProject);
+            descriptor.Field(t => t.Remove(default(string)))
+                .Type<CommandResultSpecification>()
+                .Description("Permanently remove a project.")
+                .RequirePermission(Activity.DeleteProject);
         }
     }
 }

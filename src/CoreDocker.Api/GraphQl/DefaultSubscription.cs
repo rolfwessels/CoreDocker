@@ -1,52 +1,74 @@
 ﻿using System;
-using System.Security.Claims;
+using System.Reflection;
 using CoreDocker.Core.Framework.Subscriptions;
-using GraphQL;
-using GraphQL.Resolvers;
-using GraphQL.Subscription;
-using GraphQL.Types;
+using CoreDocker.Utilities.Helpers;
+using HotChocolate.Subscriptions;
+using HotChocolate.Types;
+using Serilog;
 
 namespace CoreDocker.Api.GraphQl
 {
-    public class DefaultSubscription : ObjectGraphType<object>
+    
+
+    public class DefaultSubscription : ObjectType<Subscription>
     {
-        private readonly SubscriptionNotifications _pub;
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IEventSender _eventSender;
 
-        public DefaultSubscription(SubscriptionNotifications pub)
+        public DefaultSubscription(SubscriptionNotifications notifications, IEventSender eventSender)
         {
-            _pub = pub;
-            AddField(new EventStreamFieldType
+            _eventSender = eventSender;
+            var observable = notifications.Messages();
+            observable.Subscribe(SendMessageToEventSender);
+        }
+
+        private void SendMessageToEventSender(RealTimeNotificationsMessage message)
+        {
+            _eventSender.SendAsync(new OnReviewMessage(message)).ContinueWithAndLogError(_log.Error); 
+        }
+
+        public class OnReviewMessage : EventMessage
+        {
+            public OnReviewMessage(RealTimeNotificationsMessage message)
+                : base(CreateEventDescription(), message)
             {
-                Name = "generalEvents",
-                Arguments = new QueryArguments(),
-                Type = typeof(RealTimeNotificationsMessageType),
-                Resolver = new FuncFieldResolver<RealTimeNotificationsMessage>(Resolver),
-                Subscriber = new EventStreamResolver<RealTimeNotificationsMessage>(context =>
-                    Subscribe(context, context.GetArgument<string>("channelId")))
-            });
+                this.Dump("-1");
+            }
+
+            private static EventDescription CreateEventDescription()
+            {
+                return new EventDescription("onDefaultEvent");
+            }
         }
 
-        private RealTimeNotificationsMessage Resolver(ResolveFieldContext context)
+        protected override void Configure(IObjectTypeDescriptor<Subscription> descriptor)
         {
-            var userNotificationsMessages = (context.Source as RealTimeNotificationsMessage);
-            return userNotificationsMessages;
+            descriptor.Field(t => t.OnDefaultEvent(default(IEventMessage)))
+                .Type<NonNullType<RealTimeNotificationsMessageType>>();
         }
 
-        private IObservable<RealTimeNotificationsMessage> Subscribe(ResolveEventStreamContext context, string channelId)
+    }
+
+    public class Subscription
+    {
+        public RealTimeNotificationsMessage OnDefaultEvent(IEventMessage message)
         {
-//            var messageContext = context.UserContext.As<MessageHandlingContext>();
-//            var user = messageContext.Get<ClaimsPrincipal>("user");
-            return _pub.Messages();
+            return (RealTimeNotificationsMessage)message.Payload;
         }
     }
 
-    public class RealTimeNotificationsMessageType : ObjectGraphType<RealTimeNotificationsMessage>
+    public class RealTimeNotificationsMessageType : ObjectType<RealTimeNotificationsMessage>
     {
-        public RealTimeNotificationsMessageType()
+        #region Overrides of ObjectType<RealTimeNotificationsMessage>
+
+        protected override void Configure(IObjectTypeDescriptor<RealTimeNotificationsMessage> descriptor)
         {
-            Field(d => d.Id).Description("The id of the item to be created if created.");
-            Field(d => d.Event).Description("The name notification.");
-            Field(d => d.CorrelationId).Description("The correlation Id for given command.");
+            descriptor.Field(x => x.Id).Type<NonNullType<StringType>>();
+            descriptor.Field(x => x.CorrelationId).Type<NonNullType<StringType>>();
+            descriptor.Field(x => x.Event).Type<NonNullType<StringType>>();
+            descriptor.Field(x => x.Exception);
         }
+
+        #endregion
     }
 }

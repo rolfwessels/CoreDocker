@@ -10,7 +10,7 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 ## Features
  * RESTful web API.
- * GraphQL (+ authorization + permissions)
+ * GraphQL (+ authorization + permissions) using hot chocolate
  * Reactjs Dashboad UI integrated
  * Authorization (OpenId with integrated identity server).
  * Swagger for API documentation.
@@ -21,16 +21,12 @@ This project contains some scafolding code that I use whenever I start a new pro
  
 
 ## Todo
- * Version the binaries that get built in docker. 
+ * Version the binaries that get built in docker.
  * Deploy with CDN
- * Prettier for the website
- * Security headers ? 
  * Code coverage in build process.
  * Code analytics - look at resharper cli tools.
  * Find and clean unused code. See if we can automate report
- * Decide what to do about logging, still not sold on the injection method (and log4net not using appsettings.json).
  * 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
- * Apply some CQRS patterns.
  * More https://shields.io/#/
 
 ## Inspection

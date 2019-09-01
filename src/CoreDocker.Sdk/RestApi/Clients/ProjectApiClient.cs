@@ -23,14 +23,17 @@ namespace CoreDocker.Sdk.RestApi.Clients
             {
                 Query = GraphQlFragments.Project + @"{
                     projects {
-                        list {
-                            ...projectData
+                        paged {
+                            items {
+                              ...projectData
+                            }   
                         }
                     }
                 }"
             };
             var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<List<ProjectModel>>(response.Data.projects.list);
+            
+            return CastHelper.DynamicCastTo<List<ProjectModel>>(response.Data.projects.paged.items);
         }
 
         public async Task<PagedListModel<ProjectModel>> Paged(int? first = null)
@@ -39,7 +42,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             {
                 Query = GraphQlFragments.Project + @"query ($first: Int){
                     projects {
-                        paged(first:$first) {
+                        paged(first:$first, includeCount: true) {
                             count,
                             items {...projectData}
                         }
@@ -74,12 +77,13 @@ namespace CoreDocker.Sdk.RestApi.Clients
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($name: String!) {
-                  projects {
+                    projects {
                     create(project: {name: $name}) {
-                      ...commandResultData
+                        ...commandResultData
                     }
-                  }
+                    }
                 }",
+
                 Variables = new {project.Name}
             });
             return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.create);
@@ -90,13 +94,14 @@ namespace CoreDocker.Sdk.RestApi.Clients
             var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
-                mutation ($id: String!, $name: String!) {
-                  projects {
-                    update(id: $id, project: {name: $name}) {
-                      ...commandResultData
-                    }
-                  }
-                }",
+                                mutation ($id: String!, $name: String!) {
+                                  projects {
+                                    update(id: $id, project: {name: $name}) {
+                                      ...commandResultData
+                                    }
+                                  }
+                                }",
+
                 Variables = new {id, project.Name}
             });
 

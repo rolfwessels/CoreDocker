@@ -1,19 +1,19 @@
 ﻿using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Shared.Models.Projects;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectSpecification : ObjectGraphType<Project>
+    public class ProjectSpecification : ObjectType<Project>
     {
-        public ProjectSpecification()
+        protected override void Configure(IObjectTypeDescriptor<Project> descriptor )
         {
             Name = "Project";
-            Field(d => d.Id).Description("The id of the project.");
-            Field(d => d.Name).Description("The name of the project.");
-            Field(d => d.UpdateDate, true, typeof(DateTimeGraphType))
+            descriptor.Field(d => d.Id).Description("The id of the project.");
+            descriptor.Field(d => d.Name).Description("The name of the project.");
+            descriptor.Field(d => d.UpdateDate).Type<DateTimeType>()
                 .Description("The last updated date for the project.");
-            Field(d => d.CreateDate, type: typeof(DateTimeGraphType))
+            descriptor.Field(d => d.CreateDate).Type<NonNullType<DateTimeType>>()
                 .Description("The date when the project was created.");
         }
     }

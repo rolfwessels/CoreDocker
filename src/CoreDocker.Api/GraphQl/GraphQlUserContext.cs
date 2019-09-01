@@ -1,61 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Helpers;
-using GraphQL;
-using GraphQL.Authorization;
-using GraphQL.Types;
-using GraphQL.Validation;
+using HotChocolate.Resolvers;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Serilog;
-using Microsoft.AspNetCore.Http;
 
 namespace CoreDocker.Api.GraphQl
 {
-    public class GraphQlUserContext : IProvideClaimsPrincipal
-    {
-        private readonly Lazy<Task<User>> _lazyUser;
-
-        public GraphQlUserContext(IUserLookup userLookup, ClaimsPrincipal ctxUser)
-        {
-            User = ctxUser;
-            _lazyUser = new Lazy<Task<User>>(() => userLookup.GetUserByEmail(User.Identity.Name));
-        }
-
-        public ClaimsPrincipal User { get; }
-        public Task<User> CurrentUser => _lazyUser.Value;
-
-        public static IDictionary<string, object> BuildFromHttpContext(HttpContext ctx,
-            IUserLookup userLookup)
-        {
-            var userContext = new GraphQlUserContext(userLookup, ctx.User);
-            return new Dictionary<string, object>()
-            {
-                {"userContext", userContext},
-                {"user", userContext.User}
-            };
-        }
-
-        public static GraphQlUserContext ReadFromContext(ValidationContext contextUserContext)
-        {
-            var userContext = (Dictionary<string, object>) contextUserContext.UserContext;
-            if (userContext.ContainsKey("userContext")) return userContext["userContext"] as GraphQlUserContext;
-
-            return null;
-        }
-    }
 
     public static class GraphQlUserContextHelper
     {
-        public static Task<User> User<T>(ResolveFieldContext<T> context)
+
+        public static Task<User> GetUser(this IResolverContext context)
         {
-            var userContext = (Dictionary<string, object>) context.UserContext;
-            var graphQlUserContext = (GraphQlUserContext) userContext["userContext"];
-            return graphQlUserContext.CurrentUser;
+            return (Task<User>) context.ContextData.GetOrAdd("UserTask", () => ReadFromClaimsPrinciple(context) as object);
+        }
+
+        private static Task<User> ReadFromClaimsPrinciple(IResolverContext context)
+        {
+            if (context.ContextData.TryGetValue("ClaimsPrincipal", out var principle))
+            {
+                var claimsPrincipal = (ClaimsPrincipal) principle;
+                var id = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == "id")?.Value;
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var userLookup = context.Resolver<IUserLookup>();
+                    return userLookup.GetById(id);
+                }
+            }
+
+            return Task.FromResult<User>(null);
         }
     }
 }

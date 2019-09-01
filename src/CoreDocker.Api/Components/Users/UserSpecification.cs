@@ -1,30 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Shared.Models.Users;
-using GraphQL.Types;
-using Serilog;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UserSpecification : ObjectGraphType<User>
+    public class UserSpecification : ObjectType<User>
     {
 
-        public UserSpecification()
+        protected override void Configure(IObjectTypeDescriptor<User> descriptor )
         {
             Name = "User";
-            Field(d => d.Id).Description("The id of the user.");
-            Field(d => d.Name).Description("The name of the user.");
-            Field(d => d.Email).Description("The email of the user.");
-            Field(d => d.Roles).Description("The roles of the user.");
-            Field<ListGraphType<StringGraphType>>("activities", resolve: context => Roles(context.Source?.Roles),
-                description: "The activities that this user is authorized for.");
-            Field(d => d.UpdateDate, true, typeof(DateTimeGraphType))
+            descriptor.Field(d => d.Id).Description("The id of the user.");
+            descriptor.Field(d => d.Name).Description("The name of the user.");
+            descriptor.Field(d => d.Email).Description("The email of the user.");
+            descriptor.Field(d => d.Roles).Description("The roles of the user.");
+            descriptor.Field("activities")
+                .Type<StringType>()
+                .Resolver(context => Roles(context.Parent<User>()?.Roles))
+                .Description("The activities that this user is authorized for.");
+            descriptor.Field(d => d.UpdateDate).Type<DateTimeType>()
                 .Description("The date when the user was last updated.");
-            Field(d => d.CreateDate, type: typeof(DateTimeGraphType))
+            descriptor.Field(d => d.CreateDate).Type<NonNullType<DateTimeType>>()
                 .Description("The date when the user was created.");
         }
 

@@ -1,14 +1,15 @@
 ﻿using CoreDocker.Shared.Models.Projects;
-using GraphQL.Types;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectCreateUpdateSpecification : InputObjectGraphType<ProjectCreateUpdateModel>
+    public class ProjectCreateUpdateSpecification : InputObjectType<ProjectCreateUpdateModel>
     {
-        public ProjectCreateUpdateSpecification()
+        protected override void Configure(IInputObjectTypeDescriptor<ProjectCreateUpdateModel> descriptor )
         {
             Name = "ProjectCreateUpdate";
-            Field(d => d.Name, true).Description("The name of the project.");
+            descriptor.Field(d => d.Name)
+                .Type<NonNullType<StringType>>().Description("The name of the project.");
         }
     }
 }

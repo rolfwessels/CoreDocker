@@ -1,15 +1,16 @@
-﻿using CoreDocker.Shared.Models.Users;
-using GraphQL.Types;
+﻿using CoreDocker.Dal.Models.Users;
+using CoreDocker.Shared.Models.Users;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class RoleSpecification : ObjectGraphType<RoleModel>
+    public class RoleSpecification : ObjectType<RoleModel>
     {
-        public RoleSpecification()
+        protected override void Configure(IObjectTypeDescriptor<RoleModel> descriptor )
         {
             Name = "Role";
-            Field(d => d.Name).Description("The name of the role.");
-            Field(d => d.Activities).Description("List of allowed activities.");
+            descriptor.Field(d => d.Name).Description("The name of the role.");
+            descriptor.Field(d => d.Activities).Description("List of allowed activities.");
         }
     }
 }

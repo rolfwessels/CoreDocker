@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using CoreDocker.Core.Framework.Logging;
 using Serilog;
 using NUnit.Framework;
@@ -9,9 +10,21 @@ namespace CoreDocker.Utilities.Tests
     [SetUpFixture]
     public class TestLoggingHelper
     {
+        private static Lazy<ILogger> _logger;
+
+        static TestLoggingHelper()
+        {
+            _logger = new Lazy<ILogger>(SetupOnce);
+        }
+
         public static void EnsureExists()
         {
-            Log.Logger = LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
+            Log.Logger = _logger.Value;
+        }
+
+        private static ILogger SetupOnce()
+        {
+            return LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
                 .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.Tests.log")
                 .WriteTo.Console(LogEventLevel.Debug)
                 //.ReadFrom.Configuration(BaseSettings.Config)

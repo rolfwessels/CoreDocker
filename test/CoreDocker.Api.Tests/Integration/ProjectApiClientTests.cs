@@ -46,6 +46,8 @@ namespace CoreDocker.Api.Tests.Integration
             var projectCreate = data.First();
             var projectUpdate = data.Last();
             // action
+            await _projectApiClient.All();
+
             var createCommand = await _projectApiClient.Create(projectCreate);
             var create = await _projectApiClient.ById(createCommand.Id);
             var updateCommand = await _projectApiClient.Update(create.Id, projectUpdate);
@@ -59,8 +61,8 @@ namespace CoreDocker.Api.Tests.Integration
             update.Should().BeEquivalentTo(projectUpdate, CompareConfig);
             allAfterUpdate.Count.Should().BeGreaterThan(0);
             allAfterUpdate.Should().Contain(x => x.Name == update.Name);
-            paged.Items.Should().HaveCountLessOrEqualTo(1);
             paged.Count.Should().BeGreaterThan(paged.Items.Count);
+            paged.Items.Should().HaveCountLessOrEqualTo(1);
         }
 
         [Test]
@@ -90,7 +92,7 @@ namespace CoreDocker.Api.Tests.Integration
             };
             // action
             testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
-                .WithMessage("You are not authorized to run this query.");
+                .WithMessage("The current user is not authorized to access this resource.");
         }
 
         #region Overrides of CrudComponentTestsBase<ProjectModel,ProjectCreateUpdateModel,ProjectReferenceModel>

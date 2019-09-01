@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoreDocker.Core.Framework.BaseManagers
+namespace CoreDocker.Dal.Persistence
 {
     public class ReferenceException : Exception
     {

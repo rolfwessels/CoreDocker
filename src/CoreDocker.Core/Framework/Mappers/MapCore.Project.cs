@@ -25,36 +25,36 @@ namespace CoreDocker.Core.Framework.Mappers
 
         public static ProjectReference ToReference(this Project project, ProjectReference projectReference = null)
         {
-            return Mapper.Map(project, projectReference);
+            return GetInstance().Map(project, projectReference);
         }
 
         public static Project ToDao(this ProjectCreate.Request project, Project projectReference = null)
         {
-            return Mapper.Map(project, projectReference);
+            return GetInstance().Map(project, projectReference);
         }
 
         public static ProjectCreate.Notification ToEvent(this ProjectCreate.Request project,
             ProjectCreate.Notification projectReference = null)
         {
-            return Mapper.Map(project, projectReference);
+            return GetInstance().Map(project, projectReference);
         }
 
         public static Project ToDao(this ProjectUpdate.Request project, Project projectReference = null)
         {
-            return Mapper.Map(project, projectReference);
+            return GetInstance().Map(project, projectReference);
         }
 
         public static ProjectUpdate.Notification ToEvent(this ProjectUpdate.Request project,
             ProjectUpdate.Notification projectReference = null)
         {
-            return Mapper.Map(project, projectReference);
+            return GetInstance().Map(project, projectReference);
         }
 
 
         public static ProjectRemove.Notification ToEvent(this ProjectRemove.Request project,
             ProjectRemove.Notification projectReference = null)
         {
-            var notification = Mapper.Map(project, projectReference);
+            var notification = GetInstance().Map(project, projectReference);
             return notification;
         }
     }
