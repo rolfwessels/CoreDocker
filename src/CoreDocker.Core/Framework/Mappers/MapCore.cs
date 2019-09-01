@@ -1,18 +1,27 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
     {
-        static MapCore()
+        private static readonly Lazy<IMapper> _mapper = new Lazy<IMapper>(InitializeMapping);
+
+        public static IMapper GetInstance()
         {
-            Mapper.Initialize(cfg =>
+            return _mapper.Value;
+        }
+
+        private static IMapper InitializeMapping()
+        {
+            var config = new MapperConfiguration(cfg =>
             {
                 CreateCommandMap(cfg);
                 CreateProjectMap(cfg);
                 CreateUserMap(cfg);
             });
+            return config.CreateMapper();
         }
 
         public static IMappingExpression<T, T2> IgnoreCreateUpdate<T, T2>(
@@ -25,7 +34,7 @@ namespace CoreDocker.Core.Framework.Mappers
 
         public static void AssertConfigurationIsValid()
         {
-            Mapper.AssertConfigurationIsValid();
+            GetInstance().ConfigurationProvider.AssertConfigurationIsValid();
         }
     }
 }

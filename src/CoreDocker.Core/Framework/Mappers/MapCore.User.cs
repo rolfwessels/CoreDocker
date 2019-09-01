@@ -36,12 +36,12 @@ namespace CoreDocker.Core.Framework.Mappers
 
         public static UserReference ToReference(this User user, UserReference userReference = null)
         {
-            return Mapper.Map(user, userReference);
+            return GetInstance().Map(user, userReference);
         }
 
         public static User ToDao(this UserCreate.Request request, User user = null)
         {
-            var map = Mapper.Map(request, user);
+            var map = GetInstance().Map(request, user);
             map.HashedPassword = UserDalHelper.SetPassword(request.Password);
             return map;
         }
@@ -49,25 +49,25 @@ namespace CoreDocker.Core.Framework.Mappers
         public static UserCreate.Notification ToEvent(this UserCreate.Request user,
             UserCreate.Notification userReference = null)
         {
-            return Mapper.Map(user, userReference);
+            return GetInstance().Map(user, userReference);
         }
 
         public static User ToDao(this UserUpdate.Request request, User user = null)
         {
-            return Mapper.Map(request, user);
+            return GetInstance().Map(request, user);
         }
 
         public static UserUpdate.Notification ToEvent(this UserUpdate.Request user,
             UserUpdate.Notification userReference = null)
         {
-            return Mapper.Map(user, userReference);
+            return GetInstance().Map(user, userReference);
         }
 
 
         public static UserRemove.Notification ToEvent(this UserRemove.Request user, bool wasRemoved,
             UserRemove.Notification userReference = null)
         {
-            var notification = Mapper.Map(user, userReference);
+            var notification = GetInstance().Map(user, userReference);
             notification.WasRemoved = wasRemoved;
             return notification;
         }

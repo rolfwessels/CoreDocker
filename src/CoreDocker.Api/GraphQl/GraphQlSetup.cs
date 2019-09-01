@@ -1,6 +1,5 @@
 ﻿using System;
 using CoreDocker.Api.AppStartup;
-using CoreDocker.Api.Components.Users;
 using CoreDocker.Api.Security;
 using CoreDocker.Utilities.Helpers;
 using HotChocolate;
@@ -35,14 +34,14 @@ namespace CoreDocker.Api.GraphQl
                 .Create();
         }
 
-        private static IQueryExecutionBuilder ConfigureBuilder(IQueryExecutionBuilder builder)
+        private static void ConfigureBuilder(IQueryExecutionBuilder builder)
         {
             var queryExecutionOptionsAccessor = new QueryExecutionOptions
             {
                 TracingPreference = TracingPreference.Always,
                 IncludeExceptionDetails = true
             };
-            return builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
+            builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
                 .AddErrorFilter<ErrorFilter>();
         }
 
