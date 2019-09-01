@@ -4,7 +4,6 @@ using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Utilities.Helpers;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
-using NUnit.Framework.Interfaces;
 using Serilog;
 
 namespace CoreDocker.Api.GraphQl
