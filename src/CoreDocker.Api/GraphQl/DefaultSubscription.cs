@@ -25,7 +25,7 @@ namespace CoreDocker.Api.GraphQl
 
         private void SendMessageToEventSender(RealTimeNotificationsMessage message)
         {
-            _eventSender.SendAsync(new OnReviewMessage(message)).ContinueWithAndLogError(_log); 
+            _eventSender.SendAsync(new OnReviewMessage(message)).ContinueWithAndLogError(_log.Error); 
         }
 
         public class OnReviewMessage : EventMessage

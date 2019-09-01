@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Utilities.Helpers
 {
@@ -13,13 +13,13 @@ namespace CoreDocker.Utilities.Helpers
             updateAllReferences.ContinueWith(logUpdate);
         }
 
-        public static void ContinueWithAndLogError(this Task sendAsync, ILogger log)
+        public static void ContinueWithAndLogError(this Task sendAsync, Action<string,Exception> log = null)
         {
             sendAsync.ContinueWith(x =>
             {
                 if (x.Exception != null)
                 {
-                    log.Error(x.Exception.Message);
+                    log?.Invoke($"Failed to run async method:{x.Exception.Message}",x.Exception);
                 }
             });
         }
