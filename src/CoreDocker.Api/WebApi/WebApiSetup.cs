@@ -7,6 +7,7 @@ namespace CoreDocker.Api.WebApi
     {
         public static void Setup(MvcOptions config)
         {
+            config.EnableEndpointRouting = false;
             config.Filters.Add(new CaptureExceptionFilter());
         }
     }

@@ -121,12 +121,7 @@ namespace CoreDocker.Sdk.RestApi
         public void SetToken(TokenResponseModel data)
         {
             var bearerToken = $"Bearer {data.AccessToken}";
-            _restClient.DefaultParameters.Add(new Parameter
-            {
-                Type = ParameterType.HttpHeader,
-                Name = "Authorization",
-                Value = bearerToken
-            });
+            _restClient.DefaultParameters.Add(new Parameter("Authorization", bearerToken, ParameterType.HttpHeader));
             _graphQlClient.DefaultRequestHeaders.Add("Authorization", new[] {bearerToken});
         }
 
