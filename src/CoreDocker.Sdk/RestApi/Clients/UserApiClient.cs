@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
-using GraphQL.Common.Request;
+using GraphQL;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {

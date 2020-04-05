@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
 using CoreDocker.Utilities.Helpers;
-using GraphQL.Client;
+using GraphQL;
 using GraphQL.Client.Http;
-using GraphQL.Common.Request;
-using GraphQL.Common.Response;
 using RestSharp;
 using Serilog;
+using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly GraphQLHttpClient _graphQlClient;
+        private GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
         public CoreDockerClient(string urlBase)
@@ -28,49 +30,28 @@ namespace CoreDocker.Sdk.RestApi
             Projects = new ProjectApiClient(this);
             Users = new UserApiClient(this);
             Ping = new PingApiClient(this);
-            _graphQlClient = new GraphQLHttpClient(UrlBase.UriCombine("/graphql"));
+            _graphQlClient = new GraphQLHttpClient(UrlBase.UriCombine("/graphql"), new NewtonsoftJsonSerializer()) ;
+            
         }
 
         public RestClient Client => _restClient;
 
         public string UrlBase { get; }
 
-        public async Task<GraphQLResponse> GraphQlPost(GraphQLRequest heroRequest)
+        public async Task<GraphQLResponse<dynamic>> GraphQlPost(GraphQLRequest heroRequest)
         {
-            var graphQlResponse = await _graphQlClient.SendQueryAsync(heroRequest);
+            var graphQlResponse = await _graphQlClient.SendQueryAsync<dynamic>(heroRequest);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
             {
-                graphQlResponse.Dump("graphQlResponse");
                 throw new GraphQlResponseException(graphQlResponse);
             }
-
             return graphQlResponse;
         }
 
-        private void SubscriptionCallback(GraphQLResponse obj, Action<GraphQLResponse> callback)
+        public IObservable<GraphQLResponse<RealTimeEvent>> SendSubscribeGeneralEvents()
         {
-            if (obj == null)
-            {
-                _log.Error($"CoreDockerClient:SubscriptionCallback Subscription value is null");
-            }
-            else
-            {
-                callback(obj);
-            }
-        }
-
-        public async Task<IDisposable> SendSubscribeGeneralEventsAsync(Action<RealTimeEvent, dynamic> callback)
-        {
-#pragma warning disable 618
-            IGraphQLSubscriptionResult subscriptionResult = await _graphQlClient.SendSubscribeAsync(@"subscription { onDefaultEvent{id,event,correlationId}}");
-#pragma warning restore 618
-            subscriptionResult.OnReceive += response1 => SubscriptionCallback(response1, response =>
-            {
-                _log.Debug("***** something +" + response);
-                var dynamicCastTo = CastHelper.DynamicCastTo<RealTimeEvent>(response.Data.generalEvents);
-                callback(dynamicCastTo, response);
-            });
-            return new SafeDisposeWrapper(subscriptionResult);
+            var request = new GraphQLRequest(@"subscription { onDefaultEvent{id,event,correlationId}}");
+            return _graphQlClient.CreateSubscriptionStream<RealTimeEvent>(request);
         }
 
         #region Nested type: RealTimeEvent
@@ -122,8 +103,28 @@ namespace CoreDocker.Sdk.RestApi
         {
             var bearerToken = $"Bearer {data.AccessToken}";
             _restClient.DefaultParameters.Add(new Parameter("Authorization", bearerToken, ParameterType.HttpHeader));
-            _graphQlClient.DefaultRequestHeaders.Add("Authorization", new[] {bearerToken});
+            _graphQlClient = new GraphQLHttpClient(new GraphQLHttpClientOptions()
+            {
+                EndPoint = new Uri(UrlBase.UriCombine("/graphql")), HttpMessageHandler = new MyHandler(data.AccessToken)
+            }, new NewtonsoftJsonSerializer());
         }
+
+        public class MyHandler : DelegatingHandler
+        {
+            private readonly AuthenticationHeaderValue _authentication;
+
+            public MyHandler(string token, HttpMessageHandler inner = null) : base(inner ?? new HttpClientHandler())
+            {
+                _authentication = new AuthenticationHeaderValue("bearer", token);
+            }
+
+            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                request.Headers.Authorization = _authentication;
+                return await base.SendAsync(request, cancellationToken);
+            }
+        }
+
 
         public AuthenticateApiClient Authenticate { get; set; }
         public PingApiClient Ping { get; set; }
