@@ -70,10 +70,7 @@ namespace CoreDocker.Api.Tests.Integration
 
                     items.Last().Event.Should().Be("UserRemoved");
                 }
-
-                subscriptions.Dispose();
             }
-
             subscriptions.Should().NotBeNull();
         }
 
