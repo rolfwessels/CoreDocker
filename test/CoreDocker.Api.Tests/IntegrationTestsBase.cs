@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
@@ -8,13 +7,11 @@ using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog.Hosting;
 
 namespace CoreDocker.Api.Tests
 {
     public class IntegrationTestsBase
     {
-
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
@@ -33,8 +30,15 @@ namespace CoreDocker.Api.Tests
             _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
         }
 
-        public CoreDockerClient AdminClient() => _adminConnection.Value;
-        public CoreDockerClient GuestClient() => _guestConnection.Value;
+        public CoreDockerClient AdminClient()
+        {
+            return _adminConnection.Value;
+        }
+
+        public CoreDockerClient GuestClient()
+        {
+            return _guestConnection.Value;
+        }
 
         #region Private Methods
 
@@ -47,7 +51,8 @@ namespace CoreDocker.Api.Tests
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .ConfigureServices((context, collection) =>
-                    collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
+                    collection.AddSingleton<ILoggerFactory>(services =>
+                        new Serilog.Extensions.Logging.SerilogLoggerFactory()))
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);

@@ -5,7 +5,7 @@ namespace CoreDocker.Api.Components.Users
 {
     public class RegisterSpecification : InputObjectType<RegisterModel>
     {
-        protected override void Configure(IInputObjectTypeDescriptor<RegisterModel> descriptor )
+        protected override void Configure(IInputObjectTypeDescriptor<RegisterModel> descriptor)
         {
             Name = "Register";
             descriptor.Field(d => d.Name).Description("The name of the user.");

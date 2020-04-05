@@ -12,7 +12,7 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
             descriptor.Field("items")
                 .Description("All items paged.")
                 .Type<ListType<TGt>>()
-                .Resolver(x=> x.Parent<PagedList<TDal>>().Items)
+                .Resolver(x => x.Parent<PagedList<TDal>>().Items)
                 .RequirePermission(Activity.ReadProject);
 
             descriptor.Field("count")

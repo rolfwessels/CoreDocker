@@ -20,7 +20,7 @@ namespace CoreDocker.Api.WebApi.Controllers
         private readonly string _environmentName;
         private readonly IGeneralUnitOfWorkFactory _factory;
 
-        public PingController(IGeneralUnitOfWorkFactory factory, IHostingEnvironment environment)
+        public PingController(IGeneralUnitOfWorkFactory factory, IWebHostEnvironment environment)
         {
             _factory = factory;
             _environmentName = environment.EnvironmentName;

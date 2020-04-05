@@ -14,7 +14,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // arrange
             var dictionary = new Dictionary<string, int>();
             // action
-            var result = dictionary.GetOrAdd("test",()=>1);
+            var result = dictionary.GetOrAdd("test", () => 1);
             // assert
             result.Should().Be(1);
             dictionary.Should().ContainKey("test").And.ContainValue(1);
@@ -26,12 +26,10 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // arrange
             var dictionary = new Dictionary<string, int> {{"test", 0}};
             // action
-            var result = dictionary.GetOrAdd("test",()=>1);
+            var result = dictionary.GetOrAdd("test", () => 1);
             // assert
             result.Should().Be(0);
             dictionary.Should().ContainKey("test").And.ContainValue(0);
         }
-
-
     }
 }

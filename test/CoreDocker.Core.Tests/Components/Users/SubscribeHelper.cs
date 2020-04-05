@@ -24,9 +24,7 @@ namespace CoreDocker.Core.Tests.Components.Users
                 var notificationHandler = typeof(INotificationHandler<>).MakeGenericType(notification);
                 if (!type.GetInterfaces().Contains(notificationHandler) &&
                     !excludeNotifications.Contains(notification.Name))
-                {
                     list.Add(notification);
-                }
             }
 
             // assert

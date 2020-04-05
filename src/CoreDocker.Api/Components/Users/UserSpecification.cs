@@ -8,8 +8,7 @@ namespace CoreDocker.Api.Components.Users
 {
     public class UserSpecification : ObjectType<User>
     {
-
-        protected override void Configure(IObjectTypeDescriptor<User> descriptor )
+        protected override void Configure(IObjectTypeDescriptor<User> descriptor)
         {
             Name = "User";
             descriptor.Field(d => d.Id).Description("The id of the user.");

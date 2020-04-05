@@ -9,7 +9,6 @@ namespace CoreDocker.Dal.MongoDb
 {
     public class MongoConnectionFactory : IGeneralUnitOfWorkFactory
     {
-
         private readonly Lazy<IGeneralUnitOfWork> _singleConnection;
 
         public MongoConnectionFactory(string connectionString, string databaseName)

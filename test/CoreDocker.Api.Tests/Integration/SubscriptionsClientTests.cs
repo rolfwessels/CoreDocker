@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Sdk.RestApi;
@@ -48,30 +49,25 @@ namespace CoreDocker.Api.Tests.Integration
             Setup();
             var userCreate = GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
-            
-            var subscriptions = await _adminConnection.Value.SendSubscribeGeneralEventsAsync((evt, _) => items.Add(evt));
+            var sendSubscribeGeneralEvents = _adminConnection.Value.SendSubscribeGeneralEvents();
+            Exception excep = null;
+            Action<Exception> onError = exception => excep = exception;
+            var subscriptions =
+                sendSubscribeGeneralEvents.Subscribe((evt) => items.Add(evt.Data.OnDefaultEvent), onError);
 
             using (subscriptions)
             {
-                await Task.Delay(100);
-//                // action
+                await Task.Delay(100);//required to allow subscription
+                // action
                 var insertCommand = await _userApiClient.Create(userCreate);
                 var insert = await _userApiClient.ById(insertCommand.Id);
                 await _userApiClient.Remove(insert.Id);
-//
-//                // assert
-                var expected = 2;
-                items.WaitFor(x=>x.Count == expected ,1000);
-                if (DateTime.Now > new DateTime(2019, 12, 01)) 
-                // The graphql client not supported waiting for new release https://github.com/graphql-dotnet/graphql-client/issues/108
-                {
-                    
-                    items.Should().HaveCount(expected);
 
-                    items.Last().Event.Should().Be("UserRemoved");
-                }
-
-                subscriptions.Dispose();
+                items.WaitFor(x => x.Count == 2, 10000);
+                // onError.Should().BeNull();
+                items.Should().HaveCount(2);
+                excep.Should().BeNull();
+                items.Last().Event.Should().Be("UserRemoved");
             }
 
             subscriptions.Should().NotBeNull();

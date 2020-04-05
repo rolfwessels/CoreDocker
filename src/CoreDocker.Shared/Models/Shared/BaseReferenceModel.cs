@@ -10,7 +10,7 @@
         {
             return Id.Equals(other.Id);
         }
-        
+
         #endregion
     }
 }

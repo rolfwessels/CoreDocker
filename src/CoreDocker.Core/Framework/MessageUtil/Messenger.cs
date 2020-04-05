@@ -27,18 +27,18 @@ namespace CoreDocker.Core.Framework.MessageUtil
             if (_dictionary.TryGetValue(typeof(T), out var type))
                 foreach (var reference in type)
                     if (reference.Key.IsAlive)
-                    {
                         reference.Value(value);
-                    }
                     else
-                    {
                         type.TryRemove(reference.Key, out _);
-                    }
         }
 
         public void Register<T>(object receiver, Action<T> action) where T : class
         {
-            void Value(object t) => action(t as T);
+            void Value(object t)
+            {
+                action(t as T);
+            }
+
             Register(typeof(T), receiver, Value);
         }
 
@@ -57,7 +57,6 @@ namespace CoreDocker.Core.Framework.MessageUtil
         public void UnRegister(Type type, object receiver)
         {
             if (_dictionary.TryGetValue(type, out var typeFound))
-            {
                 foreach (var key in typeFound.Keys)
                 {
                     if (!key.IsAlive)
@@ -68,23 +67,20 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
                     if (key.Target == receiver) typeFound.TryRemove(key, out _);
                 }
-            }
         }
 
         public void UnRegister(object receiver)
         {
             foreach (var type in _dictionary.Values)
+            foreach (var key in type.Keys)
             {
-                foreach (var key in type.Keys)
+                if (!key.IsAlive)
                 {
-                    if (!key.IsAlive)
-                    {
-                        type.TryRemove(key, out _);
-                        continue;
-                    }
-
-                    if (key.Target == receiver) type.TryRemove(key, out _);
+                    type.TryRemove(key, out _);
+                    continue;
                 }
+
+                if (key.Target == receiver) type.TryRemove(key, out _);
             }
         }
 

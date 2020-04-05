@@ -34,15 +34,12 @@ namespace CoreDocker.Core.Components.Users
             {
                 var query = _generalUnitOfWork.Users.Query();
                 if (!string.IsNullOrEmpty(options.Search))
-                {
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
                         x.Email.ToLower().Contains(options.Search.ToLower()) ||
                         x.Name.ToLower().Contains(options.Search.ToLower()));
-                }
 
                 if (options.Sort != null)
-                {
                     switch (options.Sort)
                     {
                         case UserPagedLookupOptions.SortOptions.Name:
@@ -54,7 +51,6 @@ namespace CoreDocker.Core.Components.Users
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                }
 
                 return new PagedList<User>(query, options);
             });

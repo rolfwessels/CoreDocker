@@ -10,7 +10,6 @@ using Serilog;
 
 namespace CoreDocker.Api.GraphQl
 {
-
     public class ErrorFilter : IErrorFilter
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
@@ -19,7 +18,6 @@ namespace CoreDocker.Api.GraphQl
 
         public IError OnError(IError error)
         {
-
             if (error.Exception is AggregateException aggregateException)
             {
                 var validationExceptions = aggregateException.InnerExceptions.OfType<ValidationException>().ToArray();
@@ -30,28 +28,16 @@ namespace CoreDocker.Api.GraphQl
                     return LogAndThrowValidation(error);
             }
 
-            if (error.Exception is ReferenceException)
-            {
-                return LogAndThrowValidation(error);
-            }
+            if (error.Exception is ReferenceException) return LogAndThrowValidation(error);
 
-            if (error.Exception is ValidationException exception)
-            {
-                return LogAndThrowValidation(error, exception);
-            }
+            if (error.Exception is ValidationException exception) return LogAndThrowValidation(error, exception);
 
-            if (error.Exception is ArgumentException)
-            {
-                return LogAndThrowValidation(error);
-            }
+            if (error.Exception is ArgumentException) return LogAndThrowValidation(error);
 
-            if (error.Exception is ArgumentNullException)
-            {
-                return LogAndThrowValidation(error);
-            }
+            if (error.Exception is ArgumentNullException) return LogAndThrowValidation(error);
 
             _log.Error(BuildMessage(error), error.Exception);
-            return error.WithCode(error.Exception?.GetType().Name.Replace("Exception","")?? error.Code);
+            return error.WithCode(error.Exception?.GetType().Name.Replace("Exception", "") ?? error.Code);
         }
 
         private static string BuildMessage(IError error)
@@ -65,8 +51,7 @@ namespace CoreDocker.Api.GraphQl
             return error.WithMessage(validationException?.Errors.First().ErrorMessage ?? error.Exception.Message)
                 .WithCode("Validation");
         }
-        
+
         #endregion
     }
-
 }

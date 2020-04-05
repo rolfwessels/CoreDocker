@@ -101,10 +101,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             where TType : class
         {
             var enumerable = _internalDataList.Where(filter.Compile()).ToArray();
-            foreach (var v in enumerable)
-            {
-                ReflectionHelper.ExpressionToAssign(v, update, value);
-            }
+            foreach (var v in enumerable) ReflectionHelper.ExpressionToAssign(v, update, value);
 
             return Task.FromResult(enumerable.LongCount());
         }
@@ -203,20 +200,14 @@ namespace CoreDocker.Dal.InMemoryCollections
 
             public IUpdateCalls<TClass> Set<TType>(Expression<Func<TClass, TType>> expression, TType value)
             {
-                foreach (var item in _list)
-                {
-                    AssignNewValue(item, expression, value);
-                }
+                foreach (var item in _list) AssignNewValue(item, expression, value);
 
                 return this;
             }
 
             public IUpdateCalls<TClass> SetOnInsert<TT>(Expression<Func<TClass, TT>> expression, TT value)
             {
-                foreach (var item in _list)
-                {
-                    AssignNewValue(item, expression, value);
-                }
+                foreach (var item in _list) AssignNewValue(item, expression, value);
 
                 return this;
             }

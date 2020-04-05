@@ -5,13 +5,17 @@ using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.Security;
 using CoreDocker.Api.SignalR;
+using CoreDocker.Api.SignalR.Hubs;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi;
+using CoreDocker.Api.WebApi.Filters;
+using CoreDocker.Shared;
 using CoreDocker.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace CoreDocker.Api
 {
@@ -32,15 +36,17 @@ namespace CoreDocker.Api
             services.AddCors();
             services.UseIdentityService(Configuration);
             services.AddBearerAuthentication();
-            services.AddMvc(WebApiSetup.Setup);
+            services.AddMvc(config => { config.Filters.Add(new CaptureExceptionFilter()); });
             services.AddSwagger();
             services.AddSignalR();
 
             return new AutofacServiceProvider(IocApi.Instance.Container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseStaticFiles();
+            app.UseRouting();
             app.UseCors(policy =>
             {
                 policy.AllowAnyMethod()
@@ -54,18 +60,24 @@ namespace CoreDocker.Api
 
             app.UseIdentityService();
             app.UseBearerAuthentication();
-            app.UseSingalRSetup();
-            app.UseMvc();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>(SignalRHubUrls.ChatUrl);
+            });
+
             app.AddGraphQl();
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
         }
 
         public static string InformationalVersion()
-        {   
+        {
             return Assembly.GetEntryAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                .InformationalVersion;   
+                .InformationalVersion;
         }
     }
 }

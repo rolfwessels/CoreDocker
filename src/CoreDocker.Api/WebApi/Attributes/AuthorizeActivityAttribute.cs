@@ -8,7 +8,6 @@ namespace CoreDocker.Api.WebApi.Attributes
 {
     public class AuthorizeActivityAttribute : AuthorizeAttribute
     {
-
         public AuthorizeActivityAttribute()
         {
         }

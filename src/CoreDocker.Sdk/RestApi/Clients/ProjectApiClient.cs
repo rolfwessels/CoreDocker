@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
-using GraphQL.Common.Request;
+using GraphQL;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -31,9 +32,9 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                 }"
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            
-            return CastHelper.DynamicCastTo<List<ProjectModel>>(response.Data.projects.paged.items);
+            var response = await CoreDockerClient.Post<Response>(request);
+
+            return response.Data.Projects.Paged.Items;
         }
 
         public async Task<PagedListModel<ProjectModel>> Paged(int? first = null)
@@ -50,8 +51,8 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {first}
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<PagedListModel<ProjectModel>>(response.Data.projects.paged);
+            var response = await CoreDockerClient.Post<Response>(request);
+            return response.Data.Projects.Paged;
         }
 
         public async Task<ProjectModel> ById(string id)
@@ -67,13 +68,13 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {id}
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<ProjectModel>(response.Data.projects.byId);
+            var response = await CoreDockerClient.Post<Response>(request);
+            return response.Data.Projects.ById;
         }
 
         public async Task<CommandResultModel> Create(ProjectCreateUpdateModel project)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($name: String!) {
@@ -86,12 +87,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
                 Variables = new {project.Name}
             });
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.create);
+            return response.Data.Projects.Create;
         }
 
         public async Task<CommandResultModel> Update(string id, ProjectCreateUpdateModel project)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                                 mutation ($id: String!, $name: String!) {
@@ -105,12 +106,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id, project.Name}
             });
 
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.update);
+            return response.Data.Projects.Update;
         }
 
         public async Task<CommandResultModel> Remove(string id)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($id: String!) {
@@ -123,7 +124,22 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id}
             });
 
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.projects.remove);
+            return response.Data.Projects.Remove;
+        }
+
+
+        private class Response
+        {
+            public ResponseData Projects { get; set; }
+
+            public class ResponseData
+            {
+                public PagedListModel<ProjectModel> Paged { get; set; }
+                public ProjectModel ById { get; set; }
+                public CommandResultModel Create { get; set; }
+                public CommandResultModel Update { get; set; }
+                public CommandResultModel Remove { get; set; }
+            }
         }
     }
 }

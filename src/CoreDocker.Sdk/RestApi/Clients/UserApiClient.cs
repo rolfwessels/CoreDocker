@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
-using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
-using GraphQL.Common.Request;
+using GraphQL;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -29,8 +28,8 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                 }"
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<List<UserModel>>(response.Data.users.paged.items);
+            var response = await CoreDockerClient.Post<Response>(request);
+            return response.Data.Users.Paged.Items;
         }
 
         public async Task<UserModel> ById(string id)
@@ -46,8 +45,8 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {id}
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.byId);
+            var response = await CoreDockerClient.Post<Response>(request);
+            return response.Data.Users.ById;
         }
 
         public async Task<UserModel> Me()
@@ -62,13 +61,13 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     }
                 }"
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<UserModel>(response.Data.users.me);
+            var response = await CoreDockerClient.Post<Response>(request);
+            return response.Data.Users.Me;
         }
 
         public async Task<CommandResultModel> Create(UserCreateUpdateModel user)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($name: String!, $email: String!, $roles: [String], $password: String) {
@@ -80,12 +79,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {user.Name, user.Email, user.Roles, user.Password}
             });
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.create);
+            return response.Data.Users.Create;
         }
 
         public async Task<CommandResultModel> Register(RegisterModel user)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($name: String!, $email: String!, $password: String!) {
@@ -97,12 +96,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {user.Name, user.Email, user.Password}
             });
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.register);
+            return response.Data.Users.Register;
         }
 
         public async Task<CommandResultModel> Update(string id, UserCreateUpdateModel user)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($id: String!, $name: String!, $email: String!, $roles: [String], $password: String) {
@@ -115,12 +114,12 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id, user.Name, user.Email, user.Roles, user.Password}
             });
 
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.update);
+            return response.Data.Users.Update;
         }
 
         public async Task<CommandResultModel> Remove(string id)
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
                 mutation ($id: String!) {
@@ -133,13 +132,13 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id}
             });
 
-            return CastHelper.DynamicCastTo<CommandResultModel>(response.Data.users.remove);
+            return response.Data.Users.Remove;
         }
 
 
         public async Task<List<RoleModel>> Roles()
         {
-            var response = await CoreDockerClient.GraphQlPost(new GraphQLRequest
+            var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = @"{
                   users {
@@ -150,7 +149,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                   }
                 }"
             });
-            return CastHelper.DynamicCastTo<List<RoleModel>>(response.Data.users.roles);
+            return response.Data.Users.Roles;
         }
 
 
@@ -168,8 +167,25 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {first}
             };
-            var response = await CoreDockerClient.GraphQlPost(request);
-            return CastHelper.DynamicCastTo<PagedListModel<UserModel>>(response.Data.users.paged);
+            var response = await CoreDockerClient.Post<Response>(request);
+            return response.Data.Users.Paged;
+        }
+
+        private class Response
+        {
+            public ResponseData Users { get; set; }
+
+            public class ResponseData
+            {
+                public CommandResultModel Register { get; set; }
+                public UserModel Me { get; set; }
+                public List<RoleModel> Roles { get; set; }
+                public PagedListModel<UserModel> Paged { get; set; }
+                public UserModel ById { get; set; }
+                public CommandResultModel Create { get; set; }
+                public CommandResultModel Update { get; set; }
+                public CommandResultModel Remove { get; set; }
+            }
         }
     }
 }
