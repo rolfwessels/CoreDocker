@@ -41,19 +41,18 @@ namespace CoreDocker.Sdk.RestApi
 
         public string UrlBase { get; }
 
-        public async Task<GraphQLResponse<dynamic>> GraphQlPost(GraphQLRequest heroRequest)
+        public async Task<GraphQLResponse<dynamic>> GraphQlPost(GraphQLRequest request)
         {
-            var graphQlResponse = await _graphQlClient.SendQueryAsync<dynamic>(heroRequest);
+            var graphQlResponse = await _graphQlClient.SendQueryAsync<dynamic>(request);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
                 throw new GraphQlResponseException<dynamic>(graphQlResponse);
             return graphQlResponse;
         }
 
 
-        public async Task<GraphQLResponse<T>> Post<T>(GraphQLRequest heroRequest)
+        public async Task<GraphQLResponse<T>> Post<T>(GraphQLRequest request)
         {
-            var graphQlResponse = await _graphQlClient.SendQueryAsync<T>(heroRequest);
-            graphQlResponse.Data.Dump("dd");
+            var graphQlResponse = await _graphQlClient.SendQueryAsync<T>(request);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
                 throw new GraphQlResponseException<T>(graphQlResponse);
             return graphQlResponse;
