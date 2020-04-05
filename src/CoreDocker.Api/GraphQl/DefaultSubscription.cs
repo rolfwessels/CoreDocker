@@ -34,7 +34,6 @@ namespace CoreDocker.Api.GraphQl
             public OnReviewMessage(RealTimeNotificationsMessage message)
                 : base(CreateEventDescription(), message)
             {
-                this.Dump("-1");
             }
 
             private static EventDescription CreateEventDescription()

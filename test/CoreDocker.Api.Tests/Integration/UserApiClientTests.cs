@@ -78,7 +78,7 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             Action testUpdateValidationFail = () => { _userApiClient.Create(invalidEmailUser).Wait(); };
             // assert
-            testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
+            testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("'Email' is not a valid email address.");
         }
 
@@ -92,7 +92,7 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             Action testUpdateValidationFail = () => { _guestConnection.Value.Users.Create(invalidEmailUser).Wait(); };
             // action
-            testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
+            testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("The current user is not authorized to access this resource.");
         }
 
@@ -106,7 +106,7 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             Action testUpdateValidationFail = () => { newConnection.Users.Me().Wait(); };
             // action
-            testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
+            testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("The current user is not authorized to access this resource.");
         }
 

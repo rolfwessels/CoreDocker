@@ -5,14 +5,14 @@ using GraphQL;
 
 namespace CoreDocker.Sdk.RestApi
 {
-    public class GraphQlResponseException : Exception
+    public class GraphQlResponseException<T> : Exception
     {
-        public GraphQlResponseException(GraphQLResponse<dynamic> graphQlResponse) : base(graphQlResponse.Errors
+        public GraphQlResponseException(GraphQLResponse<T> graphQlResponse) : base(graphQlResponse.Errors
             .Select(x => x.Message).StringJoin())
         {
             GraphQlResponse = graphQlResponse;
         }
 
-        public GraphQLResponse<dynamic> GraphQlResponse { get; }
+        public GraphQLResponse<T> GraphQlResponse { get; }
     }
 }

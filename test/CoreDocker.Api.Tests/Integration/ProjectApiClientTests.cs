@@ -75,7 +75,7 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             Action testUpdateValidationFail = () => { _projectApiClient.Create(invalidEmailProject).Wait(); };
             // assert
-            testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
+            testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("'Name' must be between 1 and 150 characters. You entered 0 characters.");
         }
 
@@ -91,7 +91,7 @@ namespace CoreDocker.Api.Tests.Integration
                 _guestConnection.Value.Projects.Create(invalidEmailProject).Wait();
             };
             // action
-            testUpdateValidationFail.Should().Throw<GraphQlResponseException>()
+            testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("The current user is not authorized to access this resource.");
         }
 

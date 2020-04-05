@@ -49,7 +49,7 @@ namespace CoreDocker.Api.GraphQl
         {
             var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
             var pathString = new Uri(openIdSettings.HostUrl.UriCombine("/graphql")).AbsolutePath;
-            app.UseGraphQL(pathString);
+            app.UseWebSockets().UseGraphQL(pathString);
             app.UseGraphQLSubscriptions(new SubscriptionMiddlewareOptions() {Path = pathString});
             app.UsePlayground(new PlaygroundOptions()
                 {
