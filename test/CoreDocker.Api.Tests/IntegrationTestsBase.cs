@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
@@ -8,7 +7,6 @@ using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog.Hosting;
 
 namespace CoreDocker.Api.Tests
 {
@@ -47,7 +45,7 @@ namespace CoreDocker.Api.Tests
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .ConfigureServices((context, collection) =>
-                    collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
+                    collection.AddSingleton<ILoggerFactory>(services => new Serilog.Extensions.Logging.SerilogLoggerFactory()))
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);

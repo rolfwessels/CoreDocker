@@ -55,7 +55,7 @@ namespace CoreDocker.Api
             app.UseIdentityService();
             app.UseBearerAuthentication();
             app.UseSingalRSetup();
-            app.UseMvc();
+            // app.UseRouter();
             app.AddGraphQl();
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
