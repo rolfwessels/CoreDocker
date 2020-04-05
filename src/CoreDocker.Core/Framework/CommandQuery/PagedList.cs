@@ -14,9 +14,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
                 : queryable.Take(optionsIncludeCount.First).ToList();
             Count = -1;
             if (optionsIncludeCount.IncludeCount)
-            {
                 Count = Items.Count == optionsIncludeCount.First ? queryable.LongCount() : Items.Count;
-            }
         }
 
         public long Count { get; set; }

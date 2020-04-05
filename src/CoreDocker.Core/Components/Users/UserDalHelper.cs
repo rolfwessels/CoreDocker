@@ -14,7 +14,7 @@ namespace CoreDocker.Core.Components.Users
 
         public static string SetPassword(this User user, string password)
         {
-            return user.HashedPassword = UserDalHelper.SetPassword(password);
+            return user.HashedPassword = SetPassword(password);
         }
 
         public static string SetPassword(string password)
@@ -25,9 +25,7 @@ namespace CoreDocker.Core.Components.Users
         public static void ValidateRolesAndThrow(this User user)
         {
             if (!RoleManager.AreValidRoles(user.Roles))
-            {
                 throw new ArgumentException($"One or more role does not exist [{user.Roles.StringJoin()}]");
-            }
         }
     }
 }

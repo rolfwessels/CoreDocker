@@ -13,13 +13,12 @@ using Serilog;
 
 namespace CoreDocker.Api.GraphQl
 {
-
     public static class GraphQlUserContextHelper
     {
-
         public static Task<User> GetUser(this IResolverContext context)
         {
-            return (Task<User>) context.ContextData.GetOrAdd("UserTask", () => ReadFromClaimsPrinciple(context) as object);
+            return (Task<User>) context.ContextData.GetOrAdd("UserTask",
+                () => ReadFromClaimsPrinciple(context) as object);
         }
 
         private static Task<User> ReadFromClaimsPrinciple(IResolverContext context)

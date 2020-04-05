@@ -6,7 +6,7 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectSpecification : ObjectType<Project>
     {
-        protected override void Configure(IObjectTypeDescriptor<Project> descriptor )
+        protected override void Configure(IObjectTypeDescriptor<Project> descriptor)
         {
             Name = "Project";
             descriptor.Field(d => d.Id).Description("The id of the project.");

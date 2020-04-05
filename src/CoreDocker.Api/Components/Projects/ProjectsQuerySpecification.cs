@@ -9,7 +9,6 @@ using Serilog;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    
     public class ProjectsQuerySpecification : ObjectType<ProjectsQuerySpecification.ProjectQuery>
     {
         private readonly IProjectLookup _projects;
@@ -20,10 +19,10 @@ namespace CoreDocker.Api.Components.Projects
             _projects = projects;
         }
 
-       
-        protected override void Configure(IObjectTypeDescriptor<ProjectQuery> descriptor )
+
+        protected override void Configure(IObjectTypeDescriptor<ProjectQuery> descriptor)
         {
-            var options = new GraphQlQueryOptions<Project, ProjectPagedLookupOptions>(_projects.GetPaged);   
+            var options = new GraphQlQueryOptions<Project, ProjectPagedLookupOptions>(_projects.GetPaged);
             Name = "Projects";
 
             descriptor.Field("byId")
@@ -32,12 +31,12 @@ namespace CoreDocker.Api.Components.Projects
                 .Argument("id", arg => arg.Type<NonNullType<StringType>>().Description("id of the project"))
                 .Resolver(x => _projects.GetById(x.Argument<string>("id")))
                 .RequirePermission(Activity.ReadProject);
-    
+
             descriptor.Field("paged")
                 .Description("all projects paged")
                 .AddOptions(options)
-                .Type<PagedListGraphType<Project,ProjectSpecification>>()
-                .Resolver(x=> options.Paged(x))
+                .Type<PagedListGraphType<Project, ProjectSpecification>>()
+                .Resolver(x => options.Paged(x))
                 .RequirePermission(Activity.ReadProject);
         }
 

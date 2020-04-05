@@ -6,7 +6,7 @@ namespace CoreDocker.Api.Components.Users
 {
     public class RoleSpecification : ObjectType<RoleModel>
     {
-        protected override void Configure(IObjectTypeDescriptor<RoleModel> descriptor )
+        protected override void Configure(IObjectTypeDescriptor<RoleModel> descriptor)
         {
             Name = "Role";
             descriptor.Field(d => d.Name).Description("The name of the role.");

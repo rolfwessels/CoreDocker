@@ -37,7 +37,7 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
 
             return _lookup(options);
         }
-        
+
         public IEnumerable<TDal> Query(IResolverContext resolverContext)
         {
             var options1 = new TOptions();
@@ -51,9 +51,10 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
             return description;
         }
 
-        public GraphQlQueryOptions<TDal, TOptions> AddArguments<TIn>(string name, string description, Action<TOptions, IResolverContext> applyArgument) where TIn : IInputType
+        public GraphQlQueryOptions<TDal, TOptions> AddArguments<TIn>(string name, string description,
+            Action<TOptions, IResolverContext> applyArgument) where TIn : IInputType
         {
-            _args.Add(new Arg<TIn>(name,description,applyArgument));
+            _args.Add(new Arg<TIn>(name, description, applyArgument));
             return this;
         }
 

@@ -21,7 +21,7 @@ namespace CoreDocker.Api.Components.Users
                 user.Password, user.Roles));
         }
 
-        public Task<CommandResult> Update(string id,UserCreateUpdateModel user)
+        public Task<CommandResult> Update(string id, UserCreateUpdateModel user)
         {
             return _commander.Execute(UserUpdate.Request.From(id, user.Name, user.Password, user.Roles,
                 user.Email));

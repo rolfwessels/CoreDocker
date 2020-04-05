@@ -29,7 +29,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }"
             };
             var response = await CoreDockerClient.Post<Response>(request);
-            return (response.Data.Users.Paged.Items);
+            return response.Data.Users.Paged.Items;
         }
 
         public async Task<UserModel> ById(string id)
@@ -46,7 +46,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id}
             };
             var response = await CoreDockerClient.Post<Response>(request);
-            return (response.Data.Users.ById);
+            return response.Data.Users.ById;
         }
 
         public async Task<UserModel> Me()
@@ -62,7 +62,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }"
             };
             var response = await CoreDockerClient.Post<Response>(request);
-            return (response.Data.Users.Me);
+            return response.Data.Users.Me;
         }
 
         public async Task<CommandResultModel> Create(UserCreateUpdateModel user)
@@ -79,7 +79,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {user.Name, user.Email, user.Roles, user.Password}
             });
-            return (response.Data.Users.Create);
+            return response.Data.Users.Create;
         }
 
         public async Task<CommandResultModel> Register(RegisterModel user)
@@ -96,7 +96,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 }",
                 Variables = new {user.Name, user.Email, user.Password}
             });
-            return (response.Data.Users.Register);
+            return response.Data.Users.Register;
         }
 
         public async Task<CommandResultModel> Update(string id, UserCreateUpdateModel user)
@@ -114,7 +114,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id, user.Name, user.Email, user.Roles, user.Password}
             });
 
-            return (response.Data.Users.Update);
+            return response.Data.Users.Update;
         }
 
         public async Task<CommandResultModel> Remove(string id)
@@ -132,7 +132,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 Variables = new {id}
             });
 
-            return (response.Data.Users.Remove);
+            return response.Data.Users.Remove;
         }
 
 
@@ -149,7 +149,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                   }
                 }"
             });
-            return (response.Data.Users.Roles);
+            return response.Data.Users.Roles;
         }
 
 
@@ -171,7 +171,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return response.Data.Users.Paged;
         }
 
-        class Response
+        private class Response
         {
             public ResponseData Users { get; set; }
 
@@ -185,7 +185,6 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 public CommandResultModel Create { get; set; }
                 public CommandResultModel Update { get; set; }
                 public CommandResultModel Remove { get; set; }
-
             }
         }
     }

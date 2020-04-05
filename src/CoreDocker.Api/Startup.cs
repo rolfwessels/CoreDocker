@@ -36,10 +36,7 @@ namespace CoreDocker.Api
             services.AddCors();
             services.UseIdentityService(Configuration);
             services.AddBearerAuthentication();
-            services.AddMvc(config =>
-            {
-                config.Filters.Add(new CaptureExceptionFilter());
-            });
+            services.AddMvc(config => { config.Filters.Add(new CaptureExceptionFilter()); });
             services.AddSwagger();
             services.AddSignalR();
 
@@ -65,10 +62,10 @@ namespace CoreDocker.Api
             app.UseBearerAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>(SignalRHubUrls.ChatUrl);
-                
             });
 
             app.AddGraphQl();
@@ -77,10 +74,10 @@ namespace CoreDocker.Api
         }
 
         public static string InformationalVersion()
-        {   
+        {
             return Assembly.GetEntryAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                .InformationalVersion;   
+                .InformationalVersion;
         }
     }
 }

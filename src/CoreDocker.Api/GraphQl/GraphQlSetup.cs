@@ -16,7 +16,6 @@ namespace CoreDocker.Api.GraphQl
 {
     public static class GraphQlSetup
     {
-
         public static void AddGraphQl(this IServiceCollection services)
         {
             services.AddInMemorySubscriptionProvider();
@@ -61,5 +60,4 @@ namespace CoreDocker.Api.GraphQl
             );
         }
     }
-
 }

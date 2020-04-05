@@ -53,23 +53,25 @@ namespace CoreDocker.Api.Tests.Integration
             var sendSubscribeGeneralEvents = _adminConnection.Value.SendSubscribeGeneralEvents();
             Exception excep = null;
             Action<Exception> onError = exception => excep = exception;
-            var subscriptions = sendSubscribeGeneralEvents.Subscribe((evt) => items.Add(evt.Data.OnDefaultEvent), onError);
-            
+            var subscriptions =
+                sendSubscribeGeneralEvents.Subscribe((evt) => items.Add(evt.Data.OnDefaultEvent), onError);
+
             Console.Out.WriteLine("------------------------------------------");
             using (subscriptions)
             {
-               // action
+                // action
                 var insertCommand = await _userApiClient.Create(userCreate);
                 var insert = await _userApiClient.ById(insertCommand.Id);
                 await _userApiClient.Remove(insert.Id);
 //
 //                // assert
-                items.WaitFor(x=>x.Count == 2 ,10000);
+                items.WaitFor(x => x.Count == 2, 10000);
                 // onError.Should().BeNull();
                 items.Should().HaveCount(2);
                 excep.Should().BeNull();
                 items.Last().Event.Should().Be("UserRemoved");
             }
+
             subscriptions.Should().NotBeNull();
         }
 

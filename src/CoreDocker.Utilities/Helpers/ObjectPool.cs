@@ -24,7 +24,7 @@ namespace CoreDocker.Utilities.Helpers
             Interlocked.Increment(ref _counter);
             return _generalUnitOfWorks[index0] != null
                 ? _generalUnitOfWorks[index0]
-                : (_generalUnitOfWorks[index0] = _getGeneralUnitOfWork());
+                : _generalUnitOfWorks[index0] = _getGeneralUnitOfWork();
         }
     }
 }

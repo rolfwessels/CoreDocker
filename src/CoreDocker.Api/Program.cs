@@ -19,9 +19,10 @@ namespace CoreDocker.Api
         public static void Main(string[] args)
         {
             Console.Title = "CoreDocker.Api";
-            
+
             Log.Logger = LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
-                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.log", fileSizeLimitBytes: 10 * LoggingHelper.MB, rollOnFileSizeLimit:true)
+                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.log", fileSizeLimitBytes: 10 * LoggingHelper.MB,
+                    rollOnFileSizeLimit: true)
                 .WriteTo.Console(LogEventLevel.Information)
                 //.ReadFrom.Configuration(BaseSettings.Config)
                 .CreateLogger());
@@ -40,7 +41,7 @@ namespace CoreDocker.Api
         {
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices((context, collection) =>
-                        collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
+                    collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
                 .UseKestrel()
                 .UseUrls(args.FirstOrDefault() ?? "http://*:5000")
                 .ConfigureAppConfiguration(SettingsFileReaderHelper)

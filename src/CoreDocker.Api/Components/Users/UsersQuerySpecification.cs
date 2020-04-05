@@ -35,7 +35,7 @@ namespace CoreDocker.Api.Components.Users
                 .Argument("id", x => x.Description("id of the user").Type<StringType>())
                 .Resolver(context => _userLookup.GetById(context.Argument<string>("id")))
                 .RequirePermission(Activity.ReadUsers);
-            
+
             descriptor.Field("paged")
                 .Description("all users paged")
                 .Type<PagedListGraphType<User, UserSpecification>>()
@@ -65,8 +65,11 @@ namespace CoreDocker.Api.Components.Users
         private GraphQlQueryOptions<User, UserPagedLookupOptions> Options()
         {
             var graphQlQueryOptions = new GraphQlQueryOptions<User, UserPagedLookupOptions>(_userLookup.GetPagedUsers)
-                .AddArguments<StringType>("search","Search by name,email or id", (x, c) => x.Search = c.Argument<string>("search"))
-                .AddArguments<StringType>("sort",$"Sort by {EnumHelper.Values<UserPagedLookupOptions.SortOptions>().StringJoin()}", (x, c) => x.Sort = c.Argument<UserPagedLookupOptions.SortOptions>("sort"));
+                .AddArguments<StringType>("search", "Search by name,email or id",
+                    (x, c) => x.Search = c.Argument<string>("search"))
+                .AddArguments<StringType>("sort",
+                    $"Sort by {EnumHelper.Values<UserPagedLookupOptions.SortOptions>().StringJoin()}",
+                    (x, c) => x.Sort = c.Argument<UserPagedLookupOptions.SortOptions>("sort"));
             return graphQlQueryOptions;
         }
 
@@ -79,6 +82,7 @@ namespace CoreDocker.Api.Components.Users
         }
 
         #endregion
+
         public class UsersQuery
         {
         }

@@ -73,9 +73,7 @@ namespace CoreDocker.Utilities.Cache
                         {
                             foreach (var cacheHolder in _objectCache.ToArray())
                                 if (cacheHolder.Value.IsExpired)
-                                {
                                     _objectCache.TryRemove(cacheHolder.Key, out _);
-                                }
                         });
                     }
                 }

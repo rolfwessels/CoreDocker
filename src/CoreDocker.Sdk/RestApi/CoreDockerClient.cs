@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -93,10 +93,11 @@ namespace CoreDocker.Sdk.RestApi
 
         private GraphQLHttpClient GraphQlClient(string dataAccessToken = null)
         {
-            var jsonSerializer = new NewtonsoftJsonSerializer(settings => settings.ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            });
+            var jsonSerializer = new NewtonsoftJsonSerializer(settings => settings.ContractResolver =
+                new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                });
             return new GraphQLHttpClient(new GraphQLHttpClientOptions
             {
                 EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
@@ -132,6 +133,4 @@ namespace CoreDocker.Sdk.RestApi
 
         #endregion
     }
-
-    
 }

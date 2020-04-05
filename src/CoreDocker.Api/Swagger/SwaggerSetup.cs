@@ -34,19 +34,20 @@ namespace CoreDocker.Api.Swagger
             var scopeApi = IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi;
 
 
-
             options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
                 In = ParameterLocation.Header,
-                
-                
+
+
                 Flows = new OpenApiOAuthFlows
                 {
                     Password = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"), UriKind.Absolute),
-                        TokenUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"), UriKind.Absolute),
+                        AuthorizationUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"),
+                            UriKind.Absolute),
+                        TokenUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"),
+                            UriKind.Absolute),
                         Scopes = new Dictionary<string, string>
                         {
                             {scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi}

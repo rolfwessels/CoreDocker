@@ -9,16 +9,16 @@ namespace CoreDocker.Api.Components.Users
 {
     public class UsersMutationSpecification : ObjectType<UsersMutation>
     {
-        protected override void Configure(IObjectTypeDescriptor<UsersMutation> descriptor )
+        protected override void Configure(IObjectTypeDescriptor<UsersMutation> descriptor)
         {
             Name = "UsersMutation";
 
-            descriptor.Field(x=>x.Create(default(UserCreateUpdateModel)))
-                .Description( "Add a user.")
+            descriptor.Field(x => x.Create(default(UserCreateUpdateModel)))
+                .Description("Add a user.")
                 .RequirePermission(Activity.UpdateUsers);
 
             descriptor.Field(x => x.Update(default(string), default(UserCreateUpdateModel)))
-                .Description( "Update a user.")
+                .Description("Update a user.")
                 .RequirePermission(Activity.UpdateUsers);
 
             descriptor.Field(x => x.Remove(default(string)))

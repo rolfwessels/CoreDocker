@@ -31,6 +31,4 @@ namespace CoreDocker.Utilities.Tests
                 .CreateLogger());
         }
     }
-
-    
 }

@@ -8,8 +8,6 @@ using Serilog;
 
 namespace CoreDocker.Api.GraphQl
 {
-    
-
     public class DefaultSubscription : ObjectType<Subscription>
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
@@ -26,7 +24,7 @@ namespace CoreDocker.Api.GraphQl
         {
             _eventSender.SendAsync(new OnReviewMessage(message))
                 .AsTask()
-                .ContinueWithAndLogError(_log.Error); 
+                .ContinueWithAndLogError(_log.Error);
         }
 
         public class OnReviewMessage : EventMessage
@@ -47,14 +45,13 @@ namespace CoreDocker.Api.GraphQl
             descriptor.Field(t => t.OnDefaultEvent(default(IEventMessage)))
                 .Type<NonNullType<RealTimeNotificationsMessageType>>();
         }
-
     }
 
     public class Subscription
     {
         public RealTimeNotificationsMessage OnDefaultEvent(IEventMessage message)
         {
-            return (RealTimeNotificationsMessage)message.Payload;
+            return (RealTimeNotificationsMessage) message.Payload;
         }
     }
 

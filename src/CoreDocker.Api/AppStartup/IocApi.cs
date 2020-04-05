@@ -25,6 +25,7 @@ namespace CoreDocker.Api.AppStartup
         private static IocApi _instance;
         private static IServiceCollection _services;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public IocApi()
         {
             var builder = new ContainerBuilder();

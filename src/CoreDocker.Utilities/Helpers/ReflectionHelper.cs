@@ -47,8 +47,8 @@ namespace CoreDocker.Utilities.Helpers
         public static void ExpressionToAssign<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression,
             TValue value)
         {
-            ParameterExpression valueParameterExpression = Expression.Parameter(typeof(TValue));
-            Expression targetExpression =
+            var valueParameterExpression = Expression.Parameter(typeof(TValue));
+            var targetExpression =
                 expression.Body is UnaryExpression unaryExpression ? unaryExpression.Operand : expression.Body;
 
             var assign = Expression.Lambda<Action<TObj, TValue>>

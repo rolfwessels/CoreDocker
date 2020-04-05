@@ -128,7 +128,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         }
 
 
-        class Response
+        private class Response
         {
             public ResponseData Projects { get; set; }
 
@@ -139,7 +139,6 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 public CommandResultModel Create { get; set; }
                 public CommandResultModel Update { get; set; }
                 public CommandResultModel Remove { get; set; }
-
             }
         }
     }

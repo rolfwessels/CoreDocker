@@ -28,14 +28,11 @@ namespace CoreDocker.Core.Components.Projects
             {
                 var query = _generalUnitOfWork.Projects.Query();
                 if (!string.IsNullOrEmpty(options.Search))
-                {
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
                         x.Name.ToLower().Contains(options.Search.ToLower()));
-                }
 
                 if (options.Sort != null)
-                {
                     switch (options.Sort)
                     {
                         case ProjectPagedLookupOptions.SortOptions.Name:
@@ -47,7 +44,6 @@ namespace CoreDocker.Core.Components.Projects
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                }
 
                 return new PagedList<Project>(query, options);
             });
