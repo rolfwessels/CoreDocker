@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using Serilog.Hosting;
+using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 
 namespace CoreDocker.Api

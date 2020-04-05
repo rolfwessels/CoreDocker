@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
@@ -25,49 +26,37 @@ namespace CoreDocker.Api.Swagger
 
         private static void SetupAction(SwaggerGenOptions options, string authorizationUrl)
         {
-            
-            options.SwaggerDoc(GetVersion(), new OpenApiInfo()
+            options.SwaggerDoc(GetVersion(), new OpenApiInfo
             {
                 Title = "CoreDocker API",
                 Description = "Contains CoreDocker api descriptions."
             });
             var scopeApi = IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi;
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "JWT Authorization header using the Bearer scheme.",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Scheme = "bearer",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT"
-            });
 
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
+                Type = SecuritySchemeType.OAuth2,
+                In = ParameterLocation.Header,
+                
+                
+                Flows = new OpenApiOAuthFlows
                 {
-                    new OpenApiSecurityScheme
+                    Password = new OpenApiOAuthFlow
                     {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    new List<string>()
+                        AuthorizationUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"), UriKind.Absolute),
+                        TokenUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"), UriKind.Absolute),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            {scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi}
+                        }
+                    }
                 }
             });
-            // options.AddSecurityDefinition("oauth2", new OAuth2Scheme
-            // {
-            //     Type = "oauth2",
-            //     Flow = "password",
-            //     TokenUrl = authorizationUrl.UriCombine("connect/token"),
-            //     AuthorizationUrl = authorizationUrl,
-            //
-            //     Scopes = new Dictionary<string, string>
-            //     {
-            //         {scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi}
-            //     }
-            // });
         }
 
         #endregion
-
 
         #region Instance
 
