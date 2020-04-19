@@ -122,6 +122,17 @@ namespace CoreDocker.Api.Tests.Integration
             userModel.Email.Should().Contain("@");
         }
 
+        [Test]
+        public async Task Me_GivenAdminUser_ShouldContainActivities()
+        {
+            // arrange
+            Setup();
+            // action
+            var userModel = await _adminConnection.Value.Users.Me();
+            // action
+            userModel.Activities.Should().Contain("ReadUsers");
+        }
+
 
         [Test]
         public async Task Roles_GivenNoUser_ShouldNotFail()
