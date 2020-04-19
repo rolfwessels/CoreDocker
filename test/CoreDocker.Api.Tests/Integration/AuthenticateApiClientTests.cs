@@ -65,11 +65,11 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             // action
-            var data = await _connection.Authenticate.Login(AdminUser, AdminPassword);
+            var auth = await _connection.Authenticate.Login(AdminUser, AdminPassword);
             // assert
-            data.AccessToken.Should().NotBeEmpty();
-            data.ExpiresIn.Should().BeGreaterThan(30);
-            data.TokenType.Should().Be("Bearer");
+            auth.AccessToken.Should().NotBeEmpty();
+            auth.ExpiresIn.Should().BeGreaterThan(30);
+            auth.TokenType.Should().Be("Bearer");
         }
     }
 }
