@@ -16,7 +16,7 @@ namespace CoreDocker.Api.Components.Users
             descriptor.Field(d => d.Email).Description("The email of the user.");
             descriptor.Field(d => d.Roles).Description("The roles of the user.");
             descriptor.Field("activities")
-                .Type<StringType>()
+                .Type<ListType<StringType>>()
                 .Resolver(context => Roles(context.Parent<User>()?.Roles))
                 .Description("The activities that this user is authorized for.");
             descriptor.Field(d => d.UpdateDate).Type<DateTimeType>()
