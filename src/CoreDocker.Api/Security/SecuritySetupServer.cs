@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using CoreDocker.Utilities.Helpers;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Serilog;
@@ -72,7 +73,14 @@ namespace CoreDocker.Api.Security
                     {
                         cert = new X509Certificate2(fileName, password);
                         _log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+
+                        // using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+                        // {
+                        //     certStore.Open(OpenFlags.ReadWrite);
+                        //     certStore.Add(cert);
+                        // }
                     }
+                    
                 }
 
                 return cert;

@@ -30,7 +30,8 @@ namespace CoreDocker.Api.Security
 
         public string CertPassword => ReadConfigValue("CertPassword", "60053018f4794862a82982640570c552");
 
-        public string CertStoreThumbprint => ReadConfigValue("certStoreThumbprint", "");
+        public string CertStoreThumbprint => ReadConfigValue("certStoreThumbprint", "B75303B3E5CEBE484C342D438987AB33560B5717");
+        //B75303B3E5CEBE484C342D438987AB33560B5717
 
 
         public string[] GetOriginList()
