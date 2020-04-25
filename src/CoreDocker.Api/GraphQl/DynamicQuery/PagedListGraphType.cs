@@ -11,13 +11,13 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
             Name = $"{typeof(TDal).Name}PagedList";
             descriptor.Field("items")
                 .Description("All items paged.")
-                .Type<ListType<TGt>>()
+                .Type<NonNullType<ListType<TGt>> >()
                 .Resolver(x => x.Parent<PagedList<TDal>>().Items)
                 .RequirePermission(Activity.ReadProject);
 
             descriptor.Field("count")
                 .Description("The total item count.")
-                .Type<LongType>()
+                .Type<NonNullType<LongType>>()
                 .Resolver(x => x.Parent<PagedList<TDal>>().Count)
                 .RequirePermission(Activity.ReadProject);
         }

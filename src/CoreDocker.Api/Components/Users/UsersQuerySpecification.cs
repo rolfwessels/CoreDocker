@@ -31,33 +31,33 @@ namespace CoreDocker.Api.Components.Users
 
             descriptor.Field("byId")
                 .Description("Get user by id")
-                .Type<UserSpecification>()
+                .Type<NonNullType<UserSpecification>>()
                 .Argument("id", x => x.Description("id of the user").Type<StringType>())
                 .Resolver(context => _userLookup.GetById(context.Argument<string>("id")))
                 .RequirePermission(Activity.ReadUsers);
 
             descriptor.Field("paged")
                 .Description("all users paged")
-                .Type<PagedListGraphType<User, UserSpecification>>()
+                .Type<NonNullType<PagedListGraphType<User, UserSpecification>>>()
                 .AddOptions(options)
                 .Resolver(x => options.Paged(x))
                 .RequirePermission(Activity.ReadUsers);
 
             descriptor.Field("me")
                 .Description("Current user")
-                .Type<UserSpecification>()
+                .Type<NonNullType<UserSpecification>>()
                 .Resolver(context => Me(context.GetUser()))
                 .RequireAuthorization();
 
             descriptor.Field("roles")
                 .Description("All roles")
-                .Type<ListType<RoleSpecification>>()
+                .Type<NonNullType<ListType<RoleSpecification>>>()
                 .Resolver(context => RoleManager.All.Select(x =>
                     new RoleModel {Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList()}));
 
             descriptor.Field("role")
                 .Description("Get role by name")
-                .Type<RoleSpecification>()
+                .Type<NonNullType<RoleSpecification>>()
                 .Argument("name", x => x.Description("role name").Type<StringType>())
                 .Resolver(context => RoleManager.GetRole(context.Argument<string>("name")).ToModel());
         }

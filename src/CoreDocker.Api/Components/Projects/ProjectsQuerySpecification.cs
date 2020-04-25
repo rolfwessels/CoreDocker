@@ -27,7 +27,7 @@ namespace CoreDocker.Api.Components.Projects
 
             descriptor.Field("byId")
                 .Description("Get project by id")
-                .Type<ProjectSpecification>()
+                .Type<NonNullType<ProjectSpecification>>()
                 .Argument("id", arg => arg.Type<NonNullType<StringType>>().Description("id of the project"))
                 .Resolver(x => _projects.GetById(x.Argument<string>("id")))
                 .RequirePermission(Activity.ReadProject);
@@ -35,7 +35,7 @@ namespace CoreDocker.Api.Components.Projects
             descriptor.Field("paged")
                 .Description("all projects paged")
                 .AddOptions(options)
-                .Type<PagedListGraphType<Project, ProjectSpecification>>()
+                .Type<NonNullType<PagedListGraphType<Project, ProjectSpecification>>>()
                 .Resolver(x => options.Paged(x))
                 .RequirePermission(Activity.ReadProject);
         }
