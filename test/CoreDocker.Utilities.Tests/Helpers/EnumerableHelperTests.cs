@@ -64,5 +64,40 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // assert
             stringJoin.Should().Be("1");
         }
+
+
+        [Test]
+        public void LookupValidValue_GivenValue_ShouldMatchValue()
+        {
+            // arrange
+            var values = new[] { "Guest", "Smesht", "Lest" };
+            // action
+            var found = values.LookupValidValue("guest");
+            // assert
+            found.Should().Be("Guest");
+        }
+
+        [Test]
+        public void LookupValidValue_GivenValueWithDifferentCase_ShouldMatchValue()
+        {
+            // arrange
+            var values = new[] { "Guest", "Smesht", "Lest" };
+            // action
+            var found = values.LookupValidValue("smesht");
+            // assert
+            found.Should().Be("Smesht");
+        }
+
+
+        [Test]
+        public void LookupValidValue_GivenInvalidValue_ShouldReturnNull()
+        {
+            // arrange
+            var values = new[] { "Guest", "Smesht", "Lest" };
+            // action
+            var found = values.LookupValidValue("Best");
+            // assert
+            found.Should().Be(null);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace CoreDocker.Api.Components.Users
             Name = "UsersMutation";
 
             descriptor.Field(x => x.Create(default(UserCreateUpdateModel)))
+                
                 .Description("Add a user.")
                 .RequirePermission(Activity.UpdateUsers);
 
