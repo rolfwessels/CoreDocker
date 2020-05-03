@@ -15,9 +15,9 @@ namespace CoreDocker.Api.Components.Users
             descriptor.Field(d => d.Name).Type<NonNullType<StringType>>().Description("The name of the user.");
             descriptor.Field(d => d.Email).Type<NonNullType<StringType>>().Description("The email of the user.");
             descriptor.Field(d => d.Roles)
-                .Type<NonNullType<ListType<StringType>>>().Description("The roles of the user.");
+                .Type<NonNullType<ListType<NonNullType<StringType>>>>().Description("The roles of the user.");
             descriptor.Field("activities")
-                .Type<NonNullType<StringType>>()
+                .Type<NonNullType<ListType<NonNullType<StringType>>>>()
                 .Resolver(context => Roles(context.Parent<User>()?.Roles))
                 .Description("The activities that this user is authorized for.");
             descriptor.Field(d => d.UpdateDate).Type<NonNullType<DateTimeType>>()

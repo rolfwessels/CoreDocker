@@ -11,6 +11,8 @@ namespace CoreDocker.Shared.Models.Users
         public DateTime? LastLoginDate { get; set; }
         public List<string> Roles { get; set; }
 
+        public List<string> Activities { get; set; }
+
         public override string ToString()
         {
             return $"Id: {Id}, Email: {Email}, Name: {Name}";
