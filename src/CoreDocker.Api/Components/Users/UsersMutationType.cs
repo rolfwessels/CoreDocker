@@ -7,14 +7,13 @@ using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UsersMutationSpecification : ObjectType<UsersMutation>
+    public class UsersMutationType : ObjectType<UsersMutation>
     {
         protected override void Configure(IObjectTypeDescriptor<UsersMutation> descriptor)
         {
             Name = "UsersMutation";
 
             descriptor.Field(x => x.Create(default(UserCreateUpdateModel)))
-                
                 .Description("Add a user.")
                 .RequirePermission(Activity.UpdateUsers);
 

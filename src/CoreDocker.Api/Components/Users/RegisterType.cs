@@ -3,7 +3,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class RegisterSpecification : InputObjectType<RegisterModel>
+    public class RegisterType : InputObjectType<RegisterModel>
     {
         protected override void Configure(IInputObjectTypeDescriptor<RegisterModel> descriptor)
         {

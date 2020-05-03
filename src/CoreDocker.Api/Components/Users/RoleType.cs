@@ -4,7 +4,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class RoleSpecification : ObjectType<RoleModel>
+    public class RoleType : ObjectType<RoleModel>
     {
         protected override void Configure(IObjectTypeDescriptor<RoleModel> descriptor)
         {

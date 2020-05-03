@@ -5,23 +5,20 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectsMutationSpecification : ObjectType<ProjectsMutation>
+    public class ProjectsMutationType : ObjectType<ProjectsMutation>
     {
         protected override void Configure(IObjectTypeDescriptor<ProjectsMutation> descriptor)
         {
             Name = "ProjectsMutation";
             descriptor.Field(t => t.Create(default(ProjectCreateUpdateModel)))
-                .Type<CommandResultSpecification>()
                 .Description("Add a project.")
                 .RequirePermission(Activity.UpdateProject);
 
             descriptor.Field(t => t.Update(default(string), default(ProjectCreateUpdateModel)))
-                .Type<CommandResultSpecification>()
                 .Description("Update a project.")
                 .RequirePermission(Activity.UpdateProject);
 
             descriptor.Field(t => t.Remove(default(string)))
-                .Type<CommandResultSpecification>()
                 .Description("Permanently remove a project.")
                 .RequirePermission(Activity.DeleteProject);
         }
@@ -41,11 +38,11 @@ namespace CoreDocker.Api.Components.Projects
     },
     {
       "FileName": "DefaultMutation.cs",
-      "Indexline": "ProjectsMutationSpecification",
+      "Indexline": "ProjectsMutationType",
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "Field<ProjectsMutationSpecification>(\"projects\", resolve: context => Task.BuildFromHttpContext(new object()));"
+        "Field<ProjectsMutationType>(\"projects\", resolve: context => Task.BuildFromHttpContext(new object()));"
       ]
     }
 ] scaffolding */

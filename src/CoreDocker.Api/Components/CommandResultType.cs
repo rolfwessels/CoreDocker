@@ -3,7 +3,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components
 {
-    public class CommandResultSpecification : ObjectType<CommandResult>
+    public class CommandResultType : ObjectType<CommandResult>
     {
         protected override void Configure(IObjectTypeDescriptor<CommandResult> descriptor)
         {

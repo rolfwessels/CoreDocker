@@ -14,12 +14,12 @@ using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UsersQuerySpecification : ObjectType<UsersQuerySpecification.UsersQuery>
+    public class UsersQueryType : ObjectType<UsersQueryType.UsersQuery>
     {
         private readonly IUserLookup _userLookup;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersQuerySpecification(IUserLookup userLookup)
+        public UsersQueryType(IUserLookup userLookup)
         {
             _userLookup = userLookup;
         }
@@ -31,33 +31,33 @@ namespace CoreDocker.Api.Components.Users
 
             descriptor.Field("byId")
                 .Description("Get user by id")
-                .Type<NonNullType<UserSpecification>>()
+                .Type<NonNullType<UserType>>()
                 .Argument("id", x => x.Description("id of the user").Type<StringType>())
                 .Resolver(context => _userLookup.GetById(context.Argument<string>("id")))
                 .RequirePermission(Activity.ReadUsers);
 
             descriptor.Field("paged")
                 .Description("all users paged")
-                .Type<NonNullType<PagedListGraphType<User, UserSpecification>>>()
+                .Type<NonNullType<PagedListGraphType<User, UserType>>>()
                 .AddOptions(options)
                 .Resolver(x => options.Paged(x))
                 .RequirePermission(Activity.ReadUsers);
 
             descriptor.Field("me")
                 .Description("Current user")
-                .Type<NonNullType<UserSpecification>>()
+                .Type<NonNullType<UserType>>()
                 .Resolver(context => Me(context.GetUser()))
                 .RequireAuthorization();
 
             descriptor.Field("roles")
                 .Description("All roles")
-                .Type<NonNullType<ListType<RoleSpecification>>>()
+                .Type<NonNullType<ListType<RoleType>>>()
                 .Resolver(context => RoleManager.All.Select(x =>
                     new RoleModel {Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList()}));
 
             descriptor.Field("role")
                 .Description("Get role by name")
-                .Type<NonNullType<RoleSpecification>>()
+                .Type<NonNullType<RoleType>>()
                 .Argument("name", x => x.Description("role name").Type<StringType>())
                 .Resolver(context => RoleManager.GetRole(context.Argument<string>("name")).ToModel());
         }

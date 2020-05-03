@@ -63,6 +63,7 @@ namespace CoreDocker.Api.Tests.Integration
             allAfterUpdate.Should().Contain(x => x.Name == update.Name);
             paged.Count.Should().BeGreaterThan(paged.Items.Count);
             paged.Items.Should().HaveCountLessOrEqualTo(1);
+            firstDelete.Id.Should().Be(createCommand.Id);
         }
 
         [Test]

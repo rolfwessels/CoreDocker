@@ -1,8 +1,6 @@
-﻿using System;
-using CoreDocker.Core.Components.Users;
+﻿using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using HotChocolate.Types;
-using HotChocolate.Types.Descriptors;
 
 namespace CoreDocker.Api.GraphQl
 {

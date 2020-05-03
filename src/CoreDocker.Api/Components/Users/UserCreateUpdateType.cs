@@ -4,7 +4,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UserCreateUpdateSpecification : InputObjectType<UserCreateUpdateModel>
+    public class UserCreateUpdateType : InputObjectType<UserCreateUpdateModel>
     {
         protected override void Configure(IInputObjectTypeDescriptor<UserCreateUpdateModel> descriptor)
         {

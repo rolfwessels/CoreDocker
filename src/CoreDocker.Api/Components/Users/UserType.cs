@@ -6,7 +6,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UserSpecification : ObjectType<User>
+    public class UserType : ObjectType<User>
     {
         protected override void Configure(IObjectTypeDescriptor<User> descriptor)
         {

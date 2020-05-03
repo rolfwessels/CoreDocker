@@ -4,7 +4,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectSpecification : ObjectType<Project>
+    public class ProjectType : ObjectType<Project>
     {
         protected override void Configure(IObjectTypeDescriptor<Project> descriptor)
         {
