@@ -23,8 +23,7 @@ namespace CoreDocker.Api.Security
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
             services.AddIdentityServer(x => { x.PublicOrigin = openIdSettings.HostUrl; })
-                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword,
-                    openIdSettings.CertStoreThumbprint))
+                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
@@ -93,6 +92,7 @@ namespace CoreDocker.Api.Security
                var cert = new X509Certificate2(fileName, password);
                 _log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
                 return cert;
+
             }
             return null;
         }
