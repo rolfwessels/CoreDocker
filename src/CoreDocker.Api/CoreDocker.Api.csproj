@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="GravatarSharp.Core" Version="0.3.0.2" />
     <PackageReference Include="HotChocolate" Version="10.4.2" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="10.4.2" />
     <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="10.4.2" />
