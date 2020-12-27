@@ -123,6 +123,17 @@ namespace CoreDocker.Api.Tests.Integration
         }
 
         [Test]
+        public async Task Me_GivenAdminUser_ShouldHaveImage()
+        {
+            // arrange
+            Setup();
+            // action
+            var userModel = await _adminConnection.Value.Users.Me();
+            // action
+            userModel.Image.Should().StartWith("https://www.gravatar.com/avatar");
+        }
+
+        [Test]
         public async Task Me_GivenAdminUser_ShouldContainActivities()
         {
             // arrange

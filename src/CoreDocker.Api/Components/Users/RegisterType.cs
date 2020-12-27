@@ -3,14 +3,13 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
 {
-    public class UserCreateUpdateSpecification : InputObjectType<UserCreateUpdateModel>
+    public class RegisterType : InputObjectType<RegisterModel>
     {
-        protected override void Configure(IInputObjectTypeDescriptor<UserCreateUpdateModel> descriptor)
+        protected override void Configure(IInputObjectTypeDescriptor<RegisterModel> descriptor)
         {
-            Name = "UserCreateUpdate";
+            Name = "Register";
             descriptor.Field(d => d.Name).Description("The name of the user.");
             descriptor.Field(d => d.Email).Description("The email of the user.");
-            descriptor.Field(d => d.Roles).Description("The users roles.");
             descriptor.Field(d => d.Password).Description("The password of the user.");
         }
     }

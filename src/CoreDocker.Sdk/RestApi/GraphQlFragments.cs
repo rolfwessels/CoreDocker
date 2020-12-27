@@ -6,6 +6,7 @@
                 id,
                 name,
                 email,
+                image,
                 roles,
                 activities,
                 createDate,

@@ -47,6 +47,7 @@ namespace CoreDocker.Api.Tests
             var port = new Random().Next(9000, 9999);
             var address = $"http://localhost:{port}";
             Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
+            Environment.SetEnvironmentVariable("OpenId__UseReferenceTokens", "true"); //helps with testing on appveyor
             TestLoggingHelper.EnsureExists();
             var host = new WebHostBuilder()
                 .UseKestrel()

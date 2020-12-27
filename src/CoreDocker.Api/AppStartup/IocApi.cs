@@ -65,7 +65,7 @@ namespace CoreDocker.Api.AppStartup
 
         private static void SetupGraphQl(ContainerBuilder builder)
         {
-            builder.RegisterType<CommandResultSpecification>().SingleInstance();
+            builder.RegisterType<CommandResultType>().SingleInstance();
 
             builder.RegisterType<ErrorFilter>().As<IErrorFilter>();
 
@@ -77,20 +77,20 @@ namespace CoreDocker.Api.AppStartup
 
 
             /*user*/
-            builder.RegisterType<UserSpecification>();
-            builder.RegisterType<UsersQuerySpecification>();
-            builder.RegisterType<UserCreateUpdateSpecification>();
-            builder.RegisterType<UsersMutationSpecification>();
-            builder.RegisterType<RoleSpecification>();
-            builder.RegisterType<RegisterSpecification>();
+            builder.RegisterType<UserType>();
+            builder.RegisterType<UsersQueryType>();
+            builder.RegisterType<UserCreateUpdateType>();
+            builder.RegisterType<UsersMutationType>();
+            builder.RegisterType<RoleType>();
+            builder.RegisterType<RegisterType>();
 
             /*project*/
-            builder.RegisterType<ProjectSpecification>();
+            builder.RegisterType<ProjectType>();
             builder.RegisterType<OpenIdSettings>();
-            builder.RegisterType<ProjectsQuerySpecification>();
-            builder.RegisterType<ProjectCreateUpdateSpecification>();
+            builder.RegisterType<ProjectsQueryType>();
+            builder.RegisterType<ProjectCreateUpdateType>();
             builder.RegisterType<ProjectsMutation>();
-            builder.RegisterType<ProjectsMutationSpecification>();
+            builder.RegisterType<ProjectsMutationType>();
 
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();

@@ -1,4 +1,5 @@
 using CoreDocker.Utilities.Helpers;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -145,5 +146,11 @@ namespace CoreDocker.Utilities.Tests.Helpers
             // assert
             uriCombine.Should().Be("http://sample/t/tt/i.html");
         }
+    
+    }
+
+    public class SampleData
+    {
+
     }
 }

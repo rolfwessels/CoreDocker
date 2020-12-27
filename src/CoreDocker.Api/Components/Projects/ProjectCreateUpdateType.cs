@@ -3,7 +3,7 @@ using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
-    public class ProjectCreateUpdateSpecification : InputObjectType<ProjectCreateUpdateModel>
+    public class ProjectCreateUpdateType : InputObjectType<ProjectCreateUpdateModel>
     {
         protected override void Configure(IInputObjectTypeDescriptor<ProjectCreateUpdateModel> descriptor)
         {

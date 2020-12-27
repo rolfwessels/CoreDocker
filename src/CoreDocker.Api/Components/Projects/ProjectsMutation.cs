@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Shared.Models.Projects;
+using HotChocolate;
+using HotChocolate.AspNetCore.Authorization;
+using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
 {
@@ -14,17 +18,23 @@ namespace CoreDocker.Api.Components.Projects
             _commander = commander;
         }
 
-        public Task<CommandResult> Create(ProjectCreateUpdateModel project)
+        public Task<CommandResult> Create([GraphQLNonNullType]
+            [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
+            ProjectCreateUpdateModel project)
         {
             return _commander.Execute(ProjectCreate.Request.From(_commander.NewId, project.Name));
         }
 
-        public Task<CommandResult> Update(string id, ProjectCreateUpdateModel project)
+        [Authorize]
+        public Task<CommandResult> Update(
+            [GraphQLNonNullType] string id,
+            [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
+            ProjectCreateUpdateModel project)
         {
             return _commander.Execute(ProjectUpdate.Request.From(id, project.Name));
         }
 
-        public Task<CommandResult> Remove(string id)
+        public Task<CommandResult> Remove([GraphQLNonNullType] string id)
         {
             return _commander.Execute(ProjectRemove.Request.From(id));
         }

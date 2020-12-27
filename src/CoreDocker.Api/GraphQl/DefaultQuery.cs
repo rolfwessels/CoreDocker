@@ -10,11 +10,11 @@ namespace CoreDocker.Api.GraphQl
         {
             Name = "Query";
             descriptor.Field("projects")
-                .Type<ProjectsQuerySpecification>()
-                .Resolver(x => new ProjectsQuerySpecification.ProjectQuery());
+                .Type<NonNullType<ProjectsQueryType>>()
+                .Resolver(x => new ProjectsQueryType.ProjectQuery());
             descriptor.Field("users")
-                .Type<UsersQuerySpecification>()
-                .Resolver(x => new UsersQuerySpecification.UsersQuery());
+                .Type<NonNullType<UsersQueryType>>()
+                .Resolver(x => new UsersQueryType.UsersQuery());
         }
     }
 }

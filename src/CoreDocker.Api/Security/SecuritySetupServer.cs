@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using CoreDocker.Utilities.Helpers;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Serilog;
@@ -22,8 +23,7 @@ namespace CoreDocker.Api.Security
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
             services.AddIdentityServer(x => { x.PublicOrigin = openIdSettings.HostUrl; })
-                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword,
-                    openIdSettings.CertStoreThumbprint))
+                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
@@ -43,45 +43,46 @@ namespace CoreDocker.Api.Security
             try
             {
                 X509Certificate2 cert = null;
-                if (!string.IsNullOrEmpty(certStoreThumbprint))
-                    using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-                    {
-                        certStore.Open(OpenFlags.ReadOnly);
-                        var certCollection = certStore.Certificates.Find(
-                            X509FindType.FindByThumbprint,
-                            certStoreThumbprint,
-                            false);
-                        // Get the first cert with the thumbprint
-                        if (certCollection.Count > 0)
-                        {
-                            cert = certCollection[0];
-                            _log.Information($"Successfully loaded cert from registry: {cert.Thumbprint}");
-                        }
-                    }
-
-                // Fallback to local file for development
-                if (cert == null)
-                {
-                    var fileName = Path.Combine("./Certificates", certFile);
-                    if (!File.Exists(fileName))
-                    {
-                        _log.Error(
-                            $"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
-                    }
-                    else
-                    {
-                        cert = new X509Certificate2(fileName, password);
-                        _log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
-                    }
-                }
-
-                return cert;
+                if (!string.IsNullOrEmpty(certStoreThumbprint)) cert = LoadCertFromStore(certStoreThumbprint);
+                return cert ?? LoadCertFromFile(certFile, password);
             }
             catch (Exception e)
             {
                 _log.Error($"SecuritySetupServer:Certificate {e.Message}");
                 throw;
             }
+        }
+
+        private static X509Certificate2 LoadCertFromStore(string certStoreThumbprint)
+        {
+            using var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            certStore.Open(OpenFlags.ReadOnly);
+            var certCollection = certStore.Certificates.Find(
+                X509FindType.FindByThumbprint,
+                certStoreThumbprint,
+                false);
+            // Get the first cert with the thumbprint
+            if (certCollection.Count <= 0) return null;
+            _log.Information($"Successfully loaded cert from registry: {certCollection[0].Thumbprint}");
+            return certCollection[0];
+        }
+
+        private static X509Certificate2 LoadCertFromFile(string certFile, string password)
+        {
+            var fileName = Path.Combine("./Certificates", certFile);
+            if (!File.Exists(fileName))
+            {
+                _log.Error(
+                    $"SecuritySetupServer:Certificate Could not load file {Path.GetFullPath(fileName)} to obtain the certificate.");
+            }
+            else
+            {
+               var cert = new X509Certificate2(fileName, password);
+                _log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                return cert;
+
+            }
+            return null;
         }
 
         #endregion

@@ -5,9 +5,12 @@ using CoreDocker.Utilities.Helpers;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using Serilog;
+// hot chocolate complains that IEventSender is obsolete but the alternative does not exist.
+#pragma warning disable 618
 
 namespace CoreDocker.Api.GraphQl
 {
+    
     public class DefaultSubscription : ObjectType<Subscription>
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
@@ -15,6 +18,7 @@ namespace CoreDocker.Api.GraphQl
 
         public DefaultSubscription(SubscriptionNotifications notifications, IEventSender eventSender)
         {
+            
             _eventSender = eventSender;
             var observable = notifications.Messages();
             observable.Subscribe(SendMessageToEventSender);

@@ -8,6 +8,7 @@ namespace CoreDocker.Shared.Models.Users
     {
         public string Name { get; set; }
         public string Email { get; set; }
+        public string Image { get; set; }
         public DateTime? LastLoginDate { get; set; }
         public List<string> Roles { get; set; }
 
