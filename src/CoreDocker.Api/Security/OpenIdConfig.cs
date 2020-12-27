@@ -58,7 +58,7 @@ namespace CoreDocker.Api.Security
                     ClientName = "CoreDocker Api",
                     ClientId = openIdSettings.ClientName,
                     RequireConsent = false,
-                    AccessTokenType = AccessTokenType.Jwt,
+                    AccessTokenType = AccessTokenType.Reference,
                     AccessTokenLifetime = (int) TimeSpan.FromDays(1).TotalSeconds, // 10 minutes, default 60 minutes
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
