@@ -44,13 +44,7 @@ namespace CoreDocker.Api.Security
             {
                 X509Certificate2 cert = null;
                 if (!string.IsNullOrEmpty(certStoreThumbprint)) cert = LoadCertFromStore(certStoreThumbprint);
-
-                if (cert == null)
-                {
-                    return LoadCertFromFile(certFile, password);
-                }
-
-                return cert;
+                return cert ?? LoadCertFromFile(certFile, password);
             }
             catch (Exception e)
             {
@@ -61,22 +55,16 @@ namespace CoreDocker.Api.Security
 
         private static X509Certificate2 LoadCertFromStore(string certStoreThumbprint)
         {
-            using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-            {
-                certStore.Open(OpenFlags.ReadOnly);
-                var certCollection = certStore.Certificates.Find(
-                    X509FindType.FindByThumbprint,
-                    certStoreThumbprint,
-                    false);
-                // Get the first cert with the thumbprint
-                if (certCollection.Count > 0)
-                {
-                    _log.Information($"Successfully loaded cert from registry: {certCollection[0].Thumbprint}");
-                    return certCollection[0];
-                }
-            }
-
-            return null;
+            using var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            certStore.Open(OpenFlags.ReadOnly);
+            var certCollection = certStore.Certificates.Find(
+                X509FindType.FindByThumbprint,
+                certStoreThumbprint,
+                false);
+            // Get the first cert with the thumbprint
+            if (certCollection.Count <= 0) return null;
+            _log.Information($"Successfully loaded cert from registry: {certCollection[0].Thumbprint}");
+            return certCollection[0];
         }
 
         private static X509Certificate2 LoadCertFromFile(string certFile, string password)

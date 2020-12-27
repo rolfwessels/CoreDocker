@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 
 namespace CoreDocker.Core.Framework.Settings
 {
@@ -11,6 +12,12 @@ namespace CoreDocker.Core.Framework.Settings
         {
             _configuration = configuration;
             _configGroup = configGroup;
+        }
+
+
+        protected bool ReadConfigValue(string key, bool defaultValue)
+        {
+            return Convert.ToBoolean(ReadConfigValue(key, defaultValue.ToString()));
         }
 
         protected string ReadConfigValue(string key, string defaultValue)
