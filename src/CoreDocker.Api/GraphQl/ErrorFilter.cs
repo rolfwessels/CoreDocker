@@ -35,14 +35,14 @@ namespace CoreDocker.Api.GraphQl
             if (error.Exception is ArgumentException) return LogAndThrowValidation(error);
 
             if (error.Exception is ArgumentNullException) return LogAndThrowValidation(error);
-
+            error.Exception.Dump("asd");
             _log.Error(BuildMessage(error), error.Exception);
             return error.WithCode(error.Exception?.GetType().Name.Replace("Exception", "") ?? error.Code);
         }
 
         private static string BuildMessage(IError error)
         {
-            return $"{error.Path.StringJoin(">")}:{error.Exception?.Message ?? error.Message}";
+            return $"{error.Path?.Print()}:{error.Exception?.Message ?? error.Message } ";
         }
 
         private IError LogAndThrowValidation(IError error, ValidationException validationException = null)

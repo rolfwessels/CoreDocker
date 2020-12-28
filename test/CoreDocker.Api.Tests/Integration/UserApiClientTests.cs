@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
-using CoreDocker.Utilities.Tests.Tools;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace CoreDocker.Api.Tests.Integration
 {
@@ -95,7 +92,6 @@ namespace CoreDocker.Api.Tests.Integration
             testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("The current user is not authorized to access this resource.");
         }
-
 
         [Test]
         public void Me_GivenNoUser_ShouldFail()

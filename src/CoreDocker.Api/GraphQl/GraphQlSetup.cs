@@ -8,6 +8,7 @@ using HotChocolate.AspNetCore.Playground;
 using HotChocolate.AspNetCore.Subscriptions;
 using HotChocolate.Execution;
 using HotChocolate.Execution.Configuration;
+using HotChocolate.Execution.Options;
 using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,38 +19,25 @@ namespace CoreDocker.Api.GraphQl
     {
         public static void AddGraphQl(this IServiceCollection services)
         {
-            services.AddInMemorySubscriptionProvider();
-            services.AddGraphQL(SchemaFactory, ConfigureBuilder);
-        }
-
-        private static ISchema SchemaFactory(IServiceProvider sp)
-        {
-            return SchemaBuilder.New()
+            // services.AddInMemorySubscriptionProvider();
+            services.AddGraphQLServer()
+                .AddErrorFilter<ErrorFilter>()
                 .AddQueryType<DefaultQuery>()
                 .AddMutationType<DefaultMutation>()
-                .AddSubscriptionType<DefaultSubscription>()
-                .AddAuthorizeDirectiveType()
-                .AddServices(sp)
-                .Create();
+                .AddAuthorization();
+            // .AddSubscriptionType<DefaultSubscription>();
         }
 
-        private static void ConfigureBuilder(IQueryExecutionBuilder builder)
-        {
-            var queryExecutionOptionsAccessor = new QueryExecutionOptions
-            {
-                TracingPreference = TracingPreference.Always,
-                IncludeExceptionDetails = true
-            };
-            builder.UseDefaultPipeline(queryExecutionOptionsAccessor)
-                .AddErrorFilter<ErrorFilter>();
-        }
+  
+
 
         public static void AddGraphQl(this IApplicationBuilder app)
         {
             var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
             var pathString = new Uri(openIdSettings.HostUrl.UriCombine("/graphql")).AbsolutePath;
-            app.UseWebSockets().UseGraphQL(pathString);
-            app.UseGraphQLSubscriptions(new SubscriptionMiddlewareOptions() {Path = pathString});
+            app.UseWebSockets();
+            app.UseEndpoints(x => x.MapGraphQL());
+            // app.UseGraphQLSubscriptions(new SubscriptionMiddlewareOptions() {Path = pathString});
             app.UsePlayground(new PlaygroundOptions()
                 {
                     QueryPath = pathString,

@@ -70,7 +70,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
-                mutation ($name: String!, $email: String!, $roles: [String], $password: String) {
+                mutation ($name: String!, $email: String!, $roles: [String!]!, $password: String) {
                   users {
                     create(user: {name: $name, email: $email, roles: $roles, password: $password}) {
                       ...commandResultData
@@ -104,7 +104,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             var response = await CoreDockerClient.Post<Response>(new GraphQLRequest
             {
                 Query = GraphQlFragments.CommandResult + @"
-                mutation ($id: String!, $name: String!, $email: String!, $roles: [String], $password: String) {
+                mutation ($id: String!, $name: String!, $email: String!, $roles: [String!]!, $password: String) {
                   users {
                     update(id: $id, user: {name: $name, email: $email, roles: $roles, password: $password}) {
                       ...commandResultData

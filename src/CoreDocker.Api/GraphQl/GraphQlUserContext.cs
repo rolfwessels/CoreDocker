@@ -15,13 +15,13 @@ namespace CoreDocker.Api.GraphQl
 {
     public static class GraphQlUserContextHelper
     {
-        public static Task<User> GetUser(this IResolverContext context)
+        public static Task<User> GetUser(this IResolverContext context, IUserLookup userLookup)
         {
             return (Task<User>) context.ContextData.GetOrAdd("UserTask",
-                () => ReadFromClaimsPrinciple(context) as object);
+                () => ReadFromClaimsPrinciple(context, userLookup) as object);
         }
 
-        private static Task<User> ReadFromClaimsPrinciple(IResolverContext context)
+        private static Task<User> ReadFromClaimsPrinciple(IResolverContext context, IUserLookup userLookup)
         {
             if (context.ContextData.TryGetValue("ClaimsPrincipal", out var principle))
             {
@@ -29,7 +29,6 @@ namespace CoreDocker.Api.GraphQl
                 var id = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == "id")?.Value;
                 if (!string.IsNullOrEmpty(id))
                 {
-                    var userLookup = context.Resolver<IUserLookup>();
                     return userLookup.GetById(id);
                 }
             }
