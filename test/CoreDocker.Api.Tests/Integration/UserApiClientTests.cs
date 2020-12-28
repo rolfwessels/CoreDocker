@@ -74,7 +74,7 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             var invalidEmailUser = GetExampleData().First();
-            invalidEmailUser.Email = "test@sdfsd";
+            invalidEmailUser.Email = "test#.com";
             // action
             Action testUpdateValidationFail = () => { _userApiClient.Create(invalidEmailUser).Wait(); };
             // assert

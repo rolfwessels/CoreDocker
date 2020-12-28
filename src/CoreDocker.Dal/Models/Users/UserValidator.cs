@@ -1,4 +1,5 @@
 ﻿using CoreDocker.Dal.Validation;
+using CoreDocker.Utilities.Helpers;
 using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Users
