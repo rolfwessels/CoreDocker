@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoreDocker.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
+using Microsoft.OpenApi.Writers;
 
 namespace CoreDocker.Api.Security
 {
@@ -29,14 +31,7 @@ namespace CoreDocker.Api.Security
                     {
                         new Secret(openIdSettings.ApiResourceSecret.Sha256())
                     },
-                    Scopes =
-                    {
-                        new Scope
-                        {
-                            Name = openIdSettings.ScopeApi,
-                            DisplayName = "Standard api access"
-                        }
-                    },
+                    Scopes = GetApiScopes(openIdSettings).Select(x=>x.Name).ToArray(),
                     UserClaims =
                     {
                         JwtClaimTypes.Role,
@@ -48,6 +43,12 @@ namespace CoreDocker.Api.Security
                 }
             };
         }
+
+        public static IEnumerable<ApiScope> GetApiScopes(OpenIdSettings openIdSettings) =>
+            new[]
+            {
+                new ApiScope(openIdSettings.ScopeApi, "Standard api access")
+            };
 
         public static IEnumerable<Client> GetClients(OpenIdSettings openIdSettings)
         {

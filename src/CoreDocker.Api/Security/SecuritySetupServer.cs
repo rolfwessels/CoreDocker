@@ -22,12 +22,12 @@ namespace CoreDocker.Api.Security
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
-            services.AddIdentityServer(x => { x.PublicOrigin = openIdSettings.HostUrl; })
+            services.AddIdentityServer()
                 .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
+                .AddInMemoryApiScopes(OpenIdConfig.GetApiScopes(openIdSettings))
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
-                // options => options.MigrationsAssembly(migrationsAssembly))) 
                 .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
         }
 
