@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Users;
 using HotChocolate.Types;
-using GravatarSharp.Core;
 
 namespace CoreDocker.Api.Components.Users
 {
@@ -14,15 +14,12 @@ namespace CoreDocker.Api.Components.Users
             Name = "User";
             descriptor.Field(d => d.Id).Type<NonNullType<StringType>>().Description("The id of the user.");
             descriptor.Field(d => d.Name).Type<NonNullType<StringType>>().Description("The name of the user.");
-            descriptor.Field(d => d.Email).Type<NonNullType<StringType>>().Description("The email of the user.");
+            descriptor.Field(d => d.Email).Type<NonNullType<StringType>>().Description("The value of the user.");
             descriptor.Field(d => d.Roles)
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>().Description("The roles of the user.");
             descriptor.Field("image")
                 .Type<NonNullType<StringType>>()
-                .Resolver(context =>
-                {
-                    return GravatarController.GetImageUrl(context.Parent<User>().Email).Replace("http://","https://"); ;
-                })
+                .Resolver(context => { return $"https://www.gravatar.com/avatar/{Md5Hash(context.Parent<User>().Email)}"; })
                 .Description("User profile image.");
             descriptor.Field("activities")
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>()
@@ -32,6 +29,22 @@ namespace CoreDocker.Api.Components.Users
                 .Description("The date when the user was last updated.");
             descriptor.Field(d => d.CreateDate).Type<NonNullType<DateTimeType>>()
                 .Description("The date when the user was created.");
+        }
+
+        private string Md5Hash(string value)
+        {
+            
+            using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(value);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+            // Convert the byte array to hexadecimal string
+            StringBuilder sb = new StringBuilder();
+            foreach (var t in hashBytes)
+            {
+                sb.Append(t.ToString("X2"));
+            }
+            return sb.ToString();
         }
 
         #region Private Methods
