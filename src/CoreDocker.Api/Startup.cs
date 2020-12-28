@@ -47,18 +47,20 @@ namespace CoreDocker.Api
         {
             app.UseStaticFiles();
             app.UseRouting();
+            var openIdSettings = new OpenIdSettings(Configuration);
+
             app.UseCors(policy =>
             {
                 policy.AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
                     .SetPreflightMaxAge(TimeSpan.FromMinutes(10)) // Cache the OPTIONS calls.
-                    .WithOrigins(new OpenIdSettings(Configuration).GetOriginList());
+                    .WithOrigins(openIdSettings.GetOriginList());
             });
 
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-            app.UseIdentityService();
+            app.UseIdentityService(openIdSettings);
             app.UseBearerAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();

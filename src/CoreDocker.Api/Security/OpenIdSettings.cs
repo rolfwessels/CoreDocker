@@ -37,7 +37,7 @@ namespace CoreDocker.Api.Security
 
         public bool UseReferenceTokens => ReadConfigValue("UseReferenceTokens", false);
 
-        public bool IsInDebugMode => ReadConfigValue("IsInDebugMode", true);
+        public bool IsDebugEnabled => ReadConfigValue("IsDebugEnabled", true);
 
         public string[] GetOriginList()
         {
