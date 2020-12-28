@@ -15,6 +15,14 @@ services:
         command: mongod --smallfiles --logpath=/dev/null # --quiet
         networks:
             - dev-network
+    www:
+        image: rolfwessels/coredocker-dashboard:alpha
+        links:
+            - src
+        environment:
+            - API_URL=http://localhost:5000
+        ports:
+            - 84:80
     src:
         container_name: core-docker
         build:
@@ -55,7 +63,9 @@ services:
             - DOTNET_ENVIRONMENT=Development
             - MongoDatabase=core-docker
             - App__HostUrl=http://localhost:5000
-
+            - OpenId__Origins=http://localhost:5000,http://localhost:84
+        ports:
+            - 5000:5000
         entrypoint: top -b
         logging:
             driver: none

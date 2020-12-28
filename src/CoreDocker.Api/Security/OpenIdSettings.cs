@@ -6,6 +6,8 @@ namespace CoreDocker.Api.Security
 {
     public class OpenIdSettings : BaseSettings
     {
+        
+
         public OpenIdSettings(IConfiguration configuration) : base(configuration, "OpenId")
         {
         }
@@ -35,6 +37,7 @@ namespace CoreDocker.Api.Security
 
         public bool UseReferenceTokens => ReadConfigValue("UseReferenceTokens", false);
 
+        public bool IsInDebugMode => ReadConfigValue("IsInDebugMode", true);
 
         public string[] GetOriginList()
         {

@@ -7,6 +7,7 @@ using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.Mappers;
 using CoreDocker.Dal.Models.Users;
+using IdentityServer4.Endpoints.Results;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Serilog;
@@ -30,6 +31,7 @@ namespace CoreDocker.Api.Security
 
         public async Task StoreAsync(PersistedGrant grant)
         {
+            _log.Information($"PersistedGrantStore:StoreAsync store sessions for SubjectId '{grant.SubjectId}' ");
             var userGrant = grant.ToGrant();
             var userById = await _userLookup.GetById(grant.SubjectId);
             if (userById != null) userGrant.User = userById.ToReference();
@@ -64,16 +66,8 @@ namespace CoreDocker.Api.Security
 
         private async Task<IEnumerable<UserGrant>> FromDbByFilter(PersistedGrantFilter filter)
         {
+            _log.Information($"PersistedGrantStore:FromDbByFilter For SubjectId `{filter.SubjectId}` ClientId `{filter.ClientId}` ");
             return (await _userGrantLookup.GetByUserId(filter.SubjectId)).Where(x => x.ClientId == filter.ClientId);
-        }
-
-
-        public async Task RemoveAllAsync(string subjectId, string clientId, string type)
-        {
-            _log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
-            var byKey = await _userGrantLookup.GetByUserId(subjectId);
-            foreach (var userGrant in byKey.Where(x => x.ClientId == clientId && x.Type == type))
-                await _userGrantLookup.Delete(userGrant.Id);
         }
 
         #endregion

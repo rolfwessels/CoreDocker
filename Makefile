@@ -82,6 +82,9 @@ test: docker-check restore
 
 start: docker-check
 	@echo -e "${GREEN}Starting the $(release) release of $(project)${NC}"
+	@cd src/CoreDocker.Api/ && dotnet run
+
+
 
 deploy: docker-check env-check
 	@echo -e "${GREEN}Deploying v${version} of $(release) release${NC}"

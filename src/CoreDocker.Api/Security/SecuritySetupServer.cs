@@ -9,6 +9,7 @@ using Serilog;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
 
 namespace CoreDocker.Api.Security
 {
@@ -19,7 +20,7 @@ namespace CoreDocker.Api.Security
 
         public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
+            
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
             services.AddIdentityServer()
@@ -28,7 +29,14 @@ namespace CoreDocker.Api.Security
                 .AddInMemoryApiScopes(OpenIdConfig.GetApiScopes(openIdSettings))
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
-                .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
+                .Services
+                    .AddTransient<IPersistedGrantStore, PersistedGrantStore>()
+                    .AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
+
+            if (openIdSettings.IsInDebugMode)
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
         }
 
         public static void UseIdentityService(this IApplicationBuilder app)
