@@ -1,0 +1,65 @@
+version: "3.5"
+networks:
+    dev-network:
+
+services:
+    db:
+        image: mongo:4.0
+        container_name: "db"
+        restart: unless-stopped
+        environment:
+            - MONGO_DATA_DIR=/data/db
+            - MONGO_LOG_DIR=/dev/null
+        ports:
+            - 27021:27017
+        command: mongod --smallfiles --logpath=/dev/null # --quiet
+        networks:
+            - dev-network
+    src:
+        container_name: core-docker
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        volumes:
+            - ".:/CoreDocker"
+            - "./.aws:/root/.aws"
+            #find src* | grep  '/bin$' | sed 's/^/ - CoreDocker\//'
+            - CoreDocker/src/CoreDocker.Api/bin
+            - CoreDocker/src/CoreDocker.Api.Lambda/bin
+            - CoreDocker/src/CoreDocker.Core/bin
+            - CoreDocker/src/CoreDocker.Dal/bin
+            - CoreDocker/src/CoreDocker.Dal.MongoDb/bin
+            - CoreDocker/src/CoreDocker.Sdk/bin
+            - CoreDocker/src/CoreDocker.Shared/bin
+            - CoreDocker/src/CoreDocker.Utilities/bin
+            - CoreDocker/test/CoreDocker.Api.Tests/bin
+            - CoreDocker/test/CoreDocker.Core.Tests/bin
+            - CoreDocker/test/CoreDocker.Dal.Tests/bin
+            - CoreDocker/test/CoreDocker.Utilities.Tests/bin
+            #find src* | grep  '/obj$' | sed 's/^/ - CoreDocker\//'
+            - CoreDocker/src/CoreDocker.Api/obj
+            - CoreDocker/src/CoreDocker.Api.Lambda/obj
+            - CoreDocker/src/CoreDocker.Core/obj
+            - CoreDocker/src/CoreDocker.Dal/obj
+            - CoreDocker/src/CoreDocker.Dal.MongoDb/obj
+            - CoreDocker/src/CoreDocker.Sdk/obj
+            - CoreDocker/src/CoreDocker.Shared/obj
+            - CoreDocker/src/CoreDocker.Utilities/obj
+            - CoreDocker/test/CoreDocker.Api.Tests/obj
+            - CoreDocker/test/CoreDocker.Core.Tests/obj
+            - CoreDocker/test/CoreDocker.Dal.Tests/obj
+            - CoreDocker/test/CoreDocker.Utilities.Tests/obj
+
+        environment:
+            - MongoConnection=mongodb://db:27017/core-docker
+            - DOTNET_ENVIRONMENT=Development
+            - MongoDatabase=core-docker
+            - App__HostUrl=http://localhost:5000
+
+        entrypoint: top -b
+        logging:
+            driver: none
+        networks:
+            - dev-network
+        depends_on:
+            - db
