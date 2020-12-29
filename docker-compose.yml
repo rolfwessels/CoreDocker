@@ -63,7 +63,7 @@ services:
             - DOTNET_ENVIRONMENT=Development
             - MongoDatabase=core-docker
             - App__HostUrl=http://localhost:5000
-            - OpenId__Origins=http://localhost:5000,http://localhost:84
+            - OpenId__Origins=http://localhost:5000,http://localhost:84,http://localhost:3000
         ports:
             - 5000:5000
         entrypoint: top -b
