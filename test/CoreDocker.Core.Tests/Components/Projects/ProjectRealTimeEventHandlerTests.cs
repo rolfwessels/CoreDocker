@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Core.Tests.Components.Users;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
+using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -25,7 +27,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
         public override void Setup()
         {
             base.Setup();
-            _subscriptionNotifications = new SubscriptionNotifications();
+            _subscriptionNotifications = new SubscriptionNotifications(new Messenger());
             _projectRealTimeEventHandler = new ProjectRealTimeEventHandler(_subscriptionNotifications);
         }
 
@@ -76,11 +78,11 @@ namespace CoreDocker.Core.Tests.Components.Projects
             string @event, SubscriptionNotifications subscriptionNotifications)
         {
             var list = new List<RealTimeNotificationsMessage>();
-            var observable = subscriptionNotifications.Messages();
-            using (observable.Subscribe(message => list.Add(message)))
+            using (subscriptionNotifications.Register(message => list.Add(message)))
             {
                 action();
                 // assert
+                list.WaitFor(x=>x.Count == 1);
                 list.Count.Should().Be(1);
                 SubscribeHelper.BasicNotificationValidation(list.First(), notification, @event);
             }

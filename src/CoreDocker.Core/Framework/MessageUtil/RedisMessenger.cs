@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CoreDocker.Utilities.Helpers;
 using Newtonsoft.Json;
 using Serilog;
@@ -48,10 +49,10 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         #region Implementation of IMessenger
 
-        public void Send<T>(T value)
+        public async Task Send<T>(T value)
         {
             _log.Debug($"RedisMessenger:Send {typeof(T).Name}:{Serialize(value)}");
-            _sub.Value.Publish(typeof(T).Name, Serialize(value));
+            await _sub.Value.PublishAsync(typeof(T).Name, Serialize(value));
         }
 
         public void Register<T>(object receiver, Action<T> action) where T : class

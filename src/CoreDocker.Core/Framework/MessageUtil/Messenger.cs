@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace CoreDocker.Core.Framework.MessageUtil
 {
@@ -22,14 +23,17 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         #region IMessenger Members
 
-        public void Send<T>(T value)
+        public Task Send<T>(T value)
         {
-            if (_dictionary.TryGetValue(typeof(T), out var type))
+            return Task.Run(() =>
+            {
+                if (!_dictionary.TryGetValue(typeof(T), out var type)) return;
                 foreach (var reference in type)
                     if (reference.Key.IsAlive)
                         reference.Value(value);
                     else
                         type.TryRemove(reference.Key, out _);
+            });
         }
 
         public void Register<T>(object receiver, Action<T> action) where T : class
@@ -38,7 +42,6 @@ namespace CoreDocker.Core.Framework.MessageUtil
             {
                 action(t as T);
             }
-
             Register(typeof(T), receiver, Value);
         }
 

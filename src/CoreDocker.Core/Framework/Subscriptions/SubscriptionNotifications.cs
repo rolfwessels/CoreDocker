@@ -2,33 +2,53 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using CoreDocker.Core.Framework.MessageUtil;
 
 namespace CoreDocker.Core.Framework.Subscriptions
 {
     public class SubscriptionNotifications
     {
-        private class SubscriptionWithGroup
-        {
-            public RealTimeNotificationsMessage Message { get; set; }
-        }
+        private readonly IMessenger _redisMessenger;
 
-        private readonly ISubject<SubscriptionWithGroup> _stream = new ReplaySubject<SubscriptionWithGroup>(0);
+        public SubscriptionNotifications(IMessenger redisMessenger)
+        {
+            _redisMessenger = redisMessenger;
+        }
 
         #region Implementation of IRealTimeNotificationChannel
 
         public Task Send(RealTimeNotificationsMessage message)
         {
-            if (message != null) _stream.OnNext(new SubscriptionWithGroup() {Message = message});
-            return Task.CompletedTask;
+            return _redisMessenger.Send(message);
         }
 
         #endregion
 
-        public IObservable<RealTimeNotificationsMessage> Messages()
+        public IDisposable Register(Action<RealTimeNotificationsMessage> action)
         {
-            return _stream
-                .Select(x => x.Message)
-                .AsObservable();
+            _redisMessenger.Register(this,action);
+            return new Closer(() => _redisMessenger.UnRegister<RealTimeNotificationsMessage>(this));
+
+        }
+
+        private class Closer : IDisposable
+        {
+            private readonly Action _unRegister;
+
+            public Closer(Action unRegister)
+            {
+                _unRegister = unRegister;
+            }
+
+            #region IDisposable
+
+            public void Dispose()
+            {
+                _unRegister();
+            }
+
+            #endregion
         }
     }
+
 }

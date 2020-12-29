@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CoreDocker.Core.Framework.MessageUtil;
 using FluentAssertions;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
 
         
         [Test]
-        public void Send_Given_Object_ShouldBeReceived()
+        public async Task Send_Given_Object_ShouldBeReceived()
         {
             // arrange
             Setup();
@@ -34,13 +35,13 @@ namespace CoreDocker.Core.Tests.MessageUtil
             string received = null;
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             // action
-            _messenger.Send(new SampleMessage("String"));
+            await _messenger.Send(new SampleMessage("String"));
             // assert
             received.Should().NotBeNull();
         }
 
         [Test]
-        public void Send_GivenObject_ShouldBeReceivedOnOtherListener()
+        public async Task Send_GivenObject_ShouldBeReceivedOnOtherListener()
         {
             // arrange
             Setup();
@@ -48,7 +49,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             object received = null;
             _messenger.Register(typeof(SampleMessage), o, m => received = m);
             // action
-            _messenger.Send(new SampleMessage("String"));
+            await _messenger.Send(new SampleMessage("String"));
             // assert
             received.Should().NotBeNull();
         }

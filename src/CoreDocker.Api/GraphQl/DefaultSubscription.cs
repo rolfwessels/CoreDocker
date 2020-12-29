@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.Subscriptions;
-using CoreDocker.Utilities.Helpers;
 using HotChocolate;
 using HotChocolate.Execution;
 using HotChocolate.Subscriptions;
@@ -29,8 +28,6 @@ namespace CoreDocker.Api.GraphQl
             CancellationToken cancellationToken)
         {
             _subscribe.AddSubscription(cancellationToken);
-           
-
             return await eventReceiver.SubscribeAsync<string, RealTimeNotificationsMessage>(
                 nameof(RealTimeNotificationsMessage), cancellationToken);
         }
@@ -42,26 +39,28 @@ namespace CoreDocker.Api.GraphQl
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ITopicEventSender _eventSender;
         private int _counter;
-
+        private readonly Lazy<IDisposable> _disposable;
 
         public SubscriptionSubscribe(SubscriptionNotifications notifications, ITopicEventSender eventSender)
         {
             _eventSender = eventSender;
-            var observable = notifications.Messages();
-            observable.Subscribe(SendMessageToEventSender);
+            _disposable = new Lazy<IDisposable>(() => notifications.Register(SendValue));
         }
 
-        private void SendMessageToEventSender(RealTimeNotificationsMessage message)
+        private void SendValue(RealTimeNotificationsMessage message)
         {
-            _eventSender.SendAsync(nameof(RealTimeNotificationsMessage), message)
-                .AsTask()
-                .ContinueWithAndLogError(_log.Error);
+            _eventSender.SendAsync(nameof(RealTimeNotificationsMessage), message).AsTask().Wait(10000);
         }
 
         public void AddSubscription(CancellationToken cancellationToken)
         {
             Interlocked.Increment(ref _counter);
             _log.Information($"Subscription added [{_counter}]");
+            if (!_disposable.IsValueCreated)
+            {
+                _log.Debug($"SubscriptionSubscribe:AddSubscription create subscriptions {_disposable.Value}");
+            }
+
             cancellationToken.Register(() =>
             {
                 _log.Information($"Subscription removed [{_counter}]");
