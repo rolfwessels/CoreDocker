@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,20 +10,17 @@ using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using Serilog;
 
-// hot chocolate complains that IEventSender is obsolete but the alternative does not exist.
-#pragma warning disable 618
+
 
 namespace CoreDocker.Api.GraphQl
 {
     public class DefaultSubscription
     {
-
-
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly SubscriptionSubscribe _subscribe;
 
         public DefaultSubscription(SubscriptionSubscribe subscribe)
         {
-
+            _subscribe = subscribe;
         }
 
         [SubscribeAndResolve]
@@ -32,8 +28,8 @@ namespace CoreDocker.Api.GraphQl
             [Service] ITopicEventReceiver eventReceiver,
             CancellationToken cancellationToken)
         {
-            _log.Warning("!!!!!!!!!!!!!!!!  OnDefaultEvent - subscribe");
-            cancellationToken.Register(() => _log.Warning("!!!!!!!!!!!!!!!! OnDefaultEvent - unsubscribe"));
+            _subscribe.AddSubscription(cancellationToken);
+           
 
             return await eventReceiver.SubscribeAsync<string, RealTimeNotificationsMessage>(
                 nameof(RealTimeNotificationsMessage), cancellationToken);
@@ -45,6 +41,8 @@ namespace CoreDocker.Api.GraphQl
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ITopicEventSender _eventSender;
+        private int _counter;
+
 
         public SubscriptionSubscribe(SubscriptionNotifications notifications, ITopicEventSender eventSender)
         {
@@ -58,6 +56,17 @@ namespace CoreDocker.Api.GraphQl
             _eventSender.SendAsync(nameof(RealTimeNotificationsMessage), message)
                 .AsTask()
                 .ContinueWithAndLogError(_log.Error);
+        }
+
+        public void AddSubscription(CancellationToken cancellationToken)
+        {
+            Interlocked.Increment(ref _counter);
+            _log.Information($"Subscription added [{_counter}]");
+            cancellationToken.Register(() =>
+            {
+                _log.Information($"Subscription removed [{_counter}]");
+                Interlocked.Decrement(ref _counter);
+            });
         }
     }
 

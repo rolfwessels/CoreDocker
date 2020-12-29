@@ -9,7 +9,6 @@ using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
-using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using Serilog;
 
@@ -18,13 +17,11 @@ namespace CoreDocker.Api.Components.Users
     public class UsersQueryType : ObjectType<UsersQueryType.UsersQuery>
     {
         private readonly IUserLookup _userLookup;
-        private readonly ITopicEventSender _eventSender;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersQueryType(IUserLookup userLookup, ITopicEventSender eventSender)
+        public UsersQueryType(IUserLookup userLookup)
         {
             _userLookup = userLookup;
-            _eventSender = eventSender;
         }
 
         protected override void Configure(IObjectTypeDescriptor<UsersQuery> descriptor)
