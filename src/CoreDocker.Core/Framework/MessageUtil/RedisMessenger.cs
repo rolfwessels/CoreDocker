@@ -17,9 +17,11 @@ namespace CoreDocker.Core.Framework.MessageUtil
             new ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, object>>();
 
         private readonly Lazy<ISubscriber> _sub;
+        private readonly string _redisHost;
 
-        public RedisMessenger()
+        public RedisMessenger(string redisHost)
         {
+            _redisHost = redisHost;
             _sub = new Lazy<ISubscriber>(GetSubscriber);
         }
 
@@ -37,7 +39,8 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         private ISubscriber GetSubscriber()
         {
-            var redis = ConnectionMultiplexer.Connect("localhost");
+            
+            var redis = ConnectionMultiplexer.Connect(_redisHost);
             return redis.GetSubscriber();
         }
 
@@ -62,13 +65,13 @@ namespace CoreDocker.Core.Framework.MessageUtil
             var handler = _dictionary.GetOrAdd(type, () => new ConcurrentDictionary<WeakReference, object>())
                 .GetOrAdd(new WeakReference(receiver), () =>
                     {
-                        Action<RedisChannel, RedisValue> handler = (channel, message) =>
+                        void Action(RedisChannel channel, RedisValue message)
                         {
                             var deserializeObject = JsonConvert.DeserializeObject(message, type);
                             _log.Debug($"RedisMessenger:Received {deserializeObject.GetType().Name}:{message}");
                             callBackToClient(deserializeObject);
-                        };
-                        return handler;
+                        }
+                        return (Action<RedisChannel, RedisValue>) Action;
                     }
                 ) as Action<RedisChannel, RedisValue>;
             _sub.Value.Subscribe(redisChannel, handler);
@@ -113,8 +116,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         private void Unsubscribe(WeakReference key, ConcurrentDictionary<WeakReference, object> typeFound, Type type)
         {
-            object handler = null;
-            if (typeFound.TryRemove(key, out handler))
+            if (typeFound.TryRemove(key, out var handler))
             {
                 _log.Debug($"RedisMessenger:Unsubscribe {type.Name}");
                 _sub.Value.Unsubscribe(type.Name, handler as Action<RedisChannel, RedisValue>);

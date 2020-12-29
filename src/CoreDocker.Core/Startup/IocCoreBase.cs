@@ -10,6 +10,7 @@ using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
+using CoreDocker.Utilities;
 using FluentValidation;
 using Serilog;
 using MediatR;
@@ -97,7 +98,7 @@ namespace CoreDocker.Core.Startup
 
         private void SetupTools(ContainerBuilder builder)
         {
-            builder.Register(x => Messenger.Default).As<IMessenger>();
+            builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
             builder.RegisterType<Commander>().As<ICommander>();
             builder.RegisterType<SubscriptionNotifications>().SingleInstance();
         }

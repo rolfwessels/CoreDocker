@@ -7,6 +7,7 @@ sudo: required
 services:
     - docker
     - mongodb
+    - redis
 
 addons:
     apt:

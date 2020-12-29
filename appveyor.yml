@@ -3,7 +3,10 @@ os: Visual Studio 2019
 services:
     - mongodb
 
-install:
+before_build:
+    - choco install redis-64
+    - redis-server --service-install
+    - redis-server --service-start
 
 build_script:
     - ps: dotnet --info

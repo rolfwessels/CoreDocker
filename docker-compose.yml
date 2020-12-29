@@ -65,9 +65,10 @@ services:
             - CoreDocker/test/CoreDocker.Utilities.Tests/obj
 
         environment:
-            - MongoConnection=mongodb://db:27017/core-docker
             - DOTNET_ENVIRONMENT=Development
+            - MongoConnection=mongodb://db:27017/core-docker
             - MongoDatabase=core-docker
+            - RedisHost=redis
             - App__HostUrl=http://localhost:5000
             - OpenId__Origins=http://localhost:5000,http://localhost:84,http://localhost:3000
         ports:

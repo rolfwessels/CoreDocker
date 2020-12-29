@@ -18,7 +18,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
         public void Setup()
         {
             TestLoggingHelper.EnsureExists();
-            _messenger = new RedisMessenger();
+            _messenger = new RedisMessenger("localhost");
         }
 
         [TearDown]
