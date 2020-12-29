@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Utilities.Helpers;
 using HotChocolate.Resolvers;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Serilog;
 
 namespace CoreDocker.Api.GraphQl
 {

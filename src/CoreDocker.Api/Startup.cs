@@ -4,12 +4,8 @@ using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.Security;
-using CoreDocker.Api.SignalR;
-using CoreDocker.Api.SignalR.Hubs;
 using CoreDocker.Api.Swagger;
-using CoreDocker.Api.WebApi;
 using CoreDocker.Api.WebApi.Filters;
-using CoreDocker.Shared;
 using CoreDocker.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,13 +60,8 @@ namespace CoreDocker.Api
             app.UseBearerAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>(SignalRHubUrls.ChatUrl);
-            });
-
             app.AddGraphQl();
+            app.UseEndpoints(e => e.MapControllers());
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
         }

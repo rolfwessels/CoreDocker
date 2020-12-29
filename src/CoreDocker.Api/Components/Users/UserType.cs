@@ -19,7 +19,7 @@ namespace CoreDocker.Api.Components.Users
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>().Description("The roles of the user.");
             descriptor.Field("image")
                 .Type<NonNullType<StringType>>()
-                .Resolver(context => { return $"https://www.gravatar.com/avatar/{Md5Hash(context.Parent<User>().Email)}"; })
+                .Resolver(context => { return $"https://www.gravatar.com/avatar/{Md5Hash(context.Parent<User>().Email)}?d=?d=robohash"; })
                 .Description("User profile image.");
             descriptor.Field("activities")
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>()

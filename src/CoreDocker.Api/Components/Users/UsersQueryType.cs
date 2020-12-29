@@ -9,6 +9,7 @@ using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 using CoreDocker.Utilities.Helpers;
+using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using Serilog;
 
@@ -17,11 +18,13 @@ namespace CoreDocker.Api.Components.Users
     public class UsersQueryType : ObjectType<UsersQueryType.UsersQuery>
     {
         private readonly IUserLookup _userLookup;
+        private readonly ITopicEventSender _eventSender;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UsersQueryType(IUserLookup userLookup)
+        public UsersQueryType(IUserLookup userLookup, ITopicEventSender eventSender)
         {
             _userLookup = userLookup;
+            _eventSender = eventSender;
         }
 
         protected override void Configure(IObjectTypeDescriptor<UsersQuery> descriptor)
@@ -53,7 +56,7 @@ namespace CoreDocker.Api.Components.Users
                 .Description("All roles")
                 .Type<NonNullType<ListType<RoleType>>>()
                 .Resolver(context => RoleManager.All.Select(x =>
-                    new RoleModel {Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList()}));
+                    new RoleModel { Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList() }));
 
             descriptor.Field("role")
                 .Description("Get role by name")
@@ -75,12 +78,7 @@ namespace CoreDocker.Api.Components.Users
 
         #region Private Methods
 
-        private static async Task<User> Me(Task<User> users)
-        {
-            var user = await users;
-            return user.Dump("0000000000User");
-        }
-
+        private async Task<User> Me(Task<User> users) => await users;
         #endregion
 
         public class UsersQuery
