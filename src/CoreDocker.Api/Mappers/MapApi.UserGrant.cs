@@ -27,6 +27,9 @@ namespace CoreDocker.Api.Mappers
                 .ForMember(x => x.UpdateDate, opt => opt.Ignore());
             configuration.CreateMap<UserGrant, PersistedGrant>()
                 .ForMember(x => x.CreationTime, opt => opt.MapFrom(x => x.CreateDate))
+                .ForMember(x => x.Description, opt => opt.Ignore())
+                .ForMember(x => x.SessionId, opt => opt.Ignore())
+                .ForMember(x => x.ConsumedTime, opt => opt.Ignore())
                 .ForMember(x => x.SubjectId, opt => opt.MapFrom(x => x.User.Id));
         }
 

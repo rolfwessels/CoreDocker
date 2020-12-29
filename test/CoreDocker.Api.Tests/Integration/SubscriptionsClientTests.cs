@@ -45,8 +45,8 @@ namespace CoreDocker.Api.Tests.Integration
             var userCreate = GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
             var sendSubscribeGeneralEvents = _adminConnection.Value.SendSubscribeGeneralEvents();
-            Exception excep = null;
-            Action<Exception> onError = exception => excep = exception;
+            Exception error = null;
+            Action<Exception> onError = e => error = e;
             var subscriptions =
                 sendSubscribeGeneralEvents.Subscribe((evt) => items.Add(evt.Data.OnDefaultEvent), onError);
 
@@ -61,7 +61,7 @@ namespace CoreDocker.Api.Tests.Integration
                 items.WaitFor(x => x.Count == 2, 10000);
                 // onError.Should().BeNull();
                 items.Should().HaveCount(2);
-                excep.Should().BeNull();
+                error.Should().BeNull();
                 items.Last().Event.Should().Be("UserRemoved");
             }
 

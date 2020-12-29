@@ -159,6 +159,24 @@ task nuget.restore {
     }
 }
 
+task nuget.update {
+    $regex = 'PackageReference Include="([^"]*)" Version="([^"]*)"'
+
+    ForEach ($file in get-childitem . -recurse | where { $_.extension -like "*proj" }) {
+        $packages = Get-Content $file.FullName |
+        select-string -pattern $regex -AllMatches | 
+        ForEach-Object { $_.Matches } | 
+        ForEach-Object { $_.Groups[1].Value.ToString() } | 
+        sort -Unique
+    
+        ForEach ($package in $packages) {
+            write-host "Update $file package :$package"  -foreground 'magenta'
+            $fullName = $file.FullName
+            iex "dotnet add $fullName package $package"
+        }
+    }
+}
+
 task clean.database {
     $mongoDbLocations = 'D:\Var\mongodb\bin\mongo.exe', 'C:\mongodb\bin\mongo.exe', 'C:\bin\MongoDB\bin\mongo.exe', "D:\Software\MongoDb\bin\mongo.exe", 'C:\Program Files\MongoDB\Server\3.2\bin\mongo.exe'
     $mongo = $mongoDbLocations | Where-Object { Test-Path $_ } | Select-Object -first 1

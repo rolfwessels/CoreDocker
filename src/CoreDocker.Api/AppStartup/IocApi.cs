@@ -72,7 +72,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<DefaultQuery>();
             builder.RegisterType<DefaultMutation>();
             builder.RegisterType<DefaultSubscription>().SingleInstance();
-            builder.RegisterType<Subscription>().SingleInstance();
+            builder.RegisterType<SubscriptionSubscribe>().SingleInstance();
             builder.RegisterType<RealTimeNotificationsMessageType>();
 
 

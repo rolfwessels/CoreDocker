@@ -52,10 +52,26 @@ namespace CoreDocker.Sdk.RestApi
 
         public async Task<GraphQLResponse<T>> Post<T>(GraphQLRequest request)
         {
-            var graphQlResponse = await _graphQlClient.SendQueryAsync<T>(request);
-            if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
-                throw new GraphQlResponseException<T>(graphQlResponse);
-            return graphQlResponse;
+            try
+            {
+                var graphQlResponse = await _graphQlClient.SendQueryAsync<T>(request);
+                if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                    throw new GraphQlResponseException<T>(graphQlResponse);
+                return graphQlResponse;
+            }
+            catch (GraphQLHttpRequestException e)
+            {
+                if (e.Content.Contains("errors"))
+                {
+                    var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
+                    graphQlResponse.Dump("graphQlResponse");
+                    
+                    if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                        throw new GraphQlResponseException<T>(graphQlResponse);
+                }
+
+                throw;
+            }
         }
 
         public IObservable<GraphQLResponse<RealTimeEventResponse>> SendSubscribeGeneralEvents()
@@ -97,11 +113,13 @@ namespace CoreDocker.Sdk.RestApi
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 });
-            return new GraphQLHttpClient(new GraphQLHttpClientOptions
+            var graphQlHttpClientOptions = new GraphQLHttpClientOptions
             {
                 EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
-                HttpMessageHandler = new WithAuthHeader(dataAccessToken),
-            }, jsonSerializer);
+                HttpMessageHandler = new WithAuthHeader(dataAccessToken)
+                
+            };
+            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer) ;
         }
 
         public class WithAuthHeader : HttpClientHandler

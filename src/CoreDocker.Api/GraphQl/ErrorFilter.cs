@@ -42,7 +42,7 @@ namespace CoreDocker.Api.GraphQl
 
         private static string BuildMessage(IError error)
         {
-            return $"{error.Path.StringJoin(">")}:{error.Exception?.Message ?? error.Message}";
+            return $"{error.Code} {error.Path?.Print()}:{error.Exception?.Message ?? error.Message } ";
         }
 
         private IError LogAndThrowValidation(IError error, ValidationException validationException = null)

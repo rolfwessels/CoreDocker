@@ -37,7 +37,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             // arrange
             Setup();
             var validRequest = GetValidRequest();
-            validRequest.Email = "sere@asdas";
+            validRequest.Email = "sere";
             // action
             Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
             // assert

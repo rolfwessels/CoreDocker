@@ -3,12 +3,14 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using CoreDocker.Utilities.Helpers;
+using IdentityServer4.Extensions;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Serilog;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
 
 namespace CoreDocker.Api.Security
 {
@@ -19,20 +21,38 @@ namespace CoreDocker.Api.Security
 
         public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
+            
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
-            services.AddIdentityServer(x => { x.PublicOrigin = openIdSettings.HostUrl; })
+            services.AddIdentityServer()
                 .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
+                .AddInMemoryApiScopes(OpenIdConfig.GetApiScopes(openIdSettings))
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
-                // options => options.MigrationsAssembly(migrationsAssembly))) 
-                .Services.AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
+                .Services
+                    .AddTransient<IPersistedGrantStore, PersistedGrantStore>()
+                    .AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
+
+            if (openIdSettings.IsDebugEnabled)
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
         }
 
-        public static void UseIdentityService(this IApplicationBuilder app)
+        public static void UseIdentityService(this IApplicationBuilder app, OpenIdSettings openIdSettings)
         {
+            // update the host url if required
+            // https://github.com/IdentityServer/IdentityServer4/issues/4592#issuecomment-659115122
+            app.Use(async (context, next) =>
+            {
+                if (openIdSettings.HostUrl.StartsWith("https"))
+                {
+                    context.SetIdentityServerOrigin(openIdSettings.HostUrl);
+                    context.SetIdentityServerBasePath(context.Request.PathBase.Value.TrimEnd('/'));
+                }
+                await next.Invoke();
+            });
             app.UseIdentityServer();
         }
 

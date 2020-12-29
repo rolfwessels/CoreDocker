@@ -44,9 +44,9 @@ namespace CoreDocker.Api.Swagger
                 {
                     Password = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"),
+                        AuthorizationUrl = new Uri(authorizationUrl.UriCombine("connect/token"),
                             UriKind.Absolute),
-                        TokenUrl = new Uri(authorizationUrl.UriCombine("connect/token").Dump("--------------"),
+                        TokenUrl = new Uri(authorizationUrl.UriCombine("connect/token"),
                             UriKind.Absolute),
                         Scopes = new Dictionary<string, string>
                         {

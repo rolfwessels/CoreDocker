@@ -21,8 +21,8 @@ namespace CoreDocker.Api.Tests.Integration
         {
             _connection = _defaultRequestFactory.Value.GetConnection();
             _connectionAuth = _defaultRequestFactory.Value.GetConnection();
-//            _connection = new CoreDockerClient("http://localhost:5000");
-//            _connectionAuth = new CoreDockerClient("http://localhost:5000");   
+            //            _connection = new CoreDockerClient("http://localhost:5000");
+            //            _connectionAuth = new CoreDockerClient("http://localhost:5000");   
         }
 
         [TearDown]
@@ -43,7 +43,7 @@ namespace CoreDocker.Api.Tests.Integration
             _connection.SetToken(data);
             var projectsEnumerable = await _connection.Projects.All();
             // assert
-            pingModel.Environment.ToLower().Should().Be("development"); //??
+            pingModel.Environment.ToLower().Should().NotBeEmpty();
             projectsEnumerable.Count().Should().BeGreaterThan(0);
         }
 

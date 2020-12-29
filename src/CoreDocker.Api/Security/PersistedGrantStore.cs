@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using CoreDocker.Api.Mappers;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.Mappers;
+using CoreDocker.Dal.Models.Users;
+using IdentityServer4.Endpoints.Results;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Serilog;
@@ -28,6 +31,7 @@ namespace CoreDocker.Api.Security
 
         public async Task StoreAsync(PersistedGrant grant)
         {
+            _log.Information($"PersistedGrantStore:StoreAsync store sessions for SubjectId '{grant.SubjectId}' ");
             var userGrant = grant.ToGrant();
             var userById = await _userLookup.GetById(grant.SubjectId);
             if (userById != null) userGrant.User = userById.ToReference();
@@ -40,10 +44,10 @@ namespace CoreDocker.Api.Security
             return byKey.ToPersistanceGrant();
         }
 
-        public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
+        public async Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
         {
-            var byKey = await _userGrantLookup.GetByUserId(subjectId);
-            return byKey.Select(x => x.ToPersistanceGrant());
+            var fromDbByFilter = await FromDbByFilter(filter);
+            return fromDbByFilter.Select(x => x.ToPersistanceGrant());
         }
 
         public async Task RemoveAsync(string key)
@@ -52,20 +56,18 @@ namespace CoreDocker.Api.Security
             if (byKey != null) await _userGrantLookup.Delete(byKey.Id);
         }
 
-        public async Task RemoveAllAsync(string subjectId, string clientId)
+        public async Task RemoveAllAsync(PersistedGrantFilter filter)
         {
-            _log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
-            var byKey = await _userGrantLookup.GetByUserId(subjectId);
-            foreach (var userGrant in byKey.Where(x => x.ClientId == clientId))
+            _log.Warning($"PersistedGrantStore:RemoveAllAsync For client {filter.SubjectId} {filter.ClientId} ");
+            var fromDbByFilter = await FromDbByFilter(filter);
+            foreach (var userGrant in fromDbByFilter)
                 await _userGrantLookup.Delete(userGrant.Id);
         }
 
-        public async Task RemoveAllAsync(string subjectId, string clientId, string type)
+        private async Task<IEnumerable<UserGrant>> FromDbByFilter(PersistedGrantFilter filter)
         {
-            _log.Warning($"PersistedGrantStore:RemoveAllAsync For client {subjectId} {clientId} ");
-            var byKey = await _userGrantLookup.GetByUserId(subjectId);
-            foreach (var userGrant in byKey.Where(x => x.ClientId == clientId && x.Type == type))
-                await _userGrantLookup.Delete(userGrant.Id);
+            _log.Information($"PersistedGrantStore:FromDbByFilter For SubjectId `{filter.SubjectId}` ClientId `{filter.ClientId}` ");
+            return (await _userGrantLookup.GetByUserId(filter.SubjectId)).Where(x => x.ClientId == filter.ClientId);
         }
 
         #endregion

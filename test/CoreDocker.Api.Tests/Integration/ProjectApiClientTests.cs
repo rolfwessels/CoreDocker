@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Utilities.Helpers;
@@ -12,7 +10,6 @@ using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Serilog;
 using NUnit.Framework;
 
 namespace CoreDocker.Api.Tests.Integration

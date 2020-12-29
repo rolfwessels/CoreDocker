@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using CoreDocker.Utilities.Helpers;
+using FluentValidation;
 using FluentValidation.Results;
 
 namespace CoreDocker.Dal.Validation
@@ -34,4 +36,6 @@ namespace CoreDocker.Dal.Validation
 
         protected abstract void TryResolve<T>(out IValidator<T> output);
     }
+
+   
 }
