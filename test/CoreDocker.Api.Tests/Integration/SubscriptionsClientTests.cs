@@ -62,7 +62,7 @@ namespace CoreDocker.Api.Tests.Integration
                 // onError.Should().BeNull();
                 items.Should().HaveCount(2);
                 error.Should().BeNull();
-                items.Last().Event.Should().Be("UserRemoved");
+                items.Select(x=>x.Event).Should().Contain("UserRemoved");
             }
 
             subscriptions.Should().NotBeNull();
