@@ -4,7 +4,7 @@ services:
     - mongodb
 
 before_build:
-    - choco install redis-64
+    - choco install redis-64 --version 3.0.503
     - redis-server --service-install
     - redis-server --service-start
 
