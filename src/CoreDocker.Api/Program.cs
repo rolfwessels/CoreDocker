@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using CoreDocker.Core.Framework.Logging;
+using CoreDocker.Core.Framework.Settings;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -52,9 +53,7 @@ namespace CoreDocker.Api
         public static void SettingsFileReaderHelper(WebHostBuilderContext hostingContext, IConfigurationBuilder config)
         {
             var env = hostingContext.HostingEnvironment;
-            config.AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true);
-            config.AddEnvironmentVariables();
+            config.AddJsonFilesAndEnvironment(env.EnvironmentName);
         }
     }
 }

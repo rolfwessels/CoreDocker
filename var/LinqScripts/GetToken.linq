@@ -31,7 +31,7 @@ void Main()
 	.Result
 	.Let(t => new { Authorization = $"{t.Token_Type} {t.Access_Token}"})
 	.ToJson()
-	.Dump("Token");
+	.Dump();
 }
 public class Token
 {

@@ -22,9 +22,9 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
             _args = new List<ArgBase>
             {
                 new Arg<IntType>("first", "Set the limit to return.",
-                    (options, context) => options.First = context.Argument<int?>("first") ?? DefaultLimit),
+                    (options, context) => options.First = context.ArgumentValue<int?>("first") ?? DefaultLimit),
                 new Arg<BooleanType>("includeCount", "Select to return the count of the items.",
-                    (options, context) => options.IncludeCount = context.Argument<bool>("includeCount"))
+                    (options, context) => options.IncludeCount = context.ArgumentValue<bool>("includeCount"))
             };
         }
 

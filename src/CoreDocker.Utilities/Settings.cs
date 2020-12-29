@@ -3,21 +3,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace CoreDocker.Utilities
 {
-    public class Settings
+    public class Settings : BaseSettings
     {
-        private static Lazy<Settings> _instance = new Lazy<Settings>(() => new Settings());
-        private readonly IConfiguration _configuration;
+        private static Lazy<Settings> _instance = new Lazy<Settings>(() => new Settings(new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true).Build()));
 
-        private Settings(IConfiguration configuration)
+        public Settings(IConfiguration configuration) : base(configuration, null)
         {
-            _configuration = configuration;
-        }
-
-        private Settings()
-        {
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true);
-            _configuration = builder.Build();
         }
 
         #region singleton
@@ -26,13 +18,15 @@ namespace CoreDocker.Utilities
 
         #endregion
 
-        public string MongoConnection => _configuration["MongoConnection"] ?? "mongodb://localhost/";
-        public string MongoDatabase => _configuration["MongoDatabase"] ?? "CoreDocker-Sample";
-        public string WebBasePath => _configuration["WebBasePath"];
+        public string MongoConnection => ReadConfigValue("MongoConnection", "mongodb://localhost/");
+        public string MongoDatabase => ReadConfigValue("MongoDatabase", "CoreDocker-Sample");
+        public string WebBasePath => ReadConfigValue("WebBasePath",null);
+        public string RedisHost => ReadConfigValue("RedisHost", "localhost");
 
         public static void Initialize(IConfiguration configuration)
         {
             _instance = new Lazy<Settings>(() => new Settings(configuration));
         }
     }
+
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace CoreDocker.Core.Framework.Settings
+namespace CoreDocker.Utilities
 {
     public class BaseSettings
     {

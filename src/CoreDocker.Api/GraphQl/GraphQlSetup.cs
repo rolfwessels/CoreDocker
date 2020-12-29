@@ -25,7 +25,7 @@ namespace CoreDocker.Api.GraphQl
         {
             app.UseWebSockets();
             app.UseEndpoints(x => x.MapGraphQL());
-            app.UsePlayground("/graphql", "/playground");
+            app.UsePlayground("/graphql", "/ui/playground");
         }
     }
 }

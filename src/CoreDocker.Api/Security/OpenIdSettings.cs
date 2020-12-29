@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using CoreDocker.Core.Framework.Settings;
+using CoreDocker.Utilities;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreDocker.Api.Security
