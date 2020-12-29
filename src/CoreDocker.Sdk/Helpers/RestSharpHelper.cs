@@ -11,10 +11,9 @@ namespace CoreDocker.Sdk.Helpers
         public static int MaxLogLength { get; set; } = 400;
         public static Action<string> Log { get; set; } = message => { };
 
-        public static Task<IRestResponse<T>> ExecuteAsyncWithLogging<T>(this RestClient client,
+        public static async Task<IRestResponse<T>> ExecuteAsyncWithLogging<T>(this RestClient client,
             RestRequest request) where T : new()
         {
-            var taskCompletionSource = new TaskCompletionSource<IRestResponse<T>>();
             var method = request.Method;
             var buildUri = client.BuildUri(request);
             var stopwatch = new Stopwatch();
@@ -23,15 +22,12 @@ namespace CoreDocker.Sdk.Helpers
                 .FirstOrDefault();
 
             Log($"Sent {method} {buildUri} [{Truncate(paramsSent, MaxLogLength)}]");
-            client.ExecuteAsync<T>(request, response =>
-            {
-                stopwatch.Stop();
-                Log(
-                    $"Response {method} {buildUri} [{stopwatch.ElapsedMilliseconds}ms] [{Truncate(response.Content, MaxLogLength)}]");
-                taskCompletionSource.SetResult(response);
-            });
 
-            return taskCompletionSource.Task;
+            var response = await client.ExecuteAsync<T>(request);
+            stopwatch.Stop();
+            Log($"Response {method} {buildUri} [{stopwatch.ElapsedMilliseconds}ms] [{Truncate(response.Content, MaxLogLength)}]");
+
+            return response;
         }
 
 

@@ -1,4 +1,4 @@
-﻿using CoreDocker.Core.Framework.Settings;
+﻿using CoreDocker.Utilities;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreDocker.Api
@@ -9,6 +9,6 @@ namespace CoreDocker.Api
         {
         }
 
-        //public string Origins => ReadConfigValue("Origins", "http://localhost:3000");
+        public string Origins => ReadConfigValue("Origins", "http://localhost:3000");
     }
 }

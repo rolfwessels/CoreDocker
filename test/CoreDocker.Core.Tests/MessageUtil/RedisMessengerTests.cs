@@ -1,8 +1,11 @@
 ﻿using System;
 using CoreDocker.Core.Framework.MessageUtil;
+using CoreDocker.Core.Framework.Settings;
+using CoreDocker.Utilities;
 using CoreDocker.Utilities.Tests;
 using CoreDocker.Utilities.Tests.Tools;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.MessageUtil
@@ -18,7 +21,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
         public void Setup()
         {
             TestLoggingHelper.EnsureExists();
-            _messenger = new RedisMessenger("localhost");
+            _messenger = new RedisMessenger(new Settings(new ConfigurationBuilder().AddJsonFilesAndEnvironment().Build()).RedisHost);
         }
 
         [TearDown]

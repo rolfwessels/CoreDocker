@@ -28,4 +28,5 @@ namespace CoreDocker.Utilities
             _instance = new Lazy<Settings>(() => new Settings(configuration));
         }
     }
+
 }
