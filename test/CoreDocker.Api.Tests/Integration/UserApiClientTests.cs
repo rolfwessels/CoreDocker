@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreDocker.Api.Components.Users;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
@@ -127,6 +128,8 @@ namespace CoreDocker.Api.Tests.Integration
             var userModel = await _adminConnection.Value.Users.Me();
             // action
             userModel.Image.Should().StartWith("https://www.gravatar.com/avatar");
+            
+           
         }
 
         [Test]

@@ -19,7 +19,7 @@ namespace CoreDocker.Api.Components.Users
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>().Description("The roles of the user.");
             descriptor.Field("image")
                 .Type<NonNullType<StringType>>()
-                .Resolver(context => { return $"https://www.gravatar.com/avatar/{Md5Hash(context.Parent<User>().Email)}?d=?d=robohash"; })
+                .Resolver(context => { return GravatarHelper.BuildUrl(context.Parent<User>().Email); })
                 .Description("User profile image.");
             descriptor.Field("activities")
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>()
@@ -31,21 +31,6 @@ namespace CoreDocker.Api.Components.Users
                 .Description("The date when the user was created.");
         }
 
-        private string Md5Hash(string value)
-        {
-            
-            using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(value);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-            
-            // Convert the byte array to hexadecimal string
-            StringBuilder sb = new StringBuilder();
-            foreach (var t in hashBytes)
-            {
-                sb.Append(t.ToString("X2"));
-            }
-            return sb.ToString();
-        }
 
         #region Private Methods
 
