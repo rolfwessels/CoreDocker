@@ -15,6 +15,11 @@ services:
         command: mongod --smallfiles --logpath=/dev/null # --quiet
         networks:
             - dev-network
+    redis:
+        image: redis:6.0-alpine
+        container_name: redis
+        ports:
+            - 6379:6379
     www:
         image: rolfwessels/coredocker-dashboard:alpha
         links:
@@ -24,6 +29,9 @@ services:
         ports:
             - 84:80
     src:
+        depends_on:
+            - redis
+            - db
         container_name: core-docker
         build:
             context: ./
@@ -42,7 +50,6 @@ services:
             - CoreDocker/src/CoreDocker.Utilities/bin
             - CoreDocker/test/CoreDocker.Api.Tests/bin
             - CoreDocker/test/CoreDocker.Core.Tests/bin
-            - CoreDocker/test/CoreDocker.Dal.Tests/bin
             - CoreDocker/test/CoreDocker.Utilities.Tests/bin
             #find src* | grep  '/obj$' | sed 's/^/ - CoreDocker\//'
             - CoreDocker/src/CoreDocker.Api/obj
@@ -55,7 +62,6 @@ services:
             - CoreDocker/src/CoreDocker.Utilities/obj
             - CoreDocker/test/CoreDocker.Api.Tests/obj
             - CoreDocker/test/CoreDocker.Core.Tests/obj
-            - CoreDocker/test/CoreDocker.Dal.Tests/obj
             - CoreDocker/test/CoreDocker.Utilities.Tests/obj
 
         environment:
@@ -71,5 +77,3 @@ services:
             driver: none
         networks:
             - dev-network
-        depends_on:
-            - db

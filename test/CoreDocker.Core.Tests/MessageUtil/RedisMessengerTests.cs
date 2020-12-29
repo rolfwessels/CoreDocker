@@ -1,29 +1,35 @@
 ﻿using System;
 using CoreDocker.Core.Framework.MessageUtil;
+using CoreDocker.Utilities.Tests;
+using CoreDocker.Utilities.Tests.Tools;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.MessageUtil
 {
     [TestFixture]
-    public class MessengerTests
+    [Category("Integration")]
+    public class RedisMessengerTests
     {
-        private IMessenger _messenger;
+        private RedisMessenger _messenger;
 
         #region Setup/Teardown
 
         public void Setup()
         {
-            _messenger = new Messenger();
+            TestLoggingHelper.EnsureExists();
+            _messenger = new RedisMessenger();
         }
 
         [TearDown]
         public void TearDown()
         {
+            GC.Collect();
+            _messenger.Clean();
+            _messenger.Count().Should().Be(0);
         }
 
         #endregion
-
         
         [Test]
         public void Send_Given_Object_ShouldBeReceived()
@@ -36,7 +42,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // action
             _messenger.Send(new SampleMessage("String"));
             // assert
-            received.Should().NotBeNull();
+            TestHelper.WaitForValue(() => received).Should().NotBeNull();
         }
 
         [Test]
@@ -50,9 +56,9 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // action
             _messenger.Send(new SampleMessage("String"));
             // assert
-            received.Should().NotBeNull();
+            TestHelper.WaitForValue(()=>received).Should().NotBeNull();
         }
-
+        
         [Test]
         public void Send_GivenRegisteredAndThenUnRegister_ShouldNotRelieveMessage()
         {
@@ -81,6 +87,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             _messenger.Send(new SampleMessage("String"));
             // assert
             received.Should().BeNull();
+            _messenger.Count().Should().Be(0);
         }
 
         #region Nested type: SampleMessage
