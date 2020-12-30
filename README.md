@@ -12,10 +12,11 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 - RESTful web API.
 - GraphQL (+ authorization + permissions) using hot chocolate
-- Reactjs Dashboad UI integrated
+- Reactjs Dashboad UI integrated (https://github.com/rolfwessels/coredocker-dashboard)
 - Authorization (OpenId with integrated identity server).
 - Swagger for API documentation.
 - MongoDB document storage database.
+- Redis for messaging between services
 - CI Appvayor && Travis for build automation
 - Docker files to compile and compose a server
 - Developed using TDD practices.
@@ -99,22 +100,13 @@ docker-compose up -d;
 docker-compose exec api bash
 ```
 
-## Deploy lambda
-
-```cmd
-cd src/CoreDocker.Api.Lambda
-dotnet build -v=q
-dotnet lambda deploy-serverless --s3-bucket coredocker-serverless coredocker-sample
-dotnet lambda delete-serverless Stage
-## Note that there is some circular depenency so you will need to update the origin url manually for now :-(
-
-```
 
 ## Logo
 
 - Special thanks to @baranpirincal for the logo. https://github.com/baranpirincal
 
-## Themes
+## Helpful Links
 
-- http://coreui.io/
-- https://github.com/akveo/ngx-admin
+- https://dev.to/ahmetkucukoglu/event-sourcing-with-asp-net-core-01-store-3k04
+- https://github.com/tabler/tabler-react
+- https://github.com/rolfwessels/coredocker-dashboard

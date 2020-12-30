@@ -2,16 +2,16 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
 
 # Base Development Packages
 RUN apk update \
-    && apk upgrade \
-    && apk add ca-certificates wget && update-ca-certificates \
-    && apk add --no-cache --update \
-    git \
-    curl \
-    wget \
-    bash \
-    make \
-    rsync \
-    nano
+  && apk upgrade \
+  && apk add ca-certificates wget && update-ca-certificates \
+  && apk add --no-cache --update \
+  git \
+  curl \
+  wget \
+  bash \
+  make \
+  rsync \
+  nano
 
 WORKDIR /CoreDocker
 

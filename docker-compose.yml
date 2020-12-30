@@ -1,82 +1,97 @@
 version: "3.5"
 networks:
-    dev-network:
+  dev-network:
 
 services:
-    db:
-        image: mongo:4.0
-        container_name: "db"
-        restart: unless-stopped
-        environment:
-            - MONGO_DATA_DIR=/data/db
-            - MONGO_LOG_DIR=/dev/null
-        ports:
-            - 27021:27017
-        command: mongod --smallfiles --logpath=/dev/null # --quiet
-        networks:
-            - dev-network
-    redis:
-        image: redis:6.0-alpine
-        container_name: redis
-        ports:
-            - 6379:6379
-        networks:
-            - dev-network
-    www:
-        image: rolfwessels/coredocker-dashboard:alpha
-        links:
-            - src
-        environment:
-            - API_URL=http://localhost:5000
-        ports:
-            - 84:80
-    src:
-        depends_on:
-            - redis
-            - db
-        container_name: core-docker
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        volumes:
-            - ".:/CoreDocker"
-            - "./.aws:/root/.aws"
-            #find src* | grep  '/bin$' | sed 's/^/ - CoreDocker\//'
-            - /CoreDocker/src/CoreDocker.Api/bin
-            - /CoreDocker/src/CoreDocker.Api.Lambda/bin
-            - /CoreDocker/src/CoreDocker.Core/bin
-            - /CoreDocker/src/CoreDocker.Dal/bin
-            - /CoreDocker/src/CoreDocker.Dal.MongoDb/bin
-            - /CoreDocker/src/CoreDocker.Sdk/bin
-            - /CoreDocker/src/CoreDocker.Shared/bin
-            - /CoreDocker/src/CoreDocker.Utilities/bin
-            - /CoreDocker/test/CoreDocker.Api.Tests/bin
-            - /CoreDocker/test/CoreDocker.Core.Tests/bin
-            - /CoreDocker/test/CoreDocker.Utilities.Tests/bin
-            #find src* | grep  '/obj$' | sed 's/^/ - /CoreDocker\//'
-            - /CoreDocker/src/CoreDocker.Api/obj
-            - /CoreDocker/src/CoreDocker.Api.Lambda/obj
-            - /CoreDocker/src/CoreDocker.Core/obj
-            - /CoreDocker/src/CoreDocker.Dal/obj
-            - /CoreDocker/src/CoreDocker.Dal.MongoDb/obj
-            - /CoreDocker/src/CoreDocker.Sdk/obj
-            - /CoreDocker/src/CoreDocker.Shared/obj
-            - /CoreDocker/src/CoreDocker.Utilities/obj
-            - /CoreDocker/test/CoreDocker.Api.Tests/obj
-            - /CoreDocker/test/CoreDocker.Core.Tests/obj
-            - /CoreDocker/test/CoreDocker.Utilities.Tests/obj
+  db:
+    image: mongo:4.0
+    container_name: "db"
+    restart: unless-stopped
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    ports:
+      - 27021:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    networks:
+      - dev-network
+  redis:
+    image: redis:6.0-alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - dev-network
+  eventstore-db:
+    image: eventstore/eventstore:20.10.0-buster-slim
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_EXT_HTTP_PORT=2113
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+    ports:
+      - "1113:1113"
+      - "2113:2113"
 
-        environment:
-            - DOTNET_ENVIRONMENT=Development
-            - MongoConnection=mongodb://db:27017/core-docker
-            - MongoDatabase=core-docker
-            - RedisHost=redis
-            - App__HostUrl=http://localhost:5000
-            - OpenId__Origins=http://localhost:5000,http://localhost:84,http://localhost:3000
-        ports:
-            - 5000:5000
-        entrypoint: top -b
-        logging:
-            driver: none
-        networks:
-            - dev-network
+  www:
+    image: rolfwessels/coredocker-dashboard:alpha
+    links:
+      - src
+    environment:
+      - API_URL=http://localhost:5000
+    ports:
+      - 84:80
+  src:
+    depends_on:
+      - redis
+      - db
+    container_name: core-docker
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ".:/CoreDocker"
+      - "./.aws:/root/.aws"
+      #find src* | grep  '/bin$' | sed 's/^/ - CoreDocker\//'
+      - /CoreDocker/src/CoreDocker.Api/bin
+      - /CoreDocker/src/CoreDocker.Api.Lambda/bin
+      - /CoreDocker/src/CoreDocker.Core/bin
+      - /CoreDocker/src/CoreDocker.Dal/bin
+      - /CoreDocker/src/CoreDocker.Dal.MongoDb/bin
+      - /CoreDocker/src/CoreDocker.Sdk/bin
+      - /CoreDocker/src/CoreDocker.Shared/bin
+      - /CoreDocker/src/CoreDocker.Utilities/bin
+      - /CoreDocker/test/CoreDocker.Api.Tests/bin
+      - /CoreDocker/test/CoreDocker.Core.Tests/bin
+      - /CoreDocker/test/CoreDocker.Utilities.Tests/bin
+      #find src* | grep  '/obj$' | sed 's/^/ - /CoreDocker\//'
+      - /CoreDocker/src/CoreDocker.Api/obj
+      - /CoreDocker/src/CoreDocker.Api.Lambda/obj
+      - /CoreDocker/src/CoreDocker.Core/obj
+      - /CoreDocker/src/CoreDocker.Dal/obj
+      - /CoreDocker/src/CoreDocker.Dal.MongoDb/obj
+      - /CoreDocker/src/CoreDocker.Sdk/obj
+      - /CoreDocker/src/CoreDocker.Shared/obj
+      - /CoreDocker/src/CoreDocker.Utilities/obj
+      - /CoreDocker/test/CoreDocker.Api.Tests/obj
+      - /CoreDocker/test/CoreDocker.Core.Tests/obj
+      - /CoreDocker/test/CoreDocker.Utilities.Tests/obj
+
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - MongoConnection=mongodb://db:27017/core-docker
+      - MongoDatabase=core-docker
+      - RedisHost=redis
+      - App__HostUrl=http://localhost:5000
+      - OpenId__Origins=http://localhost:5000,http://localhost:84,http://localhost:3000
+    ports:
+      - 5000:5000
+    entrypoint: top -b
+    logging:
+      driver: none
+    networks:
+      - dev-network
