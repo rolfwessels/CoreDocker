@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 
 namespace CoreDocker.Core.Framework.CommandQuery
@@ -14,12 +15,12 @@ namespace CoreDocker.Core.Framework.CommandQuery
 
         #region Implementation of ICommander
 
-        public async Task Notify<T>(T notificationRequest) where T : CommandNotificationBase
+        public async Task Notify<T>(T notificationRequest, CancellationToken cancellationToken) where T : CommandNotificationBase
         {
             await _mediator.Publish(notificationRequest);
         }
 
-        public async Task<CommandResult> Execute<T>(T commandRequest) where T : CommandRequestBase
+        public async Task<CommandResult> Execute<T>(T commandRequest, CancellationToken cancellationToken) where T : CommandRequestBase
         {
             return await _mediator.Send(commandRequest);
         }

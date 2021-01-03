@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
@@ -41,7 +42,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
             var validRequest = GetValidRequest();
             validRequest.Name = "";
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
+            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x =>
@@ -55,7 +56,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var project = await _projects.FindOne(x => x.Id == validRequest.Id);
             ;
@@ -69,7 +70,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var project = await _projects.FindOne(x => x.Id == validRequest.Id);
             project.Should().BeEquivalentTo(validRequest, DefaultCommandExcluding);

@@ -4,6 +4,7 @@ using Autofac;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Core.Framework.Event;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Dal.Models.Projects;
@@ -61,6 +62,7 @@ namespace CoreDocker.Core.Startup
             builder.Register(x => x.Resolve<IGeneralUnitOfWork>().UserGrants);
             builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Projects);
             builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Users);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().SystemCommands);
             builder.Register(x => x.Resolve<IGeneralUnitOfWork>().SystemEvents);
         }
 
@@ -104,9 +106,10 @@ namespace CoreDocker.Core.Startup
         {
             builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
             builder.RegisterType<MediatorCommander>();
-            builder.Register(x=>new CommanderPersist(x.Resolve<MediatorCommander>(),x.Resolve<IRepository<SystemEvent>>(), x.Resolve<IStringify>())).As<ICommander>();
+            builder.Register(x=>new CommanderPersist(x.Resolve<MediatorCommander>(),x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(), x.Resolve<IEventStoreConnection>())).As<ICommander>();
             builder.RegisterType<SubscriptionNotifications>().SingleInstance();
             builder.RegisterType<StringifyJson>().As<IStringify>().SingleInstance();
+            builder.RegisterType<EventStoreConnection>().As<IEventStoreConnection>();
         }
 
         #endregion

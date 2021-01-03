@@ -1,88 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Core.Framework.MessageUtil;
+using CoreDocker.Dal.Models.SystemEvents;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Helpers;
 using CoreDocker.Utilities.Serializer;
-using EventStore.Client;
-using Newtonsoft.Json;
-using Serilog;
 
 namespace CoreDocker.Core.Framework.Event
 {
-    public class EventStoreConnection
+    public class EventStoreConnection : IEventStoreConnection
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Lazy<EventStoreClient> _client;
-        private EventStoreClient Client => _client.Value;
-        private Dictionary<string,Type> _types = new Dictionary<string, Type>();
+        private readonly IRepository<SystemEvent> _events;
+        private readonly IMessenger _messenger;
         private readonly IStringify _stringify;
+        public readonly Dictionary<string,Type> _types = new Dictionary<string, Type>();
 
-        public EventStoreConnection(string connectionString = "esdb://localhost:2113?Tls=false")
+        public EventStoreConnection(IRepository<SystemEvent> events, IMessenger messenger, IStringify stringify)
         {
-            _stringify = new StringifyJson();
-            _client = new Lazy<EventStoreClient>(() =>Init(connectionString)); ;
+            _events = events;
+            _messenger = messenger;
+            _stringify = stringify;
         }
 
-        private EventStoreClient Init(string connectionString)
-        {
-            var settings = EventStoreClientSettings.Create(connectionString);
-            var client = new EventStoreClient(settings);
-            return client;
-        }
+        #region Implementation of IEventStoreConnection
 
-        public async Task Append<T>(string streamName, T value, CancellationToken cancellationToken)
+        public IAsyncEnumerable<EventHolder> Read(CancellationToken cancellationToken)
         {
-            var eventData = new EventData(
-                Uuid.NewUuid(),
-                GetTypeName<T>(),
-                _stringify.SerializeToUtf8Bytes(value)
-            );
-            await Client.AppendToStreamAsync(
-                streamName,
-                StreamState.Any,
-                new[] { eventData },
-                cancellationToken: cancellationToken
-            );
+            var keyCollection = _types.Keys;
+            return _events.Find(x => keyCollection.Contains(x.TypeName))
+                .ToAsyncEnumerable()
+                .SelectMany(x=>x.ToAsyncEnumerable())
+                .Select(x=> EventHolder.From(x.EventName,_stringify.Deserialize(_types[x.TypeName],x.Data.AsReadOnlyMemory())));
         }
 
         
-        public async IAsyncEnumerable<EventHolder> Read(string streamName, [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            var result = Client.ReadStreamAsync(Direction.Forwards, streamName, StreamPosition.Start);
-            var events = await result.ToListAsync(cancellationToken);
-            foreach (var e in events)
-            {
-                if (_types.TryGetValue(e.Event.EventType, out var type))
-                {
-                    var deserialize = _stringify.Deserialize(type, e.Event.Data);
-                    _log.Debug($"EventStoreConnection:Read {e.Event.EventType} from {e.Event.Data}");
-                    yield return EventHolder.From(e.Event.EventType, deserialize);
-                }
-                else
-                {
-                    _log.Error($"Could not find type [{e.Event.EventType}] in registered types [{_types.Values.StringJoin()}] ");
-                }
-            }
-        }
-
-        private string GetTypeName<T>()
-        {
-            return typeof(T).Name;
-        }
-
         public void Register<T>()
         {
-            _types.Add(GetTypeName<T>(), typeof(T));
+            _types.Add(SystemEvent.BuildTypeName(default(T)), typeof(T));
         }
 
-        public async Task RemoveSteam(string streamName)
+        public Task RemoveSteam(string streamName)
         {
-            await Client.TombstoneAsync(streamName, StreamState.Any, e => { });
+            throw new NotImplementedException();
         }
+
+        public async Task Append<T>(T value, CancellationToken cancellationToken)
+        {
+            var commandNotificationBase = value as CommandNotificationBase;
+            var systemEvent = new SystemEvent(
+                commandNotificationBase?.CorrelationId ?? null,
+                commandNotificationBase?.CreatedAt ?? DateTime.Now,
+                commandNotificationBase?.Id ?? null,
+                commandNotificationBase?.EventName?? null,
+                SystemEvent.BuildTypeName(value),
+                _stringify.Serialize(value)
+            );
+            await _events.Add(systemEvent);
+            await _messenger.Send(systemEvent);
+        }
+
+        #endregion
+    }
+
+    public interface IEventStoreConnection
+    {
+        Task Append<T>(T value, CancellationToken cancellationToken);
+        IAsyncEnumerable<EventHolder> Read(CancellationToken cancellationToken);
+        void Register<T>();
+        Task RemoveSteam(string streamName);
     }
 
     public class EventHolder

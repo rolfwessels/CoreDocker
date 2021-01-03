@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Mappers;
@@ -27,7 +28,7 @@ namespace CoreDocker.Core.Components.Projects
 
             #region Overrides of CommandHandlerBase<Request>
 
-            public override async Task ProcessCommand(Request request)
+            public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _persistence.GetConnection())
                 {
@@ -39,7 +40,7 @@ namespace CoreDocker.Core.Components.Projects
                     );
                 }
 
-                await _commander.Notify(request.ToEvent());
+                await _commander.Notify(request.ToEvent(), cancellationToken);
             }
 
             #endregion

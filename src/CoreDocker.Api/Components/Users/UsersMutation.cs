@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Api.Components.Projects;
 using CoreDocker.Core.Components.Users;
@@ -26,7 +27,7 @@ namespace CoreDocker.Api.Components.Users
             UserCreateUpdateModel user)
         {
             return _commander.Execute(UserCreate.Request.From(_generator.NewId, user.Name, user.Email,
-                user.Password, user.Roles));
+                user.Password, user.Roles), CancellationToken.None);
         }
 
         public Task<CommandResult> Update(
@@ -35,19 +36,19 @@ namespace CoreDocker.Api.Components.Users
             UserCreateUpdateModel user)
         {
             return _commander.Execute(UserUpdate.Request.From(id, user.Name, user.Password, user.Roles,
-                user.Email));
+                user.Email), CancellationToken.None);
         }
 
         public Task<CommandResult> Remove([GraphQLNonNullType] string id)
         {
-            return _commander.Execute(UserRemove.Request.From(id));
+            return _commander.Execute(UserRemove.Request.From(id), CancellationToken.None);
         }
 
         public Task<CommandResult> Register([GraphQLNonNullType] [GraphQLType(typeof(RegisterType))]
             RegisterModel user)
         {
             return _commander.Execute(UserCreate.Request.From(_generator.NewId, user.Name, user.Email,
-                user.Password, new List<string>() {RoleManager.Guest.Name}));
+                user.Password, new List<string>() {RoleManager.Guest.Name}), CancellationToken.None);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Framework.CommandQuery;
@@ -26,7 +27,7 @@ namespace CoreDocker.Api.Components.Projects
             [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
             ProjectCreateUpdateModel project)
         {
-            return _commander.Execute(ProjectCreate.Request.From(_generator.NewId, project.Name));
+            return _commander.Execute(ProjectCreate.Request.From(_generator.NewId, project.Name), CancellationToken.None);
         }
 
         [Authorize]
@@ -35,12 +36,12 @@ namespace CoreDocker.Api.Components.Projects
             [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
             ProjectCreateUpdateModel project)
         {
-            return _commander.Execute(ProjectUpdateName.Request.From(id, project.Name));
+            return _commander.Execute(ProjectUpdateName.Request.From(id, project.Name), CancellationToken.None);
         }
 
         public Task<CommandResult> Remove([GraphQLNonNullType] string id)
         {
-            return _commander.Execute(ProjectRemove.Request.From(id));
+            return _commander.Execute(ProjectRemove.Request.From(id), CancellationToken.None);
         }
     }
 }

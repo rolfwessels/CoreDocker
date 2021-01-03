@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Mappers;
@@ -24,13 +25,13 @@ namespace CoreDocker.Core.Components.Users
 
             #region Overrides of CommandHandlerBase<Request>
 
-            public override async Task ProcessCommand(Request request)
+            public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _persistence.GetConnection())
                 {
                     var foundUser = await connection.Users.FindOrThrow(request.Id);
                     var removed = await connection.Users.Remove(x => x.Id == foundUser.Id);
-                    await _commander.Notify(request.ToEvent(removed));
+                    await _commander.Notify(request.ToEvent(removed), cancellationToken);
                 }
             }
 
