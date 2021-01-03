@@ -1,5 +1,4 @@
 ﻿using System;
-using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.Users;
 

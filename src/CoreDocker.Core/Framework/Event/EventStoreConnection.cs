@@ -50,7 +50,7 @@ namespace CoreDocker.Core.Framework.Event
         }
 
         
-        public async IAsyncEnumerable<EventHolder> Read(string streamName, CancellationToken cancellationToken)
+        public async IAsyncEnumerable<EventHolder> Read(string streamName, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var result = Client.ReadStreamAsync(Direction.Forwards, streamName, StreamPosition.Start);
             var events = await result.ToListAsync(cancellationToken);

@@ -12,7 +12,7 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 - RESTful web API.
 - GraphQL (+ authorization + permissions) using hot chocolate
-- Reactjs Dashboad UI integrated (https://github.com/rolfwessels/coredocker-dashboard)
+- Reactjs Dashboad UI integrated (<https://github.com/rolfwessels/coredocker-dashboard>)
 - Authorization (OpenId with integrated identity server).
 - Swagger for API documentation.
 - MongoDB document storage database.
@@ -29,7 +29,7 @@ This project contains some scafolding code that I use whenever I start a new pro
 - Code analytics - look at resharper cli tools.
 - Find and clean unused code. See if we can automate report
 - 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
-- More https://shields.io/#/
+- More <https://shields.io/#/>
 
 ## Inspection
 
@@ -68,7 +68,7 @@ make start
 
 ## Create certificates
 
-see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/
+see <https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/>
 
 ```cmd
 cd src/CoreDocker.Api/Certificates
@@ -100,13 +100,12 @@ docker-compose up -d;
 docker-compose exec api bash
 ```
 
-
 ## Logo
 
-- Special thanks to @baranpirincal for the logo. https://github.com/baranpirincal
+- Special thanks to @baranpirincal for the logo. <https://github.com/baranpirincal>
 
 ## Helpful Links
 
-- https://dev.to/ahmetkucukoglu/event-sourcing-with-asp-net-core-01-store-3k04
-- https://github.com/tabler/tabler-react
-- https://github.com/rolfwessels/coredocker-dashboard
+- <https://dev.to/ahmetkucukoglu/event-sourcing-with-asp-net-core-01-store-3k04>
+- <https://github.com/tabler/tabler-react>
+- <https://github.com/rolfwessels/coredocker-dashboard>

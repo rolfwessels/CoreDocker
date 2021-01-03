@@ -3,20 +3,19 @@ using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using Microsoft.Extensions.Logging;
 
 namespace CoreDocker.Core.Components.Users
 {
     public class UserGrantLookup : BaseLookup<UserGrant>, IUserGrantLookup
     {
-        public UserGrantLookup(BaseManagerArguments baseManagerArguments, ILogger<UserGrantLookup> logger) : base(
-            baseManagerArguments)
+        public UserGrantLookup(IRepository<UserGrant> userGrant)
         {
+            Repository = userGrant;
         }
 
         #region Overrides of BaseLookup<UserGrant>
 
-        protected override IRepository<UserGrant> Repository => _generalUnitOfWork.UserGrants;
+        protected override IRepository<UserGrant> Repository { get; }
 
         #endregion
 

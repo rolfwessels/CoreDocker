@@ -15,14 +15,14 @@ namespace CoreDocker.Core.Components.Users
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UserLookup(BaseManagerArguments baseManagerArguments) : base(
-            baseManagerArguments)
+        public UserLookup(IRepository<User> users)
         {
+            Repository = users;
         }
 
         #region Overrides of BaseLookup<User>
 
-        protected override IRepository<User> Repository => _generalUnitOfWork.Users;
+        protected override IRepository<User> Repository { get; }
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace CoreDocker.Core.Components.Users
         {
             return Task.Run(() =>
             {
-                var query = _generalUnitOfWork.Users.Query();
+                var query = Repository.Query();
                 if (!string.IsNullOrEmpty(options.Search))
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
@@ -78,15 +78,16 @@ namespace CoreDocker.Core.Components.Users
         public async Task<User> GetUserByEmail(string email)
         {
             if (email == null) throw new ArgumentNullException(nameof(email));
-            return await _generalUnitOfWork.Users.FindOne(x => x.Email == email.ToLower());
+            return await Repository.FindOne(x => x.Email == email.ToLower());
         }
 
         public async Task UpdateLastLoginDate(string email)
         {
-            var userFound = await GetUserByEmail(email);
-            if (userFound == null) throw new ArgumentException("Invalid email address.");
-            userFound.LastLoginDate = DateTime.Now;
-//            await Update(userFound);
+            var updateOne = await Repository.UpdateOne(x => x.Email == email.ToLower(), calls => calls.Set(x=>x.LastLoginDate, DateTime.Now));
+            if (updateOne == 0)
+            {
+                throw new ArgumentException("Invalid email address.");
+            }
         }
 
         #endregion

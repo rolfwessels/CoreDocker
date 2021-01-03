@@ -22,7 +22,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         {
             base.Setup();
             _mockLogger = new Mock<ILogger<UserGrantLookup>>();
-            _userGrantLookup = new UserGrantLookup(_baseManagerArguments, _mockLogger.Object);
+            _userGrantLookup = new UserGrantLookup(_fakeGeneralUnitOfWork.UserGrants);
         }
 
         #endregion

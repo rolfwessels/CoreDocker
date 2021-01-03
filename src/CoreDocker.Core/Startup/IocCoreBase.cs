@@ -57,6 +57,9 @@ namespace CoreDocker.Core.Startup
         {
             builder.Register(GetInstanceOfIGeneralUnitOfWorkFactory).SingleInstance();
             builder.Register(Delegate).As<IGeneralUnitOfWork>();
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().UserGrants);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Projects);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Users);
         }
 
         protected abstract IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg);
@@ -80,7 +83,6 @@ namespace CoreDocker.Core.Startup
 
         private static void SetupManagers(ContainerBuilder builder)
         {
-            builder.RegisterType<BaseManagerArguments>();
             builder.RegisterType<ProjectLookup>().As<IProjectLookup>();
             builder.RegisterType<RoleManager>().As<IRoleManager>();
             builder.RegisterType<UserLookup>().As<IUserLookup>();

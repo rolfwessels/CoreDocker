@@ -60,9 +60,10 @@ namespace CoreDocker.Api.Tests.Integration
 
                 items.WaitFor(x => x.Count == 2, 10000);
                 // onError.Should().BeNull();
+                items.Select(x => x.Event).Should().Contain("UserRemoved");
                 items.Should().HaveCount(2);
                 error.Should().BeNull();
-                items.Select(x=>x.Event).Should().Contain("UserRemoved");
+                
             }
 
             subscriptions.Should().NotBeNull();
