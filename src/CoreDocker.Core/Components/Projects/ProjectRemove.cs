@@ -27,12 +27,10 @@ namespace CoreDocker.Core.Components.Projects
 
             public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _persistence.GetConnection())
-                {
-                    var foundProject = await connection.Projects.FindOrThrow(request.Id);
-                    await connection.Projects.Remove(x => x.Id == foundProject.Id);
-                    await _commander.Notify(request.ToEvent(), cancellationToken);
-                }
+                using var connection = _persistence.GetConnection();
+                var foundProject = await connection.Projects.FindOrThrow(request.Id);
+                await connection.Projects.Remove(x => x.Id == foundProject.Id);
+                await _commander.Notify(request.ToEvent(), cancellationToken);
             }
 
             #endregion
