@@ -17,7 +17,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectUpdateTests : BaseManagerTests
     {
-        private ProjectUpdate.Handler _handler;
+        private ProjectUpdateName.Handler _handler;
         private IRepository<Project> _projects;
 
         #region Setup/Teardown
@@ -25,7 +25,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
         public override void Setup()
         {
             base.Setup();
-            _handler = new ProjectUpdate.Handler(_inMemoryGeneralUnitOfWorkFactory,
+            _handler = new ProjectUpdateName.Handler(_inMemoryGeneralUnitOfWorkFactory,
                 FakeValidator.New<ProjectValidator>(),
                 _mockICommander.Object);
             _projects = _fakeGeneralUnitOfWork.Projects;
@@ -76,14 +76,14 @@ namespace CoreDocker.Core.Tests.Components.Projects
         }
 
 
-        public ProjectUpdate.Request GetValidRequest()
+        public ProjectUpdateName.Request GetValidRequest()
         {
             var existingProject = _fakeGeneralUnitOfWork.Projects.AddAFake();
             var projectUpdateUpdateModels = Builder<Project>.CreateNew()
                 .WithValidData()
                 .With(x => x.Id = existingProject.Id)
                 .Build()
-                .DynamicCastTo<ProjectUpdate.Request>();
+                .DynamicCastTo<ProjectUpdateName.Request>();
             return projectUpdateUpdateModels;
         }
     }

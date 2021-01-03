@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Dal.Persistence;
 using CoreDocker.Shared.Models.Projects;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
@@ -12,10 +13,12 @@ namespace CoreDocker.Api.Components.Projects
     public class ProjectsMutation
     {
         private readonly ICommander _commander;
+        private readonly IIdGenerator _generator;
 
-        public ProjectsMutation(ICommander commander)
+        public ProjectsMutation(ICommander commander, IIdGenerator generator)
         {
             _commander = commander;
+            _generator = generator;
         }
 
         public Task<CommandResult> Create(
@@ -23,7 +26,7 @@ namespace CoreDocker.Api.Components.Projects
             [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
             ProjectCreateUpdateModel project)
         {
-            return _commander.Execute(ProjectCreate.Request.From(_commander.NewId, project.Name));
+            return _commander.Execute(ProjectCreate.Request.From(_generator.NewId, project.Name));
         }
 
         [Authorize]
@@ -32,7 +35,7 @@ namespace CoreDocker.Api.Components.Projects
             [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
             ProjectCreateUpdateModel project)
         {
-            return _commander.Execute(ProjectUpdate.Request.From(id, project.Name));
+            return _commander.Execute(ProjectUpdateName.Request.From(id, project.Name));
         }
 
         public Task<CommandResult> Remove([GraphQLNonNullType] string id)

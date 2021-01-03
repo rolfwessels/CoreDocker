@@ -4,8 +4,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
 {
     public interface ICommander
     {
-        string NewId { get; }
-        Task SendEvent<T>(T @event) where T : CommandNotificationBase;
-        Task<CommandResult> Execute<T>(T from) where T : CommandRequestBase;
+        Task Notify<T>(T notificationRequest) where T : CommandNotificationBase;
+        Task<CommandResult> Execute<T>(T commandRequest) where T : CommandRequestBase;
     }
 }

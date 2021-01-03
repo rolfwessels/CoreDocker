@@ -1,5 +1,6 @@
 ﻿using System;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 
 namespace CoreDocker.Dal.Persistence
@@ -9,5 +10,6 @@ namespace CoreDocker.Dal.Persistence
         IRepository<Project> Projects { get; }
         IRepository<User> Users { get; }
         IRepository<UserGrant> UserGrants { get; }
+        IRepository<SystemEvent> SystemEvents { get; set; }
     }
 }

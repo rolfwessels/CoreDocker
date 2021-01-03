@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace CoreDocker.Utilities.Tests.Serializer
 {
     [TestFixture]
-    public class JsonSerializerTests
+    public class StringifyJsonTests
     {
         private StringifyJson _stringifyJson;
 

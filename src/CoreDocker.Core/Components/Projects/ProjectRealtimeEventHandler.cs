@@ -8,7 +8,7 @@ namespace CoreDocker.Core.Components.Projects
 {
     public class ProjectRealTimeEventHandler : RealTimeEventHandlerBase,
         INotificationHandler<ProjectCreate.Notification>,
-        INotificationHandler<ProjectUpdate.Notification>,
+        INotificationHandler<ProjectUpdateName.Notification>,
         INotificationHandler<ProjectRemove.Notification>
     {
         private readonly SubscriptionNotifications _subscription;
@@ -29,7 +29,7 @@ namespace CoreDocker.Core.Components.Projects
 
         #region Implementation of INotificationHandler<in Notification>
 
-        public Task Handle(ProjectUpdate.Notification notification, CancellationToken cancellationToken)
+        public Task Handle(ProjectUpdateName.Notification notification, CancellationToken cancellationToken)
         {
             return _subscription.Send(BuildMessage(notification));
         }

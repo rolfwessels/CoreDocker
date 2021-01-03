@@ -35,7 +35,7 @@ namespace CoreDocker.Core.Components.Projects
                     _validation.ValidateAndThrow(project);
                     await connection.Projects.Add(project);
                 }
-                await _commander.SendEvent(request.ToEvent());
+                await _commander.Notify(request.ToEvent());
             }
 
             #endregion

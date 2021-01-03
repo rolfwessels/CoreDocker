@@ -30,7 +30,7 @@ namespace CoreDocker.Core.Components.Projects
                 {
                     var foundProject = await connection.Projects.FindOrThrow(request.Id);
                     await connection.Projects.Remove(x => x.Id == foundProject.Id);
-                    await _commander.SendEvent(request.ToEvent());
+                    await _commander.Notify(request.ToEvent());
                 }
             }
 

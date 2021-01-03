@@ -30,7 +30,7 @@ namespace CoreDocker.Core.Components.Users
                 {
                     var foundUser = await connection.Users.FindOrThrow(request.Id);
                     var removed = await connection.Users.Remove(x => x.Id == foundUser.Id);
-                    await _commander.SendEvent(request.ToEvent(removed));
+                    await _commander.Notify(request.ToEvent(removed));
                 }
             }
 

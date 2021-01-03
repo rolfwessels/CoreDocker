@@ -45,7 +45,7 @@ namespace CoreDocker.Core.Components.Users
                     );
                 }
 
-                await _commander.SendEvent(request.ToEvent());
+                await _commander.Notify(request.ToEvent());
             }
 
             #endregion

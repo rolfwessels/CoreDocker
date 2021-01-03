@@ -39,7 +39,7 @@ namespace CoreDocker.Core.Components.Users
                     await connection.Users.Add(user);
                 }
 
-                await _commander.SendEvent(request.ToEvent());
+                await _commander.Notify(request.ToEvent());
             }
 
             #endregion

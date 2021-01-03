@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities.Helpers;
@@ -19,6 +19,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             Users = new FakeRepository<User>();
             Projects = new FakeRepository<Project>();
             UserGrants = new FakeRepository<UserGrant>();
+            SystemEvents = new FakeRepository<SystemEvent>();
         }
 
         #region IGeneralUnitOfWork Members
@@ -39,6 +40,7 @@ namespace CoreDocker.Dal.InMemoryCollections
         public IRepository<User> Users { get; }
         public IRepository<Project> Projects { get; }
         public IRepository<UserGrant> UserGrants { get; }
+        public IRepository<SystemEvent> SystemEvents { get; set; }
 
         #endregion
     }

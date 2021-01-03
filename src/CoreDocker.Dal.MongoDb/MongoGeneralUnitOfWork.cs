@@ -1,5 +1,6 @@
 ﻿using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using MongoDB.Driver;
@@ -13,6 +14,7 @@ namespace CoreDocker.Dal.MongoDb
             Users = new MongoRepository<User>(database);
             Projects = new MongoRepository<Project>(database);
             UserGrants = new MongoRepository<UserGrant>(database);
+            SystemEvents = new MongoRepository<SystemEvent>(database);
         }
 
         #region IGeneralUnitOfWork Members
@@ -32,6 +34,7 @@ namespace CoreDocker.Dal.MongoDb
         public IRepository<User> Users { get; }
         public IRepository<Project> Projects { get; }
         public IRepository<UserGrant> UserGrants { get; }
+        public IRepository<SystemEvent> SystemEvents { get; set; }
 
         #endregion
     }

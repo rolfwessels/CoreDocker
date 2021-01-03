@@ -13,10 +13,10 @@ namespace CoreDocker.Core.Framework.Mappers
                 .IgnoreCreateUpdate();
             cfg.CreateMap<ProjectCreate.Request, ProjectCreate.Notification>();
 
-            cfg.CreateMap<ProjectUpdate.Request, Project>()
+            cfg.CreateMap<ProjectUpdateName.Request, Project>()
                 .IgnoreCreateUpdate();
 
-            cfg.CreateMap<ProjectUpdate.Request, ProjectUpdate.Notification>();
+            cfg.CreateMap<ProjectUpdateName.Request, ProjectUpdateName.Notification>();
 
             cfg.CreateMap<ProjectRemove.Request, ProjectRemove.Notification>()
                 .ForMember(x => x.WasRemoved, opt => opt.Ignore());
@@ -39,13 +39,13 @@ namespace CoreDocker.Core.Framework.Mappers
             return GetInstance().Map(project, projectReference);
         }
 
-        public static Project ToDao(this ProjectUpdate.Request project, Project projectReference = null)
+        public static Project ToDao(this ProjectUpdateName.Request project, Project projectReference = null)
         {
             return GetInstance().Map(project, projectReference);
         }
 
-        public static ProjectUpdate.Notification ToEvent(this ProjectUpdate.Request project,
-            ProjectUpdate.Notification projectReference = null)
+        public static ProjectUpdateName.Notification ToEvent(this ProjectUpdateName.Request project,
+            ProjectUpdateName.Notification projectReference = null)
         {
             return GetInstance().Map(project, projectReference);
         }
