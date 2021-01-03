@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,21 +65,18 @@ namespace CoreDocker.Core.Tests.Framework.Event
             var expectedAfter = Guid.NewGuid();
             _store.Register<SampleCreate>();
 
-
             // action
             var cancellationTokenSource = new CancellationTokenSource();
             await _store.Append(new SampleCreate { Create = expectedBefore }, cancellationTokenSource.Token);
-           
-            var result = _store.Read(cancellationTokenSource.Token);
-            var listAsync = result
-                .OfType<EventHolderTyped<SampleCreate>>()
-                .Select(x => x.Typed)
-                .ToListAsync(cancellationTokenSource.Token);
-            await _store.Append(new SampleCreate { Create = expectedAfter }, cancellationTokenSource.Token);
-            // activity
-            var list = await listAsync;
+            var list = new List<SampleCreate>();
+            using (_store.ReadAndFollow(cancellationTokenSource.Token).Subscribe(holder => list.Add((holder as EventHolderTyped<SampleCreate>)?.Typed)))
+            {
+                await _store.Append(new SampleCreate {Create = expectedAfter}, cancellationTokenSource.Token);
+            }
+
             list.Select(x => x.Create).Should().Contain(expectedBefore);
             list.Select(x => x.Create).Should().Contain(expectedAfter);
+         
         }
 
 

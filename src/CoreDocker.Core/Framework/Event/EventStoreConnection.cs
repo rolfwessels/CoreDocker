@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
@@ -28,16 +31,22 @@ namespace CoreDocker.Core.Framework.Event
 
         #region Implementation of IEventStoreConnection
 
-        public IAsyncEnumerable<EventHolder> Read(CancellationToken cancellationToken)
+        public IAsyncEnumerable<EventHolder> Read(CancellationToken token)
         {
             var keyCollection = _types.Keys;
-            return _events.Find(x => keyCollection.Contains(x.TypeName))
-                .ToAsyncEnumerable()
-                .SelectMany(x=>x.ToAsyncEnumerable())
-                .Select(x=> EventHolder.From(x.EventName,_stringify.Deserialize(_types[x.TypeName],x.Data.AsReadOnlyMemory())));
+            var asyncEnumerable = _events.Find(x => keyCollection.Contains(x.TypeName))
+                    .ToAsyncEnumerable()
+                    .SelectMany(x => x.ToAsyncEnumerable())
+                    .Select(ToEventHolder);
+            return asyncEnumerable;
         }
 
-        
+        private EventHolder ToEventHolder(SystemEvent x)
+        {
+            return EventHolder.From(x.EventName, _stringify.Deserialize(_types[x.TypeName], x.Data.AsReadOnlyMemory()));
+        }
+
+
         public void Register<T>()
         {
             _types.Add(SystemEvent.BuildTypeName(default(T)), typeof(T));
@@ -48,7 +57,30 @@ namespace CoreDocker.Core.Framework.Event
             throw new NotImplementedException();
         }
 
-        public async Task Append<T>(T value, CancellationToken cancellationToken)
+        public IObservable<EventHolder> ReadAndFollow(CancellationToken token)
+        {
+            return Observable.Create<EventHolder>(o =>
+            {
+                var keyCollection = _types.Keys;
+                var asyncEnumerable = _events.Find(x => keyCollection.Contains(x.TypeName)).Result;
+                var receiver = new Object();
+                _messenger.Register<SystemEvent>(receiver,e => o.OnNext(ToEventHolder(e)) );
+                foreach (var holder in asyncEnumerable.Select(ToEventHolder))
+                {
+                    o.OnNext(holder);
+                }
+
+                //o.OnCompleted();
+
+                return () => { _messenger.UnRegister(receiver); };
+            });
+            // var observableCollection = new ObservableCollection<EventHolder>();
+            // Read(token)
+            // _messenger.Register<SystemEvent>(observableCollection, e => observableCollection.Add(ToEventHolder(e)));
+            // return observableCollection.ToAsyncEnumerable();
+        }
+
+        public async Task Append<T>(T value, CancellationToken token)
         {
             var commandNotificationBase = value as CommandNotificationBase;
             var systemEvent = new SystemEvent(
@@ -64,43 +96,5 @@ namespace CoreDocker.Core.Framework.Event
         }
 
         #endregion
-    }
-
-    public interface IEventStoreConnection
-    {
-        Task Append<T>(T value, CancellationToken cancellationToken);
-        IAsyncEnumerable<EventHolder> Read(CancellationToken cancellationToken);
-        void Register<T>();
-        Task RemoveSteam(string streamName);
-    }
-
-    public class EventHolder
-    {
-        public string EventType { get; }
-        public object Value { get; }
-
-        protected EventHolder(string eventType, object value)
-        {
-            EventType = eventType;
-            Value = value;
-        }
-
-        public static EventHolder From(string eventType, object value)
-        {
-            Type generic = typeof(EventHolderTyped<>);
-            Type constructed = generic.MakeGenericType(value.GetType());
-            return Activator.CreateInstance(constructed, eventType, value) as EventHolder;
-        }
-    }
-
-    public class EventHolderTyped<T>: EventHolder
-    {
-        public EventHolderTyped(string eventType, object value) : base(eventType, value)
-        {
-        }
-
-        public T Typed => (T) Value;
-
-        
     }
 }
