@@ -34,7 +34,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
         #endregion
 
         [Test]
-        public void ProcessCommand_GivenInvalidRequest_ShouldSetAllProperties()
+        public void ProcessCommand_GivenInvalidRequest_ShouldThrowException()
         {
             // arrange
             Setup();

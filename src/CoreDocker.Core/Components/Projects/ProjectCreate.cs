@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Mappers;
@@ -37,7 +35,6 @@ namespace CoreDocker.Core.Components.Projects
                     _validation.ValidateAndThrow(project);
                     await connection.Projects.Add(project);
                 }
-
                 await _commander.SendEvent(request.ToEvent());
             }
 
@@ -51,6 +48,12 @@ namespace CoreDocker.Core.Components.Projects
         public class Notification : CommandNotificationBase
         {
             public string Name { get; set; }
+
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "ProjectCreated";
+
+            #endregion
         }
 
         #endregion

@@ -54,6 +54,12 @@ namespace CoreDocker.Core.Components.Projects
         public class Notification : CommandNotificationBase
         {
             public string Name { get; set; }
+
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "ProjectUpdated";
+
+            #endregion
         }
 
         #endregion

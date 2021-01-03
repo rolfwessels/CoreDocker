@@ -44,6 +44,12 @@ namespace CoreDocker.Core.Components.Users
         public class Notification : CommandNotificationBase
         {
             public bool WasRemoved { get; set; }
+
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "UserRemoved";
+
+            #endregion
         }
 
         #endregion

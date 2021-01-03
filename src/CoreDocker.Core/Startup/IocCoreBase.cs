@@ -3,7 +3,6 @@ using System.Reflection;
 using Autofac;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Subscriptions;

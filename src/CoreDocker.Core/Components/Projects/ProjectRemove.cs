@@ -43,6 +43,12 @@ namespace CoreDocker.Core.Components.Projects
 
         public class Notification : CommandNotificationBase
         {
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "ProjectRemoved";
+
+            #endregion
+
             public bool WasRemoved { get; set; }
         }
 

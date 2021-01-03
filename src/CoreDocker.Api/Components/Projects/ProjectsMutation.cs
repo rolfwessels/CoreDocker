@@ -18,7 +18,8 @@ namespace CoreDocker.Api.Components.Projects
             _commander = commander;
         }
 
-        public Task<CommandResult> Create([GraphQLNonNullType]
+        public Task<CommandResult> Create(
+            [GraphQLNonNullType]
             [GraphQLType(typeof(NonNullType<ProjectCreateUpdateType>))]
             ProjectCreateUpdateModel project)
         {
