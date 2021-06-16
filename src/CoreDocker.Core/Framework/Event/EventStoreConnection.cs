@@ -49,11 +49,6 @@ namespace CoreDocker.Core.Framework.Event
             _types.Add(SystemEvent.BuildTypeName(default(T)), typeof(T));
         }
 
-        public Task RemoveSteam(string streamName)
-        {
-            throw new NotImplementedException();
-        }
-
         public IObservable<EventHolder> ReadAndFollow(CancellationToken token)
         {
             return Observable.Create<EventHolder>(o =>

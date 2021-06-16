@@ -10,7 +10,6 @@ namespace CoreDocker.Core.Framework.Event
         Task Append<T>(T value, CancellationToken token);
         IAsyncEnumerable<EventHolder> Read(CancellationToken token);
         void Register<T>();
-        Task RemoveSteam(string streamName);
         IObservable<EventHolder> ReadAndFollow(CancellationToken token);
     }
 }
