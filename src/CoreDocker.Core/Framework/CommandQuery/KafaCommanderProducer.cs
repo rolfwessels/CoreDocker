@@ -1,76 +1,63 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 using CoreDocker.Core.Framework.Mappers;
-using Kafka.Public;
+using CoreDocker.Utilities.Helpers;
+using MediatR;
+using Newtonsoft.Json;
 using Serilog;
-using ILogger = Kafka.Public.ILogger;
 
 
 namespace CoreDocker.Core.Framework.CommandQuery
 {
     public class KafaCommanderProducer : ICommander, IDisposable
     {
-        private static readonly Serilog.ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
-        
-        private Lazy<ClusterClient> _eventProducer;
+        public const string TopicCommands = "core.docker.commands";
+        public const string TopicEvents = "core.docker.events";
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
+        private ProducerConfig _producerConfig;
+        private Lazy<IProducer<Null, string>> _producer;
+        private JsonSerializerSettings _jsonSerializerSettings;
 
-        public KafaCommanderProducer(string host = "localhost:9092")
+
+        public KafaCommanderProducer(string host = "localhost:9093")
         {
-            _eventProducer = new Lazy<ClusterClient>(() => new ClusterClient(new Configuration {Seeds = host}, LoggingAdapt.From(_log.ForContext(typeof(ClusterClient)))));
+            _producerConfig = new ProducerConfig
+            {
+                BootstrapServers = host,
+                ClientId = Dns.GetHostName(),
+            };
+
+            _producer = new Lazy<IProducer<Null, string>>(() =>
+                new ProducerBuilder<Null, string>(_producerConfig).Build());
+            _jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
         }
 
-        private class LoggingAdapt : ILogger
-        {
-            public static LoggingAdapt From(Serilog.ILogger log)
-            {
-                return new LoggingAdapt(log);
-            }
-
-            private readonly Serilog.ILogger _log;
-
-            private LoggingAdapt(Serilog.ILogger log)
-            {
-                _log = log;
-            }
-
-            #region Implementation of ILogger
-
-            public void LogInformation(string message)
-            {
-                _log.Information(message);
-            }
-
-            public void LogWarning(string message)
-            {
-                _log.Warning(message);
-            }
-
-            public void LogError(string message)
-            {
-                _log.Error(message);
-            }
-
-            public void LogDebug(string message)
-            {
-                _log.Debug(message);
-            }
-
-            #endregion
-        }
 
         #region Implementation of ICommander
 
-        public async Task Notify<T>(T notificationRequest, CancellationToken cancellationToken) where T : CommandNotificationBase
+        public async Task Notify<T>(T notificationRequest, CancellationToken cancellationToken)
+            where T : CommandNotificationBase
         {
-            _eventProducer.Value.Produce("core.docker.events", notificationRequest);
+           
+            await _producer.Value.ProduceAsync(TopicEvents,
+                new Message<Null, string> {Value = JsonConvert.SerializeObject(notificationRequest,Formatting.Indented, _jsonSerializerSettings) },
+                cancellationToken);
         }
 
-        public async Task<CommandResult> Execute<T>(T commandRequest, CancellationToken cancellationToken) where T : CommandRequestBase
+        public async Task<CommandResult> Execute<T>(T commandRequest, CancellationToken cancellationToken)
+            where T : CommandRequestBase
         {
-            _eventProducer.Value.Produce("core.docker.commands", commandRequest);
+            await _producer.Value.ProduceAsync(TopicCommands,
+                new Message<Null, string> {Value = JsonConvert.SerializeObject(commandRequest, Formatting.Indented, _jsonSerializerSettings) }, cancellationToken);
             return commandRequest.ToCommandResult();
         }
 
@@ -80,7 +67,58 @@ namespace CoreDocker.Core.Framework.CommandQuery
 
         public void Dispose()
         {
-           if (_eventProducer.IsValueCreated) _eventProducer.Value.Dispose();
+            if (_producer.IsValueCreated) _producer.Value.Dispose();
+        }
+
+        #endregion
+    }
+
+    public class KafaCommanderConsumer
+    {
+        private readonly IMediator _mediatorCommander;
+        private readonly ConsumerConfig _config;
+        private JsonSerializerSettings _jsonSerializerSettings;
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public KafaCommanderConsumer(IMediator mediator, string host = "localhost:9093"  )
+        {
+            _mediatorCommander = mediator;
+            _config = new ConsumerConfig
+            {
+                BootstrapServers = host,
+                GroupId = "KafaCommander",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+            _jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
+        }
+
+
+        #region Implementation of ICommander
+
+        public Task Start(CancellationToken cancellationToken)
+        {
+            return Task.Run(() => ConsumeAll(cancellationToken), cancellationToken);
+        }
+
+        private void ConsumeAll(CancellationToken cancellationToken)
+        {
+            _log.Information("ConsumeAll");
+            using var consumer = new ConsumerBuilder<Ignore, string>(_config).Build();
+            consumer.Subscribe(KafaCommanderProducer.TopicCommands);
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                _log.Information("---------------------------------------------");
+                var consumeResult = consumer.Consume(cancellationToken);
+                _log.Information("------------------>---------------------------");
+                var dump = JsonConvert.DeserializeObject(consumeResult.Message.Value, _jsonSerializerSettings);
+                _log.Information("-------------------->-------------------------");
+                _mediatorCommander.Send(dump, cancellationToken).Wait();
+            }
+
+            consumer.Close();
         }
 
         #endregion

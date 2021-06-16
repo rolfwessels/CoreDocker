@@ -43,6 +43,7 @@ namespace CoreDocker.Api
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices((context, collection) =>
                     collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
+                
                 .UseKestrel()
                 .UseUrls(args.FirstOrDefault() ?? "http://*:5000")
                 .ConfigureAppConfiguration(SettingsFileReaderHelper)

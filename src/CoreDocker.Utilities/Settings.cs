@@ -22,7 +22,7 @@ namespace CoreDocker.Utilities
         public string MongoDatabase => ReadConfigValue("MongoDatabase", "CoreDocker-Sample");
         public string WebBasePath => ReadConfigValue("WebBasePath",null);
         public string RedisHost => ReadConfigValue("RedisHost", "localhost:6390");
-        public string KafkaHost => ReadConfigValue("KafkaHost", "localhost:9092");
+        public string KafkaHost => ReadConfigValue("KafkaHost", "localhost:9093");
 
         public static void Initialize(IConfiguration configuration)
         {

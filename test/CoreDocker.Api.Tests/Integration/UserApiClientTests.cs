@@ -47,6 +47,7 @@ namespace CoreDocker.Api.Tests.Integration
 
             // action
             var insertCommand = await _userApiClient.Create(userCreate);
+            await Task.Delay(1000);
             var insert = await _userApiClient.ById(insertCommand.Id);
             var updateCommand = await _userApiClient.Update(insert.Id, userUpdate);
             var update = await _userApiClient.ById(insertCommand.Id);

@@ -8,6 +8,7 @@ namespace CoreDocker.Dal.MongoDb
         #region Implementation of IIdGenerator
 
         public string NewId => ObjectId.GenerateNewId().ToString();
+        public static string Id => ObjectId.GenerateNewId().ToString();
 
         #endregion
     }

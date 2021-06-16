@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi.Filters;
+using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,6 +66,7 @@ namespace CoreDocker.Api
             app.UseEndpoints(e => e.MapControllers());
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
+            IocApi.Instance.Resolve<KafaCommanderConsumer>().Start(new CancellationToken());
         }
 
         public static string InformationalVersion()
