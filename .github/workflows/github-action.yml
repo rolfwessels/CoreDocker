@@ -26,6 +26,6 @@ jobs:
       - name: Setup MongoDB
         uses: supercharge/mongodb-github-action@1.6.0
         with:
-          mongodb-version: "4.x"
+          mongodb-version: "4.0"
       - name: Test
         run: make test
