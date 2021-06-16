@@ -85,7 +85,7 @@ publish:
 	@echo  "${GREEN}Publish branch $(current-branch) to $(docker-tags) as user ${DOCKER_USER}${NC}"
 	@docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
 	@echo  "${GREEN}Building $(docker-tags)${NC}"
-	@docker build ${docker-tags} .
+	@cd src && docker build ${docker-tags} .
 	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
 	@docker push rolfwessels/coredocker
 
