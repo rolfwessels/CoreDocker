@@ -46,7 +46,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // action
             await _messenger.Send(new SampleMessage("String"));
             // assert
-            TestHelper.WaitForValue(() => received).Should().NotBeNull();
+            TestHelper.WaitForValue(() => received, 3000).Should().NotBeNull();
         }
 
         [Test]
