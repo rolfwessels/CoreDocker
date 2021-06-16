@@ -17,7 +17,7 @@ namespace CoreDocker.Utilities.Tests.Helpers
         #endregion
 
         [Test]
-        public void method_GiventestingFor_Shouldresult()
+        public void ToArray_GivenEnum_ShouldBuildArrayOfEnums()
         {
             // arrange
             Setup();

@@ -17,11 +17,7 @@ namespace CoreDocker.Dal.Models.SystemEvents
             Data = data;
         }
 
-        public SystemEvent()
-        {
-        }
-
-        public string CorrelationId { get; set; }
+        public string CorrelationId { get;  }
         public DateTime CreatedAt { get; set; }
         public string EventName { get; set; }
         public string EventId { get; set; }

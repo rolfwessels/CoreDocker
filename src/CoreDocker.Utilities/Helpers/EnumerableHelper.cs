@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using static System.String;
 
 namespace CoreDocker.Utilities.Helpers
@@ -25,11 +27,46 @@ namespace CoreDocker.Utilities.Helpers
         public static object LookupValidValue<T>(this IEnumerable<T> values, string call)
         {
             if (call == null) throw new ArgumentNullException(nameof(call));
-            var valueTuples = values.Select(x => new Tuple<T,string>( x, x.ToString())).ToArray();
+            var valueTuples = values.Select(x => new Tuple<T, string>( x, x.ToString())).ToArray();
             var firstOrDefault = valueTuples.FirstOrDefault(x =>
-                string.Equals(x.Item2, call, StringComparison.CurrentCultureIgnoreCase));
+                String.Equals(x.Item2, call, StringComparison.CurrentCultureIgnoreCase));
             if (firstOrDefault != null) return firstOrDefault.Item1;
             return null;
+        }
+
+        public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this Task<List<T>> task)
+        {
+            var systemEvents = await task;
+            foreach (var systemEvent in systemEvents)
+            {
+                yield return systemEvent; 
+            }
+        }
+
+        public static async IAsyncEnumerable<T2> OfType<T, T2>(this IAsyncEnumerable<T> iterator)
+        {
+            await foreach (var value in iterator)
+            {
+                if (value is T2 typed) yield return typed;
+            }
+        }
+
+        public static async Task<List<T>> ToList<T>(this IAsyncEnumerable<T> iterator, CancellationToken cancellationToken)
+        {
+            List<T> list = new List<T>();
+            await foreach (var value in iterator.WithCancellation(cancellationToken))
+            {
+                list.Add(value);
+            }
+            return list;
+        }
+
+        public static async IAsyncEnumerable<T2> Select<T,T2>(this IAsyncEnumerable<T> iterator, Func<T, T2> map)
+        {
+            await foreach (var value in iterator)
+            {
+                yield return map(value);
+            }
         }
     }
 

@@ -39,19 +39,15 @@ namespace CoreDocker.Core.Tests.Framework.Event
             var expectedBefore = Guid.NewGuid();
             var expectedAfter = Guid.NewGuid();
             _store.Register<SampleCreate>();
-            
-            
             // action
             var cancellationTokenSource = new CancellationTokenSource();
             await _store.Append( new SampleCreate {Create = expectedBefore }, cancellationTokenSource.Token);
             await _store.Append( new SampleCreate {Create = expectedAfter }, cancellationTokenSource.Token);
-            var result = _store.Read( cancellationTokenSource.Token);
-            var list = await result
-                .OfType<EventHolderTyped<SampleCreate>>()
+            var list = await _store.Read( cancellationTokenSource.Token)
+                .OfType<EventHolder, EventHolderTyped<SampleCreate>>()
                 .Select(x => x.Typed)
-                .ToListAsync(cancellationTokenSource.Token);
+                .ToList(cancellationTokenSource.Token);
             // activity
-
             list.Select(x=>x.Create).Should().Contain(expectedBefore);
             list.Select(x=>x.Create).Should().Contain(expectedAfter);
         }

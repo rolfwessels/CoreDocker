@@ -21,7 +21,7 @@ namespace CoreDocker.Utilities
         public string MongoConnection => ReadConfigValue("MongoConnection", "mongodb://localhost/");
         public string MongoDatabase => ReadConfigValue("MongoDatabase", "CoreDocker-Sample");
         public string WebBasePath => ReadConfigValue("WebBasePath",null);
-        public string RedisHost => ReadConfigValue("RedisHost", "localhost");
+        public string RedisHost => ReadConfigValue("RedisHost", "localhost:6390");
 
         public static void Initialize(IConfiguration configuration)
         {
