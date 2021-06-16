@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Settings;
 using CoreDocker.Utilities;
@@ -33,9 +34,9 @@ namespace CoreDocker.Core.Tests.MessageUtil
         }
 
         #endregion
-        
+
         [Test]
-        public void Send_Given_Object_ShouldBeReceived()
+        public async Task Send_Given_Object_ShouldBeReceived()
         {
             // arrange
             Setup();
@@ -43,13 +44,13 @@ namespace CoreDocker.Core.Tests.MessageUtil
             string received = null;
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             // action
-            _messenger.Send(new SampleMessage("String"));
+            await _messenger.Send(new SampleMessage("String"));
             // assert
             TestHelper.WaitForValue(() => received).Should().NotBeNull();
         }
 
         [Test]
-        public void Send_GivenObject_ShouldBeReceivedOnOtherListener()
+        public async Task Send_GivenObject_ShouldBeReceivedOnOtherListener()
         {
             // arrange
             Setup();
@@ -57,13 +58,13 @@ namespace CoreDocker.Core.Tests.MessageUtil
             object received = null;
             _messenger.Register(typeof(SampleMessage), o, m => received = m);
             // action
-            _messenger.Send(new SampleMessage("String"));
+            await _messenger.Send(new SampleMessage("String"));
             // assert
-            TestHelper.WaitForValue(()=>received).Should().NotBeNull();
+            TestHelper.WaitForValue(() => received).Should().NotBeNull();
         }
-        
+
         [Test]
-        public void Send_GivenRegisteredAndThenUnRegister_ShouldNotRelieveMessage()
+        public async Task Send_GivenRegisteredAndThenUnRegister_ShouldNotRelieveMessage()
         {
             // arrange
             Setup();
@@ -72,13 +73,13 @@ namespace CoreDocker.Core.Tests.MessageUtil
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             _messenger.UnRegister<SampleMessage>(o);
             // action
-            _messenger.Send(new SampleMessage("String"));
+            await _messenger.Send(new SampleMessage("String"));
             // assert
             received.Should().BeNull();
         }
 
         [Test]
-        public void Send_GivenRegisteredAndThenUnRegisterAll_ShouldNotRelieveMessage()
+        public async Task Send_GivenRegisteredAndThenUnRegisterAll_ShouldNotRelieveMessage()
         {
             // arrange
             Setup();
@@ -87,7 +88,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             _messenger.UnRegister(o);
             // action
-            _messenger.Send(new SampleMessage("String"));
+            await _messenger.Send(new SampleMessage("String"));
             // assert
             received.Should().BeNull();
             _messenger.Count().Should().Be(0);

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace CoreDocker.Utilities.Helpers
@@ -50,6 +51,11 @@ namespace CoreDocker.Utilities.Helpers
             }
 
             return new FileInfo(stringValue);
+        }
+
+        public static ReadOnlyMemory<byte> AsReadOnlyMemory(this string argData)
+        {
+            return new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(argData)); 
         }
     }
 }

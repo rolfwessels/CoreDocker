@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
@@ -32,14 +33,14 @@ namespace CoreDocker.Core.Tests.Components.Users
         #endregion
 
         [Test]
-        public void ProcessCommand_GivenInvalidRequest_ShouldSetAllProperties()
+        public void ProcessCommand_GivenInvalidRequest_ShouldThrowException()
         {
             // arrange
             Setup();
             var validRequest = GetValidRequest();
             validRequest.Email = "sere";
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
+            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x => x.ErrorMessage == "'Email' is not a valid email address.");
@@ -52,7 +53,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var user = await _users.FindOne(x => x.Id == validRequest.Id);
             user.Should().NotBeNull();
@@ -65,7 +66,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var user = await _users.FindOne(x => x.Id == validRequest.Id);
             user.Should().BeEquivalentTo(validRequest, opt => DefaultCommandExcluding(opt).Excluding(x => x.Password));

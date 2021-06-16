@@ -23,7 +23,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         public override void Setup()
         {
             base.Setup();
-            _userLookup = new UserLookup(_baseManagerArguments);
+            _userLookup = new UserLookup(_fakeGeneralUnitOfWork.Users);
         }
 
         #endregion

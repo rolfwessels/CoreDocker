@@ -70,5 +70,10 @@ namespace CoreDocker.Utilities.Helpers
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
         }
+
+        public static string OrEmpty(this string value)
+        {
+            return value ?? string.Empty;
+        }
     }
 }

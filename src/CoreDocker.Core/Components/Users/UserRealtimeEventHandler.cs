@@ -1,13 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Subscriptions;
 using MediatR;
 
 namespace CoreDocker.Core.Components.Users
 {
-    public class UserRealTimeEventHandler :
-        INotificationHandler<UserCreate.Notification>,
+    public class UserRealTimeEventHandler : RealTimeEventHandlerBase, INotificationHandler<UserCreate.Notification>,
         INotificationHandler<UserUpdate.Notification>,
         INotificationHandler<UserRemove.Notification>
     {
@@ -22,7 +20,7 @@ namespace CoreDocker.Core.Components.Users
 
         public Task Handle(UserCreate.Notification notification, CancellationToken cancellationToken)
         {
-            return _subscription.Send(BuildMessage(notification, "UserCreated"));
+            return _subscription.Send(BuildMessage(notification));
         }
 
         #endregion
@@ -31,7 +29,7 @@ namespace CoreDocker.Core.Components.Users
 
         public Task Handle(UserUpdate.Notification notification, CancellationToken cancellationToken)
         {
-            return _subscription.Send(BuildMessage(notification, "UserUpdated"));
+            return _subscription.Send(BuildMessage(notification));
         }
 
         #endregion
@@ -40,19 +38,9 @@ namespace CoreDocker.Core.Components.Users
 
         public Task Handle(UserRemove.Notification notification, CancellationToken cancellationToken)
         {
-            return _subscription.Send(BuildMessage(notification, "UserRemoved"));
+            return _subscription.Send(BuildMessage(notification));
         }
 
         #endregion
-
-        private static RealTimeNotificationsMessage BuildMessage(CommandNotificationBase notification, string eventName)
-        {
-            return new RealTimeNotificationsMessage()
-            {
-                CorrelationId = notification.CorrelationId,
-                Event = eventName,
-                Id = notification.Id
-            };
-        }
     }
 }

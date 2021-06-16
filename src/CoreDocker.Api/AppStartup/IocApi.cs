@@ -47,6 +47,7 @@ namespace CoreDocker.Api.AppStartup
 
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
+            
             _log.Information($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
             try
             {
@@ -102,6 +103,7 @@ namespace CoreDocker.Api.AppStartup
 
         private void SetupTools(ContainerBuilder builder)
         {
+            builder.RegisterType<ObjectIdGenerator>().As<IIdGenerator>().SingleInstance();
         }
 
         #endregion

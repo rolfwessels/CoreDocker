@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
@@ -17,7 +18,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectUpdateTests : BaseManagerTests
     {
-        private ProjectUpdate.Handler _handler;
+        private ProjectUpdateName.Handler _handler;
         private IRepository<Project> _projects;
 
         #region Setup/Teardown
@@ -25,7 +26,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
         public override void Setup()
         {
             base.Setup();
-            _handler = new ProjectUpdate.Handler(_inMemoryGeneralUnitOfWorkFactory,
+            _handler = new ProjectUpdateName.Handler(_inMemoryGeneralUnitOfWorkFactory,
                 FakeValidator.New<ProjectValidator>(),
                 _mockICommander.Object);
             _projects = _fakeGeneralUnitOfWork.Projects;
@@ -34,14 +35,14 @@ namespace CoreDocker.Core.Tests.Components.Projects
         #endregion
 
         [Test]
-        public void ProcessCommand_GivenInvalidRequest_ShouldSetAllProperties()
+        public void ProcessCommand_GivenInvalidRequest_ShouldThrowException()
         {
             // arrange
             Setup();
             var validRequest = GetValidRequest();
             validRequest.Name = "";
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest).Wait(); };
+            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x =>
@@ -55,7 +56,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var project = await _projects.FindOne(x => x.Id == validRequest.Id);
             ;
@@ -69,21 +70,21 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var project = await _projects.FindOne(x => x.Id == validRequest.Id);
             project.Should().BeEquivalentTo(validRequest, DefaultCommandExcluding);
         }
 
 
-        public ProjectUpdate.Request GetValidRequest()
+        public ProjectUpdateName.Request GetValidRequest()
         {
             var existingProject = _fakeGeneralUnitOfWork.Projects.AddAFake();
             var projectUpdateUpdateModels = Builder<Project>.CreateNew()
                 .WithValidData()
                 .With(x => x.Id = existingProject.Id)
                 .Build()
-                .DynamicCastTo<ProjectUpdate.Request>();
+                .DynamicCastTo<ProjectUpdateName.Request>();
             return projectUpdateUpdateModels;
         }
     }

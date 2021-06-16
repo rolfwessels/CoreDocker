@@ -12,21 +12,22 @@ indent_size = 4
 ; 2-column tab indentation
 [*.js]
 indent_style = space
-indent_size = 4
+indent_size = 2
+end_of_line = cr
 
 [*.sh]
 indent_style = space
-indent_size = 4
+indent_size = 2
 end_of_line = cr
 
 [*.yml]
 indent_style = space
-indent_size = 4
+indent_size = 2
 end_of_line = cr
 
 [Dockerfile]
 indent_style = space
-indent_size = 4
+indent_size = 2
 end_of_line = cr
 
 [Makefile]

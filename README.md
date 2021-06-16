@@ -12,10 +12,11 @@ This project contains some scafolding code that I use whenever I start a new pro
 
 - RESTful web API.
 - GraphQL (+ authorization + permissions) using hot chocolate
-- Reactjs Dashboad UI integrated
+- Reactjs Dashboad UI integrated (<https://github.com/rolfwessels/coredocker-dashboard>)
 - Authorization (OpenId with integrated identity server).
 - Swagger for API documentation.
 - MongoDB document storage database.
+- Redis for messaging between services
 - CI Appvayor && Travis for build automation
 - Docker files to compile and compose a server
 - Developed using TDD practices.
@@ -28,7 +29,7 @@ This project contains some scafolding code that I use whenever I start a new pro
 - Code analytics - look at resharper cli tools.
 - Find and clean unused code. See if we can automate report
 - 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
-- More https://shields.io/#/
+- More <https://shields.io/#/>
 
 ## Inspection
 
@@ -67,7 +68,7 @@ make start
 
 ## Create certificates
 
-see https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/
+see <https://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/>
 
 ```cmd
 cd src/CoreDocker.Api/Certificates
@@ -99,22 +100,12 @@ docker-compose up -d;
 docker-compose exec api bash
 ```
 
-## Deploy lambda
-
-```cmd
-cd src/CoreDocker.Api.Lambda
-dotnet build -v=q
-dotnet lambda deploy-serverless --s3-bucket coredocker-serverless coredocker-sample
-dotnet lambda delete-serverless Stage
-## Note that there is some circular depenency so you will need to update the origin url manually for now :-(
-
-```
-
 ## Logo
 
-- Special thanks to @baranpirincal for the logo. https://github.com/baranpirincal
+- Special thanks to @baranpirincal for the logo. <https://github.com/baranpirincal>
 
-## Themes
+## Helpful Links
 
-- http://coreui.io/
-- https://github.com/akveo/ngx-admin
+- <https://dev.to/ahmetkucukoglu/event-sourcing-with-asp-net-core-01-store-3k04>
+- <https://github.com/tabler/tabler-react>
+- <https://github.com/rolfwessels/coredocker-dashboard>

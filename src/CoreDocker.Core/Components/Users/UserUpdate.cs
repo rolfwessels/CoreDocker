@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Mappers;
-using CoreDocker.Dal.Models.Base;
-using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Validation;
-using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users
 {
@@ -32,7 +29,7 @@ namespace CoreDocker.Core.Components.Users
 
             #region Overrides of CommandHandlerBase<Request>
 
-            public override async Task ProcessCommand(Request request)
+            public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _persistence.GetConnection())
                 {
@@ -49,7 +46,7 @@ namespace CoreDocker.Core.Components.Users
                     );
                 }
 
-                await _commander.SendEvent(request.ToEvent());
+                await _commander.Notify(request.ToEvent(), cancellationToken);
             }
 
             #endregion
@@ -65,6 +62,12 @@ namespace CoreDocker.Core.Components.Users
             public string Email { get; set; }
             public bool PasswordChanged { get; set; }
             public List<string> Roles { get; set; }
+
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "UserUpdated";
+
+            #endregion
         }
 
         #endregion

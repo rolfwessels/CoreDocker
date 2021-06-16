@@ -3,14 +3,16 @@ using System.Reflection;
 using Autofac;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
-using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
+using CoreDocker.Core.Framework.Event;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
+using CoreDocker.Utilities.Serializer;
 using FluentValidation;
 using Serilog;
 using MediatR;
@@ -57,6 +59,11 @@ namespace CoreDocker.Core.Startup
         {
             builder.Register(GetInstanceOfIGeneralUnitOfWorkFactory).SingleInstance();
             builder.Register(Delegate).As<IGeneralUnitOfWork>();
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().UserGrants);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Projects);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Users);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().SystemCommands);
+            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().SystemEvents);
         }
 
         protected abstract IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg);
@@ -80,7 +87,6 @@ namespace CoreDocker.Core.Startup
 
         private static void SetupManagers(ContainerBuilder builder)
         {
-            builder.RegisterType<BaseManagerArguments>();
             builder.RegisterType<ProjectLookup>().As<IProjectLookup>();
             builder.RegisterType<RoleManager>().As<IRoleManager>();
             builder.RegisterType<UserLookup>().As<IUserLookup>();
@@ -99,8 +105,11 @@ namespace CoreDocker.Core.Startup
         private void SetupTools(ContainerBuilder builder)
         {
             builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
-            builder.RegisterType<Commander>().As<ICommander>();
+            builder.RegisterType<MediatorCommander>();
+            builder.Register(x=>new CommanderPersist(x.Resolve<MediatorCommander>(),x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(), x.Resolve<IEventStoreConnection>())).As<ICommander>();
             builder.RegisterType<SubscriptionNotifications>().SingleInstance();
+            builder.RegisterType<StringifyJson>().As<IStringify>().SingleInstance();
+            builder.RegisterType<EventStoreConnection>().As<IEventStoreConnection>();
         }
 
         #endregion

@@ -6,9 +6,9 @@ using MediatR;
 
 namespace CoreDocker.Core.Components.Projects
 {
-    public class ProjectRealTimeEventHandler :
+    public class ProjectRealTimeEventHandler : RealTimeEventHandlerBase,
         INotificationHandler<ProjectCreate.Notification>,
-        INotificationHandler<ProjectUpdate.Notification>,
+        INotificationHandler<ProjectUpdateName.Notification>,
         INotificationHandler<ProjectRemove.Notification>
     {
         private readonly SubscriptionNotifications _subscription;
@@ -22,16 +22,16 @@ namespace CoreDocker.Core.Components.Projects
 
         public Task Handle(ProjectCreate.Notification notification, CancellationToken cancellationToken)
         {
-            return _subscription.Send(BuildMessage(notification, "ProjectCreated"));
+            return _subscription.Send(BuildMessage(notification));
         }
 
         #endregion
 
         #region Implementation of INotificationHandler<in Notification>
 
-        public Task Handle(ProjectUpdate.Notification notification, CancellationToken cancellationToken)
+        public Task Handle(ProjectUpdateName.Notification notification, CancellationToken cancellationToken)
         {
-            return _subscription.Send(BuildMessage(notification, "ProjectUpdated"));
+            return _subscription.Send(BuildMessage(notification));
         }
 
         #endregion
@@ -40,19 +40,11 @@ namespace CoreDocker.Core.Components.Projects
 
         public Task Handle(ProjectRemove.Notification notification, CancellationToken cancellationToken)
         {
-            return _subscription.Send(BuildMessage(notification, "ProjectRemoved"));
+            return _subscription.Send(BuildMessage(notification));
         }
 
         #endregion
 
-        private static RealTimeNotificationsMessage BuildMessage(CommandNotificationBase notification, string eventName)
-        {
-            return new RealTimeNotificationsMessage()
-            {
-                CorrelationId = notification.CorrelationId,
-                Event = eventName,
-                Id = notification.Id
-            };
-        }
+        
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
@@ -38,7 +39,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
             Setup();
             var validRequest = GetValidRequest();
             // action
-            await _handler.ProcessCommand(validRequest);
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
             var project = await _projects.FindOne(x => x.Id == validRequest.Id);
             project.Should().Be(null);

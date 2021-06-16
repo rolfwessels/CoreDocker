@@ -1,6 +1,4 @@
 using System;
-using CoreDocker.Core.Components.Users;
-using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.InMemoryCollections;
@@ -17,7 +15,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
     [TestFixture]
     public class BaseManagerTests
     {
-        protected BaseManagerArguments _baseManagerArguments;
+        
         protected IGeneralUnitOfWork _fakeGeneralUnitOfWork;
         public InMemoryGeneralUnitOfWorkFactory _inMemoryGeneralUnitOfWorkFactory;
         public Mock<ICommander> _mockICommander;
@@ -33,8 +31,6 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
             _inMemoryGeneralUnitOfWorkFactory = new InMemoryGeneralUnitOfWorkFactory();
             _fakeGeneralUnitOfWork = _inMemoryGeneralUnitOfWorkFactory.GetConnection();
             _mockICommander = new Mock<ICommander>();
-            _baseManagerArguments = new BaseManagerArguments(_fakeGeneralUnitOfWork, _mockIMessenger.Object,
-                _mockIValidatorFactory.Object);
         }
 
         [TearDown]

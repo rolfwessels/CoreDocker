@@ -10,13 +10,14 @@ namespace CoreDocker.Core.Components.Projects
 {
     public class ProjectLookup : BaseLookup<Project>, IProjectLookup
     {
-        public ProjectLookup(BaseManagerArguments baseManagerArguments) : base(baseManagerArguments)
+        public ProjectLookup(IRepository<Project> projects)
         {
+            Repository = projects;
         }
 
         #region Overrides of BaseLookup<Project>
 
-        protected override IRepository<Project> Repository => _generalUnitOfWork.Projects;
+        protected override IRepository<Project> Repository { get; }
 
         #endregion
 
@@ -26,7 +27,7 @@ namespace CoreDocker.Core.Components.Projects
         {
             return Task.Run(() =>
             {
-                var query = _generalUnitOfWork.Projects.Query();
+                var query = Repository.Query();
                 if (!string.IsNullOrEmpty(options.Search))
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||

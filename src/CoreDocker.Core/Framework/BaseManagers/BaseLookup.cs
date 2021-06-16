@@ -10,26 +10,11 @@ using CoreDocker.Dal.Validation;
 
 namespace CoreDocker.Core.Framework.BaseManagers
 {
-    public abstract class BaseLookup
+   
+
+    public abstract class BaseLookup<T> :  IBaseLookup<T> where T : BaseDalModelWithId
     {
-        protected readonly IGeneralUnitOfWork _generalUnitOfWork;
-        protected readonly IMessenger _messenger;
-        protected readonly IValidatorFactory _validationFactory;
-
-        protected BaseLookup(BaseManagerArguments baseManagerArguments)
-        {
-            _generalUnitOfWork = baseManagerArguments.GeneralUnitOfWork;
-            _messenger = baseManagerArguments.Messenger;
-            _validationFactory = baseManagerArguments.ValidationFactory;
-        }
-    }
-
-    public abstract class BaseLookup<T> : BaseLookup, IBaseLookup<T> where T : BaseDalModelWithId
-    {
-        protected BaseLookup(BaseManagerArguments baseManagerArguments) : base(baseManagerArguments)
-        {
-        }
-
+        
         protected abstract IRepository<T> Repository { get; }
 
 

@@ -6,14 +6,13 @@ services:
 before_build:
     - choco install redis-64 --version 3.0.503
     - redis-server --service-install
-    - redis-server --service-start
+    - redis-server --service-start    - choco install eventstore-oss --version 20.10.0
 
 build_script:
     - ps: dotnet --info
     - ps: ./go test
     - ps: $wc = New-Object 'System.Net.WebClient'
     - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\build\reports\result.trx))
-    # - npm install -g @angular/cli
     - go appveyor -properties @{'buildConfiguration'='Release'}
 
 test: off

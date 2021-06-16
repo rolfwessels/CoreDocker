@@ -21,7 +21,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
             {
                 try
                 {
-                    await ProcessCommand(request);
+                    await ProcessCommand(request, cancellationToken);
                     return request.ToCommandResult();
                 }
                 catch (Exception e)
@@ -34,6 +34,6 @@ namespace CoreDocker.Core.Framework.CommandQuery
 
         #endregion
 
-        public abstract Task ProcessCommand(T request);
+        public abstract Task ProcessCommand(T request, CancellationToken cancellationToken);
     }
 }

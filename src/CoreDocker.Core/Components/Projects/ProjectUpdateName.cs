@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Mappers;
@@ -9,7 +8,7 @@ using CoreDocker.Dal.Validation;
 
 namespace CoreDocker.Core.Components.Projects
 {
-    public class ProjectUpdate
+    public class ProjectUpdateName
     {
         #region Nested type: Handler
 
@@ -29,7 +28,7 @@ namespace CoreDocker.Core.Components.Projects
 
             #region Overrides of CommandHandlerBase<Request>
 
-            public override async Task ProcessCommand(Request request)
+            public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _persistence.GetConnection())
                 {
@@ -41,7 +40,7 @@ namespace CoreDocker.Core.Components.Projects
                     );
                 }
 
-                await _commander.SendEvent(request.ToEvent());
+                await _commander.Notify(request.ToEvent(), cancellationToken);
             }
 
             #endregion
@@ -54,6 +53,12 @@ namespace CoreDocker.Core.Components.Projects
         public class Notification : CommandNotificationBase
         {
             public string Name { get; set; }
+
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "ProjectUpdatedName";
+
+            #endregion
         }
 
         #endregion

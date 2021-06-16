@@ -56,10 +56,10 @@ namespace CoreDocker.Core.Tests.Components.Projects
         {
             // arrange
             Setup();
-            var notification = BuildNotification<ProjectUpdate.Notification>();
+            var notification = BuildNotification<ProjectUpdateName.Notification>();
             // action
             BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
-                "ProjectUpdated", _subscriptionNotifications);
+                "ProjectUpdatedName", _subscriptionNotifications);
         }
 
         [Test]

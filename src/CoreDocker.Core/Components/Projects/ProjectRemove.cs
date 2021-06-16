@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Mappers;
@@ -24,14 +25,12 @@ namespace CoreDocker.Core.Components.Projects
 
             #region Overrides of CommandHandlerBase<Request>
 
-            public override async Task ProcessCommand(Request request)
+            public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _persistence.GetConnection())
-                {
-                    var foundProject = await connection.Projects.FindOrThrow(request.Id);
-                    await connection.Projects.Remove(x => x.Id == foundProject.Id);
-                    await _commander.SendEvent(request.ToEvent());
-                }
+                using var connection = _persistence.GetConnection();
+                var foundProject = await connection.Projects.FindOrThrow(request.Id);
+                await connection.Projects.Remove(x => x.Id == foundProject.Id);
+                await _commander.Notify(request.ToEvent(), cancellationToken);
             }
 
             #endregion
@@ -43,6 +42,12 @@ namespace CoreDocker.Core.Components.Projects
 
         public class Notification : CommandNotificationBase
         {
+            #region Overrides of CommandNotificationBase
+
+            public override string EventName => "ProjectRemoved";
+
+            #endregion
+
             public bool WasRemoved { get; set; }
         }
 

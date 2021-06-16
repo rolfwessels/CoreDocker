@@ -65,7 +65,7 @@ namespace CoreDocker.Sdk.RestApi
                 {
                     var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
                     graphQlResponse.Dump("graphQlResponse");
-                    
+
                     if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
                         throw new GraphQlResponseException<T>(graphQlResponse);
                 }
@@ -102,7 +102,12 @@ namespace CoreDocker.Sdk.RestApi
         public void SetToken(TokenResponseModel data)
         {
             var bearerToken = $"Bearer {data.AccessToken}";
+            //F
+            #pragma warning disable 618
             _restClient.DefaultParameters.Add(new Parameter("Authorization", bearerToken, ParameterType.HttpHeader));
+            #pragma warning restore 618
+            
+
             _graphQlClient = GraphQlClient(data.AccessToken);
         }
 
@@ -117,9 +122,9 @@ namespace CoreDocker.Sdk.RestApi
             {
                 EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
                 HttpMessageHandler = new WithAuthHeader(dataAccessToken)
-                
+
             };
-            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer) ;
+            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer);
         }
 
         public class WithAuthHeader : HttpClientHandler
