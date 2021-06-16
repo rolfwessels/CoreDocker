@@ -13,12 +13,6 @@ jobs:
       RedisHost: localhost
     steps:
       - uses: actions/checkout@v2
-      - name: docker publish
-        env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        run: |
-          make publish
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -31,5 +25,13 @@ jobs:
         uses: supercharge/mongodb-github-action@1.6.0
         with:
           mongodb-version: "4.0"
+
       - name: Test
         run: make test
+
+      - name: docker publish
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          make publish
