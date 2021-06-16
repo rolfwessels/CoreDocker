@@ -106,7 +106,8 @@ namespace CoreDocker.Core.Startup
         {
             builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
             builder.RegisterType<MediatorCommander>();
-            builder.Register(x=>new CommanderPersist(x.Resolve<MediatorCommander>(),x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(), x.Resolve<IEventStoreConnection>())).As<ICommander>();
+            builder.Register<KafaCommanderProducer>(x=> new KafaCommanderProducer( Settings.Instance.KafkaHost)).SingleInstance();
+            builder.Register(x=>new CommanderPersist(x.Resolve<KafaCommanderProducer>(),x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(), x.Resolve<IEventStoreConnection>())).As<ICommander>();
             builder.RegisterType<SubscriptionNotifications>().SingleInstance();
             builder.RegisterType<StringifyJson>().As<IStringify>().SingleInstance();
             builder.RegisterType<EventStoreConnection>().As<IEventStoreConnection>();

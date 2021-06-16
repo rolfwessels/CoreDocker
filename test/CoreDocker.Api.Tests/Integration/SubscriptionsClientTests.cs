@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using FizzWare.NBuilder.Generators;
 using FluentAssertions;
 using NUnit.Framework;
 
+//using Subscribe = System.ObservableExtensions.Subscribe;
 namespace CoreDocker.Api.Tests.Integration
 {
     [TestFixture]
@@ -52,6 +54,8 @@ namespace CoreDocker.Api.Tests.Integration
 
             using (subscriptions)
             {
+                
+
                 await Task.Delay(100);//required to allow subscription
                 // action
                 var insertCommand = await _userApiClient.Create(userCreate);

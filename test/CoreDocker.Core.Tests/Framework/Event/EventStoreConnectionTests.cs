@@ -12,6 +12,8 @@ using CoreDocker.Utilities.Serializer;
 using CoreDocker.Utilities.Tests;
 using NUnit.Framework;
 using FluentAssertions;
+// using x= System.ObservableExtensions.Subscribe
+
 
 namespace CoreDocker.Core.Tests.Framework.Event
 {
