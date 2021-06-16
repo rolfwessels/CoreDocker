@@ -11,10 +11,29 @@ GREEN=\033[0;32m
 NC=\033[0m # No Color
 version := 0.1.$(shell git rev-list HEAD --count)
 
+dockerhub := rolfwessels/coredocker
+
+ifdef GITHUB_BASE_REF
+	current-branch :=  $(patsubst refs/heads/%,%,${GITHUB_HEAD_REF})
+else ifdef GITHUB_REF
+	current-branch :=  $(patsubst refs/heads/%,%,${GITHUB_REF})
+else 
+	current-branch :=  $(shell git rev-parse --abbrev-ref HEAD)
+endif
 
 release := 'development'
 ifeq ($(env), prod)
 	release := 'production'
+endif
+
+
+
+ifeq ($(current-branch), master)
+  docker-tags := -t $(dockerhub):alpha -t $(dockerhub):latest -t $(dockerhub):v$(version)
+else ifeq ($(current-branch), develop)
+  docker-tags := -t $(dockerhub):beta 
+else
+  docker-tags := -t $(dockerhub):alpha 
 endif
 
 # Docker Warning
@@ -68,14 +87,19 @@ version:
 	@echo "${GREEN}Setting version number $(version) ${NC}"
 	@echo '{ "version": "${version}" }' > src/version.json
 
-publish: docker-check
-	@echo -e "${GREEN}Building the $(release) release of $(project)${NC}"
+publish: 
+	@echo  "${GREEN}Publish branch $(current-branch) to $(docker-tags) as user ${DOCKER_USER}${NC}"
+	@docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+	@echo  "${GREEN}Building $(docker-tags)${NC}"
+	@cd src && docker build ${docker-tags} .
+	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
+	@docker push --all-tags $(dockerhub)
 
-restore: docker-check
+restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
 	dotnet restore
 
-test: docker-check restore
+test: restore
 	@echo -e "${GREEN}Testing the $(project)${NC}"
 	export DOTNET_ENVIRONMENT "Development"
 	dotnet test
@@ -83,8 +107,6 @@ test: docker-check restore
 start: docker-check
 	@echo -e "${GREEN}Starting the $(release) release of $(project)${NC}"
 	@cd src/CoreDocker.Api/ && dotnet run
-
-
 
 deploy: docker-check env-check
 	@echo -e "${GREEN}Deploying v${version} of $(release) release${NC}"
