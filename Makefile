@@ -10,11 +10,24 @@ RED=\033[0;31m
 GREEN=\033[0;32m
 NC=\033[0m # No Color
 version := 0.1.$(shell git rev-list HEAD --count)
+current-branch := $(shell git rev-parse --abbrev-ref HEAD)
 
 
 release := 'development'
 ifeq ($(env), prod)
 	release := 'production'
+endif
+
+ifeq ($(current-branch), master)
+	
+endif
+
+ifeq ($(current-branch), master)
+  docker-tags := -t rolfwessels/coredocker:alpha -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v$(version)
+else ifeq ($(current-branch), develop)
+  docker-tags := -t rolfwessels/coredocker:beta 
+else
+  docker-tags := -t rolfwessels/coredocker:alpha 
 endif
 
 # Docker Warning
@@ -68,8 +81,13 @@ version:
 	@echo "${GREEN}Setting version number $(version) ${NC}"
 	@echo '{ "version": "${version}" }' > src/version.json
 
-publish: docker-check
-	@echo -e "${GREEN}Building the $(release) release of $(project)${NC}"
+publish: 
+	@echo  "${GREEN}Publish branch $(current-branch) to $(docker-tags) as user ${DOCKER_USER}${NC}"
+	@docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+	@echo  "${GREEN}Building $(docker-tags)${NC}"
+	@docker build ${docker-tags} .
+	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
+	@docker push rolfwessels/coredocker
 
 restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
@@ -83,8 +101,6 @@ test: restore
 start: docker-check
 	@echo -e "${GREEN}Starting the $(release) release of $(project)${NC}"
 	@cd src/CoreDocker.Api/ && dotnet run
-
-
 
 deploy: docker-check env-check
 	@echo -e "${GREEN}Deploying v${version} of $(release) release${NC}"

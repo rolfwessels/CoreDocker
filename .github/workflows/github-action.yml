@@ -29,3 +29,10 @@ jobs:
           mongodb-version: "4.0"
       - name: Test
         run: make test
+
+      - name: docker publish
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          make publish
