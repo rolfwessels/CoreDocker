@@ -11,7 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      RedisHost: localhost
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
@@ -22,5 +23,9 @@ jobs:
         uses: shogo82148/actions-setup-redis@v1
         with:
           redis-version: "6.x"
+      - name: Setup MongoDB
+        uses: supercharge/mongodb-github-action@1.6.0
+        with:
+          mongodb-version: "4.x"
       - name: Test
         run: make test
