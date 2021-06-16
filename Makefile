@@ -88,7 +88,7 @@ publish:
 	@echo  "${GREEN}Building $(docker-tags)${NC}"
 	@cd src && docker build ${docker-tags} .
 	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
-	@docker push $(dockerhub)
+	@docker push --all-tags $(dockerhub)
 
 restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
