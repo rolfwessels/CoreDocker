@@ -13,7 +13,9 @@ version := 0.1.$(shell git rev-list HEAD --count)
 
 dockerhub := rolfwessels/coredocker
 
-ifdef GITHUB_REF
+ifdef GITHUB_BASE_REF
+	current-branch :=  $(patsubst refs/heads/%,%,${GITHUB_BASE_REF})
+else ifdef GITHUB_REF
 	current-branch :=  $(patsubst refs/heads/%,%,${GITHUB_REF})
 else 
 	current-branch :=  $(shell git rev-parse --abbrev-ref HEAD)
