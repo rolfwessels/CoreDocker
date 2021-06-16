@@ -10,18 +10,21 @@ RED=\033[0;31m
 GREEN=\033[0;32m
 NC=\033[0m # No Color
 version := 0.1.$(shell git rev-list HEAD --count)
-current-branch := $(shell git rev-parse --abbrev-ref HEAD)
+
 dockerhub := rolfwessels/coredocker
 
+ifdef GITHUB_REF
+	current-branch :=  $(patsubst refs/heads/%,%,${GITHUB_REF})
+else 
+	current-branch :=  $(shell git rev-parse --abbrev-ref HEAD)
+endif
 
 release := 'development'
 ifeq ($(env), prod)
 	release := 'production'
 endif
 
-ifeq ($(current-branch), master)
-	
-endif
+
 
 ifeq ($(current-branch), master)
   docker-tags := -t $(dockerhub):alpha -t $(dockerhub):latest -t $(dockerhub):v$(version)
@@ -84,11 +87,12 @@ version:
 
 publish: 
 	@echo  "${GREEN}Publish branch $(current-branch) to $(docker-tags) as user ${DOCKER_USER}${NC}"
-	@docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
-	@echo  "${GREEN}Building $(docker-tags)${NC}"
-	@cd src && docker build ${docker-tags} .
-	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
-	@docker push --all-tags $(dockerhub)
+	
+	# @docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+	# @echo  "${GREEN}Building $(docker-tags)${NC}"
+	# @cd src && docker build ${docker-tags} .
+	# @echo  "${GREEN}Pusing to $(docker-tags)${NC}"
+	# @docker push --all-tags $(dockerhub)
 
 restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
