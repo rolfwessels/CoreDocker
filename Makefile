@@ -11,6 +11,7 @@ GREEN=\033[0;32m
 NC=\033[0m # No Color
 version := 0.1.$(shell git rev-list HEAD --count)
 current-branch := $(shell git rev-parse --abbrev-ref HEAD)
+dockerhub := rolfwessels/coredocker
 
 
 release := 'development'
@@ -23,11 +24,11 @@ ifeq ($(current-branch), master)
 endif
 
 ifeq ($(current-branch), master)
-  docker-tags := -t rolfwessels/coredocker:alpha -t rolfwessels/coredocker:latest -t rolfwessels/coredocker:v$(version)
+  docker-tags := -t $(dockerhub):alpha -t $(dockerhub):latest -t $(dockerhub):v$(version)
 else ifeq ($(current-branch), develop)
-  docker-tags := -t rolfwessels/coredocker:beta 
+  docker-tags := -t $(dockerhub):beta 
 else
-  docker-tags := -t rolfwessels/coredocker:alpha 
+  docker-tags := -t $(dockerhub):alpha 
 endif
 
 # Docker Warning
@@ -87,7 +88,7 @@ publish:
 	@echo  "${GREEN}Building $(docker-tags)${NC}"
 	@cd src && docker build ${docker-tags} .
 	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
-	@docker push rolfwessels/coredocker
+	@docker push $(dockerhub)
 
 restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
