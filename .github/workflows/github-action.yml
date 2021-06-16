@@ -18,7 +18,5 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-      - name: Allow make commands
-        run: touch /.dockerenv
       - name: Test
         run: make test

@@ -71,11 +71,11 @@ version:
 publish: docker-check
 	@echo -e "${GREEN}Building the $(release) release of $(project)${NC}"
 
-restore: docker-check
+restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
 	dotnet restore
 
-test: docker-check restore
+test: restore
 	@echo -e "${GREEN}Testing the $(project)${NC}"
 	export DOTNET_ENVIRONMENT "Development"
 	dotnet test
