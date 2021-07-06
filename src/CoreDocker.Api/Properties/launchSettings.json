@@ -30,8 +30,9 @@
     },
     "App": {
       "commandName": "Project",
+      "commandLineArgs": "http://*:5010",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000/"
+      "launchUrl": "http://localhost:5010/"
     }
   }
 }

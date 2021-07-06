@@ -115,7 +115,15 @@ namespace CoreDocker.Core.Framework.CommandQuery
                 _log.Information("------------------>---------------------------");
                 var dump = JsonConvert.DeserializeObject(consumeResult.Message.Value, _jsonSerializerSettings);
                 _log.Information("-------------------->-------------------------");
-                _mediatorCommander.Send(dump, cancellationToken).Wait();
+
+                try
+                {
+                    _mediatorCommander.Send(dump, cancellationToken).Wait(cancellationToken);
+                }
+                catch (Exception e)
+                {
+                    _log.Error(e.Message, e);
+                }
             }
 
             consumer.Close();
