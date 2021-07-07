@@ -6,7 +6,7 @@ using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.Security;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Api.WebApi.Filters;
-using CoreDocker.Utilities;
+using CoreDocker.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

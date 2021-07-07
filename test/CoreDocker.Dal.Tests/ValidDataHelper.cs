@@ -5,7 +5,7 @@ using CoreDocker.Dal.Models.Users;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 
-namespace CoreDocker.Utilities.Tests.TempBuildres
+namespace CoreDocker.Dal.Tests
 {
     public static class ValidDataHelper
     {

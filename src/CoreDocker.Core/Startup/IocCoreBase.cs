@@ -12,7 +12,6 @@ using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities;
 using FluentValidation;
 using Serilog;
 using MediatR;

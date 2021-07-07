@@ -1,8 +1,8 @@
 ﻿using System;
+using CoreDocker.Dal.Tests;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
-using CoreDocker.Utilities.Tests;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

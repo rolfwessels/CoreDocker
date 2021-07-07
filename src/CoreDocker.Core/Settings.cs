@@ -2,7 +2,7 @@
 using Bumbershoot.Utilities;
 using Microsoft.Extensions.Configuration;
 
-namespace CoreDocker.Utilities
+namespace CoreDocker.Core
 {
     public class Settings : BaseSettings
     {

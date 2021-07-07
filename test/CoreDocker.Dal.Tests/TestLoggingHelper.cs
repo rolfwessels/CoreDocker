@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Reflection;
 using CoreDocker.Core.Framework.Logging;
-using Serilog;
 using NUnit.Framework;
+using Serilog;
 using Serilog.Events;
 
-namespace CoreDocker.Utilities.Tests
+namespace CoreDocker.Dal.Tests
 {
     [SetUpFixture]
     public class TestLoggingHelper

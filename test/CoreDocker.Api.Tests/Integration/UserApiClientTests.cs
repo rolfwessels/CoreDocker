@@ -7,7 +7,7 @@ using CoreDocker.Dal.Models.Users;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
 using Bumbershoot.Utilities.Helpers;
-using CoreDocker.Utilities.Tests.TempBuildres;
+using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;

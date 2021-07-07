@@ -9,7 +9,7 @@ using CoreDocker.Dal.InMemoryCollections;
 using CoreDocker.Dal.Models.SystemEvents;
 using Bumbershoot.Utilities.Helpers;
 using Bumbershoot.Utilities.Serializer;
-using CoreDocker.Utilities.Tests;
+using CoreDocker.Dal.Tests;
 using NUnit.Framework;
 using FluentAssertions;
 

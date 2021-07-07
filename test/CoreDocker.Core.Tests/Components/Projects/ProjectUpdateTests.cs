@@ -7,7 +7,7 @@ using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Persistence;
 using Bumbershoot.Utilities.Helpers;
-using CoreDocker.Utilities.Tests.TempBuildres;
+using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentValidation;
