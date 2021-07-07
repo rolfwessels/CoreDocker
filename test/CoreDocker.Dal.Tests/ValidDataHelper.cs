@@ -23,12 +23,10 @@ namespace CoreDocker.Dal.Tests
 
         private static T ValidData<T>(T value)
         {
-            var project = value as Project;
-            if (project != null)
+            if (value is Project project)
                 project.Name = GetRandom.String(20);
 
-            var user = value as User;
-            if (user != null)
+            if (value is User user)
             {
                 user.Name = GetRandom.FirstName() + " " + GetRandom.LastName();
                 user.Email = (Regex.Replace(user.Name.ToLower(), "[^a-z]", "") + GetRandom.NumericString(3) +
