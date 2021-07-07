@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Api.WebApi.Exceptions;
 using CoreDocker.Shared.Models.Shared;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using FluentValidation;
 using Serilog;
 using Microsoft.AspNetCore.Mvc;

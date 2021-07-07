@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 
 namespace CoreDocker.Dal.Models.SystemEvents
 {

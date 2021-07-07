@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using HotChocolate.Resolvers;
 
 namespace CoreDocker.Api.GraphQl

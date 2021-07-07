@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 

@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreDocker.Utilities.Helpers;
 using Moq.Language.Flow;
 
 namespace CoreDocker.Utilities.Tests.Tools

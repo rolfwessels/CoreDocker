@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using FluentAssertions;
 using NUnit.Framework;
 

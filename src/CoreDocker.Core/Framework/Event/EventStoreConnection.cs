@@ -8,8 +8,8 @@ using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Helpers;
-using CoreDocker.Utilities.Serializer;
+using Bumbershoot.Utilities.Helpers;
+using Bumbershoot.Utilities.Serializer;
 
 namespace CoreDocker.Core.Framework.Event
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Subscriptions;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using FluentAssertions;
 using MediatR;
 

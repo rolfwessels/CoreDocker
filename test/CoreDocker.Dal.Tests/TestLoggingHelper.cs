@@ -25,9 +25,7 @@ namespace CoreDocker.Utilities.Tests
         private static ILogger SetupOnce()
         {
             return LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
-                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.Tests.log")
                 .WriteTo.Console(LogEventLevel.Debug)
-                //.ReadFrom.Configuration(BaseSettings.Config)
                 .CreateLogger());
         }
     }

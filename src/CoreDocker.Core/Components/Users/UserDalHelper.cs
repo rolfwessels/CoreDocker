@@ -1,7 +1,7 @@
 ﻿using System;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users
 {

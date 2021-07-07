@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Projects;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Utilities.Tests.TempBuildres;
 using FizzWare.NBuilder;
 using FluentAssertions;

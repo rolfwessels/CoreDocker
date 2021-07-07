@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Helpers;
 
 namespace CoreDocker.Dal.InMemoryCollections
 {

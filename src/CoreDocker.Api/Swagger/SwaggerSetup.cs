@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;

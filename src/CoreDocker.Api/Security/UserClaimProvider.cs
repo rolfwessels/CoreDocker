@@ -6,7 +6,7 @@ using CoreDocker.Api.AppStartup;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Extensions;

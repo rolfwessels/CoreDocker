@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
+using Bumbershoot.Utilities.Serializer;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Framework.CommandQuery;
@@ -12,7 +13,6 @@ using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Utilities;
-using CoreDocker.Utilities.Serializer;
 using FluentValidation;
 using Serilog;
 using MediatR;
