@@ -1,4 +1,0 @@
-[submodule "src/CoreDocker.Website"]
-	path = src/CoreDocker.Website
-	url = https://github.com/rolfwessels/CoreDocker.Website
-	branch = master
