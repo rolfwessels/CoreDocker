@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using FluentAssertions;
 using NUnit.Framework;
 

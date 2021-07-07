@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Settings;
-using CoreDocker.Utilities;
-using CoreDocker.Utilities.Tests;
-using CoreDocker.Utilities.Tests.Tools;
+using CoreDocker.Dal.Tests;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;

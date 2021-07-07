@@ -8,7 +8,7 @@ using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Core.Framework.Subscriptions;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
-using CoreDocker.Utilities.Tests.TempBuildres;
+using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;

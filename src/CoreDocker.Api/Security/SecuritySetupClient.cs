@@ -1,7 +1,7 @@
 ﻿using System;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Dal.Models.Auth;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;

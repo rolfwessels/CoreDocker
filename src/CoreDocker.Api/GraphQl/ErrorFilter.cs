@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using FluentValidation;
 using HotChocolate;
 using Serilog;

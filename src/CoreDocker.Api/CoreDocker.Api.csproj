@@ -15,7 +15,6 @@
     <ProjectReference Include="..\CoreDocker.Dal\CoreDocker.Dal.csproj" />
     <ProjectReference Include="..\CoreDocker.Dal.MongoDb\CoreDocker.Dal.MongoDb.csproj" />
     <ProjectReference Include="..\CoreDocker.Core\CoreDocker.Core.csproj" />
-    <ProjectReference Include="..\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />

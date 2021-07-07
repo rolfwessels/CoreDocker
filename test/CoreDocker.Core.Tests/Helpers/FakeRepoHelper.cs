@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Helpers;
-using CoreDocker.Utilities.Tests.TempBuildres;
+using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 
 namespace CoreDocker.Core.Tests.Helpers

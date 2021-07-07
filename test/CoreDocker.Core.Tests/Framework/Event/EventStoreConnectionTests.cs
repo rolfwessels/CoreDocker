@@ -7,9 +7,9 @@ using CoreDocker.Core.Framework.Event;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.InMemoryCollections;
 using CoreDocker.Dal.Models.SystemEvents;
-using CoreDocker.Utilities.Helpers;
-using CoreDocker.Utilities.Serializer;
-using CoreDocker.Utilities.Tests;
+using Bumbershoot.Utilities.Helpers;
+using Bumbershoot.Utilities.Serializer;
+using CoreDocker.Dal.Tests;
 using NUnit.Framework;
 using FluentAssertions;
 

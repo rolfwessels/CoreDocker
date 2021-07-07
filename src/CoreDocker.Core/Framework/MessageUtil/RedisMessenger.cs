@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
-using CoreDocker.Utilities.Helpers;
-using Newtonsoft.Json;
+using Bumbershoot.Utilities.Helpers;
 using Serilog;
 using StackExchange.Redis;
 
@@ -68,7 +68,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
                     {
                         void Action(RedisChannel channel, RedisValue message)
                         {
-                            var deserializeObject = JsonConvert.DeserializeObject(message, type);
+                            var deserializeObject = JsonSerializer.Deserialize(message, type);
                             _log.Debug($"RedisMessenger:Received {deserializeObject.GetType().Name}:{message}");
                             callBackToClient(deserializeObject);
                         }
@@ -126,7 +126,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         private RedisValue Serialize<T>(T value)
         {
-            return new RedisValue(JsonConvert.SerializeObject(value));
+            return new RedisValue(JsonSerializer.Serialize(value));
         }
 
 

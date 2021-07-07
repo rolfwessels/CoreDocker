@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using FluentValidation;
 using FluentValidation.Results;
 

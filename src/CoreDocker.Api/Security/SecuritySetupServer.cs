@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using IdentityServer4.Extensions;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;

@@ -10,12 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreDocker.Utilities\CoreDocker.Utilities.csproj" />
     <ProjectReference Include="..\CoreDocker.Core\CoreDocker.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
+    <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
 		<PackageReference Include="Serilog" Version="2.10.0" />
   </ItemGroup>
 </Project>

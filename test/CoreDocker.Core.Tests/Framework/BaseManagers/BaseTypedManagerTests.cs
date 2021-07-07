@@ -5,7 +5,7 @@ using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Tests.TempBuildres;
+using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;

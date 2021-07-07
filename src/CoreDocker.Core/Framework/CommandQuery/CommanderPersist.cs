@@ -1,9 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Serializer;
 using CoreDocker.Core.Framework.Event;
 using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Utilities.Serializer;
+
 
 namespace CoreDocker.Core.Framework.CommandQuery
 {

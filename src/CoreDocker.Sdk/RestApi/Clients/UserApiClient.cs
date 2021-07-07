@@ -4,7 +4,7 @@ using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 using GraphQL;
 
 namespace CoreDocker.Sdk.RestApi.Clients

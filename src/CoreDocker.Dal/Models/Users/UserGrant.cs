@@ -1,6 +1,6 @@
 ﻿using System;
 using CoreDocker.Dal.Models.Base;
-using CoreDocker.Utilities.Helpers;
+using Bumbershoot.Utilities.Helpers;
 
 namespace CoreDocker.Dal.Models.Users
 {

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using CoreDocker.Utilities;
+using Bumbershoot.Utilities;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreDocker.Api.Security
