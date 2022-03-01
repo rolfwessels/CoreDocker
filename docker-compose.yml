@@ -1,11 +1,13 @@
 version: "3.5"
 volumes:
-  mongodb-data:networks:
+  mongodb-data:
+  dotnet-binobj:
+networks:
   dev-network:
 
 services:
   db:
-    image: mongo:4.0
+    image: mongo:5-focal
     container_name: "db"
     restart: unless-stopped
     environment:
@@ -15,7 +17,8 @@ services:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
     networks:
-      - dev-network    volumes:
+      - dev-network
+    volumes:
       - "mongodb-data:/data/db"
   redis:
     image: redis:6.0-alpine
@@ -32,6 +35,7 @@ services:
       - API_URL=http://localhost:5000
     ports:
       - 84:80
+
   src:
     depends_on:
       - redis
