@@ -1,7 +1,6 @@
 version: "3.5"
 volumes:
   mongodb-data:
-  dotnet-binobj:
 networks:
   dev-network:
 
@@ -15,7 +14,7 @@ services:
       - MONGO_LOG_DIR=/dev/null
     ports:
       - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    command: mongod  --logpath=/dev/null # --quiet
     networks:
       - dev-network
     volumes:

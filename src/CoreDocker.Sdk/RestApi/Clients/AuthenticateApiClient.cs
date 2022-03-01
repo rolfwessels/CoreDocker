@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
@@ -41,7 +42,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)
         {
-            var request = new RestRequest(DefaultTokenUrl("token"), Method.POST);
+            var request = new RestRequest(DefaultTokenUrl("token"), Method.Post);
             request.AddParameter("client_id", tokenRequestModel.ClientId);
             request.AddParameter("client_secret", tokenRequestModel.ClientSecret);
             request.AddParameter("username", tokenRequestModel.UserName);
@@ -55,14 +56,14 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return result.Data;
         }
 
-        protected virtual void ValidateTokenResponse<T>(IRestResponse<T> result)
+        protected virtual void ValidateTokenResponse<T>(RestResponse<T> result)
         {
             if (result.StatusCode != HttpStatusCode.OK)
             {
                 if (string.IsNullOrEmpty(result.Content))
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
-                var errorMessage = SimpleJson.DeserializeObject<TokenErrorMessage>(result.Content);
+                var errorMessage = JsonSerializer.Deserialize<TokenErrorMessage>(result.Content);
                 throw new Exception($"{errorMessage.error}[{errorMessage.error_description}]");
             }
         }

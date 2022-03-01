@@ -30,7 +30,7 @@ namespace CoreDocker.Sdk.RestApi.Base
             return CoreDockerClient.UrlBase.AppendUrl(_baseUrl).AppendUrl(appendToUrl);
         }
 
-        protected virtual T ValidateResponse<T>(IRestResponse<T> result)
+        protected virtual T ValidateResponse<T>(RestResponse<T> result)
         {
             if (result.StatusCode != HttpStatusCode.OK)
             {

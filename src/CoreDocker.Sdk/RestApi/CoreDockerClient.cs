@@ -102,12 +102,9 @@ namespace CoreDocker.Sdk.RestApi
         public void SetToken(TokenResponseModel data)
         {
             var bearerToken = $"Bearer {data.AccessToken}";
-            //F
-            #pragma warning disable 618
-            _restClient.DefaultParameters.Add(new Parameter("Authorization", bearerToken, ParameterType.HttpHeader));
-            #pragma warning restore 618
+            _restClient.AddDefaultParameter("Authorization", bearerToken, ParameterType.HttpHeader);
+            data.AccessToken.Dump("data.AccessToken");
             
-
             _graphQlClient = GraphQlClient(data.AccessToken);
         }
 

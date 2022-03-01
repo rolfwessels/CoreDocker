@@ -11,7 +11,7 @@ namespace CoreDocker.Sdk.Helpers
         public static int MaxLogLength { get; set; } = 400;
         public static Action<string> Log { get; set; } = message => { };
 
-        public static async Task<IRestResponse<T>> ExecuteAsyncWithLogging<T>(this RestClient client,
+        public static async Task<RestResponse<T>> ExecuteAsyncWithLogging<T>(this RestClient client,
             RestRequest request) where T : new()
         {
             var method = request.Method;
