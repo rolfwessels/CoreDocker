@@ -1,5 +1,6 @@
 version: "3.5"
-networks:
+volumes:
+  mongodb-data:networks:
   dev-network:
 
 services:
@@ -11,10 +12,11 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     ports:
-      - 27021:27017
+      - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
     networks:
-      - dev-network
+      - dev-network    volumes:
+      - "mongodb-data:/data/db"
   redis:
     image: redis:6.0-alpine
     ports:
@@ -29,7 +31,7 @@ services:
     environment:
       - API_URL=http://localhost:5000
     ports:
-      - 84:80
+      - 84:80
   src:
     depends_on:
       - redis
