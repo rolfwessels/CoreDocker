@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
@@ -16,6 +17,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
+using RestSharp.Serializers.Json;
 using Serilog;
 
 namespace CoreDocker.Sdk.RestApi
@@ -64,8 +66,6 @@ namespace CoreDocker.Sdk.RestApi
                 if (e.Content.Contains("errors"))
                 {
                     var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
-                    graphQlResponse.Dump("graphQlResponse");
-
                     if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
                         throw new GraphQlResponseException<T>(graphQlResponse);
                 }
@@ -103,8 +103,6 @@ namespace CoreDocker.Sdk.RestApi
         {
             var bearerToken = $"Bearer {data.AccessToken}";
             _restClient.AddDefaultParameter("Authorization", bearerToken, ParameterType.HttpHeader);
-            data.AccessToken.Dump("data.AccessToken");
-            
             _graphQlClient = GraphQlClient(data.AccessToken);
         }
 

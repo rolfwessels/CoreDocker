@@ -42,6 +42,11 @@ indent_style = space
 indent_size = 2
 end_of_line = cr
 
+[*.json]
+indent_style = space
+indent_size = 2
+end_of_line = cr
+
 [*.yml]
 indent_style = space
 indent_size = 2

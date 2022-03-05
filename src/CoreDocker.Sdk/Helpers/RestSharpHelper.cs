@@ -12,7 +12,7 @@ namespace CoreDocker.Sdk.Helpers
         public static Action<string> Log { get; set; } = message => { };
 
         public static async Task<RestResponse<T>> ExecuteAsyncWithLogging<T>(this RestClient client,
-            RestRequest request) where T : new()
+            RestRequest request) 
         {
             var method = request.Method;
             var buildUri = client.BuildUri(request);

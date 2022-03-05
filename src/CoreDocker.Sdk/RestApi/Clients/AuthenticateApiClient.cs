@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models.Auth;
@@ -20,10 +22,10 @@ namespace CoreDocker.Sdk.RestApi.Clients
             _coreDockerClient = coreDockerClient;
         }
 
-        public async Task<Jwks> GetConfigAsync()
+        public async Task<Jwks[]> GetConfigAsync()
         {
             var restRequest = new RestRequest(".well-known/openid-configuration/jwks");
-            var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsyncWithLogging<Jwks>(restRequest);
+            var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsyncWithLogging<Jwks[]>(restRequest);
             return restRequestAsyncHandle.Data;
         }
 
@@ -49,9 +51,8 @@ namespace CoreDocker.Sdk.RestApi.Clients
             request.AddParameter("password", tokenRequestModel.Password);
             request.AddParameter("grant_type", tokenRequestModel.GrantType);
             request.AddParameter("scope", "api");
-            var restClient = _coreDockerClient.Client;
-            var result =
-                await restClient.ExecuteAsyncWithLogging<TokenResponseModel>(request);
+            
+            var result = await _coreDockerClient.Client.ExecuteAsyncWithLogging<TokenResponseModel>(request);
             ValidateTokenResponse(result);
             return result.Data;
         }
@@ -64,7 +65,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
                 var errorMessage = JsonSerializer.Deserialize<TokenErrorMessage>(result.Content);
-                throw new Exception($"{errorMessage.error}[{errorMessage.error_description}]");
+                throw new Exception($"{errorMessage.Error}[{errorMessage.ErrorDescription}]");
             }
         }
 
@@ -72,6 +73,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public class Jwks
         {
+            [JsonPropertyName("keys")]
             public List<Dictionary<string, string>> Keys { get; set; }
         }
 
@@ -79,11 +81,13 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         #region Nested type: TokenErrorMessage
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        
         internal class TokenErrorMessage
         {
-            public string error { get; set; }
-            public string error_description { get; set; }
+            [JsonPropertyName("error")]
+            public string Error { get; set; }
+            [JsonPropertyName("error_description")]
+            public string ErrorDescription { get; set; }
         }
 
         #endregion
