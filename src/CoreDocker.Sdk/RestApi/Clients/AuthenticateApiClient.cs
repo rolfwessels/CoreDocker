@@ -25,7 +25,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         {
             var restRequest = new RestRequest(".well-known/openid-configuration/jwks");
             var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsync(restRequest);
-            return restRequestAsyncHandle.Content != null ? JsonConvert.DeserializeObject<Jwks>(restRequestAsyncHandle.Content) : null;
+            return restRequestAsyncHandle.Content != null ? JsonConvert.DeserializeObject<Jwks>(restRequestAsyncHandle.Content) : new Jwks();
         }
 
         public async Task<TokenResponseModel> Login(string adminUser, string adminPassword)
@@ -53,7 +53,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             
             var result = await _coreDockerClient.Client.ExecuteAsyncWithLogging<TokenResponseModel>(request);
             ValidateTokenResponse(result);
-            return result.Data;
+            return ValidateResponse(result);
         }
 
         protected virtual void ValidateTokenResponse<T>(RestResponse<T> result)
@@ -63,7 +63,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 if (string.IsNullOrEmpty(result.Content))
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
-                var errorMessage = JsonSerializer.Deserialize<TokenErrorMessage>(result.Content);
+                var errorMessage = JsonSerializer.Deserialize<TokenErrorMessage>(result.Content)!;
                 throw new Exception($"{errorMessage.Error}[{errorMessage.ErrorDescription}]");
             }
         }
@@ -73,7 +73,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         public class Jwks
         {
             [JsonPropertyName("keys")]
-            public List<Dictionary<string, object>> Keys { get; set; }
+            public List<Dictionary<string, object>> Keys { get; set; } = new List<Dictionary<string, object>>();
         }
 
         #endregion
@@ -84,9 +84,9 @@ namespace CoreDocker.Sdk.RestApi.Clients
         internal class TokenErrorMessage
         {
             [JsonPropertyName("error")]
-            public string Error { get; set; }
+            public string? Error { get; set; }
             [JsonPropertyName("error_description")]
-            public string ErrorDescription { get; set; }
+            public string? ErrorDescription { get; set; }
         }
 
         #endregion

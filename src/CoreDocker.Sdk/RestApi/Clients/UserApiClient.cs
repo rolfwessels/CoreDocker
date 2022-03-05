@@ -6,6 +6,7 @@ using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Users;
 using Bumbershoot.Utilities.Helpers;
 using GraphQL;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -171,20 +172,21 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return response.Data.Users.Paged;
         }
 
+        // ReSharper disable ClassNeverInstantiated.Local
         private class Response
         {
-            public ResponseData Users { get; set; }
+            public ResponseData Users { get; set; } = null!;
 
             public class ResponseData
             {
-                public CommandResultModel Register { get; set; }
-                public UserModel Me { get; set; }
-                public List<RoleModel> Roles { get; set; }
-                public PagedListModel<UserModel> Paged { get; set; }
-                public UserModel ById { get; set; }
-                public CommandResultModel Create { get; set; }
-                public CommandResultModel Update { get; set; }
-                public CommandResultModel Remove { get; set; }
+                public CommandResultModel Register { get; set; } = null!;
+                public UserModel Me { get; set; } = null!;
+                public List<RoleModel> Roles { get; set; } = null!;
+                public PagedListModel<UserModel> Paged { get; set; } = null!;
+                public UserModel ById { get; set; } = null!;
+                public CommandResultModel Create { get; set; } = null!;
+                public CommandResultModel Update { get; set; } = null!;
+                public CommandResultModel Remove { get; set; } = null!;
             }
         }
     }

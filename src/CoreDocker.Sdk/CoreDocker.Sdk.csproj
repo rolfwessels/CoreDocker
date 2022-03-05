@@ -7,7 +7,9 @@
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
+
 
     <ItemGroup>
         <ProjectReference Include="..\CoreDocker.Core\CoreDocker.Core.csproj" />

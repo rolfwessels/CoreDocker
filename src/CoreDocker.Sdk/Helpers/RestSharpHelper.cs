@@ -18,7 +18,7 @@ namespace CoreDocker.Sdk.Helpers
             var buildUri = client.BuildUri(request);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var paramsSent = request.Parameters.Where(x => x.Name == "application/json").Select(x => x.Value.ToString())
+            var paramsSent = request.Parameters.Where(x => x.Name == "application/json").Select(x => x.Value?.ToString())
                 .FirstOrDefault();
 
             Log($"Sent {method} {buildUri} [{Truncate(paramsSent, MaxLogLength)}]");
@@ -31,7 +31,7 @@ namespace CoreDocker.Sdk.Helpers
         }
 
 
-        public static string Truncate(string value, int maxChars)
+        public static string? Truncate(string? value, int maxChars)
         {
             if (value == null) return null;
             return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";

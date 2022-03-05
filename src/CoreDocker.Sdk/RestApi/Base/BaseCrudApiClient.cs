@@ -37,7 +37,7 @@ namespace CoreDocker.Sdk.RestApi.Base
         public async Task<TModel> Update(string id, TDetailModel model)
         {
             var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)), Method.Put);
-            restRequest.AddBody(model, ContentType.Json);
+            restRequest.AddBody(model!, ContentType.Json);
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }

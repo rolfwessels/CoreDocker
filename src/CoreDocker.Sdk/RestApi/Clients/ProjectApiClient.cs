@@ -127,11 +127,10 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return response.Data.Projects.Remove;
         }
 
-
+#pragma warning disable CS8618
         private class Response
         {
             public ResponseData Projects { get; set; }
-
             public class ResponseData
             {
                 public PagedListModel<ProjectModel> Paged { get; set; }
@@ -141,5 +140,6 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 public CommandResultModel Remove { get; set; }
             }
         }
+#pragma warning restore CS8618
     }
 }

@@ -35,10 +35,19 @@ namespace CoreDocker.Sdk.RestApi.Base
             if (result.StatusCode != HttpStatusCode.OK)
             {
                 if (string.IsNullOrEmpty(result.Content))
+                {
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
+                }
+
                 var errorMessage = JsonConvert.DeserializeObject<ErrorMessage>(result.Content);
                 throw new Exception(errorMessage.Message);
+            }
+
+            if (result.Data == null)
+            {
+                throw new ApplicationException(
+                    $"{result.StatusCode} response data could not be found.");
             }
 
             return result.Data;
@@ -47,8 +56,7 @@ namespace CoreDocker.Sdk.RestApi.Base
         protected async Task<T> ExecuteAndValidate<T>(RestRequest request) where T : new()
         {
             var response = await CoreDockerClient.Client.ExecuteAsyncWithLogging<T>(request);
-            ValidateResponse(response);
-            return response.Data;
+            return ValidateResponse(response);
         }
 
         protected async Task<bool> ExecuteAndValidateBool(RestRequest request)
