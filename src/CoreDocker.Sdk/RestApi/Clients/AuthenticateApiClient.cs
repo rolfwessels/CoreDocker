@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models.Auth;
+using Newtonsoft.Json;
 using RestSharp;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -22,11 +23,11 @@ namespace CoreDocker.Sdk.RestApi.Clients
             _coreDockerClient = coreDockerClient;
         }
 
-        public async Task<Jwks[]> GetConfigAsync()
+        public async Task<Jwks> GetConfigAsync()
         {
             var restRequest = new RestRequest(".well-known/openid-configuration/jwks");
-            var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsyncWithLogging<Jwks[]>(restRequest);
-            return restRequestAsyncHandle.Data;
+            var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsync(restRequest);
+            return restRequestAsyncHandle.Content != null ? JsonConvert.DeserializeObject<Jwks>(restRequestAsyncHandle.Content) : null;
         }
 
         public async Task<TokenResponseModel> Login(string adminUser, string adminPassword)
@@ -74,7 +75,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         public class Jwks
         {
             [JsonPropertyName("keys")]
-            public List<Dictionary<string, string>> Keys { get; set; }
+            public List<Dictionary<string, object>> Keys { get; set; }
         }
 
         #endregion

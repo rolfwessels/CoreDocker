@@ -55,8 +55,8 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             var data = await _connection.Authenticate.GetConfigAsync();
             // assert
-            data.First().Keys.Dump("data.Keys");
-            data.First().Keys.First().Keys.Should().Contain("kty");
+            data.Keys.Dump("data.Keys");
+            data.Keys.First().Keys.Should().Contain("kty");
         }
 
         [Test]
