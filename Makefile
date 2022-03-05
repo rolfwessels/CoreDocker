@@ -107,7 +107,7 @@ update:
 test: restore
 	@echo -e "${GREEN}Testing the $(project)${NC}"
 	export DOTNET_ENVIRONMENT "Development"
-	dotnet test  --verbosity 
+	dotnet test
 
 start: docker-check
 	@echo -e "${GREEN}Starting the $(release) release of $(project)${NC}"
