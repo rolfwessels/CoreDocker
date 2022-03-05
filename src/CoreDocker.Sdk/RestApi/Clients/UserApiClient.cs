@@ -154,7 +154,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
         }
 
 
-        public async Task<PagedListModel<UserModel>> Paged(int? first = null)
+        public async Task<PagedResult<UserModel>> Paged(int? first = null)
         {
             var request = new GraphQLRequest
             {
@@ -182,7 +182,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
                 public CommandResultModel Register { get; set; } = null!;
                 public UserModel Me { get; set; } = null!;
                 public List<RoleModel> Roles { get; set; } = null!;
-                public PagedListModel<UserModel> Paged { get; set; } = null!;
+                public PagedResult<UserModel> Paged { get; set; } = null!;
                 public UserModel ById { get; set; } = null!;
                 public CommandResultModel Create { get; set; } = null!;
                 public CommandResultModel Update { get; set; } = null!;

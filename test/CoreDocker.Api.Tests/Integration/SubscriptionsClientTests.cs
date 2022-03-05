@@ -41,7 +41,7 @@ namespace CoreDocker.Api.Tests.Integration
         {
             // arrange
             Setup();
-            var userCreate = GetExampleData().First();
+            var userCreate = UserApiClientTests.GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
             var sendSubscribeGeneralEvents = _adminConnection.Value.SendSubscribeGeneralEvents();
             Exception error = null;
@@ -51,7 +51,7 @@ namespace CoreDocker.Api.Tests.Integration
 
             using (subscriptions)
             {
-                await Task.Delay(100);//required to allow subscription
+                await Task.Delay(1000);//required to allow subscription
                 // action
                 var insertCommand = await _userApiClient.Create(userCreate);
                 var insert = await _userApiClient.ById(insertCommand.Id);
@@ -66,18 +66,6 @@ namespace CoreDocker.Api.Tests.Integration
 
             subscriptions.Should().NotBeNull();
         }
-
-
-        #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel>
-
-        protected IList<UserCreateUpdateModel> GetExampleData()
-        {
-            var userCreateUpdateModels = Builder<User>.CreateListOfSize(2).WithValidData().Build()
-                .DynamicCastTo<List<UserCreateUpdateModel>>();
-            userCreateUpdateModels.ForEach(x => x.Password = GetRandom.Phrase(20));
-            return userCreateUpdateModels;
-        }
-
-        #endregion
+        
     }
 }

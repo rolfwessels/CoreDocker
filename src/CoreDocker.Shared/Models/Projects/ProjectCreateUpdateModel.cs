@@ -1,7 +1,4 @@
 ﻿namespace CoreDocker.Shared.Models.Projects
 {
-    public class ProjectCreateUpdateModel
-    {
-        public string Name { get; set; }
-    }
+    public record ProjectCreateUpdateModel(string Name);
 }

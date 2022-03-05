@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Shared;
 
 namespace CoreDocker.Shared.Interfaces.Base

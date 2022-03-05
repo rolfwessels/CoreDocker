@@ -2,9 +2,5 @@
 
 namespace CoreDocker.Shared.Models.Users
 {
-    public class RoleModel
-    {
-        public string Name { get; set; }
-        public List<string> Activities { get; set; }
-    }
+    public record RoleModel(string Name, List<string> Activities);
 }

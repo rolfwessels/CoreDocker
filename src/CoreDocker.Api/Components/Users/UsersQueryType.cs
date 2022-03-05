@@ -53,7 +53,7 @@ namespace CoreDocker.Api.Components.Users
                 .Description("All roles")
                 .Type<NonNullType<ListType<RoleType>>>()
                 .Resolve(context => RoleManager.All.Select(x =>
-                    new RoleModel { Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList() }));
+                    new RoleModel(x.Name, x.Activities.Select(a => a.ToString()).ToList())));
 
             descriptor.Field("role")
                 .Description("Get role by name")

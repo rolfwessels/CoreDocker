@@ -68,8 +68,8 @@ namespace CoreDocker.Api.Tests.Integration
         {
             // arrange
             Setup();
-            var invalidEmailProject = GetExampleData().First();
-            invalidEmailProject.Name = "";
+            var invalidEmailProject = GetExampleData().First() with {Name = ""};
+            
             // action
             Action testUpdateValidationFail = () => { _projectApiClient.Create(invalidEmailProject).Wait(); };
             // assert

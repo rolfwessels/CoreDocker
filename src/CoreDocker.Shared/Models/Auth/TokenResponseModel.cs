@@ -6,12 +6,12 @@ namespace CoreDocker.Shared.Models.Auth
     public class TokenResponseModel
     {
         [JsonPropertyName("access_token")]
-        public string AccessToken { get; set; }
+        public string AccessToken { get; init; } = default!;
 
         [JsonPropertyName("token_type")]
-        public string TokenType { get; set; }
+        public string TokenType { get; init; } = default!;
 
         [JsonPropertyName("expires_in")]
-        public int ExpiresIn { get; set; }
+        public int ExpiresIn { get; init; } = 0;
     }
 }

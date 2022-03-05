@@ -30,13 +30,8 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public async Task<TokenResponseModel> Login(string adminUser, string adminPassword)
         {
-            var token = await GetToken(new TokenRequestModel
-            {
-                ClientId = "coredocker.api",
-                ClientSecret = "super_secure_password",
-                UserName = adminUser,
-                Password = adminPassword
-            });
+            var token = await GetToken(new TokenRequestModel(ClientId: "coredocker.api",
+                ClientSecret: "super_secure_password", UserName: adminUser, Password: adminPassword));
             CoreDockerClient.SetToken(token);
             return token;
         }

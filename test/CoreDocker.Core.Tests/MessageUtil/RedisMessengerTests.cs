@@ -103,8 +103,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
 
             public string Message { get; private set; }
 
-            #region IDisposable Members
-
+            
             #region Implementation of IDisposable
 
             public void Dispose()
@@ -114,7 +113,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
 
             #endregion
 
-            #endregion
+            
         }
 
         #endregion

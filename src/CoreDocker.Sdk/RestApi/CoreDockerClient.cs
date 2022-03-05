@@ -24,7 +24,7 @@ namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         private GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
@@ -140,13 +140,5 @@ namespace CoreDocker.Sdk.RestApi
         public UserApiClient Users { get; set; }
 
         #endregion
-    }
-}
-
-
-namespace System.Runtime.CompilerServices
-{//hack!
-    public sealed class IsExternalInit
-    {
     }
 }
