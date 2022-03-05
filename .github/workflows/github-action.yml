@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - name: Setup Redis
         uses: shogo82148/actions-setup-redis@v1
         with:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup MongoDB
         uses: supercharge/mongodb-github-action@1.6.0
         with:
-          mongodb-version: "4.0"
+          mongodb-version: "5.0"
 
       - name: Test
         run: make test
