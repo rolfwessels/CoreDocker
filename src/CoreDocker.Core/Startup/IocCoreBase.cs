@@ -104,7 +104,7 @@ namespace CoreDocker.Core.Startup
         private void SetupTools(ContainerBuilder builder)
         {
             builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
-            builder.RegisterType<MediatorCommander>();
+            builder.RegisterType<MediatorCommander>().SingleInstance();
             builder.Register(x=>new CommanderPersist(x.Resolve<MediatorCommander>(),x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(), x.Resolve<IEventStoreConnection>())).As<ICommander>();
             builder.RegisterType<SubscriptionNotifications>().SingleInstance();
             builder.RegisterType<StringifyJson>().As<IStringify>().SingleInstance();
