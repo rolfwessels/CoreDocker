@@ -33,33 +33,33 @@ namespace CoreDocker.Api.Components.Users
                 .Description("Get user by id")
                 .Type<NonNullType<UserType>>()
                 .Argument("id", x => x.Description("id of the user").Type<StringType>())
-                .Resolver(context => _userLookup.GetById(context.ArgumentValue<string>("id")))
+                .Resolve(context => _userLookup.GetById(context.ArgumentValue<string>("id")))
                 .RequirePermission(Activity.ReadUsers);
 
             descriptor.Field("paged")
                 .Description("all users paged")
                 .Type<NonNullType<PagedListGraphType<User, UserType>>>()
                 .AddOptions(options)
-                .Resolver(x => options.Paged(x))
+                .Resolve(x => options.Paged(x))
                 .RequirePermission(Activity.ReadUsers);
 
             descriptor.Field("me")
                 .Description("Current user")
                 .Type<NonNullType<UserType>>()
-                .Resolver(context => Me(context.GetUser(_userLookup)))
+                .Resolve(context => Me(context.GetUser(_userLookup)))
                 .RequireAuthorization();
 
             descriptor.Field("roles")
                 .Description("All roles")
                 .Type<NonNullType<ListType<RoleType>>>()
-                .Resolver(context => RoleManager.All.Select(x =>
+                .Resolve(context => RoleManager.All.Select(x =>
                     new RoleModel { Name = x.Name, Activities = x.Activities.Select(a => a.ToString()).ToList() }));
 
             descriptor.Field("role")
                 .Description("Get role by name")
                 .Type<NonNullType<RoleType>>()
                 .Argument("name", x => x.Description("role name").Type<StringType>())
-                .Resolver(context => RoleManager.GetRole(context.ArgumentValue<string>("name")).ToModel());
+                .Resolve(context => RoleManager.GetRole(context.ArgumentValue<string>("name")).ToModel());
         }
 
         private GraphQlQueryOptions<User, UserPagedLookupOptions> Options()

@@ -13,7 +13,7 @@ namespace CoreDocker.Api.GraphQl
         public static Task<User> GetUser(this IResolverContext context, IUserLookup userLookup)
         {
             return (Task<User>) context.ContextData.GetOrAdd("UserTask",
-                () => ReadFromClaimsPrinciple(context, userLookup) as object);
+                () => ReadFromClaimsPrinciple(context, userLookup));
         }
 
         private static Task<User> ReadFromClaimsPrinciple(IResolverContext context, IUserLookup userLookup)
