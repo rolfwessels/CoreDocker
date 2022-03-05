@@ -3,11 +3,10 @@ root = true
 
 [*]
 end_of_line = crlf
-
 ; 4-column space indentation
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 2
-indent_size = 4
+indent_size = 2
 
 [*.cs]
 indent_style = space

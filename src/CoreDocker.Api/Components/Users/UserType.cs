@@ -19,11 +19,11 @@ namespace CoreDocker.Api.Components.Users
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>().Description("The roles of the user.");
             descriptor.Field("image")
                 .Type<NonNullType<StringType>>()
-                .Resolver(context => { return GravatarHelper.BuildUrl(context.Parent<User>().Email); })
+                .Resolve(context => { return GravatarHelper.BuildUrl(context.Parent<User>().Email); })
                 .Description("User profile image.");
             descriptor.Field("activities")
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>()
-                .Resolver(context => Roles(context.Parent<User>()?.Roles))
+                .Resolve(context => Roles(context.Parent<User>()?.Roles))
                 .Description("The activities that this user is authorized for.");
             descriptor.Field(d => d.UpdateDate).Type<NonNullType<DateTimeType>>()
                 .Description("The date when the user was last updated.");
