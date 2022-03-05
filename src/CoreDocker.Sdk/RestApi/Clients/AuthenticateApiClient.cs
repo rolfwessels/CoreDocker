@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models.Auth;
