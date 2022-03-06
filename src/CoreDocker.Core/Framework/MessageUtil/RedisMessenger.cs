@@ -68,7 +68,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
                     {
                         void Action(RedisChannel channel, RedisValue message)
                         {
-                            var deserializeObject = JsonSerializer.Deserialize(message, type);
+                            var deserializeObject = JsonSerializer.Deserialize(message, type)!;
                             _log.Debug($"RedisMessenger:Received {deserializeObject.GetType().Name}:{message}");
                             callBackToClient(deserializeObject);
                         }

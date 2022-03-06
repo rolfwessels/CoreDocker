@@ -34,7 +34,7 @@ namespace CoreDocker.Core.Components.Users
 
         #region IRoleManager Members
 
-        public Task<Role> GetRoleByName(string name)
+        public Task<Role?> GetRoleByName(string name)
         {
             return Task.FromResult(GetRole(name));
         }
@@ -46,7 +46,7 @@ namespace CoreDocker.Core.Components.Users
 
         #endregion
 
-        public static Role GetRole(string name)
+        public static Role? GetRole(string name)
         {
             return _roles.FirstOrDefault(x => x.Name == name);
         }

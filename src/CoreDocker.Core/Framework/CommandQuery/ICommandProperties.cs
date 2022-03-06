@@ -4,8 +4,8 @@ namespace CoreDocker.Core.Framework.CommandQuery
 {
     public interface ICommandProperties
     {
-        string CorrelationId { get; set; }
-        string Id { get; set; }
-        DateTime CreatedAt { get; set; }
+        string CorrelationId { get; }
+        string Id { get;  }
+        DateTime CreatedAt { get;  }
     }
 }

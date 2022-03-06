@@ -22,7 +22,7 @@ namespace CoreDocker.Core.Startup
 {
     public abstract class IocCoreBase
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         protected void SetupCore(ContainerBuilder builder)
         {
@@ -126,7 +126,7 @@ namespace CoreDocker.Core.Startup
 
             protected override void TryResolve<T>(out IValidator<T> output)
             {
-                _context().TryResolve(out output);
+                _context().TryResolve(out output!);
             }
         }
 

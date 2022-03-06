@@ -9,6 +9,6 @@ namespace CoreDocker.Core.Components.Users
     {
         Task<User> GetUserByEmail(string email);
         Task<PagedList<User>> GetPagedUsers(UserPagedLookupOptions options);
-        Task<User> GetUserByEmailAndPassword(string contextUserName, string contextPassword);
+        Task<User?> GetUserByEmailAndPassword(string contextUserName, string contextPassword);
     }
 }

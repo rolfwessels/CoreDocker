@@ -1,10 +1,4 @@
 ﻿namespace CoreDocker.Core.Framework.Subscriptions
 {
-    public class RealTimeNotificationsMessage
-    {
-        public string Id { get; set; }
-        public string Event { get; set; }
-        public string CorrelationId { get; set; }
-        public string Exception { get; set; }
-    }
+    public record RealTimeNotificationsMessage(string Id, string Event, string CorrelationId, string? Exception);
 }

@@ -48,7 +48,7 @@ namespace CoreDocker.Core.Components.Projects
 
         public class Notification : CommandNotificationBase
         {
-            public string Name { get; set; }
+            public string Name { get; set; } = null!;
 
             #region Overrides of CommandNotificationBase
 

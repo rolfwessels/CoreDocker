@@ -67,8 +67,8 @@ namespace CoreDocker.Core.Framework.Mappers
         public static UserRemove.Notification ToEvent(this UserRemove.Request user, bool wasRemoved,
             UserRemove.Notification? userReference = null)
         {
-            var notification = GetInstance().Map(user, userReference)!;
-            notification.WasRemoved = wasRemoved;
+            var notification = GetInstance().Map(user, userReference);
+            notification!.WasRemoved = wasRemoved;
             return notification;
         }
     }

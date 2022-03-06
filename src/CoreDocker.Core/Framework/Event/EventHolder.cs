@@ -15,9 +15,10 @@ namespace CoreDocker.Core.Framework.Event
 
         public static EventHolder From(string eventType, object value)
         {
-            Type generic = typeof(EventHolderTyped<>);
-            Type constructed = generic.MakeGenericType(value.GetType());
-            return Activator.CreateInstance(constructed, eventType, value) as EventHolder;
+            var generic = typeof(EventHolderTyped<>);
+            var constructed = generic.MakeGenericType(value.GetType());
+            var eventHolder = Activator.CreateInstance(constructed, eventType, value) as EventHolder;
+            return eventHolder ?? throw new InvalidOperationException("Could not create event holder");
         }
     }
 }

@@ -6,7 +6,7 @@ namespace CoreDocker.Core.Components.Users
 {
     public interface IRoleManager
     {
-        Task<Role> GetRoleByName(string name);
+        Task<Role?> GetRoleByName(string name);
         Task<List<Role>> Get();
     }
 }

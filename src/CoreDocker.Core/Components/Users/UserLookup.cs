@@ -13,7 +13,7 @@ namespace CoreDocker.Core.Components.Users
 {
     public class UserLookup : BaseLookup<User>, IUserLookup
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public UserLookup(IRepository<User> users)
         {
@@ -56,7 +56,7 @@ namespace CoreDocker.Core.Components.Users
             });
         }
 
-        public async Task<User> GetUserByEmailAndPassword(string email, string password)
+        public async Task<User?> GetUserByEmailAndPassword(string email, string password)
         {
             var user = await GetUserByEmail(email);
             if (user?.HashedPassword != null)
@@ -75,7 +75,7 @@ namespace CoreDocker.Core.Components.Users
             return user;
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string email)
         {
             if (email == null) throw new ArgumentNullException(nameof(email));
             return await Repository.FindOne(x => x.Email == email.ToLower());
