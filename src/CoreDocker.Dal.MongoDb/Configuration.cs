@@ -2,16 +2,17 @@
 using CoreDocker.Dal.MongoDb.Migrations;
 using CoreDocker.Dal.MongoDb.Migrations.Versions;
 using MongoDB.Driver;
+using SharpCompress;
 
 namespace CoreDocker.Dal.MongoDb
 {
     public class Configuration
     {
-        private static readonly object _locker = new object();
-        private static Configuration _instance;
+        private static readonly object _locker = new();
+        private static Lazy<Configuration> _instance = new(() => new Configuration());
         private readonly IMigration[] _updates;
-        private MongoMappers _mongoMappers;
-        private Task _update;
+        private MongoMappers? _mongoMappers;
+        private Task? _update;
 
         protected Configuration()
         {
@@ -23,7 +24,7 @@ namespace CoreDocker.Dal.MongoDb
 
         public Task Update(IMongoDatabase db)
         {
-            lock (_instance)
+            lock (_locker)
             {
                 if (_update == null)
                 {
@@ -41,13 +42,7 @@ namespace CoreDocker.Dal.MongoDb
 
         public static Configuration Instance()
         {
-            if (_instance == null)
-                lock (_locker)
-                {
-                    if (_instance == null) _instance = new Configuration();
-                }
-
-            return _instance;
+            return _instance.Value;
         }
 
         #endregion

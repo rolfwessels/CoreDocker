@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Dal.Models.Users;
 using CoreDocker.Sdk.RestApi;
 using CoreDocker.Sdk.RestApi.Clients;
-using CoreDocker.Shared.Models.Users;
 using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Tests;
-using FizzWare.NBuilder;
-using FizzWare.NBuilder.Generators;
 using FluentAssertions;
 using NUnit.Framework;
 
