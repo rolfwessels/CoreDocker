@@ -7,14 +7,14 @@ namespace CoreDocker.Api.Mappers
 {
     public static partial class MapApi
     {
-        public static Project ToDal(this ProjectCreateUpdateModel model, Project project = null)
+        public static Project ToDal(this ProjectCreateUpdateModel model, Project? project = null)
         {
-            return GetInstance().Map(model, project);
+            return GetInstance().Map(model, project)!;
         }
 
-        public static ProjectModel ToModel(this Project project, ProjectModel model = null)
+        public static ProjectModel ToModel(this Project project, ProjectModel? model = null)
         {
-            return GetInstance().Map(project, model);
+            return GetInstance().Map(project, model)!;
         }
 
         public static IEnumerable<ProjectReferenceModel> ToReferenceModelList(this IEnumerable<Project> projects)

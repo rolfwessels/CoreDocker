@@ -29,7 +29,7 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
         }
 
 
-        public Task<PagedList<TDal>> Paged(IResolverContext context, TOptions options = null)
+        public Task<PagedList<TDal>> Paged(IResolverContext context, TOptions? options = null)
         {
             options = options ?? new TOptions();
 

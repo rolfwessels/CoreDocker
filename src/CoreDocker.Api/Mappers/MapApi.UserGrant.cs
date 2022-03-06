@@ -6,14 +6,14 @@ namespace CoreDocker.Api.Mappers
 {
     public static partial class MapApi
     {
-        public static UserGrant ToGrant(this PersistedGrant model, UserGrant userGrant = null)
+        public static UserGrant ToGrant(this PersistedGrant model, UserGrant? userGrant = null)
         {
-            return GetInstance().Map(model, userGrant);
+            return GetInstance().Map(model, userGrant)!;
         }
 
-        public static PersistedGrant ToPersistanceGrant(this UserGrant userGrant, PersistedGrant model = null)
+        public static PersistedGrant ToPersistanceGrant(this UserGrant? userGrant, PersistedGrant? model = null)
         {
-            return GetInstance().Map(userGrant, model);
+            return GetInstance().Map(userGrant, model)!;
         }
 
         #region Private Methods
