@@ -2,7 +2,7 @@
 {
     public abstract class BaseReferenceWithName : BaseReference
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         public override string ToString()
         {
@@ -16,7 +16,7 @@
             return base.Equals(other) && string.Equals(Name, other.Name);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

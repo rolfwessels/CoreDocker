@@ -128,7 +128,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             return Task.FromResult(_internalDataList.Where(filter.Compile()).ToList());
         }
 
-        public async Task<T> FindOne(Expression<Func<T, bool>> filter)
+        public async Task<T?> FindOne(Expression<Func<T, bool>> filter)
         {
             var list = await FindInternal(filter);
             return list.DynamicCastTo<List<T>>().FirstOrDefault();

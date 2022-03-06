@@ -16,7 +16,7 @@ namespace CoreDocker.Dal.Persistence
 
         Task<bool> Remove(Expression<Func<T, bool>> filter);
         Task<List<T>> Find(Expression<Func<T, bool>> filter);
-        Task<T> FindOne(Expression<Func<T, bool>> filter);
+        Task<T?> FindOne(Expression<Func<T, bool>> filter);
         Task<long> Count();
         Task<long> Count(Expression<Func<T, bool>> filter);
         Task<long> UpdateMany(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd);

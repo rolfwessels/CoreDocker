@@ -52,9 +52,9 @@ namespace CoreDocker.Core.Components.Users
 
         public class Notification : CommandNotificationBase
         {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public List<string> Roles { get; set; }
+            public string Name { get; set; } = null!;
+            public string Email { get; set; } = null!;
+            public List<string> Roles { get; set; } = null!;
 
             #region Overrides of CommandNotificationBase
 

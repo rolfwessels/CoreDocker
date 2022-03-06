@@ -34,7 +34,7 @@ namespace CoreDocker.Core.Framework.Mappers
         }
 
 
-        public static UserReference ToReference(this User user, UserReference? userReference = null)
+        public static UserReference? ToReference(this User user, UserReference? userReference = null)
         {
             return GetInstance().Map(user, userReference)!;
         }

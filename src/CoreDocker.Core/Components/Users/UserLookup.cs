@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Framework.BaseManagers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Vendor;
@@ -36,8 +37,8 @@ namespace CoreDocker.Core.Components.Users
                 if (!string.IsNullOrEmpty(options.Search))
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
-                        x.Email.ToLower().Contains(options.Search.ToLower()) ||
-                        x.Name.ToLower().Contains(options.Search.ToLower()));
+                        x.Email.OrEmpty().ToLower().Contains(options.Search.ToLower()) ||
+                        x.Name.OrEmpty().ToLower().Contains(options.Search.ToLower()));
 
                 if (options.Sort != null)
                     switch (options.Sort)
@@ -56,7 +57,7 @@ namespace CoreDocker.Core.Components.Users
             });
         }
 
-        public async Task<User?> GetUserByEmailAndPassword(string email, string password)
+        public async Task<User?> GetUserByEmailAndPassword(string? email, string password)
         {
             var user = await GetUserByEmail(email);
             if (user?.HashedPassword != null)
@@ -75,7 +76,7 @@ namespace CoreDocker.Core.Components.Users
             return user;
         }
 
-        public async Task<User?> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string? email)
         {
             if (email == null) throw new ArgumentNullException(nameof(email));
             return await Repository.FindOne(x => x.Email == email.ToLower());
