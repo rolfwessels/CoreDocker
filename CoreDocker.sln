@@ -21,9 +21,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1F5EB58A-8ACE-4179-85CD-119D2DEFF2DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{BA7073F6-2A1C-4F82-A240-D02064A3BE86}"
-	ProjectSection(SolutionItems) = preProject
-		src\CoreDocker.Utilities\Settings.cs = src\CoreDocker.Utilities\Settings.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E1C5C555-3024-4E82-92B0-15CB6AA06135}"
 EndProject

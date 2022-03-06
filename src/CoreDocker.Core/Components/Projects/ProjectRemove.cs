@@ -55,18 +55,7 @@ namespace CoreDocker.Core.Components.Projects
 
         #region Nested type: Request
 
-        public class Request : CommandRequestBase
-        {
-            public static Request From(string id)
-            {
-                if (id == null) throw new ArgumentNullException(nameof(id));
-
-                return new Request
-                {
-                    Id = id
-                };
-            }
-        }
+        public record Request(string Id) : CommandRequestBase(Id);
 
         #endregion
     }

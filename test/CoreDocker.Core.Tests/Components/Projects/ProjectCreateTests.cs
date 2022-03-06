@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Bumbershoot.Utilities.Helpers;
@@ -38,10 +37,9 @@ namespace CoreDocker.Core.Tests.Components.Projects
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest();
-            validRequest.Name = "";
+            var validRequest = GetValidRequest() with { Name = "" };
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
+            var testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x =>

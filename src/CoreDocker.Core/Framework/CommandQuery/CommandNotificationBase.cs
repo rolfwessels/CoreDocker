@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CoreDocker.Core.Framework.CommandQuery
 {
-    public abstract class CommandNotificationBase : ICommandProperties, INotification
+    public abstract record CommandNotificationBase : ICommandProperties, INotification
     {
         #region Implementation of ICommandProperties
 

@@ -74,30 +74,8 @@ namespace CoreDocker.Core.Components.Users
 
         #region Nested type: Request
 
-        public class Request : CommandRequestBase
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public List<string> Roles { get; set; }
-
-            public static Request From(string id, string name, string password, List<string> roles, string email)
-            {
-                if (id == null) throw new ArgumentNullException(nameof(id));
-                if (name == null) throw new ArgumentNullException(nameof(name));
-                if (email == null) throw new ArgumentNullException(nameof(email));
-//                if (roles == null || !roles.Any()) throw new ArgumentNullException(nameof(roles));
-
-                return new Request
-                {
-                    Id = id,
-                    Name = name,
-                    Password = password,
-                    Email = email,
-                    Roles = roles
-                };
-            }
-        }
+        public record Request(string Id, string Name, string? Password, List<string> Roles, string Email) 
+            : CommandRequestBase(Id);
 
         #endregion
     }

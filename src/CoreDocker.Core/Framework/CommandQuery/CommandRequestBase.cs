@@ -3,10 +3,11 @@ using MediatR;
 
 namespace CoreDocker.Core.Framework.CommandQuery
 {
-    public class CommandRequestBase : IRequest<CommandResult>, ICommandProperties
+    public abstract record CommandRequestBase : IRequest<CommandResult>, ICommandProperties
     {
-        public CommandRequestBase()
+        protected CommandRequestBase(string id)
         {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
             CorrelationId = Guid.NewGuid().ToString();
             CreatedAt = DateTime.Now.ToUniversalTime();
         }

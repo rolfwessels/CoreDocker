@@ -23,38 +23,38 @@ namespace CoreDocker.Core.Framework.Mappers
         }
 
 
-        public static ProjectReference ToReference(this Project project, ProjectReference projectReference = null)
+        public static ProjectReference ToReference(this Project project, ProjectReference? projectReference = null)
         {
-            return GetInstance().Map(project, projectReference);
+            return GetInstance().Map(project, projectReference)!;
         }
 
-        public static Project ToDao(this ProjectCreate.Request project, Project projectReference = null)
+        public static Project ToDao(this ProjectCreate.Request project, Project? projectReference = null)
         {
-            return GetInstance().Map(project, projectReference);
+            return GetInstance().Map(project, projectReference)!;
         }
 
         public static ProjectCreate.Notification ToEvent(this ProjectCreate.Request project,
-            ProjectCreate.Notification projectReference = null)
+            ProjectCreate.Notification? projectReference = null)
         {
-            return GetInstance().Map(project, projectReference);
+            return GetInstance().Map(project, projectReference)!;
         }
 
-        public static Project ToDao(this ProjectUpdateName.Request project, Project projectReference = null)
+        public static Project ToDao(this ProjectUpdateName.Request project, Project? projectReference = null)
         {
-            return GetInstance().Map(project, projectReference);
+            return GetInstance().Map(project, projectReference)!;
         }
 
         public static ProjectUpdateName.Notification ToEvent(this ProjectUpdateName.Request project,
-            ProjectUpdateName.Notification projectReference = null)
+            ProjectUpdateName.Notification? projectReference = null)
         {
-            return GetInstance().Map(project, projectReference);
+            return GetInstance().Map(project, projectReference)!;
         }
 
 
         public static ProjectRemove.Notification ToEvent(this ProjectRemove.Request project,
-            ProjectRemove.Notification projectReference = null)
+            ProjectRemove.Notification? projectReference = null)
         {
-            var notification = GetInstance().Map(project, projectReference);
+            var notification = GetInstance().Map(project, projectReference)!;
             return notification;
         }
     }

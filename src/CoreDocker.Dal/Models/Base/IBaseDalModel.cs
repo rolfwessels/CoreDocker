@@ -4,7 +4,7 @@ namespace CoreDocker.Dal.Models.Base
 {
     public interface IBaseDalModel
     {
-        DateTime CreateDate { get; }
-        DateTime UpdateDate { get; }
+        DateTime CreateDate { get; set; }
+        DateTime UpdateDate { get; set; }
     }
 }
