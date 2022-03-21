@@ -2,7 +2,8 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
 WORKDIR /app
 COPY ./ ./
 WORKDIR /app/CoreDocker.Api
-RUN dotnet publish -c Release -o out
+ARG  VERSION=latest
+RUN dotnet publish ${CODE_VERSION} -c Release -o out
 
 
 # Build runtime image
