@@ -56,7 +56,6 @@ help:
 	@echo ""
 	@echo "  Service Targets (should only be run inside the docker container)"
 	@echo "   - publish      : Build the $(project) to build folder"
-	@echo "   - version      : Set current version number $(project)"
 	@echo "   - start        : Run the $(project)"
 	@echo "   - test         : Run the $(project) tests"
 	@echo "   - update       : Update the $(project) nuget packages"
@@ -87,9 +86,6 @@ build: down
 	@echo "Building containers..."
 	@docker-compose build
 
-version:
-	@echo "${GREEN}Setting version number $(version) ${NC}"
-	@echo '{ "version": "${version}" }' > src/version.json
 
 publish-bin: docker-check env-check
 	@echo -e "${GREEN}Building the $(release)-$(version)-$(version-suffix) release of $(project)${NC}"
@@ -125,6 +121,18 @@ test: restore
 	export DOTNET_ENVIRONMENT "Development"
 	dotnet test
 
+coverage: restore
+	@echo -e "${GREEN}Testing the $(project)${NC}"
+	export DOTNET_ENVIRONMENT "Development"
+	@echo "dotnet test  /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov"
+	# rm test/TestResults/coverage.info
+	dotnet test CoreDocker.sln --logger:trx --results-directory ../TestResults \
+   /p:CollectCoverage=true \
+   /p:CoverletOutput=../TestResults/ \
+   /p:MergeWith=../TestResults/coverlet.info \
+   /p:Exclude="[*.Tests]*" \
+   /p:CoverletOutputFormat="lcov"
+	 
 start: docker-check
 	@echo -e "${GREEN}Starting the $(release) release of $(project)${NC}"
 	@cd src/CoreDocker.Api/ && dotnet run

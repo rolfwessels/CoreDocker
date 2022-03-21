@@ -29,7 +29,13 @@ jobs:
           mongodb-version: "5.0"
 
       - name: Test
-        run: make test
+        run: make coverage
+
+      - name: Publish coverage report to coveralls.io
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: test//TestResults/coverage.info
 
       - name: docker publish
         env:
