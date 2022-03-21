@@ -19,11 +19,11 @@ This project contains some scafolding code that I use whenever I start a new pro
 - Redis for messaging between services
 - CI Appvayor && Travis for build automation
 - Docker files to compile and compose a server
+- Versioned binaries
 - Developed using TDD practices.
 
 ## Todo
 
-- Version the binaries that get built in docker.
 - Deploy with CDN
 - Code coverage in build process.
 - Code analytics - look at resharper cli tools.
