@@ -13,7 +13,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
     [Category("Integration")]
     public class RedisMessengerTests
     {
-        private RedisMessenger _messenger;
+        private RedisMessenger _messenger = null!;
 
         #region Setup/Teardown
 
@@ -39,7 +39,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // arrange
             Setup();
             var o = new object();
-            string received = null;
+            string? received = null;
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             // action
             await _messenger.Send(new SampleMessage("String"));
@@ -53,7 +53,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // arrange
             Setup();
             var o = new object();
-            object received = null;
+            object? received = null;
             _messenger.Register(typeof(SampleMessage), o, m => received = m);
             // action
             await _messenger.Send(new SampleMessage("String"));
@@ -67,7 +67,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // arrange
             Setup();
             var o = new object();
-            string received = null;
+            string? received = null;
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             _messenger.UnRegister<SampleMessage>(o);
             // action
@@ -82,7 +82,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
             // arrange
             Setup();
             var o = new object();
-            string received = null;
+            string? received = null;
             _messenger.Register<SampleMessage>(o, m => received = m.Message);
             _messenger.UnRegister(o);
             // action
@@ -101,7 +101,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
                 Message = message;
             }
 
-            public string Message { get; private set; }
+            public string? Message { get; private set; }
 
             
             #region Implementation of IDisposable

@@ -25,7 +25,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
             // action
             var result = await Lookup.GetById(guid);
             // assert
-            result.Id.Should().Be(guid);
+            result?.Id.Should().Be(guid);
         }
 
         [Test]

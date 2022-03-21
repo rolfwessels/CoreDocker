@@ -8,6 +8,7 @@ using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Persistence;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Extensions;
@@ -35,7 +36,7 @@ namespace CoreDocker.Api.Security
         {
             var sub = context.Subject.GetSubjectId();
 
-            var user = await _userLookup.GetUserByEmail(sub);
+            var user = (await _userLookup.GetUserByEmail(sub)).ExistsOrThrow(sub);
 
             var claims = BuildClaimListForUser(user);
 
@@ -93,7 +94,7 @@ namespace CoreDocker.Api.Security
                     ? new Claim(JwtClaimTypes.Role, RoleManager.Admin.Name)
                     : new Claim(JwtClaimTypes.Role, RoleManager.Guest.Name)
             };
-            var selectMany = user.Roles.Select(r => _roleManager.GetRoleByName(r).Result).SelectMany(x => x.Activities)
+            var selectMany = user.Roles.Select(r => _roleManager.GetRoleByName(r).Result).SelectMany(x => x!.Activities)
                 .Distinct().ToList();
             claims.AddRange(selectMany.Select(claim => new Claim(JwtClaimTypes.Role, ToPolicyName(claim))));
 

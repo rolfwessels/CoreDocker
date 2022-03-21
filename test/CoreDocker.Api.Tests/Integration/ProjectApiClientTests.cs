@@ -18,7 +18,7 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class ProjectApiClientTests : IntegrationTestsBase
     {
-        private ProjectApiClient _projectApiClient;
+        private ProjectApiClient _projectApiClient = null!;
 
         #region Setup/Teardown
 

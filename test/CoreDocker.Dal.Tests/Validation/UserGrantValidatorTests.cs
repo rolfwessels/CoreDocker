@@ -12,7 +12,7 @@ namespace CoreDocker.Dal.Tests.Validation
     [TestFixture]
     public class UserGrantValidatorTests
     {
-        private UserGrantValidator _validator;
+        private UserGrantValidator _validator = null!;
 
         #region Setup/Teardown
 
@@ -82,7 +82,7 @@ namespace CoreDocker.Dal.Tests.Validation
             // arrange
             Setup();
             var userReference = Builder<UserReference>.CreateNew()
-                .With(x => x.Name = null)
+                .With(x => x.Name = null!)
                 .Build();
             var userGrant = Builder<UserGrant>.CreateNew().WithValidData().Build();
             userGrant.User = userReference;

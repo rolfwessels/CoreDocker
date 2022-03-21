@@ -15,7 +15,7 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class SubscriptionsClientTests : IntegrationTestsBase
     {
-        private UserApiClient _userApiClient;
+        private UserApiClient _userApiClient = null!;
 
         #region Setup/Teardown
 
@@ -40,7 +40,7 @@ namespace CoreDocker.Api.Tests.Integration
             var userCreate = UserApiClientTests.GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
             var sendSubscribeGeneralEvents = _adminConnection.Value.SendSubscribeGeneralEvents();
-            Exception error = null;
+            Exception? error = null;
             void OnError(Exception e) => error = e;
             var subscriptions =
                 sendSubscribeGeneralEvents.Subscribe(evt => items.Add(evt.Data.OnDefaultEvent), OnError);

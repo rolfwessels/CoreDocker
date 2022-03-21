@@ -10,7 +10,7 @@ namespace CoreDocker.Api.Components.Projects
         protected override void Configure(IObjectTypeDescriptor<ProjectsMutation> descriptor)
         {
             Name = "ProjectsMutation";
-            descriptor.Field(t => t.Create(default))
+            descriptor.Field(t => t.Create(default!))
                 .Description("Add a project.")
                 .RequirePermission(Activity.UpdateProject);
 

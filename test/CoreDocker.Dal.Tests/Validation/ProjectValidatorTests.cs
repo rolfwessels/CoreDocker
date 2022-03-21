@@ -12,7 +12,7 @@ namespace CoreDocker.Dal.Tests.Validation
     [TestFixture]
     public class ProjectValidatorTests
     {
-        private ProjectValidator _validator;
+        private ProjectValidator _validator = null!;
 
         #region Setup/Teardown
 
@@ -46,7 +46,7 @@ namespace CoreDocker.Dal.Tests.Validation
             // arrange
             Setup();
             var project = Builder<Project>.CreateNew().WithValidData().Build();
-            project.Name = null;
+            project.Name = null!;
             // assert
             _validator.TestValidate(project).ShouldHaveValidationErrorFor(project => project.Name);
 
