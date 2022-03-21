@@ -28,7 +28,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             }
 
             // assert
-            var dictionary = list.ToDictionary(x => x.FullName.Split(".").Last().Replace("+", "."));
+            var dictionary = list.ToDictionary(x => x.FullName.OrEmpty().Split(".").Last().Replace("+", "."));
             dictionary.Keys.Dump($"Missing: [{list.Count}]");
             dictionary.Select(notification => $"{type.Name} should implement INotificationHandler<{notification.Key}>.")
                 .ToArray().Should().BeEmpty();

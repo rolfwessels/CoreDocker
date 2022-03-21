@@ -8,7 +8,7 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class RoleManagerTests
     {
-        private RoleManager _roleManager;
+        private RoleManager _roleManager = null!;
 
         #region Setup/Teardown
 
@@ -25,7 +25,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             // arrange
             Setup();
             // action
-            var roleByName = _roleManager.GetRoleByName("Admin").Result;
+            var roleByName = _roleManager.GetRoleByName("Admin").Result!;
             // assert
             roleByName.Name.Should().Be("Admin");
             roleByName.Activities.Should().Contain(Activity.DeleteUser);
@@ -38,7 +38,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             // arrange
             Setup();
             // action
-            var roleByName = _roleManager.GetRoleByName("Guest").Result;
+            var roleByName = _roleManager.GetRoleByName("Guest").Result!;
             // assert
             roleByName.Name.Should().Be("Guest");
             roleByName.Activities.Should().NotContain(Activity.DeleteUser);

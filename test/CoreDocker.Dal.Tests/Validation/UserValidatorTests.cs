@@ -11,7 +11,7 @@ namespace CoreDocker.Dal.Tests.Validation
     [TestFixture]
     public class UserValidatorTests
     {
-        private UserValidator _validator;
+        private UserValidator _validator = null!;
 
         #region Setup/Teardown
 

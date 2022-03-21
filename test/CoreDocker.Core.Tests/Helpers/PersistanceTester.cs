@@ -30,9 +30,9 @@ namespace CoreDocker.Core.Tests.Helpers
             var add = await repository.Add(user);
             foreach (var action in _testSaved)
             {
-                var firstOrDefault = await repository.FindOne(x => x.Id == user.Id);
-                firstOrDefault.Should().NotBeNull("Could not load the value");
-                action(user, firstOrDefault);
+                var found = await repository.FindOne(x => x.Id == user.Id);
+                found.Should().NotBeNull("Could not load the value");
+                action(user, found!);
             }
 
             add.Should().NotBeNull("Saving should return the saved value");

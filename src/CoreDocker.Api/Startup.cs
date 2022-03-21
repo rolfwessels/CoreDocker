@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using CoreDocker.Api.AppStartup;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace CoreDocker.Api
 {
@@ -41,6 +43,7 @@ namespace CoreDocker.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            PrintVersionNumber();
             app.UseStaticFiles();
             app.UseRouting();
             var openIdSettings = new OpenIdSettings(Configuration);
@@ -66,11 +69,17 @@ namespace CoreDocker.Api
             SimpleFileServer.Initialize(app);
         }
 
+        private static void PrintVersionNumber()
+        {
+            var log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+            log.Information("Starting server {InformationalVersion}", InformationalVersion());
+        }
+
         public static string InformationalVersion()
         {
-            return Assembly.GetEntryAssembly()?
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion ?? "V0.0.0";
+            var assembly = Assembly.GetExecutingAssembly();
+            var productVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
+            return $"{productVersion}";
         }
     }
 }

@@ -59,12 +59,12 @@ namespace CoreDocker.Dal.MongoDb.Migrations
 
         private async Task RunTheUpdate(IMigration migrateInitialize, IMongoDatabase db)
         {
-            _log.Information($"Starting {migrateInitialize.GetType().Name} db update");
+            _log.Information("Starting {Name} db update", migrateInitialize.GetType().Name);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             await migrateInitialize.Update(db);
             stopwatch.Stop();
-            _log.Information($"Done {migrateInitialize.GetType().Name} in {stopwatch.ElapsedMilliseconds}ms");
+            _log.Information("Done {Name} in {ElapsedMilliseconds}ms", migrateInitialize.GetType().Name, stopwatch.ElapsedMilliseconds);
         }
 
         #endregion

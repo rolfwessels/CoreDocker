@@ -1,7 +1,11 @@
+**/obj/**/*
+**/bin/**/*
+**/*lock.json
+**/.idea.*
 node_modules
 build
 npm-debug.log
-Dockerfile*
+**/Dockerfile
 docker-compose*
 .dockerignore
 .git

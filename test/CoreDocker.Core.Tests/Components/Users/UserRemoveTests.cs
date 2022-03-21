@@ -16,8 +16,8 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserRemoveTests : BaseManagerTests
     {
-        private UserRemove.Handler _handler;
-        private IRepository<User> _users;
+        private UserRemove.Handler _handler = null!;
+        private IRepository<User> _users = null!;
 
         #region Setup/Teardown
 

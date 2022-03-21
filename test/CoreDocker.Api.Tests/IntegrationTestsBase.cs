@@ -59,7 +59,7 @@ namespace CoreDocker.Api.Tests
                 .UseUrls(address);
             host.Build().Start();
 
-            Log.Information($"Starting api on [{address}]");
+            Log.Information("Starting api on [{address}]", address);
             var forContext = Log.ForContext(typeof(RestSharpHelper));
             RestSharpHelper.Log = m => { forContext.Debug(m); };
             return address;

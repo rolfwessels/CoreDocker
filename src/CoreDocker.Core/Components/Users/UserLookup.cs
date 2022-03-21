@@ -65,12 +65,12 @@ namespace CoreDocker.Core.Components.Users
                 if (!PasswordHash.ValidatePassword(password, user.HashedPassword))
                 {
                     user = null;
-                    _log.Information($"Invalid password for user '{email}'");
+                    _log.Warning("Invalid password for user '{email}'", email);
                 }
             }
             else
             {
-                _log.Information($"Invalid user '{email}'");
+                _log.Warning("Invalid user '{email}'", email);
             }
 
             return user;

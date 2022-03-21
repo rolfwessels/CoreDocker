@@ -55,15 +55,15 @@ namespace CoreDocker.Api.GraphQl
         public void AddSubscription(CancellationToken cancellationToken)
         {
             Interlocked.Increment(ref _counter);
-            _log.Information($"Subscription added [{_counter}]");
+            _log.Information("Subscription added [{counter}]", _counter);
             if (!_disposable.IsValueCreated)
             {
-                _log.Debug($"SubscriptionSubscribe:AddSubscription create subscriptions {_disposable.Value}");
+                _log.Debug("SubscriptionSubscribe:AddSubscription create subscriptions {value}", _disposable.Value);
             }
 
             cancellationToken.Register(() =>
             {
-                _log.Information($"Subscription removed [{_counter}]");
+                _log.Information("Subscription removed [{ct}]", _counter);
                 Interlocked.Decrement(ref _counter);
             });
         }

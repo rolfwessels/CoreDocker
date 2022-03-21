@@ -31,7 +31,7 @@ namespace CoreDocker.Api.Security
 
         public async Task StoreAsync(PersistedGrant grant)
         {
-            _log.Information($"PersistedGrantStore:StoreAsync store sessions for SubjectId '{grant.SubjectId}' ");
+            _log.Information("PersistedGrantStore:StoreAsync store sessions for SubjectId '{subjectId}' ", grant.SubjectId);
             var userGrant = grant.ToGrant();
             var userById = await _userLookup.GetById(grant.SubjectId);
             if (userById != null) userGrant.User = userById.ToReference();
@@ -66,7 +66,7 @@ namespace CoreDocker.Api.Security
 
         private async Task<IEnumerable<UserGrant>> FromDbByFilter(PersistedGrantFilter filter)
         {
-            _log.Information($"PersistedGrantStore:FromDbByFilter For SubjectId `{filter.SubjectId}` ClientId `{filter.ClientId}` ");
+            _log.Information("PersistedGrantStore:FromDbByFilter For SubjectId `{SubjectId}` ClientId `{ClientId}` ", filter.SubjectId, filter.ClientId);
             return (await _userGrantLookup.GetByUserId(filter.SubjectId)).Where(x => x.ClientId == filter.ClientId);
         }
 

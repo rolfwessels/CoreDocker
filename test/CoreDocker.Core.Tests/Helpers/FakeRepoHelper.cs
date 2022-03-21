@@ -15,7 +15,7 @@ namespace CoreDocker.Core.Tests.Helpers
             where T : IBaseDalModel
         {
             var items = Builder<T>.CreateListOfSize(size).WithValidData().Build();
-            items.OfType<IBaseDalModelWithId>().ForEach(x => x.Id = null);
+            items.OfType<IBaseDalModelWithId>().ForEach(x => x.Id = null!);
             return items
                 .ForEach(applyUpdate)
                 .Select(repository.Add)
@@ -30,13 +30,13 @@ namespace CoreDocker.Core.Tests.Helpers
 
         public static T AddAFake<T>(this IRepository<T> repository) where T : IBaseDalModel
         {
-            return AddFake(repository, 1).FirstOrDefault();
+            return AddFake(repository, 1).First();
         }
 
 
         public static T AddAFake<T>(this IRepository<T> repository, Action<T> applyUpdate) where T : IBaseDalModel
         {
-            return AddFake(repository, 1, applyUpdate).FirstOrDefault();
+            return AddFake(repository, 1, applyUpdate).First();
         }
     }
 }

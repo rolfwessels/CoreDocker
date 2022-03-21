@@ -13,8 +13,8 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserGrantManagerTests : BaseTypedManagerTests<UserGrant>
     {
-        private Mock<ILogger<UserGrantLookup>> _mockLogger;
-        private UserGrantLookup _userGrantLookup;
+        private Mock<ILogger<UserGrantLookup>> _mockLogger = null!;
+        private UserGrantLookup _userGrantLookup = null!;
 
         #region Setup/Teardown
 

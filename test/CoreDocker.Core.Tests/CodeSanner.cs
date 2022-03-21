@@ -35,10 +35,10 @@ namespace CoreDocker.Core.Tests
                 if (_runners.Any(x => x.ShouldScan(fileName)))
                 {
                     var fileReport = new FileReport
-                    {
-                        FileName = fileName,
-                        ShortName = fileName.Replace(GetSourcePath(), "")
-                    };
+                    (
+                        fileName,
+                        fileName.Replace(GetSourcePath(), "")
+                    );
                     var readAllLines = File.ReadAllLines(fileName);
                     foreach (var runner in _runners.Where(x => x.ShouldScan(fileName)))
                     {
@@ -75,12 +75,8 @@ namespace CoreDocker.Core.Tests
                 var testclassName = fileNameWithoutExtension + "Tests.cs";
                 if (!allFiles.Any(x => x.Contains(testclassName)))
                     yield return
-                        new Issue
-                        {
-                            Type = GetType().Name,
-                            Description =
-                                $"Expect the file {fileNameWithoutExtension} to have a test class somewhere {testclassName}."
-                        };
+                        new Issue(GetType().Name,
+                            $"Expect the file {fileNameWithoutExtension} to have a test class somewhere {testclassName}.");
             }
 
             #endregion
@@ -90,17 +86,12 @@ namespace CoreDocker.Core.Tests
 
         #region Nested type: FileReport
 
-        public class FileReport
+        public record FileReport(string FileName, string ShortName)
         {
-            public FileReport()
-            {
-                Issues = new List<Issue>();
-            }
-
-            public string FileName { get; set; }
-            public List<Issue> Issues { get; set; }
+            
+            public List<Issue> Issues { get; set; } = new();
             public int LinesOfCode { get; set; }
-            public string ShortName { get; set; }
+            
 
             public override string ToString()
             {
@@ -127,11 +118,8 @@ namespace CoreDocker.Core.Tests
 
         #region Nested type: Issue
 
-        public class Issue
+        public record Issue(string Type, string Description)
         {
-            public string Type { get; set; }
-            public string Description { get; set; }
-
             public override string ToString()
             {
                 var stringBuilder = new StringBuilder();
@@ -162,18 +150,17 @@ namespace CoreDocker.Core.Tests
                 if (endsWithTests)
                     yield return
                         new Issue
-                        {
-                            Type = GetType().Name,
-                            Description = $"File should be called {name.Replace("Test.cs", "Tests.cs")}."
-                        };
+                        (
+                            GetType().Name,
+                            $"File should be called {name.Replace("Test.cs", "Tests.cs")}."
+                        );
                 var endsWithTest = name.EndsWith("Tests.cs");
                 if (endsWithTest && !fileLines.Any(x => x.Contains(nameNoExtention)))
                     yield return
-                        new Issue
-                        {
-                            Type = GetType().Name,
-                            Description = $"File {name} should contain class {nameNoExtention}."
-                        };
+                        new Issue(
+                            GetType().Name,
+                            $"File {name} should contain class {nameNoExtention}."
+                        );
             }
 
             #endregion

@@ -16,7 +16,7 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserManagerTests : BaseTypedManagerTests<User>
     {
-        private UserLookup _userLookup;
+        private UserLookup _userLookup = null!;
 
         #region Setup/Teardown
 

@@ -13,8 +13,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectManagerTests : BaseTypedManagerTests<Project>
     {
-        private Mock<ILogger<ProjectLookup>> _mockLogger;
-        private ProjectLookup _projectLookup;
+        private Mock<ILogger<ProjectLookup>> _mockLogger = null!;
+        private ProjectLookup _projectLookup = null!;
 
         #region Setup/Teardown
 

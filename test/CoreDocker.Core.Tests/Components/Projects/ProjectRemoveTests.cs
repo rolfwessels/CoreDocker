@@ -16,8 +16,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectRemoveTests : BaseManagerTests
     {
-        private ProjectRemove.Handler _handler;
-        private IRepository<Project> _projects;
+        private ProjectRemove.Handler _handler = null!;
+        private IRepository<Project> _projects = null!;
 
         #region Setup/Teardown
 

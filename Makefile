@@ -27,13 +27,16 @@ ifeq ($(env), prod)
 endif
 
 
-
+version-suffix := ''
 ifeq ($(current-branch), master)
   docker-tags := -t $(dockerhub):alpha -t $(dockerhub):latest -t $(dockerhub):v$(version)
+	
 else ifeq ($(current-branch), develop)
   docker-tags := -t $(dockerhub):beta 
+	version-suffix := beta
 else
   docker-tags := -t $(dockerhub):alpha 
+	version-suffix := alpha
 endif
 
 # Docker Warning
@@ -88,13 +91,26 @@ version:
 	@echo "${GREEN}Setting version number $(version) ${NC}"
 	@echo '{ "version": "${version}" }' > src/version.json
 
-publish: 
+publish-bin: docker-check env-check
+	@echo -e "${GREEN}Building the $(release)-$(version)-$(version-suffix) release of $(project)${NC}"
+	# @dotnet publish src/CoreDocker.Api/CoreDocker.Api.csproj -r linux-x64 -p:PublishSingleFile=true --self-contained true --output ./dist/$(release)/linux-x64
+	@dotnet publish src/CoreDocker.Api/CoreDocker.Api.csproj -r win-x64 -p:VersionSuffix=$(version-suffix)  -p:FileVersion=$(version) -p:VersionPrefix=$(version)  --output ./dist/$(release)/win-x64
+
+
+docker-login: 
 	@echo  "${GREEN}Publish branch $(current-branch) to $(docker-tags) as user ${DOCKER_USER}${NC}"
 	@docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
-	@echo  "${GREEN}Building $(docker-tags)${NC}"
-	@cd src && docker build ${docker-tags} .
+
+docker-build:
+	@echo  "${GREEN}Building $(docker-tags) with $(version)-$(version-suffix)${NC}"
+	@cd src && docker build --build-arg VERSION=$(version) --build-arg VERSION_SUFFIX=$(version-suffix) ${docker-tags} .
+
+docker-push:
 	@echo  "${GREEN}Pusing to $(docker-tags)${NC}"
 	@docker push --all-tags $(dockerhub)
+
+publish:  docker-login  docker-build docker-push
+	@echo  "${GREEN}Done${NC}"
 
 restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
