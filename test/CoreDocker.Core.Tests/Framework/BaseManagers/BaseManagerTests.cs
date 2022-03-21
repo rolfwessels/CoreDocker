@@ -16,11 +16,11 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
     public class BaseManagerTests
     {
         
-        protected IGeneralUnitOfWork _fakeGeneralUnitOfWork;
-        public InMemoryGeneralUnitOfWorkFactory _inMemoryGeneralUnitOfWorkFactory;
-        public Mock<ICommander> _mockICommander;
-        protected Mock<IMessenger> _mockIMessenger;
-        protected Mock<IValidatorFactory> _mockIValidatorFactory;
+        protected IGeneralUnitOfWork _fakeGeneralUnitOfWork = null!;
+        public InMemoryGeneralUnitOfWorkFactory _inMemoryGeneralUnitOfWorkFactory = null!;
+        public Mock<ICommander> _mockICommander = null!;
+        protected Mock<IMessenger> _mockIMessenger = null!;
+        protected Mock<IValidatorFactory> _mockIValidatorFactory = null!;
 
         #region Setup/Teardown
 
@@ -73,7 +73,7 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
 
             public static IValidatorFactory New<T>()
             {
-                return new FakeValidator(Activator.CreateInstance(typeof(T)));
+                return new FakeValidator(Activator.CreateInstance(typeof(T))!);
             }
         }
 

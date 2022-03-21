@@ -19,7 +19,7 @@ namespace CoreDocker.Core.Tests.Framework.Event
     public class EventStoreConnectionTests
     {
 
-        private IEventStoreConnection _store;
+        private IEventStoreConnection _store = null!;
 
         #region Setup/Teardown
 
@@ -65,7 +65,7 @@ namespace CoreDocker.Core.Tests.Framework.Event
             var cancellationTokenSource = new CancellationTokenSource();
             await _store.Append(new SampleCreate { Create = expectedBefore }, cancellationTokenSource.Token);
             var list = new List<SampleCreate>();
-            using (_store.ReadAndFollow(cancellationTokenSource.Token).Subscribe(holder => list.Add((holder as EventHolderTyped<SampleCreate>)?.Typed)))
+            using (_store.ReadAndFollow(cancellationTokenSource.Token).Subscribe(holder => list.Add((holder as EventHolderTyped<SampleCreate>)!.Typed)))
             {
                 await _store.Append(new SampleCreate {Create = expectedAfter}, cancellationTokenSource.Token);
             }

@@ -18,8 +18,8 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserRealTimeEventHandlerTests : BaseManagerTests
     {
-        private SubscriptionNotifications _subscriptionNotifications;
-        private UserRealTimeEventHandler _userRealTimeEventHandler;
+        private SubscriptionNotifications _subscriptionNotifications = null!;
+        private UserRealTimeEventHandler _userRealTimeEventHandler = null!;
 
         #region Overrides of BaseManagerTests
 

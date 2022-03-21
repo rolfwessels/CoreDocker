@@ -16,8 +16,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectCreateTests : BaseManagerTests
     {
-        private ProjectCreate.Handler _handler;
-        private IRepository<Project> _projects;
+        private ProjectCreate.Handler _handler = null!;
+        private IRepository<Project> _projects = null!;
 
         #region Setup/Teardown
 

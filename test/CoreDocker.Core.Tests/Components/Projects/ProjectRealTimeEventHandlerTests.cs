@@ -19,8 +19,8 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectRealTimeEventHandlerTests : BaseManagerTests
     {
-        private SubscriptionNotifications _subscriptionNotifications;
-        private ProjectRealTimeEventHandler _projectRealTimeEventHandler;
+        private SubscriptionNotifications _subscriptionNotifications = null!;
+        private ProjectRealTimeEventHandler _projectRealTimeEventHandler = null!;
 
         #region Overrides of BaseManagerTests
 

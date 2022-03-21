@@ -17,8 +17,8 @@ namespace CoreDocker.Core.Tests.Components.Users
     [TestFixture]
     public class UserCreateTests : BaseManagerTests
     {
-        private UserCreate.Handler _handler;
-        private IRepository<User> _users;
+        private UserCreate.Handler _handler = null!;
+        private IRepository<User> _users = null!;
 
         #region Setup/Teardown
 
@@ -68,9 +68,9 @@ namespace CoreDocker.Core.Tests.Components.Users
             // action
             await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
-            var user = await _users.FindOne(x => x.Id == validRequest.Id);
+            var user = (await _users.FindOne(x => x.Id == validRequest.Id)).ExistsOrThrow(validRequest.Id);
             user.Should().BeEquivalentTo(validRequest, opt => DefaultCommandExcluding(opt).Excluding(x => x.Password));
-            user.HashedPassword.Length.Should().BeGreaterThan(validRequest.Password.Length);
+            user.HashedPassword!.Length.Should().BeGreaterThan(validRequest.Password.Length);
         }
 
         public UserCreate.Request GetValidRequest()
