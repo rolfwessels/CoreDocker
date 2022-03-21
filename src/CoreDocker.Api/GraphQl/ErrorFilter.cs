@@ -12,7 +12,7 @@ namespace CoreDocker.Api.GraphQl
 {
     public class ErrorFilter : IErrorFilter
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         #region Implementation of IErrorFilter
 
@@ -45,10 +45,10 @@ namespace CoreDocker.Api.GraphQl
             return $"{error.Code} {error.Path?.Print()}:{error.Exception?.Message ?? error.Message } ";
         }
 
-        private IError LogAndThrowValidation(IError error, ValidationException validationException = null)
+        private IError LogAndThrowValidation(IError error, ValidationException? validationException = null)
         {
             _log.Warning(BuildMessage(error), error.Exception);
-            return error.WithMessage(validationException?.Errors.First().ErrorMessage ?? error.Exception.Message)
+            return error.WithMessage(validationException?.Errors.First().ErrorMessage ?? error.Exception?.Message ?? "Unknown Error")
                 .WithCode("Validation");
         }
 

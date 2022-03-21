@@ -39,8 +39,7 @@ namespace CoreDocker.Core.Tests.Components.Projects
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest();
-            validRequest.Name = "";
+            var validRequest = GetValidRequest() with {Name = ""};
             // action
             Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert

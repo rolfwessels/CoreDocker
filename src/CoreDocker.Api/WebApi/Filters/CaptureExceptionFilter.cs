@@ -15,7 +15,7 @@ namespace CoreDocker.Api.WebApi.Filters
 {
     public class CaptureExceptionFilter : ExceptionFilterAttribute
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
 
         #region Overrides of ExceptionFilterAttribute
@@ -28,8 +28,8 @@ namespace CoreDocker.Api.WebApi.Filters
                 RespondWithTheExceptionMessage(context, apiException);
             else if (IsSomeSortOfValidationError(exception))
                 RespondWithBadRequest(context, exception);
-            else if (exception is ValidationException)
-                RespondWithValidationRequest(context, exception as ValidationException);
+            else if (exception is ValidationException validationException)
+                RespondWithValidationRequest(context, validationException);
             else
                 RespondWithInternalServerException(context, exception);
             return base.OnExceptionAsync(context);
@@ -61,7 +61,7 @@ namespace CoreDocker.Api.WebApi.Filters
             ValidationException validationException)
         {
             var errorMessage =
-                new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault());
+                new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault()??"Validation Error");
             context.Result = CreateResponse(HttpStatusCode.BadRequest, errorMessage);
         }
 

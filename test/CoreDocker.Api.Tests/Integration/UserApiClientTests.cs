@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Api.Components.Users;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
@@ -20,7 +19,7 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class UserApiClientTests : IntegrationTestsBase
     {
-        private UserApiClient _userApiClient;
+        private UserApiClient _userApiClient = null!;
 
         #region Setup/Teardown
 
@@ -71,8 +70,7 @@ namespace CoreDocker.Api.Tests.Integration
         {
             // arrange
             Setup();
-            var invalidEmailUser = GetExampleData().First();
-            invalidEmailUser.Email = "test#.com";
+            var invalidEmailUser = GetExampleData().First() with{ Email = "test#.com" };
             // action
             Action testUpdateValidationFail = () => { _userApiClient.Create(invalidEmailUser).Wait(); };
             // assert
@@ -85,8 +83,7 @@ namespace CoreDocker.Api.Tests.Integration
         {
             // arrange
             Setup();
-            var invalidEmailUser = GetExampleData().First();
-            invalidEmailUser.Email = "test@sdfsd";
+            var invalidEmailUser = GetExampleData().First() with { Email = "test@sdfsd" };
             // action
             Action testUpdateValidationFail = () => { _guestConnection.Value.Users.Create(invalidEmailUser).Wait(); };
             // action
@@ -184,12 +181,11 @@ namespace CoreDocker.Api.Tests.Integration
 
         #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel>
 
-        protected IList<UserCreateUpdateModel> GetExampleData()
+        public static IList<UserCreateUpdateModel> GetExampleData()
         {
             var userCreateUpdateModels = Builder<User>.CreateListOfSize(2).WithValidData().Build()
                 .DynamicCastTo<List<UserCreateUpdateModel>>();
-            userCreateUpdateModels.ForEach(x => x.Password = GetRandom.Phrase(20));
-            return userCreateUpdateModels;
+            return userCreateUpdateModels.Select(x => x with { Password = GetRandom.Phrase(20) }).ToList();
         }
 
         #endregion

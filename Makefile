@@ -56,6 +56,7 @@ help:
 	@echo "   - version      : Set current version number $(project)"
 	@echo "   - start        : Run the $(project)"
 	@echo "   - test         : Run the $(project) tests"
+	@echo "   - update       : Update the $(project) nuget packages"
 	@echo "   - deploy       : Deploy the $(project)"
 	@echo ""
 	@echo "Options:"
@@ -98,6 +99,10 @@ publish:
 restore: 
 	@echo -e "${GREEN}Restore $(project) nuget packages${NC}"
 	dotnet restore
+
+update: 
+	@echo -e "${GREEN}Update $(project) nuget packages${NC}"
+	nukeeper update -a 0 -m 1000
 
 test: restore
 	@echo -e "${GREEN}Testing the $(project)${NC}"

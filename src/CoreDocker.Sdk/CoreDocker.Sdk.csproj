@@ -1,28 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <AssemblyName>CoreDocker.Sdk</AssemblyName>
+        <PackageId>CoreDocker.Sdk</PackageId>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>CoreDocker.Sdk</AssemblyName>
-    <PackageId>CoreDocker.Sdk</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CoreDocker.Core\CoreDocker.Core.csproj" />
-    <ProjectReference Include="..\CoreDocker.Shared\CoreDocker.Shared.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CoreDocker.Core\CoreDocker.Core.csproj" />
+        <ProjectReference Include="..\CoreDocker.Shared\CoreDocker.Shared.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GraphQL.Client" Version="3.2.4" />
-    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="3.2.4" />
-    <PackageReference Include="RestSharp" Version="106.11.7" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="GraphQL.Client" Version="4.0.2" />
+        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="4.0.2" />
+        <PackageReference Include="RestSharp" Version="107.3.0" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    
-  </ItemGroup>
+    <ItemGroup>
+    </ItemGroup>
 
 </Project>

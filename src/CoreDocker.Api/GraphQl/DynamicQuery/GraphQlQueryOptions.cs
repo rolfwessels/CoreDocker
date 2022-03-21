@@ -29,7 +29,7 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
         }
 
 
-        public Task<PagedList<TDal>> Paged(IResolverContext context, TOptions options = null)
+        public Task<PagedList<TDal>> Paged(IResolverContext context, TOptions? options = null)
         {
             options = options ?? new TOptions();
 
@@ -63,10 +63,8 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
         public class Arg<TIn> : ArgBase where TIn : IInputType
         {
             public Arg(string name, string description, Action<TOptions, IResolverContext> applyArgument)
+            :base(name,description, applyArgument)
             {
-                Name = name;
-                Description = description;
-                ApplyArgument = applyArgument;
             }
 
             public override void Apply(IObjectFieldDescriptor description)
@@ -81,9 +79,16 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
 
         public abstract class ArgBase
         {
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public Action<TOptions, IResolverContext> ApplyArgument { get; set; }
+            protected ArgBase(string name, string description, Action<TOptions, IResolverContext> applyArgument)
+            {
+                Name = name;
+                Description = description;
+                ApplyArgument = applyArgument;
+            }
+
+            public string Name { get;  }
+            public string Description { get; }
+            public Action<TOptions, IResolverContext> ApplyArgument { get;  }
             public abstract void Apply(IObjectFieldDescriptor description);
 
             public void Apply(TOptions description, IResolverContext context)

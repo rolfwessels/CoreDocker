@@ -33,8 +33,11 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var user = Builder<User>.CreateNew().WithValidData().Build();
+            user.Email = "";
+
             // assert
-            _validator.ShouldHaveValidationErrorFor(user => user.Email, null as string);
+            _validator.TestValidate(user).ShouldHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -42,8 +45,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var user = Builder<User>.CreateNew().WithValidData().Build();
+            user.Email = "asdf";
             // assert
-            _validator.ShouldHaveValidationErrorFor(user => user.Email, "test");
+            _validator.TestValidate(user).ShouldHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -51,8 +56,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var user = Builder<User>.CreateNew().WithValidData().Build();
+            user.Email = "fasdas@.asd.cp,";
             // assert
-            _validator.ShouldNotHaveValidationErrorFor(user => user.Email, "test@test.com");
+            _validator.TestValidate(user).ShouldNotHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -60,8 +67,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var user = Builder<User>.CreateNew().WithValidData().Build();
+            user.HashedPassword = null;
             // assert
-            _validator.ShouldHaveValidationErrorFor(user => user.HashedPassword, "");
+            _validator.TestValidate(user).ShouldHaveValidationErrorFor(x => x.HashedPassword);
         }
 
 
@@ -70,8 +79,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var user = Builder<User>.CreateNew().WithValidData().Build();
+            user.Name = null;
             // assert
-            _validator.ShouldHaveValidationErrorFor(user => user.Name, null as string);
+            _validator.TestValidate(user).ShouldHaveValidationErrorFor(x => x.Name);
         }
 
 

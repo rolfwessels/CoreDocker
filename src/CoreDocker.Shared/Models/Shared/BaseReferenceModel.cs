@@ -2,7 +2,7 @@
 {
     public class BaseReferenceModel
     {
-        public string Id { get; set; }
+        public string Id { get; init; } = null!;
 
         #region Equality members
 

@@ -12,7 +12,7 @@ namespace CoreDocker.Dal.Tests.Validation
     [TestFixture]
     public class ProjectValidatorTests
     {
-        private ProjectValidator _validator;
+        private ProjectValidator _validator = null!;
 
         #region Setup/Teardown
 
@@ -33,8 +33,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var project = Builder<Project>.CreateNew().WithValidData().Build();
+            project.Name = GetRandom.String(200);
             // assert
-            _validator.ShouldHaveValidationErrorFor(project => project.Name, GetRandom.String(200));
+            _validator.TestValidate(project).ShouldHaveValidationErrorFor(project => project.Name);
         }
 
 
@@ -43,8 +45,11 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var project = Builder<Project>.CreateNew().WithValidData().Build();
+            project.Name = null!;
             // assert
-            _validator.ShouldHaveValidationErrorFor(project => project.Name, null as string);
+            _validator.TestValidate(project).ShouldHaveValidationErrorFor(project => project.Name);
+
         }
 
         [Test]

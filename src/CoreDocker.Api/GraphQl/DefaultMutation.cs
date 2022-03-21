@@ -12,10 +12,10 @@ namespace CoreDocker.Api.GraphQl
             Name = "Mutation";
             descriptor.Field("projects")
                 .Type<NonNullType<ProjectsMutationType>>()
-                .Resolver(x => x.Resolver<ProjectsMutation>());
+                .Resolve(x => x.Resolver<ProjectsMutation>());
             descriptor.Field("users")
                 .Type<NonNullType<UsersMutationType>>()
-                .Resolver(x => x.Resolver<UsersMutation>());
+                .Resolve(x => x.Resolver<UsersMutation>());
         }
     }
 }

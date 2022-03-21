@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared;
 using CoreDocker.Shared.Models;
 using CoreDocker.Shared.Models.Projects;
 using CoreDocker.Shared.Models.Users;
-using Bumbershoot.Utilities.Helpers;
 using GraphQL;
 
 namespace CoreDocker.Sdk.RestApi.Clients
@@ -37,7 +35,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return response.Data.Projects.Paged.Items;
         }
 
-        public async Task<PagedListModel<ProjectModel>> Paged(int? first = null)
+        public async Task<PagedResult<ProjectModel>> Paged(int? first = null)
         {
             var request = new GraphQLRequest
             {
@@ -127,19 +125,19 @@ namespace CoreDocker.Sdk.RestApi.Clients
             return response.Data.Projects.Remove;
         }
 
-
+#pragma warning disable CS8618
         private class Response
         {
             public ResponseData Projects { get; set; }
-
             public class ResponseData
             {
-                public PagedListModel<ProjectModel> Paged { get; set; }
+                public PagedResult<ProjectModel> Paged { get; set; }
                 public ProjectModel ById { get; set; }
                 public CommandResultModel Create { get; set; }
                 public CommandResultModel Update { get; set; }
                 public CommandResultModel Remove { get; set; }
             }
         }
+#pragma warning restore CS8618
     }
 }

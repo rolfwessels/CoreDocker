@@ -7,11 +7,9 @@ namespace CoreDocker.Api.Mappers
 {
     public static partial class MapApi
     {
-
-
-        public static RoleModel ToModel(this Role user, RoleModel model = null)
+        public static RoleModel ToModel(this Role? user, RoleModel? model = null)
         {
-            return GetInstance().Map(user, model);
+            return GetInstance().Map(user, model)!;
         }
 
 

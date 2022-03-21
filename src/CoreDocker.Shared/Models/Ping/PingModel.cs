@@ -1,10 +1,4 @@
 ﻿namespace CoreDocker.Shared.Models.Ping
 {
-    public class PingModel
-    {
-        public string Environment { get; set; }
-        public string Version { get; set; }
-        public string Database { get; set; }
-        public string MachineName { get; set; }
-    }
+    public record PingModel(string Environment, string Version, string Database, string MachineName);
 }

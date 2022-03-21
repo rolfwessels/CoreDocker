@@ -11,11 +11,10 @@ namespace CoreDocker.Dal.Persistence
             where T : IBaseDalModelWithId
         {
             var foundUser = await repo.FindOne(x => x.Id == requestId);
-
             return foundUser.ExistsOrThrow(requestId);
         }
 
-        public static T ExistsOrThrow<T>(this T found, string requestId) where T : IBaseDalModelWithId
+        public static T ExistsOrThrow<T>(this T? found, string requestId) where T : IBaseDalModelWithId
         {
             if (found == null)
                 throw new ReferenceException(

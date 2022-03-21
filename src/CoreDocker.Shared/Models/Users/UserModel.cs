@@ -4,16 +4,8 @@ using CoreDocker.Shared.Models.Shared;
 
 namespace CoreDocker.Shared.Models.Users
 {
-    public class UserModel : BaseModel
+    public record UserModel(string Name, string Email, string Image, DateTime? LastLoginDate, List<string> Roles, List<string> Activities) : BaseModel
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Image { get; set; }
-        public DateTime? LastLoginDate { get; set; }
-        public List<string> Roles { get; set; }
-
-        public List<string> Activities { get; set; }
-
         public override string ToString()
         {
             return $"Id: {Id}, Email: {Email}, Name: {Name}";

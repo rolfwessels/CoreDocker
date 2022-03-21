@@ -8,7 +8,7 @@ namespace CoreDocker.Dal.Models.Users
     {
         public UserGrantValidator()
         {
-            RuleFor(x => x.Key).NotNull().MediumString();
+            RuleFor(x => x.Key!).NotNull().MediumString();
             RuleFor(x => x.User).NotNull()
                 .Must(x => !string.IsNullOrEmpty(x?.Name))
                 .Must(x => !string.IsNullOrEmpty(x?.Email))

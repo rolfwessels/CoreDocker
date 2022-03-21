@@ -69,10 +69,10 @@ namespace CoreDocker.Core.Framework.Event
         {
             var commandNotificationBase = value as CommandNotificationBase;
             var systemEvent = new SystemEvent(
-                commandNotificationBase?.CorrelationId ?? null,
+                commandNotificationBase?.CorrelationId ?? "",
                 commandNotificationBase?.CreatedAt ?? DateTime.Now,
-                commandNotificationBase?.Id ?? null,
-                commandNotificationBase?.EventName?? null,
+                commandNotificationBase?.Id ?? "",
+                commandNotificationBase?.EventName?? "",
                 SystemEvent.BuildTypeName(value),
                 _stringify.Serialize(value)
             );

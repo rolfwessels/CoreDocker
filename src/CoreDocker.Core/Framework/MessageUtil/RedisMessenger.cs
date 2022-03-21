@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Bumbershoot.Utilities.Helpers;
 using Serilog;
 using StackExchange.Redis;
 
@@ -12,10 +12,9 @@ namespace CoreDocker.Core.Framework.MessageUtil
 {
     public class RedisMessenger : IMessenger
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
-        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, object>> _dictionary =
-            new ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, object>>();
+        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, object>> _dictionary = new();
 
         private readonly Lazy<ISubscriber> _sub;
         private readonly string _redisHost;
@@ -63,20 +62,25 @@ namespace CoreDocker.Core.Framework.MessageUtil
         public void Register(Type type, object receiver, Action<object> callBackToClient)
         {
             var redisChannel = type.Name;
-            var handler = _dictionary.GetOrAdd(type, () => new ConcurrentDictionary<WeakReference, object>())
-                .GetOrAdd(new WeakReference(receiver), () =>
+            var references = _dictionary.GetOrAdd(type, (_) => new ConcurrentDictionary<WeakReference, object>());
+            var handler = references
+                .GetOrAdd(new WeakReference(receiver), (_) =>
                     {
                         void Action(RedisChannel channel, RedisValue message)
                         {
-                            var deserializeObject = JsonSerializer.Deserialize(message, type);
+                            var deserializeObject = JsonSerializer.Deserialize(message, type)!;
                             _log.Debug($"RedisMessenger:Received {deserializeObject.GetType().Name}:{message}");
                             callBackToClient(deserializeObject);
                         }
                         return (Action<RedisChannel, RedisValue>) Action;
                     }
                 ) as Action<RedisChannel, RedisValue>;
+         
+            
             _sub.Value.Subscribe(redisChannel, handler);
         }
+
+       
 
         public void UnRegister<T>(object receiver)
         {
@@ -132,4 +136,6 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         #endregion
     }
+
+  
 }

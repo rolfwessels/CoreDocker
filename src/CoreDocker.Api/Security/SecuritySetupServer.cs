@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Bumbershoot.Utilities.Helpers;
 using IdentityServer4.Extensions;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
@@ -16,7 +15,7 @@ namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupServer
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
 
         public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
@@ -49,7 +48,7 @@ namespace CoreDocker.Api.Security
                 if (openIdSettings.HostUrl.StartsWith("https"))
                 {
                     context.SetIdentityServerOrigin(openIdSettings.HostUrl);
-                    context.SetIdentityServerBasePath(context.Request.PathBase.Value.TrimEnd('/'));
+                    context.SetIdentityServerBasePath(context.Request.PathBase.Value?.TrimEnd('/'));
                 }
                 await next.Invoke();
             });
@@ -58,11 +57,11 @@ namespace CoreDocker.Api.Security
 
         #region Private Methods
 
-        private static X509Certificate2 Certificate(string certFile, string password, string certStoreThumbprint)
+        private static X509Certificate2? Certificate(string certFile, string password, string certStoreThumbprint)
         {
             try
             {
-                X509Certificate2 cert = null;
+                X509Certificate2? cert = null;
                 if (!string.IsNullOrEmpty(certStoreThumbprint)) cert = LoadCertFromStore(certStoreThumbprint);
                 return cert ?? LoadCertFromFile(certFile, password);
             }
@@ -73,7 +72,7 @@ namespace CoreDocker.Api.Security
             }
         }
 
-        private static X509Certificate2 LoadCertFromStore(string certStoreThumbprint)
+        private static X509Certificate2? LoadCertFromStore(string certStoreThumbprint)
         {
             using var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
             certStore.Open(OpenFlags.ReadOnly);
@@ -87,7 +86,7 @@ namespace CoreDocker.Api.Security
             return certCollection[0];
         }
 
-        private static X509Certificate2 LoadCertFromFile(string certFile, string password)
+        private static X509Certificate2? LoadCertFromFile(string certFile, string password)
         {
             var fileName = Path.Combine("./Certificates", certFile);
             if (!File.Exists(fileName))

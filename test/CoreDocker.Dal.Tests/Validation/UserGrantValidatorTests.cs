@@ -12,7 +12,7 @@ namespace CoreDocker.Dal.Tests.Validation
     [TestFixture]
     public class UserGrantValidatorTests
     {
-        private UserGrantValidator _validator;
+        private UserGrantValidator _validator = null!;
 
         #region Setup/Teardown
 
@@ -33,8 +33,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var userGrant = Builder<UserGrant>.CreateNew().WithValidData().Build();
+            userGrant.Key = GetRandom.String(200);
             // assert
-            _validator.ShouldHaveValidationErrorFor(userGrant => userGrant.Key, GetRandom.String(200));
+            _validator.TestValidate(userGrant).ShouldHaveValidationErrorFor(grant => grant.Key);
         }
 
 
@@ -43,8 +45,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var userGrant = Builder<UserGrant>.CreateNew().WithValidData().Build();
+            userGrant.Key = null;
             // assert
-            _validator.ShouldHaveValidationErrorFor(userGrant => userGrant.Key, null as string);
+            _validator.TestValidate(userGrant).ShouldHaveValidationErrorFor(grant => grant.Key);
         }
 
         [Test]
@@ -52,8 +56,10 @@ namespace CoreDocker.Dal.Tests.Validation
         {
             // arrange
             Setup();
+            var userGrant = Builder<UserGrant>.CreateNew().WithValidData().Build();
+            userGrant.User = null;
             // assert
-            _validator.ShouldHaveValidationErrorFor(userGrant => userGrant.User, null as UserReference);
+            _validator.TestValidate(userGrant).ShouldHaveValidationErrorFor(grant => grant.User);
         }
 
         [Test]
@@ -64,8 +70,10 @@ namespace CoreDocker.Dal.Tests.Validation
             var userReference = Builder<UserReference>.CreateNew()
                 .With(x => x.Email = null)
                 .Build();
+            var userGrant = Builder<UserGrant>.CreateNew().WithValidData().Build();
+            userGrant.User = userReference;
             // assert
-            _validator.ShouldHaveValidationErrorFor(userGrant => userGrant.User, userReference);
+            _validator.TestValidate(userGrant).ShouldHaveValidationErrorFor(grant => grant.User);
         }
 
         [Test]
@@ -74,10 +82,12 @@ namespace CoreDocker.Dal.Tests.Validation
             // arrange
             Setup();
             var userReference = Builder<UserReference>.CreateNew()
-                .With(x => x.Name = null)
+                .With(x => x.Name = null!)
                 .Build();
+            var userGrant = Builder<UserGrant>.CreateNew().WithValidData().Build();
+            userGrant.User = userReference;
             // assert
-            _validator.ShouldHaveValidationErrorFor(userGrant => userGrant.User, userReference);
+            _validator.TestValidate(userGrant).ShouldHaveValidationErrorFor(grant => grant.User);
         }
 
         [Test]

@@ -2,9 +2,9 @@
 
 namespace CoreDocker.Shared.Models.Shared
 {
-    public abstract class BaseModel : IBaseModel
+    public abstract record BaseModel : IBaseModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public DateTime UpdateDate { get; set; }
         public DateTime CreateDate { get; set; }
     }

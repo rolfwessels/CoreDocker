@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Bumbershoot.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users
 {
     public static class GravatarHelper
     {
-        public static string BuildUrl(string email)
+        public static string BuildUrl(string? email)
         {
-            var md5Hash = Md5Hash(email.ToLower().Trim());
+            var md5Hash = Md5Hash(email.OrEmpty().ToLower().Trim());
             return $"https://www.gravatar.com/avatar/{md5Hash}?d=robohash";
         }
 

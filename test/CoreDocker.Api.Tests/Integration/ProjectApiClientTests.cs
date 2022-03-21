@@ -18,7 +18,7 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class ProjectApiClientTests : IntegrationTestsBase
     {
-        private ProjectApiClient _projectApiClient;
+        private ProjectApiClient _projectApiClient = null!;
 
         #region Setup/Teardown
 
@@ -68,8 +68,8 @@ namespace CoreDocker.Api.Tests.Integration
         {
             // arrange
             Setup();
-            var invalidEmailProject = GetExampleData().First();
-            invalidEmailProject.Name = "";
+            var invalidEmailProject = GetExampleData().First() with {Name = ""};
+            
             // action
             Action testUpdateValidationFail = () => { _projectApiClient.Create(invalidEmailProject).Wait(); };
             // assert

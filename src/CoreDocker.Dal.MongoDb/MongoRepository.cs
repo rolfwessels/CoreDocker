@@ -158,9 +158,9 @@ namespace CoreDocker.Dal.MongoDb
             return Collection.Find(Builders<T>.Filter.Where(filter)).ToListAsync();
         }
 
-        public Task<T> FindOne(Expression<Func<T, bool>> filter)
+        public Task<T?> FindOne(Expression<Func<T, bool>> filter)
         {
-            return Collection.Find(Builders<T>.Filter.Where(filter)).FirstOrDefaultAsync();
+            return Collection.Find(Builders<T>.Filter.Where(filter)).FirstOrDefaultAsync()!;
         }
 
 

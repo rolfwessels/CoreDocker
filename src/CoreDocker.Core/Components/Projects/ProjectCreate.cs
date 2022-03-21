@@ -48,7 +48,7 @@ namespace CoreDocker.Core.Components.Projects
 
         public class Notification : CommandNotificationBase
         {
-            public string Name { get; set; }
+            public string Name { get; set; } = null!;
 
             #region Overrides of CommandNotificationBase
 
@@ -61,22 +61,8 @@ namespace CoreDocker.Core.Components.Projects
 
         #region Nested type: Request
 
-        public class Request : CommandRequestBase
-        {
-            public string Name { get; set; }
-
-            public static Request From(string id, string name)
-            {
-                if (id == null) throw new ArgumentNullException(nameof(id));
-                if (name == null) throw new ArgumentNullException(nameof(name));
-
-                return new Request
-                {
-                    Id = id,
-                    Name = name
-                };
-            }
-        }
+        public record Request(string Id, string Name)
+            : CommandRequestBase(Id);
 
         #endregion
     }

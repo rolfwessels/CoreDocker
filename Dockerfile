@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine
 
 # Base Development Packages
 RUN apk update \
@@ -26,7 +26,7 @@ COPY src/CoreDocker.Dal.MongoDb/*.csproj ./src/CoreDocker.Dal.MongoDb/
 
 WORKDIR /CoreDocker/src/CoreDocker.Api
 RUN dotnet restore
-
+RUN dotnet tool install nukeeper --global
 # Working Folder
 WORKDIR /CoreDocker
 ENV TERM xterm-256color

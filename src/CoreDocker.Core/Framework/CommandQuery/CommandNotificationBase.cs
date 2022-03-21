@@ -7,8 +7,8 @@ namespace CoreDocker.Core.Framework.CommandQuery
     {
         #region Implementation of ICommandProperties
 
-        public string CorrelationId { get; set; }
-        public string Id { get; set; }
+        public string CorrelationId { get; set; } = null!;
+        public string Id { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public abstract string EventName { get; }
 

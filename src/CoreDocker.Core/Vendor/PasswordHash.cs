@@ -57,7 +57,7 @@ namespace CoreDocker.Core.Vendor
         /// <returns>
         ///     The hash of the password.
         /// </returns>
-        public static string CreateHash(string password)
+        public static string? CreateHash(string password)
         {
             // Generate a random salt
             var csprng = RandomNumberGenerator.Create();
@@ -79,9 +79,10 @@ namespace CoreDocker.Core.Vendor
         /// <returns>
         ///     True if the <paramref name="password" /> is correct. False otherwise.
         /// </returns>
-        public static bool ValidatePassword(string password, string correctHash)
+        public static bool ValidatePassword(string password, string? correctHash)
         {
             // Extract the parameters from the hash
+            if (correctHash == null) return false;
             char[] delimiter = {':'};
             var split = correctHash.Split(delimiter);
             var iterations = int.Parse(split[ITERATION_INDEX]);

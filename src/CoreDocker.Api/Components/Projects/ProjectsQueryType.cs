@@ -12,7 +12,7 @@ namespace CoreDocker.Api.Components.Projects
     public class ProjectsQueryType : ObjectType<ProjectsQueryType.ProjectQuery>
     {
         private readonly IProjectLookup _projects;
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public ProjectsQueryType(IProjectLookup projects)
         {
@@ -29,14 +29,14 @@ namespace CoreDocker.Api.Components.Projects
                 .Description("Get project by id")
                 .Type<NonNullType<ProjectType>>()
                 .Argument("id", arg => arg.Type<NonNullType<StringType>>().Description("id of the project"))
-                .Resolver(x => _projects.GetById(x.ArgumentValue<string>("id")))
+                .Resolve(x => _projects.GetById(x.ArgumentValue<string>("id")))
                 .RequirePermission(Activity.ReadProject);
 
             descriptor.Field("paged")
                 .Description("all projects paged")
                 .AddOptions(options)
                 .Type<NonNullType<PagedListGraphType<Project, ProjectType>>>()
-                .Resolver(x => options.Paged(x))
+                .Resolve(x => options.Paged(x))
                 .RequirePermission(Activity.ReadProject);
         }
 

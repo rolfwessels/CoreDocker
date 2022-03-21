@@ -30,7 +30,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
                 if (!_dictionary.TryGetValue(typeof(T), out var type)) return;
                 foreach (var reference in type)
                     if (reference.Key.IsAlive)
-                        reference.Value(value);
+                        reference.Value(value!);
                     else
                         type.TryRemove(reference.Key, out _);
             });
@@ -40,7 +40,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
         {
             void Value(object t)
             {
-                action(t as T);
+                action(t as T ?? throw new InvalidOperationException());
             }
             Register(typeof(T), receiver, Value);
         }

@@ -1,22 +1,28 @@
 version: "3.5"
+volumes:
+  mongodb-data:
 networks:
   dev-network:
 
 services:
   db:
-    image: mongo:4.0
+    image: mongo:5-focal
     container_name: "db"
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     ports:
-      - 27021:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
+      - 27017:27017
+    command: mongod  --logpath=/dev/null # --quiet
     networks:
       - dev-network
+    volumes:
+      - "mongodb-data:/data/db"
+
   redis:
     image: redis:6.0-alpine
+    # restart: unless-stopped
     ports:
       - 6390:6379
     networks:
@@ -29,7 +35,8 @@ services:
     environment:
       - API_URL=http://localhost:5000
     ports:
-      - 84:80
+      - 84:80
+
   src:
     depends_on:
       - redis

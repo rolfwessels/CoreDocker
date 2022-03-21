@@ -2,10 +2,7 @@
 
 namespace CoreDocker.Shared.Models.Users
 {
-    public class CommandResultModel
+    public record CommandResultModel(string CorrelationId, string Id, DateTime CreatedAt)
     {
-        public string CorrelationId { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string Id { get; set; }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi.Base;
 using CoreDocker.Shared.Models.Auth;
+using Newtonsoft.Json;
 using RestSharp;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CoreDocker.Sdk.RestApi.Clients
 {
@@ -22,48 +24,42 @@ namespace CoreDocker.Sdk.RestApi.Clients
         public async Task<Jwks> GetConfigAsync()
         {
             var restRequest = new RestRequest(".well-known/openid-configuration/jwks");
-            var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsyncWithLogging<Jwks>(restRequest);
-            return restRequestAsyncHandle.Data;
+            var restRequestAsyncHandle = await _coreDockerClient.Client.ExecuteAsync(restRequest);
+            return restRequestAsyncHandle.Content != null ? JsonConvert.DeserializeObject<Jwks>(restRequestAsyncHandle.Content) : new Jwks();
         }
 
         public async Task<TokenResponseModel> Login(string adminUser, string adminPassword)
         {
-            var token = await GetToken(new TokenRequestModel
-            {
-                ClientId = "coredocker.api",
-                ClientSecret = "super_secure_password",
-                UserName = adminUser,
-                Password = adminPassword
-            });
+            var token = await GetToken(new TokenRequestModel(ClientId: "coredocker.api",
+                ClientSecret: "super_secure_password", UserName: adminUser, Password: adminPassword));
             CoreDockerClient.SetToken(token);
             return token;
         }
 
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)
         {
-            var request = new RestRequest(DefaultTokenUrl("token"), Method.POST);
+            var request = new RestRequest(DefaultTokenUrl("token"), Method.Post);
             request.AddParameter("client_id", tokenRequestModel.ClientId);
             request.AddParameter("client_secret", tokenRequestModel.ClientSecret);
             request.AddParameter("username", tokenRequestModel.UserName);
             request.AddParameter("password", tokenRequestModel.Password);
             request.AddParameter("grant_type", tokenRequestModel.GrantType);
             request.AddParameter("scope", "api");
-            var restClient = _coreDockerClient.Client;
-            var result =
-                await restClient.ExecuteAsyncWithLogging<TokenResponseModel>(request);
+            
+            var result = await _coreDockerClient.Client.ExecuteAsyncWithLogging<TokenResponseModel>(request);
             ValidateTokenResponse(result);
-            return result.Data;
+            return ValidateResponse(result);
         }
 
-        protected virtual void ValidateTokenResponse<T>(IRestResponse<T> result)
+        protected virtual void ValidateTokenResponse<T>(RestResponse<T> result)
         {
             if (result.StatusCode != HttpStatusCode.OK)
             {
                 if (string.IsNullOrEmpty(result.Content))
                     throw new ApplicationException(
                         $"{result.StatusCode} response contains no data.");
-                var errorMessage = SimpleJson.DeserializeObject<TokenErrorMessage>(result.Content);
-                throw new Exception($"{errorMessage.error}[{errorMessage.error_description}]");
+                var errorMessage = JsonSerializer.Deserialize<TokenErrorMessage>(result.Content)!;
+                throw new Exception($"{errorMessage.Error}[{errorMessage.ErrorDescription}]");
             }
         }
 
@@ -71,18 +67,21 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public class Jwks
         {
-            public List<Dictionary<string, string>> Keys { get; set; }
+            [JsonPropertyName("keys")]
+            public List<Dictionary<string, object>> Keys { get; set; } = new List<Dictionary<string, object>>();
         }
 
         #endregion
 
         #region Nested type: TokenErrorMessage
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        
         internal class TokenErrorMessage
         {
-            public string error { get; set; }
-            public string error_description { get; set; }
+            [JsonPropertyName("error")]
+            public string? Error { get; set; }
+            [JsonPropertyName("error_description")]
+            public string? ErrorDescription { get; set; }
         }
 
         #endregion

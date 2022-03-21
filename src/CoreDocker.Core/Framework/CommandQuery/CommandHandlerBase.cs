@@ -11,7 +11,7 @@ namespace CoreDocker.Core.Framework.CommandQuery
 {
     public abstract class CommandHandlerBase<T> : IRequestHandler<T, CommandResult> where T : CommandRequestBase
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         #region IRequestHandler<T,CommandResult> Members
 

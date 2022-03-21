@@ -6,12 +6,13 @@ namespace CoreDocker.Core.Framework.Subscriptions
     {
         protected RealTimeNotificationsMessage BuildMessage(CommandNotificationBase notification)
         {
-            return new RealTimeNotificationsMessage()
-            {
-                CorrelationId = notification.CorrelationId,
-                Event = notification.EventName,
-                Id = notification.Id
-            };
+            return new RealTimeNotificationsMessage
+            (
+                notification.Id,
+                notification.EventName,
+                notification.CorrelationId,
+                null
+            );
         }
     }
 }

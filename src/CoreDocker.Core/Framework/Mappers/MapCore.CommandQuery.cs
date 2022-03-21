@@ -12,9 +12,9 @@ namespace CoreDocker.Core.Framework.Mappers
         }
 
         public static CommandResult ToCommandResult(this CommandRequestBase project,
-            CommandResult projectReference = null)
+            CommandResult? projectReference = null)
         {
-            return GetInstance().Map(project, projectReference);
+            return GetInstance().Map(project, projectReference)!;
         }
     }
 }

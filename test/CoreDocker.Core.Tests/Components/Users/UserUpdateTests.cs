@@ -38,8 +38,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest();
-            validRequest.Name = "";
+            var validRequest = GetValidRequest() with {Name = ""};
             // action
             Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
@@ -82,8 +81,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest();
-            validRequest.Password = "test";
+            var validRequest = GetValidRequest() with { Password = "test"};
             // action
             await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
@@ -96,8 +94,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest();
-            validRequest.Password = null;
+            var validRequest = GetValidRequest() with { Password = null};
             // action
             await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
@@ -112,8 +109,7 @@ namespace CoreDocker.Core.Tests.Components.Users
                 .WithValidData()
                 .With(x => x.Id = existingUser.Id)
                 .Build()
-                .DynamicCastTo<UserUpdate.Request>();
-            userUpdateUpdateModels.Password = "tes";
+                .DynamicCastTo<UserUpdate.Request>() with { Password = "tes" };
             return userUpdateUpdateModels;
         }
     }

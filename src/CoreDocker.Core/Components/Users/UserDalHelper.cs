@@ -17,9 +17,9 @@ namespace CoreDocker.Core.Components.Users
             return user.HashedPassword = SetPassword(password);
         }
 
-        public static string SetPassword(string password)
+        public static string SetPassword(string? password)
         {
-            return PasswordHash.CreateHash(password ?? Guid.NewGuid().ToString());
+            return PasswordHash.CreateHash(password ?? Guid.NewGuid().ToString())!;
         }
 
         public static void ValidateRolesAndThrow(this User user)

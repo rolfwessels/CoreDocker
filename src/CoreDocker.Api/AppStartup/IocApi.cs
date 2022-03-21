@@ -12,25 +12,24 @@ using CoreDocker.Core.Startup;
 using CoreDocker.Dal.MongoDb;
 using CoreDocker.Dal.Persistence;
 using HotChocolate;
-using Serilog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace CoreDocker.Api.AppStartup
 {
     public class IocApi : IocCoreBase
     {
-        private static bool _isInitialized;
-        private static readonly object _locker = new object();
-        private static IocApi _instance;
-        private static IServiceCollection _services;
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        private static readonly object _locker = new();
+        private static IocApi? _instance;
+        private static IServiceCollection? _services;
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public IocApi()
         {
             var builder = new ContainerBuilder();
             SetupCore(builder);
-            SetupCommonControllers(builder);
             SetupGraphQl(builder);
             SetupTools(builder);
             builder.Populate(_services);
@@ -39,7 +38,11 @@ namespace CoreDocker.Api.AppStartup
 
         public static void Populate(IServiceCollection services)
         {
-            if (_isInitialized) throw new Exception("Need to call Populate before first instance call.");
+            if (_instance != null)
+            {
+                throw new Exception("Need to call Populate before first instance call.");
+            }
+
             _services = services;
         }
 
@@ -47,7 +50,6 @@ namespace CoreDocker.Api.AppStartup
 
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
-            
             _log.Information($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
             try
             {
@@ -97,9 +99,7 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
         }
 
-        private void SetupCommonControllers(ContainerBuilder builder)
-        {
-        }
+        
 
         private void SetupTools(ContainerBuilder builder)
         {
@@ -114,16 +114,14 @@ namespace CoreDocker.Api.AppStartup
         {
             get
             {
-                if (_isInitialized) return _instance;
+                if (_instance != null)
+                {
+                    return _instance;
+                }
                 lock (_locker)
                 {
-                    if (!_isInitialized)
-                    {
-                        _instance = new IocApi();
-                        _isInitialized = true;
-                    }
+                    _instance ??= new IocApi();
                 }
-
                 return _instance;
             }
         }
@@ -131,7 +129,7 @@ namespace CoreDocker.Api.AppStartup
         public IContainer Container { get; }
 
 
-        public T Resolve<T>()
+        public T Resolve<T>() where T : notnull
         {
             return Container.Resolve<T>();
         }

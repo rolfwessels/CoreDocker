@@ -3,10 +3,12 @@ using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.MongoDb.Migrations
 {
-    public class DbVersion : IBaseDalModel
+    public record DbVersion : IBaseDalModel
     {
-        public DbVersion()
+        public DbVersion(int id, string name)
         {
+            Id = id;
+            Name = name;
             CreateDate = DateTime.Now;
             UpdateDate = DateTime.Now;
         }

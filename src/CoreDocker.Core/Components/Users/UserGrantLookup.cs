@@ -21,14 +21,14 @@ namespace CoreDocker.Core.Components.Users
 
         #region Implementation of IUserGrantLookup
 
-        public Task<UserGrant> GetByKey(string key)
+        public Task<UserGrant?> GetByKey(string key)
         {
             return Repository.FindOne(x => x.Key == key);
         }
 
         public Task<List<UserGrant>> GetByUserId(string userId)
         {
-            return Repository.Find(x => x.User.Id == userId);
+            return Repository.Find(x => x.User != null && x.User.Id == userId);
         }
 
         public Task Insert(UserGrant userGrant)

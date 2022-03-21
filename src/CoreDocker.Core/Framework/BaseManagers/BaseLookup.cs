@@ -28,7 +28,7 @@ namespace CoreDocker.Core.Framework.BaseManagers
             return Repository.Find(x => true);
         }
 
-        public virtual Task<T> GetById(string id)
+        public virtual Task<T?> GetById(string id)
         {
             return Repository.FindOne(x => x.Id == id);
         }

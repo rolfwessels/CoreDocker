@@ -2,7 +2,7 @@
 {
     public abstract class BaseReference : IBaseReference
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
         #region Equality members
 
@@ -11,7 +11,7 @@
             return Id.Equals(other.Id);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

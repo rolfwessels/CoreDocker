@@ -1,19 +1,17 @@
-﻿namespace CoreDocker.Shared.Models.Auth
+﻿
+using System.Text.Json.Serialization;
+
+namespace CoreDocker.Shared.Models.Auth
 {
     public class TokenResponseModel
     {
-        public string AccessToken { get; set; }
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; init; } = default!;
 
-        public string TokenType { get; set; }
+        [JsonPropertyName("token_type")]
+        public string TokenType { get; init; } = default!;
 
-        public int ExpiresIn { get; set; }
-
-        public string ClientId { get; set; }
-
-        public string UserName { get; set; }
-
-        public string DisplayName { get; set; }
-
-        public string Permissions { get; set; }
+        [JsonPropertyName("expires_in")]
+        public int ExpiresIn { get; init; } = 0;
     }
 }

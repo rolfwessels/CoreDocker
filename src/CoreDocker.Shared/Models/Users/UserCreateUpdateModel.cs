@@ -2,8 +2,6 @@
 
 namespace CoreDocker.Shared.Models.Users
 {
-    public class UserCreateUpdateModel : RegisterModel
-    {
-        public List<string> Roles { get; set; }
-    }
+    public record UserCreateUpdateModel(string Name, string Email, string Password, List<string> Roles) 
+        : RegisterModel(Name, Email, Password);
 }

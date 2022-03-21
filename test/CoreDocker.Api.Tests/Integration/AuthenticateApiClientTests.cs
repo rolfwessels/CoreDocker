@@ -11,8 +11,8 @@ namespace CoreDocker.Api.Tests.Integration
     [Category("Integration")]
     public class AuthenticateApiClientTests : IntegrationTestsBase
     {
-        private ICoreDockerClient _connection;
-        private ICoreDockerClient _connectionAuth;
+        private ICoreDockerClient? _connection;
+        private ICoreDockerClient? _connectionAuth;
 
 
         #region Setup/Teardown
@@ -37,9 +37,9 @@ namespace CoreDocker.Api.Tests.Integration
         {
             // arrange
             Setup();
-            var pingModel = await _connection.Ping.Get();
+            var pingModel = await _connection!.Ping.Get();
             // action
-            var data = await _connectionAuth.Authenticate.Login(AdminUser, AdminPassword);
+            var data = await _connectionAuth!.Authenticate.Login(AdminUser, AdminPassword);
             _connection.SetToken(data);
             var projectsEnumerable = await _connection.Projects.All();
             // assert
@@ -53,7 +53,7 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             // action
-            var data = await _connection.Authenticate.GetConfigAsync();
+            var data = await _connection!.Authenticate.GetConfigAsync();
             // assert
             data.Keys.Dump("data.Keys");
             data.Keys.First().Keys.Should().Contain("kty");
@@ -65,7 +65,7 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             // action
-            var auth = await _connection.Authenticate.Login(AdminUser, AdminPassword);
+            var auth = await _connection!.Authenticate.Login(AdminUser, AdminPassword);
             // assert
             auth.AccessToken.Should().NotBeEmpty();
             auth.ExpiresIn.Should().BeGreaterThan(30);

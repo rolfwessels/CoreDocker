@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
@@ -16,13 +17,14 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
+using RestSharp.Serializers.Json;
 using Serilog;
 
 namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         private GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
@@ -61,11 +63,9 @@ namespace CoreDocker.Sdk.RestApi
             }
             catch (GraphQLHttpRequestException e)
             {
-                if (e.Content.Contains("errors"))
+                if (e.Content != null && e.Content.Contains("errors"))
                 {
                     var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
-                    graphQlResponse.Dump("graphQlResponse");
-
                     if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
                         throw new GraphQlResponseException<T>(graphQlResponse);
                 }
@@ -80,20 +80,11 @@ namespace CoreDocker.Sdk.RestApi
             return _graphQlClient.CreateSubscriptionStream<RealTimeEventResponse>(request);
         }
 
-        public class RealTimeEventResponse
-        {
-            public RealTimeEvent OnDefaultEvent { get; set; }
-        }
+        public record RealTimeEventResponse(RealTimeEvent OnDefaultEvent);
 
         #region Nested type: RealTimeEvent
 
-        public class RealTimeEvent
-        {
-            public string Id { get; set; }
-            public string Event { get; set; }
-            public string CorrelationId { get; set; }
-            public string Exception { get; set; }
-        }
+        public record RealTimeEvent(string Id, string Event, string CorrelationId, string Exception);
 
         #endregion
 
@@ -102,16 +93,11 @@ namespace CoreDocker.Sdk.RestApi
         public void SetToken(TokenResponseModel data)
         {
             var bearerToken = $"Bearer {data.AccessToken}";
-            //F
-            #pragma warning disable 618
-            _restClient.DefaultParameters.Add(new Parameter("Authorization", bearerToken, ParameterType.HttpHeader));
-            #pragma warning restore 618
-            
-
+            _restClient.AddDefaultParameter("Authorization", bearerToken, ParameterType.HttpHeader);
             _graphQlClient = GraphQlClient(data.AccessToken);
         }
 
-        private GraphQLHttpClient GraphQlClient(string dataAccessToken = null)
+        private GraphQLHttpClient GraphQlClient(string? dataAccessToken = null)
         {
             var jsonSerializer = new NewtonsoftJsonSerializer(settings => settings.ContractResolver =
                 new DefaultContractResolver
@@ -129,9 +115,9 @@ namespace CoreDocker.Sdk.RestApi
 
         public class WithAuthHeader : HttpClientHandler
         {
-            private readonly string _token;
+            private readonly string? _token;
 
-            public WithAuthHeader(string token)
+            public WithAuthHeader(string? token)
             {
                 _token = token;
             }

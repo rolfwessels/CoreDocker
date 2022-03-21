@@ -35,13 +35,8 @@ namespace CoreDocker.Api.WebApi.Controllers
         [AllowAnonymous]
         public Task<PingModel> Get()
         {
-            return Task.FromResult(new PingModel
-            {
-                Version = _informationalVersion,
-                Database = IsDatabaseConnected(),
-                Environment = _environmentName,
-                MachineName = Environment.MachineName
-            });
+            return Task.FromResult(new PingModel(Version: _informationalVersion, Database: IsDatabaseConnected(),
+                Environment: _environmentName, MachineName: Environment.MachineName));
         }
 
         /// <summary>
@@ -53,13 +48,8 @@ namespace CoreDocker.Api.WebApi.Controllers
         [AllowAnonymous]
         public Task<PingModel> GetHealthCheck()
         {
-            return Task.FromResult(new PingModel
-            {
-                Version = _informationalVersion,
-                Database = "Unknown.",
-                Environment = _environmentName,
-                MachineName = Environment.MachineName
-            });
+            return Task.FromResult(new PingModel(Version: _informationalVersion, Database: "Unknown.",
+                Environment: _environmentName, MachineName: Environment.MachineName));
         }
 
         #region Private Methods

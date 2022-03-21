@@ -4,21 +4,11 @@ using System.Net;
 namespace CoreDocker.Api.WebApi.Exceptions
 {
     public class ApiException : Exception
-    {
-        public ApiException(string message)
-            : this(message, null)
-        {
-        }
-
-        public ApiException(string message, Exception innerException)
-            : this(HttpStatusCode.InternalServerError, message, innerException)
-        {
-        }
-
-        public ApiException(HttpStatusCode statuscode, string message, Exception innerException) : base(message,
+    {  
+        public ApiException(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError, Exception? innerException = null) : base(message,
             innerException)
         {
-            HttpStatusCode = statuscode;
+            HttpStatusCode = statusCode;
         }
 
         public HttpStatusCode HttpStatusCode { get; set; }

@@ -52,9 +52,9 @@ namespace CoreDocker.Core.Components.Users
 
         public class Notification : CommandNotificationBase
         {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public List<string> Roles { get; set; }
+            public string Name { get; set; } = null!;
+            public string Email { get; set; } = null!;
+            public List<string> Roles { get; set; } = null!;
 
             #region Overrides of CommandNotificationBase
 
@@ -67,28 +67,21 @@ namespace CoreDocker.Core.Components.Users
 
         #region Nested type: Request
 
-        public class Request : CommandRequestBase
+        public record Request : CommandRequestBase
         {
             public string Name { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
             public List<string> Roles { get; set; }
-
-            public static Request From(string id, string name, string email, string password, List<string> roles)
+            
+            public Request(string id, string name, string email, string password, List<string> roles) : base(id)
             {
-                if (id == null) throw new ArgumentNullException(nameof(id));
-                if (name == null) throw new ArgumentNullException(nameof(name));
-                if (email == null) throw new ArgumentNullException(nameof(email));
                 if (roles == null || !roles.Any()) throw new ArgumentNullException(nameof(roles));
-
-                return new Request
-                {
-                    Id = id,
-                    Name = name,
-                    Email = email,
-                    Password = password,
-                    Roles = roles
-                };
+                
+                Name = name ?? throw new ArgumentNullException(nameof(name));
+                Email = email ?? throw new ArgumentNullException(nameof(email));
+                Password = password;
+                Roles = roles;
             }
         }
 
