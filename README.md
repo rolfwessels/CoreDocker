@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/rolfwessels/CoreDocker.svg?branch=master)](https://travis-ci.org/rolfwessels/CoreDocker)
 [![Build status](https://ci.appveyor.com/api/projects/status/tumprt66bbfxb22o?svg=true)](https://ci.appveyor.com/project/rolfwessels/coredocker)
 [![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker/)
+[![Coverage Status](https://coveralls.io/repos/github/rolfwessels/CoreDocker/badge.svg?branch=master)](https://coveralls.io/github/rolfwessels/CoreDocker?branch=master)
 
 This project contains some scafolding code that I use whenever I start a new project. It followes some best practices.
 
@@ -25,7 +26,6 @@ This project contains some scafolding code that I use whenever I start a new pro
 ## Todo
 
 - Deploy with CDN
-- Code coverage in build process.
 - Code analytics - look at resharper cli tools.
 - Find and clean unused code. See if we can automate report
 - 3rd party authentication - github or google would be awesome (Tired of always writing own user management system).
