@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
@@ -10,14 +9,12 @@ using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 using Bumbershoot.Utilities.Helpers;
 using HotChocolate.Types;
-using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {
     public class UsersQueryType : ObjectType<UsersQueryType.UsersQuery>
     {
         private readonly IUserLookup _userLookup;
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public UsersQueryType(IUserLookup userLookup)
         {
@@ -52,7 +49,7 @@ namespace CoreDocker.Api.Components.Users
             descriptor.Field("roles")
                 .Description("All roles")
                 .Type<NonNullType<ListType<RoleType>>>()
-                .Resolve(context => RoleManager.All.Select(x =>
+                .Resolve(_ => RoleManager.All.Select(x =>
                     new RoleModel(x.Name, x.Activities.Select(a => a.ToString()).ToList())));
 
             descriptor.Field("role")
@@ -75,7 +72,7 @@ namespace CoreDocker.Api.Components.Users
 
         #region Private Methods
 
-        private async Task<User> Me(Task<User> users) => await users;
+        private async Task<User?> Me(Task<User?> users) => await users;
         #endregion
 
         public class UsersQuery

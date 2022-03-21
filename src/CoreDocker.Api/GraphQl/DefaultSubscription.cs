@@ -36,7 +36,7 @@ namespace CoreDocker.Api.GraphQl
 
     public class SubscriptionSubscribe
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         private readonly ITopicEventSender _eventSender;
         private int _counter;
         private readonly Lazy<IDisposable> _disposable;

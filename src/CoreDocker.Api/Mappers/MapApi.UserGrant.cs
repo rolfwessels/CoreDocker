@@ -30,7 +30,7 @@ namespace CoreDocker.Api.Mappers
                 .ForMember(x => x.Description, opt => opt.Ignore())
                 .ForMember(x => x.SessionId, opt => opt.Ignore())
                 .ForMember(x => x.ConsumedTime, opt => opt.Ignore())
-                .ForMember(x => x.SubjectId, opt => opt.MapFrom(x => x.User.Id));
+                .ForMember(x => x.SubjectId, opt => opt.MapFrom(x => x.User != null ? x.User.Id : ""));
         }
 
         #endregion

@@ -23,7 +23,7 @@ namespace CoreDocker.Api.Components.Users
                 .Description("User profile image.");
             descriptor.Field("activities")
                 .Type<NonNullType<ListType<NonNullType<StringType>>>>()
-                .Resolve(context => Roles(context.Parent<User>()?.Roles))
+                .Resolve(context => Roles(context.Parent<User>().Roles))
                 .Description("The activities that this user is authorized for.");
             descriptor.Field(d => d.UpdateDate).Type<NonNullType<DateTimeType>>()
                 .Description("The date when the user was last updated.");
@@ -38,7 +38,7 @@ namespace CoreDocker.Api.Components.Users
         {
             var roles = sourceRoles.Select(RoleManager.GetRole)
                 .Where(x => x != null)
-                .SelectMany(x => x.Activities)
+                .SelectMany(x => x!.Activities)
                 .Distinct()
                 .Select(x => x.ToString())
                 .OrderBy(x => x)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -83,18 +84,18 @@ namespace CoreDocker.Api.Security
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtClaimTypes.Name, user.Email),
-                new Claim(JwtClaimTypes.Id, user.Id),
-                new Claim(JwtClaimTypes.GivenName, user.Name),
-                new Claim(IdentityServerConstants.StandardScopes.Email, user.Email),
-                new Claim(JwtClaimTypes.Scope, IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi),
+                new(JwtClaimTypes.Name, user.Email ?? throw new Exception("Email required for claim")),
+                new(JwtClaimTypes.Id, user.Id),
+                new(JwtClaimTypes.GivenName, user.Name ?? throw new Exception("Email required for claim")),
+                new(IdentityServerConstants.StandardScopes.Email, user.Email),
+                new(JwtClaimTypes.Scope, IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi),
                 user.Roles.Contains(RoleManager.Admin.Name)
                     ? new Claim(JwtClaimTypes.Role, RoleManager.Admin.Name)
                     : new Claim(JwtClaimTypes.Role, RoleManager.Guest.Name)
             };
             var selectMany = user.Roles.Select(r => _roleManager.GetRoleByName(r).Result).SelectMany(x => x.Activities)
                 .Distinct().ToList();
-            foreach (var claim in selectMany) claims.Add(new Claim(JwtClaimTypes.Role, ToPolicyName(claim)));
+            claims.AddRange(selectMany.Select(claim => new Claim(JwtClaimTypes.Role, ToPolicyName(claim))));
 
             return claims;
         }
