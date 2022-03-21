@@ -50,7 +50,7 @@ namespace CoreDocker.Api.AppStartup
 
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
-            _log.Information($"Connecting to :{Settings.Instance.MongoConnection} [{Settings.Instance.MongoDatabase}]");
+            _log.Information("Connecting to :{MongoConnection} [{MongoDatabase}]", Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
             try
             {
                 return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);

@@ -82,7 +82,7 @@ namespace CoreDocker.Api.Security
                 false);
             // Get the first cert with the thumbprint
             if (certCollection.Count <= 0) return null;
-            _log.Information($"Successfully loaded cert from registry: {certCollection[0].Thumbprint}");
+            _log.Information("Successfully loaded cert from registry: {Thumbprint}", certCollection[0].Thumbprint);
             return certCollection[0];
         }
 
@@ -97,7 +97,7 @@ namespace CoreDocker.Api.Security
             else
             {
                var cert = new X509Certificate2(fileName, password);
-                _log.Information($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                _log.Information("Falling back to cert from file. Successfully loaded: {Thumbprint}", cert.Thumbprint);
                 return cert;
 
             }

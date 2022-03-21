@@ -43,8 +43,7 @@ namespace CoreDocker.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-            log.Information("Starting server {InformationalVersion}", InformationalVersion());
+            PrintVersionNumber();
             app.UseStaticFiles();
             app.UseRouting();
             var openIdSettings = new OpenIdSettings(Configuration);
@@ -68,15 +67,18 @@ namespace CoreDocker.Api
             app.UseEndpoints(e => e.MapControllers());
             app.UseSwagger();
             SimpleFileServer.Initialize(app);
-            
+        }
 
+        private static void PrintVersionNumber()
+        {
+            var log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+            log.Information("Starting server {InformationalVersion}", InformationalVersion());
         }
 
         public static string InformationalVersion()
         {
-            // string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            // string fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            string? productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            var assembly = Assembly.GetExecutingAssembly();
+            var productVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
             return $"{productVersion}";
         }
     }
