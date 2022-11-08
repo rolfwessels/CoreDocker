@@ -7,7 +7,7 @@
 [![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker/)
 [![Coverage Status](https://coveralls.io/repos/github/rolfwessels/CoreDocker/badge.svg?branch=master)](https://coveralls.io/github/rolfwessels/CoreDocker?branch=master)
 
-This project contains some scafolding code that I use whenever I start a new project. It followes some best practices.
+This project contains some scaffolding code that I use whenever I start a new project. It follows some best practices.
 
 ## Features
 
@@ -57,14 +57,14 @@ make start
 
 ### Commands outside the container
 
-- `make up` : brings up the container & attach to the default container
+- `make up` : brings up the container & attaches to the default container
 - `make down` : stops the container
 - `make build` : builds the container
 
 ### Commands to run inside the container
 
 - `make start` : Run the app
-- `make test` : To test the app
+- `make test` : Test the app
 
 ## Create certificates
 
