@@ -4,7 +4,7 @@ COPY ./ ./
 WORKDIR /app/CoreDocker.Api
 ARG  VERSION=0.0.0
 ARG  VERSION_SUFFIX=pre-alpha
-RUN dotnet publish  --version-suffix=${VERSION_SUFFIX} -p:VersionSuffix=${VERSION_SUFFIX}  -p:FileVersion=${VERSION} -p:VersionPrefix=${VERSION} -c Release -o out
+RUN dotnet publish  -p:VersionSuffix=${VERSION_SUFFIX}  -p:FileVersion=${VERSION} -p:VersionPrefix=${VERSION} -c Release -o out
 
 
 # Build runtime image
