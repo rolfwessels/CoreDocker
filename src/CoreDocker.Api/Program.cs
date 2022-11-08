@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using CoreDocker.Core.Framework.Logging;
@@ -22,7 +23,7 @@ namespace CoreDocker.Api
             Console.Title = "CoreDocker.Api";
 
             Log.Logger = LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
-                .WriteTo.File(@"c:\temp\logs\CoreDocker.Api.log", fileSizeLimitBytes: 10 * LoggingHelper.MB,
+                .WriteTo.File(Path.Combine(Path.GetTempPath(), "CoreDocker.Api.log"), fileSizeLimitBytes: 10 * LoggingHelper.MB,
                     rollOnFileSizeLimit: true)
                 .WriteTo.Console(LogEventLevel.Information)
                 //.ReadFrom.Configuration(BaseSettings.Config)
