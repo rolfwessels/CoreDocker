@@ -14,13 +14,9 @@ namespace CoreDocker.Dal.InMemoryCollections
 
         public string NewId => Guid.NewGuid().ToString().Substring(0, 26);
 
-        #region IGeneralUnitOfWorkFactory Members
-
         public IGeneralUnitOfWork GetConnection()
         {
             return _inMemoryGeneralUnitOfWork;
         }
-
-        #endregion
     }
 }

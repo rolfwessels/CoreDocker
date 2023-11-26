@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using CoreDocker.Dal.Models.Base;
-using Serilog;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
+using Serilog;
 
 namespace CoreDocker.Dal.MongoDb
 {
@@ -18,8 +18,6 @@ namespace CoreDocker.Dal.MongoDb
             SetupDataTimeSerializer();
             SetupMapping();
         }
-
-        #region Private Methods
 
         private static void SetupMapping()
         {
@@ -48,7 +46,5 @@ namespace CoreDocker.Dal.MongoDb
                 _log.Error("MongoMappers:InitializeMappers " + e.Message, e);
             }
         }
-
-        #endregion
     }
 }

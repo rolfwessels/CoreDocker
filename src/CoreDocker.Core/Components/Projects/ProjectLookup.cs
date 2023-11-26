@@ -15,13 +15,7 @@ namespace CoreDocker.Core.Components.Projects
             Repository = projects;
         }
 
-        #region Overrides of BaseLookup<Project>
-
         protected override IRepository<Project> Repository { get; }
-
-        #endregion
-
-        #region Implementation of IProjectLookup
 
         public Task<PagedList<Project>> GetPaged(ProjectPagedLookupOptions options)
         {
@@ -29,11 +23,14 @@ namespace CoreDocker.Core.Components.Projects
             {
                 var query = Repository.Query();
                 if (!string.IsNullOrEmpty(options.Search))
+                {
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
                         x.Name.ToLower().Contains(options.Search.ToLower()));
+                }
 
                 if (options.Sort != null)
+                {
                     switch (options.Sort)
                     {
                         case ProjectPagedLookupOptions.SortOptions.Name:
@@ -45,12 +42,11 @@ namespace CoreDocker.Core.Components.Projects
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
+                }
 
                 return new PagedList<Project>(query, options);
             });
         }
-
-        #endregion
     }
 }
 

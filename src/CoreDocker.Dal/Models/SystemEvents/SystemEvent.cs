@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Linq;
-using CoreDocker.Dal.Models.Base;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.Models.SystemEvents
 {
     public class SystemEvent : BaseDalModelWithId
     {
-        public SystemEvent(string correlationId, DateTime createdAt, string eventId, string eventName, string typeName, string data)
+        public SystemEvent(string correlationId,
+            DateTime createdAt,
+            string eventId,
+            string eventName,
+            string typeName,
+            string data)
         {
             CorrelationId = correlationId;
             CreatedAt = createdAt;
@@ -17,7 +22,7 @@ namespace CoreDocker.Dal.Models.SystemEvents
             Data = data;
         }
 
-        public string CorrelationId { get;  }
+        public string CorrelationId { get; }
         public DateTime CreatedAt { get; set; }
         public string EventName { get; set; }
         public string EventId { get; set; }

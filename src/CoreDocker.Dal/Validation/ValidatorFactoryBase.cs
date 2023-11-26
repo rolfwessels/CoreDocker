@@ -1,14 +1,10 @@
-﻿using System.Reflection;
-using Bumbershoot.Utilities.Helpers;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 
 namespace CoreDocker.Dal.Validation
 {
     public abstract class ValidatorFactoryBase : IValidatorFactory
     {
-        #region IValidatorFactory Members
-
         public ValidationResult For<T>(T user)
         {
             var validationRules = GetValidationRules<T>();
@@ -26,8 +22,6 @@ namespace CoreDocker.Dal.Validation
             return GetValidationRules<T>();
         }
 
-        #endregion
-
         protected IValidator<T> GetValidationRules<T>()
         {
             TryResolve(out IValidator<T> output);
@@ -36,6 +30,4 @@ namespace CoreDocker.Dal.Validation
 
         protected abstract void TryResolve<T>(out IValidator<T> output);
     }
-
-   
 }

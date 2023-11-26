@@ -1,7 +1,7 @@
 ﻿using System;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Vendor;
 using CoreDocker.Dal.Models.Users;
-using Bumbershoot.Utilities.Helpers;
 
 namespace CoreDocker.Core.Components.Users
 {
@@ -25,7 +25,9 @@ namespace CoreDocker.Core.Components.Users
         public static void ValidateRolesAndThrow(this User user)
         {
             if (!RoleManager.AreValidRoles(user.Roles))
+            {
                 throw new ArgumentException($"One or more role does not exist [{user.Roles.StringJoin()}]");
+            }
         }
     }
 }

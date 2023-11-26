@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -15,9 +14,9 @@ namespace CoreDocker.Core.Framework.MessageUtil
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<WeakReference, object>> _dictionary = new();
+        private readonly string _redisHost;
 
         private readonly Lazy<ISubscriber> _sub;
-        private readonly string _redisHost;
 
         public RedisMessenger(string redisHost)
         {
@@ -35,18 +34,11 @@ namespace CoreDocker.Core.Framework.MessageUtil
             return _dictionary.Sum(x => x.Value.Count);
         }
 
-        #region Private Methods
-
         private ISubscriber GetSubscriber()
         {
-            
             var redis = ConnectionMultiplexer.Connect(_redisHost);
             return redis.GetSubscriber();
         }
-
-        #endregion
-
-        #region Implementation of IMessenger
 
         public async Task Send<T>(T value)
         {
@@ -56,15 +48,15 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         public void Register<T>(object receiver, Action<T> action) where T : class
         {
-            Register(typeof(T), receiver, o => action((T) o));
+            Register(typeof(T), receiver, o => action((T)o));
         }
 
         public void Register(Type type, object receiver, Action<object> callBackToClient)
         {
             var redisChannel = type.Name;
-            var references = _dictionary.GetOrAdd(type, (_) => new ConcurrentDictionary<WeakReference, object>());
+            var references = _dictionary.GetOrAdd(type, _ => new ConcurrentDictionary<WeakReference, object>());
             var handler = references
-                .GetOrAdd(new WeakReference(receiver), (_) =>
+                .GetOrAdd(new WeakReference(receiver), _ =>
                     {
                         void Action(RedisChannel channel, RedisValue message)
                         {
@@ -72,15 +64,15 @@ namespace CoreDocker.Core.Framework.MessageUtil
                             _log.Debug($"RedisMessenger:Received {deserializeObject.GetType().Name}:{message}");
                             callBackToClient(deserializeObject);
                         }
-                        return (Action<RedisChannel, RedisValue>) Action;
+
+                        return (Action<RedisChannel, RedisValue>)Action;
                     }
                 ) as Action<RedisChannel, RedisValue>;
-         
-            
+
+
             _sub.Value.Subscribe(redisChannel, handler);
         }
 
-       
 
         public void UnRegister<T>(object receiver)
         {
@@ -90,24 +82,27 @@ namespace CoreDocker.Core.Framework.MessageUtil
         public void UnRegister(Type type, object receiver)
         {
             if (_dictionary.TryGetValue(type, out var typeFound))
+            {
                 foreach (var key in typeFound.Keys)
+                {
                     Remove(receiver, key, typeFound, type);
+                }
+            }
         }
 
-        
 
         public void UnRegister(object receiver)
         {
             foreach (var keyValuePair in _dictionary)
             foreach (var key in keyValuePair.Value.Keys)
+            {
                 Remove(receiver, key, keyValuePair.Value, keyValuePair.Key);
+            }
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private void Remove(object receiver, WeakReference key, ConcurrentDictionary<WeakReference, object> typeFound,
+        private void Remove(object receiver,
+            WeakReference key,
+            ConcurrentDictionary<WeakReference, object> typeFound,
             Type type)
         {
             if (!key.IsAlive)
@@ -116,7 +111,10 @@ namespace CoreDocker.Core.Framework.MessageUtil
                 return;
             }
 
-            if (key.Target == receiver) Unsubscribe(key, typeFound, type);
+            if (key.Target == receiver)
+            {
+                Unsubscribe(key, typeFound, type);
+            }
         }
 
         private void Unsubscribe(WeakReference key, ConcurrentDictionary<WeakReference, object> typeFound, Type type)
@@ -132,10 +130,5 @@ namespace CoreDocker.Core.Framework.MessageUtil
         {
             return new RedisValue(JsonSerializer.Serialize(value));
         }
-
-
-        #endregion
     }
-
-  
 }

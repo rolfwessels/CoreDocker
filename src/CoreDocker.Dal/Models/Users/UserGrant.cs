@@ -1,15 +1,11 @@
 ﻿using System;
-using CoreDocker.Dal.Models.Base;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.Models.Users
 {
     public class UserGrant : BaseDalModelWithId
     {
-        public UserGrant()
-        {
-        }
-
         public string? Key { get; set; }
         public string? Type { get; set; }
         public UserReference? User { get; set; }

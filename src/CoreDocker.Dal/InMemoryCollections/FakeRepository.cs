@@ -11,37 +11,32 @@ namespace CoreDocker.Dal.InMemoryCollections
 {
     public class FakeRepository<T> : IRepository<T> where T : IBaseDalModel
     {
-        private readonly List<T> _internalDataList;
-
         public FakeRepository()
         {
-            _internalDataList = new List<T>();
+            InternalDataList = new List<T>();
         }
 
-        public List<T> InternalDataList => _internalDataList;
-
-        #region Private Methods
+        public List<T> InternalDataList { get; }
 
         private void AddAndSetUpdateDate(T entity)
         {
-            _internalDataList.Add(entity.DynamicCastTo<T>());
+            InternalDataList.Add(entity.DynamicCastTo<T>());
             entity.UpdateDate = DateTime.Now;
         }
 
-        #endregion
-
-        #region Implementation of IRepository<T>
-
         public IQueryable<T> Query()
         {
-            return _internalDataList.AsQueryable();
+            return InternalDataList.AsQueryable();
         }
 
         public Task<T> Add(T entity)
         {
             entity.CreateDate = DateTime.Now;
             if (entity is IBaseDalModelWithId baseDalModelWithId && string.IsNullOrEmpty(baseDalModelWithId.Id))
+            {
                 baseDalModelWithId.Id = BuildId();
+            }
+
             AddAndSetUpdateDate(entity);
             return Task.FromResult(entity);
         }
@@ -55,26 +50,33 @@ namespace CoreDocker.Dal.InMemoryCollections
         public Task<IEnumerable<T>> AddRange(IEnumerable<T> entities)
         {
             var addRange = entities as T[] ?? entities.ToArray();
-            foreach (var entity in addRange) Add(entity);
+            foreach (var entity in addRange)
+            {
+                Add(entity);
+            }
 
             return Task.FromResult(entities);
         }
 
 
-        public Task<long> Update<TType>(Expression<Func<T, bool>> filter, Expression<Func<T, TType>> update,
+        public Task<long> Update<TType>(Expression<Func<T, bool>> filter,
+            Expression<Func<T, TType>> update,
             TType value)
             where TType : class
         {
-            var enumerable = _internalDataList.Where(filter.Compile()).ToArray();
-            foreach (var v in enumerable) ReflectionHelper.ExpressionToAssign(v, update, value);
+            var enumerable = InternalDataList.Where(filter.Compile()).ToArray();
+            foreach (var v in enumerable)
+            {
+                ReflectionHelper.ExpressionToAssign(v, update, value);
+            }
 
             return Task.FromResult(enumerable.LongCount());
         }
 
         public Task<bool> Remove(Expression<Func<T, bool>> filter)
         {
-            var array = _internalDataList.Where(filter.Compile()).ToArray();
-            array.ForEach(x => _internalDataList.Remove(x));
+            var array = InternalDataList.Where(filter.Compile()).ToArray();
+            array.ForEach(x => InternalDataList.Remove(x));
             return Task.FromResult(array.Length > 0);
         }
 
@@ -86,7 +88,7 @@ namespace CoreDocker.Dal.InMemoryCollections
 
         private Task<List<T>> FindInternal(Expression<Func<T, bool>> filter)
         {
-            return Task.FromResult(_internalDataList.Where(filter.Compile()).ToList());
+            return Task.FromResult(InternalDataList.Where(filter.Compile()).ToList());
         }
 
         public async Task<T?> FindOne(Expression<Func<T, bool>> filter)
@@ -97,12 +99,12 @@ namespace CoreDocker.Dal.InMemoryCollections
 
         public Task<long> Count()
         {
-            return Task.FromResult(_internalDataList.LongCount());
+            return Task.FromResult(InternalDataList.LongCount());
         }
 
         public Task<long> Count(Expression<Func<T, bool>> filter)
         {
-            return Task.FromResult(_internalDataList.Where(filter.Compile()).LongCount());
+            return Task.FromResult(InternalDataList.Where(filter.Compile()).LongCount());
         }
 
         public async Task<long> UpdateMany(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd)
@@ -127,7 +129,7 @@ namespace CoreDocker.Dal.InMemoryCollections
             if (!list.Any())
             {
                 var instance = Activator.CreateInstance<T>();
-                _internalDataList.Add(instance);
+                InternalDataList.Add(instance);
                 list.Add(instance);
             }
 
@@ -136,14 +138,15 @@ namespace CoreDocker.Dal.InMemoryCollections
             return list.Count;
         }
 
-        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd,
+        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter,
+            Action<IUpdateCalls<T>> upd,
             bool isUpsert = false)
         {
             var list = (await FindInternal(filter)).Take(1).ToList();
             if (isUpsert && !list.Any())
             {
                 var instance = Activator.CreateInstance<T>();
-                _internalDataList.Add(instance);
+                InternalDataList.Add(instance);
                 list.Add(instance);
             }
 
@@ -161,18 +164,22 @@ namespace CoreDocker.Dal.InMemoryCollections
                 _list = list;
             }
 
-            #region Implementation of IUpdateCalls<TClass>
-
             public IUpdateCalls<TClass> Set<TType>(Expression<Func<TClass, TType>> expression, TType value)
             {
-                foreach (var item in _list) AssignNewValue(item, expression, value);
+                foreach (var item in _list)
+                {
+                    AssignNewValue(item, expression, value);
+                }
 
                 return this;
             }
 
             public IUpdateCalls<TClass> SetOnInsert<TT>(Expression<Func<TClass, TT>> expression, TT value)
             {
-                foreach (var item in _list) AssignNewValue(item, expression, value);
+                foreach (var item in _list)
+                {
+                    AssignNewValue(item, expression, value);
+                }
 
                 return this;
             }
@@ -206,10 +213,9 @@ namespace CoreDocker.Dal.InMemoryCollections
                 throw new NotImplementedException();
             }
 
-            #endregion
 
-
-            public static void AssignNewValue<TObj, TValue>(TObj obj, Expression<Func<TObj, TValue>> expression,
+            public static void AssignNewValue<TObj, TValue>(TObj obj,
+                Expression<Func<TObj, TValue>> expression,
                 TValue value)
             {
                 ReflectionHelper.ExpressionToAssign(obj, expression, value);
@@ -228,15 +234,15 @@ namespace CoreDocker.Dal.InMemoryCollections
             if (entity is IBaseDalModelWithId baseDalModelWithId)
             {
                 var baseDalModelWithIds =
-                    _internalDataList.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
+                    InternalDataList.Cast<IBaseDalModelWithId>().FirstOrDefault(x => x.Id == baseDalModelWithId.Id);
                 if (baseDalModelWithIds != null)
                 {
-                    _internalDataList.Remove((T) baseDalModelWithIds);
+                    InternalDataList.Remove((T)baseDalModelWithIds);
                     return true;
                 }
             }
 
-            return _internalDataList.Remove(entity);
+            return InternalDataList.Remove(entity);
         }
 
         public T Update(T entity, object t)
@@ -245,7 +251,5 @@ namespace CoreDocker.Dal.InMemoryCollections
             AddAndSetUpdateDate(entity);
             return entity;
         }
-
-        #endregion
     }
 }

@@ -13,18 +13,16 @@ namespace CoreDocker.Core.Framework.CommandQuery
             _mediator = mediator;
         }
 
-        #region Implementation of ICommander
-
-        public async Task Notify<T>(T notificationRequest, CancellationToken cancellationToken) where T : CommandNotificationBase
+        public async Task Notify<T>(T notificationRequest, CancellationToken cancellationToken)
+            where T : CommandNotificationBase
         {
             await _mediator.Publish(notificationRequest, cancellationToken);
         }
 
-        public async Task<CommandResult> Execute<T>(T commandRequest, CancellationToken cancellationToken) where T : CommandRequestBase
+        public async Task<CommandResult> Execute<T>(T commandRequest, CancellationToken cancellationToken)
+            where T : CommandRequestBase
         {
             return await _mediator.Send(commandRequest, cancellationToken);
         }
-
-        #endregion
     }
 }

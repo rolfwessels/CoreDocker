@@ -16,31 +16,19 @@ namespace CoreDocker.Core.Components.Users
             _subscription = subscription;
         }
 
-        #region Implementation of INotificationHandler<in Notification>
-
         public Task Handle(UserCreate.Notification notification, CancellationToken cancellationToken)
         {
             return _subscription.Send(BuildMessage(notification));
         }
-
-        #endregion
-
-        #region Implementation of INotificationHandler<in Notification>
 
         public Task Handle(UserUpdate.Notification notification, CancellationToken cancellationToken)
         {
             return _subscription.Send(BuildMessage(notification));
         }
 
-        #endregion
-
-        #region Implementation of INotificationHandler<in Notification>
-
         public Task Handle(UserRemove.Notification notification, CancellationToken cancellationToken)
         {
             return _subscription.Send(BuildMessage(notification));
         }
-
-        #endregion
     }
 }

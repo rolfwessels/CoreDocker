@@ -9,7 +9,7 @@ namespace CoreDocker.Dal.MongoDb
     public class Configuration
     {
         private static readonly object _locker = new();
-        private static Lazy<Configuration> _instance = new(() => new Configuration());
+        private static readonly Lazy<Configuration> _instance = new(() => new Configuration());
         private readonly IMigration[] _updates;
         private MongoMappers? _mongoMappers;
         private Task? _update;
@@ -38,13 +38,9 @@ namespace CoreDocker.Dal.MongoDb
             return _update;
         }
 
-        #region Instance
-
         public static Configuration Instance()
         {
             return _instance.Value;
         }
-
-        #endregion
     }
 }

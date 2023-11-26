@@ -13,8 +13,8 @@ using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using FluentValidation;
-using Serilog;
 using MediatR;
+using Serilog;
 using IValidatorFactory = CoreDocker.Dal.Validation.IValidatorFactory;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
@@ -67,8 +67,6 @@ namespace CoreDocker.Core.Startup
 
         protected abstract IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg);
 
-        #region Private Methods
-
         private IGeneralUnitOfWork Delegate(IComponentContext x)
         {
             try
@@ -105,15 +103,14 @@ namespace CoreDocker.Core.Startup
         {
             builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
             builder.RegisterType<MediatorCommander>().SingleInstance();
-            builder.Register(x=>new CommanderPersist(x.Resolve<MediatorCommander>(),x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(), x.Resolve<IEventStoreConnection>())).As<ICommander>();
+            builder.Register(x => new CommanderPersist(x.Resolve<MediatorCommander>(),
+                    x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(),
+                    x.Resolve<IEventStoreConnection>()))
+                .As<ICommander>();
             builder.RegisterType<SubscriptionNotifications>().SingleInstance();
             builder.RegisterType<StringifyJson>().As<IStringify>().SingleInstance();
             builder.RegisterType<EventStoreConnection>().As<IEventStoreConnection>();
         }
-
-        #endregion
-
-        #region Nested type: AutofacValidatorFactory
 
         private class AutofacValidatorFactory : ValidatorFactoryBase
         {
@@ -129,7 +126,5 @@ namespace CoreDocker.Core.Startup
                 _context().TryResolve(out output!);
             }
         }
-
-        #endregion
     }
 }

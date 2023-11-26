@@ -21,18 +21,26 @@ namespace CoreDocker.Core.Framework.MessageUtil
 
         public static IMessenger Default => _messenger.Value;
 
-        #region IMessenger Members
-
         public Task Send<T>(T value)
         {
             return Task.Run(() =>
             {
-                if (!_dictionary.TryGetValue(typeof(T), out var type)) return;
+                if (!_dictionary.TryGetValue(typeof(T), out var type))
+                {
+                    return;
+                }
+
                 foreach (var reference in type)
+                {
                     if (reference.Key.IsAlive)
+                    {
                         reference.Value(value!);
+                    }
                     else
+                    {
                         type.TryRemove(reference.Key, out _);
+                    }
+                }
             });
         }
 
@@ -42,6 +50,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
             {
                 action(t as T ?? throw new InvalidOperationException());
             }
+
             Register(typeof(T), receiver, Value);
         }
 
@@ -60,6 +69,7 @@ namespace CoreDocker.Core.Framework.MessageUtil
         public void UnRegister(Type type, object receiver)
         {
             if (_dictionary.TryGetValue(type, out var typeFound))
+            {
                 foreach (var key in typeFound.Keys)
                 {
                     if (!key.IsAlive)
@@ -68,8 +78,12 @@ namespace CoreDocker.Core.Framework.MessageUtil
                         continue;
                     }
 
-                    if (key.Target == receiver) typeFound.TryRemove(key, out _);
+                    if (key.Target == receiver)
+                    {
+                        typeFound.TryRemove(key, out _);
+                    }
                 }
+            }
         }
 
         public void UnRegister(object receiver)
@@ -83,10 +97,11 @@ namespace CoreDocker.Core.Framework.MessageUtil
                     continue;
                 }
 
-                if (key.Target == receiver) type.TryRemove(key, out _);
+                if (key.Target == receiver)
+                {
+                    type.TryRemove(key, out _);
+                }
             }
         }
-
-        #endregion
     }
 }

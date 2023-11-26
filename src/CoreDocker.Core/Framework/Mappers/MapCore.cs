@@ -6,7 +6,7 @@ namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
     {
-        private static readonly Lazy<IMapper> _mapper = new Lazy<IMapper>(InitializeMapping);
+        private static readonly Lazy<IMapper> _mapper = new(InitializeMapping);
 
         public static IMapper GetInstance()
         {

@@ -27,8 +27,6 @@ namespace CoreDocker.Core.Components.Users
 
         public static List<Role> All { get; }
 
-        #region IRoleManager Members
-
         public Task<Role?> GetRoleByName(string name)
         {
             return Task.FromResult(GetRole(name));
@@ -38,8 +36,6 @@ namespace CoreDocker.Core.Components.Users
         {
             return Task.FromResult(All.ToList());
         }
-
-        #endregion
 
         public static Role? GetRole(string name)
         {
@@ -68,13 +64,9 @@ namespace CoreDocker.Core.Components.Users
             return All.Where(x => x.Activities.Contains(permission)).Select(x => x.Name).ToArray();
         }
 
-        #region Private Methods
-
         private static IEnumerable<Activity> Activities(IEnumerable<string> rolesByName)
         {
             return All.Where(x => rolesByName.Contains(x.Name)).SelectMany(x => x.Activities).ToArray();
         }
-
-        #endregion
     }
 }

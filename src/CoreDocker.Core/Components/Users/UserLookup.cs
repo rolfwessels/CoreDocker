@@ -21,13 +21,7 @@ namespace CoreDocker.Core.Components.Users
             Repository = users;
         }
 
-        #region Overrides of BaseLookup<User>
-
         protected override IRepository<User> Repository { get; }
-
-        #endregion
-
-        #region IUserLookup Members
 
         public Task<PagedList<User>> GetPagedUsers(UserPagedLookupOptions options)
         {
@@ -35,12 +29,15 @@ namespace CoreDocker.Core.Components.Users
             {
                 var query = Repository.Query();
                 if (!string.IsNullOrEmpty(options.Search))
+                {
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
                         x.Email.OrEmpty().ToLower().Contains(options.Search.ToLower()) ||
                         x.Name.OrEmpty().ToLower().Contains(options.Search.ToLower()));
+                }
 
                 if (options.Sort != null)
+                {
                     switch (options.Sort)
                     {
                         case UserPagedLookupOptions.SortOptions.Name:
@@ -52,6 +49,7 @@ namespace CoreDocker.Core.Components.Users
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
+                }
 
                 return new PagedList<User>(query, options);
             });
@@ -78,19 +76,22 @@ namespace CoreDocker.Core.Components.Users
 
         public async Task<User?> GetUserByEmail(string? email)
         {
-            if (email == null) throw new ArgumentNullException(nameof(email));
+            if (email == null)
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
             return await Repository.FindOne(x => x.Email == email.ToLower());
         }
 
         public async Task UpdateLastLoginDate(string email)
         {
-            var updateOne = await Repository.UpdateOne(x => x.Email == email.ToLower(), calls => calls.Set(x=>x.LastLoginDate, DateTime.Now));
+            var updateOne = await Repository.UpdateOne(x => x.Email == email.ToLower(),
+                calls => calls.Set(x => x.LastLoginDate, DateTime.Now));
             if (updateOne == 0)
             {
                 throw new ArgumentException("Invalid email address.");
             }
         }
-
-        #endregion
     }
 }

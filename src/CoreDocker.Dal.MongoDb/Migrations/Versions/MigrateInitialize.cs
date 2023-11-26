@@ -10,8 +10,6 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
 {
     public class MigrateInitialize : IMigration
     {
-        #region IMigration Members
-
         public async Task Update(IMongoDatabase db)
         {
             await AddUsers(db);
@@ -20,10 +18,6 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
             await MockData(db);
 #endif
         }
-
-        #endregion
-
-        #region Private Methods
 
         private async Task AddUsers(IMongoDatabase db)
         {
@@ -57,12 +51,10 @@ namespace CoreDocker.Dal.MongoDb.Migrations.Versions
         {
             var projects = new MongoRepository<Project>(db);
             var saves = Enumerable.Range(1, 10)
-                .Select(x => new Project {Name = "Project " + x})
+                .Select(x => new Project { Name = "Project " + x })
                 .Select(projects.Add)
                 .ToArray();
             await Task.WhenAll(saves);
         }
-
-        #endregion
     }
 }

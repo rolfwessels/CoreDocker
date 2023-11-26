@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using CoreDocker.Dal.Models.Base;
+﻿using System.Threading.Tasks;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Dal.Persistence
 {
@@ -17,8 +16,11 @@ namespace CoreDocker.Dal.Persistence
         public static T ExistsOrThrow<T>(this T? found, string requestId) where T : IBaseDalModelWithId
         {
             if (found == null)
+            {
                 throw new ReferenceException(
                     $"Invalid {typeof(T).Name.UnderScoreAndCamelCaseToHumanReadable()} id [{requestId}].");
+            }
+
             return found;
         }
     }

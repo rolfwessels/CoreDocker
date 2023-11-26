@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using CoreDocker.Dal.Persistence;
-using Serilog;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -22,16 +20,12 @@ namespace CoreDocker.Dal.MongoDb
 
         public string ConnectionString { get; }
 
-        #region IGeneralUnitOfWorkFactory Members
+        public string NewId => ObjectId.GenerateNewId().ToString();
 
         public IGeneralUnitOfWork GetConnection()
         {
             return _singleConnection.Value;
         }
-
-        public string NewId => ObjectId.GenerateNewId().ToString();
-
-        #endregion
 
         public IMongoDatabase DatabaseOnly()
         {
@@ -39,8 +33,6 @@ namespace CoreDocker.Dal.MongoDb
             var database = client.GetDatabase(DatabaseName);
             return database;
         }
-
-        #region Private Methods
 
         private IGeneralUnitOfWork GeneralUnitOfWork()
         {
@@ -53,7 +45,5 @@ namespace CoreDocker.Dal.MongoDb
         {
             return new MongoClient(ConnectionString);
         }
-
-        #endregion
     }
 }

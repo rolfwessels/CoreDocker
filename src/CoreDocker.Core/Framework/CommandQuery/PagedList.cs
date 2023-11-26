@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CoreDocker.Core.Components.Users;
-using CoreDocker.Dal.Models.Users;
 
 namespace CoreDocker.Core.Framework.CommandQuery
 {
@@ -14,7 +12,9 @@ namespace CoreDocker.Core.Framework.CommandQuery
                 : queryable.Take(optionsIncludeCount.First).ToList();
             Count = -1;
             if (optionsIncludeCount.IncludeCount)
+            {
                 Count = Items.Count == optionsIncludeCount.First ? queryable.LongCount() : Items.Count;
+            }
         }
 
         public long Count { get; set; }

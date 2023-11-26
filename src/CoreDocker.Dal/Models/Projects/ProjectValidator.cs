@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CoreDocker.Dal.Validation;
+﻿using CoreDocker.Dal.Validation;
 using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Projects

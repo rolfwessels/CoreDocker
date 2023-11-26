@@ -13,20 +13,15 @@ namespace CoreDocker.Core.Framework.Subscriptions
             _redisMessenger = redisMessenger;
         }
 
-        #region Implementation of IRealTimeNotificationChannel
-
         public Task Send(RealTimeNotificationsMessage message)
         {
             return _redisMessenger.Send(message);
         }
 
-        #endregion
-
         public IDisposable Register(Action<RealTimeNotificationsMessage> action)
         {
-            _redisMessenger.Register(this,action);
+            _redisMessenger.Register(this, action);
             return new Closer(() => _redisMessenger.UnRegister<RealTimeNotificationsMessage>(this));
-
         }
 
         private class Closer : IDisposable
@@ -38,15 +33,10 @@ namespace CoreDocker.Core.Framework.Subscriptions
                 _unRegister = unRegister;
             }
 
-            #region IDisposable
-
             public void Dispose()
             {
                 _unRegister();
             }
-
-            #endregion
         }
     }
-
 }
