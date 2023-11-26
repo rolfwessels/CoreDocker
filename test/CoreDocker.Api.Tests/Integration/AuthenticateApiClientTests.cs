@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Sdk.RestApi;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Sdk.RestApi;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -13,7 +13,6 @@ namespace CoreDocker.Api.Tests.Integration
     {
         private ICoreDockerClient? _connection;
         private ICoreDockerClient? _connectionAuth;
-
 
         #region Setup/Teardown
 

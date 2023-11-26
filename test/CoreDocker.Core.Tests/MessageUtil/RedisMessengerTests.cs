@@ -20,7 +20,9 @@ namespace CoreDocker.Core.Tests.MessageUtil
         public void Setup()
         {
             TestLoggingHelper.EnsureExists();
-            _messenger = new RedisMessenger(new Settings(new ConfigurationBuilder().AddJsonFilesAndEnvironment().Build()).RedisHost);
+            _messenger =
+                new RedisMessenger(new Settings(new ConfigurationBuilder().AddJsonFilesAndEnvironment().Build())
+                    .RedisHost);
         }
 
         [TearDown]
@@ -92,8 +94,6 @@ namespace CoreDocker.Core.Tests.MessageUtil
             _messenger.Count().Should().Be(0);
         }
 
-        #region Nested type: SampleMessage
-
         public class SampleMessage : IDisposable
         {
             public SampleMessage(string message)
@@ -103,19 +103,10 @@ namespace CoreDocker.Core.Tests.MessageUtil
 
             public string? Message { get; private set; }
 
-            
-            #region Implementation of IDisposable
-
             public void Dispose()
             {
                 Message = null;
             }
-
-            #endregion
-
-            
         }
-
-        #endregion
     }
 }

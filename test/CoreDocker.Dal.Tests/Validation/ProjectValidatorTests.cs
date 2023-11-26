@@ -1,6 +1,6 @@
 using System.Linq;
-using CoreDocker.Dal.Models.Projects;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Models.Projects;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
@@ -49,7 +49,6 @@ namespace CoreDocker.Dal.Tests.Validation
             project.Name = null!;
             // assert
             _validator.TestValidate(project).ShouldHaveValidationErrorFor(project => project.Name);
-
         }
 
         [Test]

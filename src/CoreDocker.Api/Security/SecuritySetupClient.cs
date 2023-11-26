@@ -1,7 +1,7 @@
 ﻿using System;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Dal.Models.Auth;
-using Bumbershoot.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -34,8 +34,6 @@ namespace CoreDocker.Api.Security
             app.UseAuthentication();
         }
 
-        #region Private Methods
-
         private static void AddFromActivities(AuthorizationOptions options)
         {
             EnumHelper.ToArray<Activity>()
@@ -48,7 +46,5 @@ namespace CoreDocker.Api.Security
                         });
                 });
         }
-
-        #endregion
     }
 }

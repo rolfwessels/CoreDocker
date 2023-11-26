@@ -52,8 +52,6 @@ namespace CoreDocker.Api.WebApi.Controllers
                 Environment: _environmentName, MachineName: Environment.MachineName));
         }
 
-        #region Private Methods
-
         private string IsDatabaseConnected()
         {
             try
@@ -66,7 +64,5 @@ namespace CoreDocker.Api.WebApi.Controllers
                 return "Error:" + e.Message;
             }
         }
-
-        #endregion
     }
 }

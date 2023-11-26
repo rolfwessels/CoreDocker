@@ -3,10 +3,11 @@ using CoreDocker.Dal.Tests;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
-using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace CoreDocker.Api.Tests
 {
@@ -40,8 +41,6 @@ namespace CoreDocker.Api.Tests
             return _guestConnection.Value;
         }
 
-        #region Private Methods
-
         private static string StartHosting()
         {
             var port = new Random().Next(9000, 9999);
@@ -53,7 +52,7 @@ namespace CoreDocker.Api.Tests
                 .UseKestrel()
                 .ConfigureServices((context, collection) =>
                     collection.AddSingleton<ILoggerFactory>(services =>
-                        new Serilog.Extensions.Logging.SerilogLoggerFactory()))
+                        new SerilogLoggerFactory()))
                 .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .UseUrls(address);
@@ -70,14 +69,12 @@ namespace CoreDocker.Api.Tests
         {
             var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
             coreDockerApi.Authenticate.Login(adminAdminCom, adminPassword).Wait();
-            return (CoreDockerClient) coreDockerApi;
+            return (CoreDockerClient)coreDockerApi;
         }
 
         protected CoreDockerClient NewClientNotAuthorized()
         {
-            return (CoreDockerClient) _defaultRequestFactory.Value.GetConnection();
+            return (CoreDockerClient)_defaultRequestFactory.Value.GetConnection();
         }
-
-        #endregion
     }
 }

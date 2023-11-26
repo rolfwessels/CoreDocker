@@ -1,9 +1,6 @@
-﻿using System.Reflection;
-using CoreDocker.Api.GraphQl;
+﻿using CoreDocker.Api.GraphQl;
 using CoreDocker.Dal.Models.Auth;
-using CoreDocker.Shared.Models.Users;
 using HotChocolate.Types;
-using Serilog;
 
 namespace CoreDocker.Api.Components.Users
 {

@@ -19,10 +19,10 @@ namespace CoreDocker.Core.Tests.Components.Projects
     [TestFixture]
     public class ProjectRealTimeEventHandlerTests : BaseManagerTests
     {
-        private SubscriptionNotifications _subscriptionNotifications = null!;
         private ProjectRealTimeEventHandler _projectRealTimeEventHandler = null!;
+        private SubscriptionNotifications _subscriptionNotifications = null!;
 
-        #region Overrides of BaseManagerTests
+        #region Setup/Teardown
 
         public override void Setup()
         {
@@ -34,13 +34,6 @@ namespace CoreDocker.Core.Tests.Components.Projects
         #endregion
 
         [Test]
-        public void Scan_GivenProjectRealTimeEventHandler_ShouldNotBeMissingAnyNotifications()
-        {
-            Setup();
-            SubscribeHelper.NotificationScanner(typeof(ProjectRealTimeEventHandler));
-        }
-
-        [Test]
         public void Handle_GivenProjectCreateNotification_ShouldNotifyOfProjectChange()
         {
             // arrange
@@ -49,6 +42,17 @@ namespace CoreDocker.Core.Tests.Components.Projects
             // action
             BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
                 "ProjectCreated", _subscriptionNotifications);
+        }
+
+        [Test]
+        public void Handle_GivenProjectRemoveNotification_ShouldNotifyOfProjectChange()
+        {
+            // arrange
+            Setup();
+            var notification = BuildNotification<ProjectRemove.Notification>();
+            // action
+            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "ProjectRemoved", _subscriptionNotifications);
         }
 
         [Test]
@@ -63,26 +67,24 @@ namespace CoreDocker.Core.Tests.Components.Projects
         }
 
         [Test]
-        public void Handle_GivenProjectRemoveNotification_ShouldNotifyOfProjectChange()
+        public void Scan_GivenProjectRealTimeEventHandler_ShouldNotBeMissingAnyNotifications()
         {
-            // arrange
             Setup();
-            var notification = BuildNotification<ProjectRemove.Notification>();
-            // action
-            BasicTest(() => _projectRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
-                "ProjectRemoved", _subscriptionNotifications);
+            SubscribeHelper.NotificationScanner(typeof(ProjectRealTimeEventHandler));
         }
 
 
-        public void BasicTest(Action action, CommandNotificationBase notification,
-            string @event, SubscriptionNotifications subscriptionNotifications)
+        public void BasicTest(Action action,
+            CommandNotificationBase notification,
+            string @event,
+            SubscriptionNotifications subscriptionNotifications)
         {
             var list = new List<RealTimeNotificationsMessage>();
             using (subscriptionNotifications.Register(message => list.Add(message)))
             {
                 action();
                 // assert
-                list.WaitFor(x=>x.Count == 1);
+                list.WaitFor(x => x.Count == 1);
                 list.Count.Should().Be(1);
                 SubscribeHelper.BasicNotificationValidation(list.First(), notification, @event);
             }

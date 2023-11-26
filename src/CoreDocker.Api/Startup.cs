@@ -57,7 +57,10 @@ namespace CoreDocker.Api
                     .WithOrigins(openIdSettings.GetOriginList());
             });
 
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             app.UseIdentityService(openIdSettings);
             app.UseBearerAuthentication();

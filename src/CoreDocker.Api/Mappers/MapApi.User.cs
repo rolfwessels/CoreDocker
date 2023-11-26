@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
 
@@ -12,12 +11,8 @@ namespace CoreDocker.Api.Mappers
             return GetInstance().Map(user, model)!;
         }
 
-
-        #region Private Methods
-
         private static void MapUserModel(IMapperConfigurationExpression configuration)
         {
-            
             configuration.CreateMap<Role, RoleModel>();
             configuration.CreateMap<UserCreateUpdateModel, User>()
                 .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email.ToLower()))
@@ -40,7 +35,5 @@ namespace CoreDocker.Api.Mappers
                 .ForMember(x => x.CreateDate, opt => opt.Ignore())
                 .ForMember(x => x.UpdateDate, opt => opt.Ignore());
         }
-
-        #endregion
     }
 }

@@ -11,8 +11,8 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsQueryType : ObjectType<ProjectsQueryType.ProjectQuery>
     {
-        private readonly IProjectLookup _projects;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly IProjectLookup _projects;
 
         public ProjectsQueryType(IProjectLookup projects)
         {
@@ -79,7 +79,7 @@ namespace CoreDocker.Api.Components.Projects
             "",
       ]
     }
-       
 
-         
+
+
 ] scaffolding */

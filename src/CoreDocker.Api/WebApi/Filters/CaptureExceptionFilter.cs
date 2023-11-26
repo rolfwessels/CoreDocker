@@ -3,13 +3,13 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Api.WebApi.Exceptions;
 using CoreDocker.Shared.Models.Shared;
-using Bumbershoot.Utilities.Helpers;
 using FluentValidation;
-using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 
 namespace CoreDocker.Api.WebApi.Filters
 {
@@ -17,33 +17,35 @@ namespace CoreDocker.Api.WebApi.Filters
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
-
-        #region Overrides of ExceptionFilterAttribute
-
         public override Task OnExceptionAsync(ExceptionContext context)
         {
             var exception = context.Exception.ToFirstExceptionOfException();
 
             if (exception is ApiException apiException)
+            {
                 RespondWithTheExceptionMessage(context, apiException);
+            }
             else if (IsSomeSortOfValidationError(exception))
+            {
                 RespondWithBadRequest(context, exception);
+            }
             else if (exception is ValidationException validationException)
+            {
                 RespondWithValidationRequest(context, validationException);
+            }
             else
+            {
                 RespondWithInternalServerException(context, exception);
+            }
+
             return base.OnExceptionAsync(context);
         }
-
-        #endregion
 
         public bool IsSomeSortOfValidationError(Exception exception)
         {
             return exception is System.ComponentModel.DataAnnotations.ValidationException ||
                    exception is ArgumentException;
         }
-
-        #region Private Methods
 
         private void RespondWithTheExceptionMessage(ExceptionContext context, ApiException exception)
         {
@@ -61,7 +63,8 @@ namespace CoreDocker.Api.WebApi.Filters
             ValidationException validationException)
         {
             var errorMessage =
-                new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault()??"Validation Error");
+                new ErrorMessage(validationException.Errors.Select(x => x.ErrorMessage).FirstOrDefault() ??
+                                 "Validation Error");
             context.Result = CreateResponse(HttpStatusCode.BadRequest, errorMessage);
         }
 
@@ -79,9 +82,7 @@ namespace CoreDocker.Api.WebApi.Filters
 
         private IActionResult CreateResponse(HttpStatusCode httpStatusCode, object errorMessage)
         {
-            return new ObjectResult(errorMessage) {StatusCode = (int) httpStatusCode};
+            return new ObjectResult(errorMessage) { StatusCode = (int)httpStatusCode };
         }
-
-        #endregion
     }
 }

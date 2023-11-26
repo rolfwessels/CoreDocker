@@ -1,12 +1,11 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -38,13 +37,26 @@ namespace CoreDocker.Core.Tests.Components.Users
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest() with {Name = ""};
+            var validRequest = GetValidRequest() with { Name = "" };
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
+            var testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x =>
                     x.ErrorMessage == "'Name' must be between 1 and 150 characters. You entered 0 characters.");
+        }
+
+        [Test]
+        public async Task ProcessCommand_GivenPasswordAsNull_ShouldNotSetPassword()
+        {
+            // arrange
+            Setup();
+            var validRequest = GetValidRequest() with { Password = null };
+            // action
+            await _handler.ProcessCommand(validRequest, CancellationToken.None);
+            // assert
+            var user = await _users.FindOne(x => x.Id == validRequest.Id);
+            user!.IsPassword("existingpass").Should().Be(true);
         }
 
         [Test]
@@ -81,7 +93,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest() with { Password = "test"};
+            var validRequest = GetValidRequest() with { Password = "test" };
             // action
             await _handler.ProcessCommand(validRequest, CancellationToken.None);
             // assert
@@ -89,27 +101,17 @@ namespace CoreDocker.Core.Tests.Components.Users
             user!.IsPassword("test").Should().Be(true);
         }
 
-        [Test]
-        public async Task ProcessCommand_GivenPasswordAsNull_ShouldNotSetPassword()
-        {
-            // arrange
-            Setup();
-            var validRequest = GetValidRequest() with { Password = null};
-            // action
-            await _handler.ProcessCommand(validRequest, CancellationToken.None);
-            // assert
-            var user = await _users.FindOne(x => x.Id == validRequest.Id);
-            user!.IsPassword("existingpass").Should().Be(true);
-        }
-
         public UserUpdate.Request GetValidRequest()
         {
-            var existingUser = _fakeGeneralUnitOfWork.Users.AddAFake(x => UserDalHelper.SetPassword(x, "existingpass"));
+            var existingUser = _fakeGeneralUnitOfWork.Users.AddAFake(x => x.SetPassword("existingpass"));
             var userUpdateUpdateModels = Builder<User>.CreateNew()
-                .WithValidData()
-                .With(x => x.Id = existingUser.Id)
-                .Build()
-                .DynamicCastTo<UserUpdate.Request>() with { Password = "tes" };
+                    .WithValidData()
+                    .With(x => x.Id = existingUser.Id)
+                    .Build()
+                    .DynamicCastTo<UserUpdate.Request>() with
+                {
+                    Password = "tes"
+                };
             return userUpdateUpdateModels;
         }
     }

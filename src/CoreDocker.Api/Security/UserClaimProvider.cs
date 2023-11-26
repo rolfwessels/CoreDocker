@@ -7,7 +7,6 @@ using CoreDocker.Api.AppStartup;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Persistence;
 using IdentityModel;
 using IdentityServer4;
@@ -30,8 +29,6 @@ namespace CoreDocker.Api.Security
             _roleManager = roleManager;
         }
 
-        #region IProfileService Members
-
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var sub = context.Subject.GetSubjectId();
@@ -50,12 +47,6 @@ namespace CoreDocker.Api.Security
             context.IsActive = user != null;
         }
 
-        #endregion
-
-        #region IResourceOwnerPasswordValidator Members
-
-        #region Implementation of IResourceOwnerPasswordValidator
-
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             var user = await _userLookup.GetUserByEmailAndPassword(context.UserName, context.Password);
@@ -70,16 +61,10 @@ namespace CoreDocker.Api.Security
             }
         }
 
-        #endregion
-
-        #endregion
-
         public static string ToPolicyName(Activity claim)
         {
             return claim.ToString().ToLower();
         }
-
-        #region Private Methods
 
         private List<Claim> BuildClaimListForUser(User user)
         {
@@ -100,7 +85,5 @@ namespace CoreDocker.Api.Security
 
             return claims;
         }
-
-        #endregion
     }
 }

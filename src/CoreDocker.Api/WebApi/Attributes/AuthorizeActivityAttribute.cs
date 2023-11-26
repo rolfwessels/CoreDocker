@@ -1,7 +1,5 @@
-﻿using System.Reflection;
-using CoreDocker.Api.Security;
+﻿using CoreDocker.Api.Security;
 using CoreDocker.Dal.Models.Auth;
-using Serilog;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDocker.Api.WebApi.Attributes
@@ -19,9 +17,6 @@ namespace CoreDocker.Api.WebApi.Attributes
 
         public Activity Activities { get; }
 
-
-        #region Overrides of AuthorizeAttribute
-
 //		protected override bool IsAuthorized(HttpActionContext actionContext)
 //		{
 //			var isAuthorized = base.IsAuthorized(actionContext);
@@ -38,7 +33,5 @@ namespace CoreDocker.Api.WebApi.Attributes
 //			}
 //			return isAuthorized;
 //		}
-
-        #endregion
     }
 }

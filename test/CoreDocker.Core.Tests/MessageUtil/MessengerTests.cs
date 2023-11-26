@@ -25,7 +25,7 @@ namespace CoreDocker.Core.Tests.MessageUtil
 
         #endregion
 
-        
+
         [Test]
         public async Task Send_Given_Object_ShouldBeReceived()
         {
@@ -84,8 +84,6 @@ namespace CoreDocker.Core.Tests.MessageUtil
             received.Should().BeNull();
         }
 
-        #region Nested type: SampleMessage
-
         public class SampleMessage : IDisposable
         {
             public SampleMessage(string message)
@@ -95,20 +93,10 @@ namespace CoreDocker.Core.Tests.MessageUtil
 
             public string Message { get; private set; }
 
-            #region IDisposable Members
-
-            #region Implementation of IDisposable
-
             public void Dispose()
             {
                 Message = null!;
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
     }
 }

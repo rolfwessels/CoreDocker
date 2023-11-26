@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Models.Users;
+using CoreDocker.Dal.Tests;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Users;
-using Bumbershoot.Utilities.Helpers;
-using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using FluentAssertions;
@@ -34,6 +34,108 @@ namespace CoreDocker.Api.Tests.Integration
         }
 
         #endregion
+
+        [Test]
+        public void Create_GivenGuestUser_ShouldFail()
+        {
+            // arrange
+            Setup();
+            var invalidEmailUser = GetExampleData().First() with { Email = "test@sdfsd" };
+            // action
+            var testUpdateValidationFail = () => { _guestConnection.Value.Users.Create(invalidEmailUser).Wait(); };
+            // action
+            testUpdateValidationFail.Should().Throw<Exception>()
+                .WithMessage("The current user is not authorized to access this resource.");
+        }
+
+
+        [Test]
+        public void Create_GivenInvalidModel_ShouldFail()
+        {
+            // arrange
+            Setup();
+            var invalidEmailUser = GetExampleData().First() with { Email = "test#.com" };
+            // action
+            var testUpdateValidationFail = () => { _userApiClient.Create(invalidEmailUser).Wait(); };
+            // assert
+            testUpdateValidationFail.Should().Throw<Exception>()
+                .WithMessage("'Email' is not a valid email address.");
+        }
+
+
+        [Test]
+        public async Task GraphQl_RegisterANewUser_ShouldWorkWhenNotLoggedIn()
+        {
+            // arrange
+            Setup();
+            var register = GetExampleData().First();
+            var newClientNotAuthorized = NewClientNotAuthorized();
+            // action
+            var insert = await newClientNotAuthorized.Users.Register(register);
+            var deleteResults = await _userApiClient.Remove(insert.Id);
+            // assert
+            deleteResults.Id.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public async Task Me_GivenAdminUser_ShouldContainActivities()
+        {
+            // arrange
+            Setup();
+            // action
+            var userModel = await _adminConnection.Value.Users.Me();
+            // action
+            userModel.Activities.Should().Contain("ReadUsers");
+        }
+
+        [Test]
+        public async Task Me_GivenAdminUser_ShouldHaveImage()
+        {
+            // arrange
+            Setup();
+            // action
+            var userModel = await _adminConnection.Value.Users.Me();
+            // action
+            userModel.Image.Should().StartWith("https://www.gravatar.com/avatar");
+        }
+
+        [Test]
+        public async Task Me_GivenAdminUser_ShouldNotFail()
+        {
+            // arrange
+            Setup();
+
+            // action
+            var userModel = await _adminConnection.Value.Users.Me();
+            // action
+            userModel.Email.Should().Contain("@");
+        }
+
+        [Test]
+        public void Me_GivenNoUser_ShouldFail()
+        {
+            // arrange
+            Setup();
+            var newConnection = NewClientNotAuthorized();
+            // action
+            var testUpdateValidationFail = () => { newConnection.Users.Me().Wait(); };
+            // action
+            testUpdateValidationFail.Should().Throw<Exception>()
+                .WithMessage("The current user is not authorized to access this resource.");
+        }
+
+
+        [Test]
+        public async Task Roles_GivenNoUser_ShouldNotFail()
+        {
+            // arrange
+            Setup();
+            var newConnection = NewClientNotAuthorized();
+            // action
+            var roles = await newConnection.Users.Roles();
+            // action
+            roles.Should().HaveCount(2);
+        }
 
         [Test]
         public async Task UserCrud_GivenInsertUpdateDelete_ShouldBeValid()
@@ -64,122 +166,11 @@ namespace CoreDocker.Api.Tests.Integration
             paged.Items.Count.Should().BeLessOrEqualTo(2);
         }
 
-
-        [Test]
-        public void Create_GivenInvalidModel_ShouldFail()
-        {
-            // arrange
-            Setup();
-            var invalidEmailUser = GetExampleData().First() with{ Email = "test#.com" };
-            // action
-            Action testUpdateValidationFail = () => { _userApiClient.Create(invalidEmailUser).Wait(); };
-            // assert
-            testUpdateValidationFail.Should().Throw<Exception>()
-                .WithMessage("'Email' is not a valid email address.");
-        }
-
-        [Test]
-        public void Create_GivenGuestUser_ShouldFail()
-        {
-            // arrange
-            Setup();
-            var invalidEmailUser = GetExampleData().First() with { Email = "test@sdfsd" };
-            // action
-            Action testUpdateValidationFail = () => { _guestConnection.Value.Users.Create(invalidEmailUser).Wait(); };
-            // action
-            testUpdateValidationFail.Should().Throw<Exception>()
-                .WithMessage("The current user is not authorized to access this resource.");
-        }
-
-        [Test]
-        public void Me_GivenNoUser_ShouldFail()
-        {
-            // arrange
-            Setup();
-            var newConnection = NewClientNotAuthorized();
-            // action
-            Action testUpdateValidationFail = () => { newConnection.Users.Me().Wait(); };
-            // action
-            testUpdateValidationFail.Should().Throw<Exception>()
-                .WithMessage("The current user is not authorized to access this resource.");
-        }
-
-        [Test]
-        public async Task Me_GivenAdminUser_ShouldNotFail()
-        {
-            // arrange
-            Setup();
-
-            // action
-            var userModel = await _adminConnection.Value.Users.Me();
-            // action
-            userModel.Email.Should().Contain("@");
-        }
-
-        [Test]
-        public async Task Me_GivenAdminUser_ShouldHaveImage()
-        {
-            // arrange
-            Setup();
-            // action
-            var userModel = await _adminConnection.Value.Users.Me();
-            // action
-            userModel.Image.Should().StartWith("https://www.gravatar.com/avatar");
-            
-           
-        }
-
-        [Test]
-        public async Task Me_GivenAdminUser_ShouldContainActivities()
-        {
-            // arrange
-            Setup();
-            // action
-            var userModel = await _adminConnection.Value.Users.Me();
-            // action
-            userModel.Activities.Should().Contain("ReadUsers");
-        }
-
-
-        [Test]
-        public async Task Roles_GivenNoUser_ShouldNotFail()
-        {
-            // arrange
-            Setup();
-            var newConnection = NewClientNotAuthorized();
-            // action
-            var roles = await newConnection.Users.Roles();
-            // action
-            roles.Should().HaveCount(2);
-        }
-
-
-        [Test]
-        public async Task GraphQl_RegisterANewUser_ShouldWorkWhenNotLoggedIn()
-        {
-            // arrange
-            Setup();
-            var register = GetExampleData().First();
-            var newClientNotAuthorized = NewClientNotAuthorized();
-            // action
-            var insert = await newClientNotAuthorized.Users.Register(register);
-            var deleteResults = await _userApiClient.Remove(insert.Id);
-            // assert
-            deleteResults.Id.Should().NotBeEmpty();
-        }
-
-
-        #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel,UserReferenceModel>
-
         protected EquivalencyAssertionOptions<UserCreateUpdateModel> CompareConfig(
             EquivalencyAssertionOptions<UserCreateUpdateModel> options)
         {
             return options.Excluding(x => x.Password);
         }
-
-        #endregion
-
-        #region Overrides of CrudComponentTestsBase<UserModel,UserCreateUpdateModel>
 
         public static IList<UserCreateUpdateModel> GetExampleData()
         {
@@ -187,7 +178,5 @@ namespace CoreDocker.Api.Tests.Integration
                 .DynamicCastTo<List<UserCreateUpdateModel>>();
             return userCreateUpdateModels.Select(x => x with { Password = GetRandom.Phrase(20) }).ToList();
         }
-
-        #endregion
     }
 }

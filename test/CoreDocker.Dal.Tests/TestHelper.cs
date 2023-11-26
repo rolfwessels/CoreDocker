@@ -25,7 +25,6 @@ namespace CoreDocker.Dal.Tests
             {
                 Thread.Sleep(100);
                 waitForValue = func();
-                
             }
 
             return waitForValue;

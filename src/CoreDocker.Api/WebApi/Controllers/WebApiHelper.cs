@@ -11,7 +11,7 @@ namespace CoreDocker.Api.WebApi.Controllers
 
         public static string? GetName(this IHttpContextAccessor httpContextAccessor)
         {
-            return httpContextAccessor.HttpContext?.User.Identity?.Name ;
+            return httpContextAccessor.HttpContext?.User.Identity?.Name;
         }
     }
 }

@@ -1,11 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Persistence;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;

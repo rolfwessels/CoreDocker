@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Models.Projects;
+using CoreDocker.Dal.Tests;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Projects;
-using Bumbershoot.Utilities.Helpers;
-using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -33,6 +33,36 @@ namespace CoreDocker.Api.Tests.Integration
         }
 
         #endregion
+
+        [Test]
+        public void Create_GivenGuestProject_ShouldFail()
+        {
+            // arrange
+            Setup();
+            var invalidEmailProject = GetExampleData().First();
+            // action
+            var testUpdateValidationFail = () =>
+            {
+                _guestConnection.Value.Projects.Create(invalidEmailProject).Wait();
+            };
+            // action
+            testUpdateValidationFail.Should().Throw<Exception>()
+                .WithMessage("The current user is not authorized to access this resource.");
+        }
+
+        [Test]
+        public void Create_GivenInvalidModel_ShouldFail()
+        {
+            // arrange
+            Setup();
+            var invalidEmailProject = GetExampleData().First() with { Name = "" };
+
+            // action
+            var testUpdateValidationFail = () => { _projectApiClient.Create(invalidEmailProject).Wait(); };
+            // assert
+            testUpdateValidationFail.Should().Throw<Exception>()
+                .WithMessage("'Name' must be between 1 and 150 characters. You entered 0 characters.");
+        }
 
         [Test]
         public async Task ProjectCrud_GivenInsertUpdateDelete_ShouldBeValid()
@@ -63,47 +93,11 @@ namespace CoreDocker.Api.Tests.Integration
             firstDelete.Id.Should().Be(createCommand.Id);
         }
 
-        [Test]
-        public void Create_GivenInvalidModel_ShouldFail()
-        {
-            // arrange
-            Setup();
-            var invalidEmailProject = GetExampleData().First() with {Name = ""};
-            
-            // action
-            Action testUpdateValidationFail = () => { _projectApiClient.Create(invalidEmailProject).Wait(); };
-            // assert
-            testUpdateValidationFail.Should().Throw<Exception>()
-                .WithMessage("'Name' must be between 1 and 150 characters. You entered 0 characters.");
-        }
-
-        [Test]
-        public void Create_GivenGuestProject_ShouldFail()
-        {
-            // arrange
-            Setup();
-            var invalidEmailProject = GetExampleData().First();
-            // action
-            Action testUpdateValidationFail = () =>
-            {
-                _guestConnection.Value.Projects.Create(invalidEmailProject).Wait();
-            };
-            // action
-            testUpdateValidationFail.Should().Throw<Exception>()
-                .WithMessage("The current user is not authorized to access this resource.");
-        }
-
-        #region Overrides of CrudComponentTestsBase<ProjectModel,ProjectCreateUpdateModel,ProjectReferenceModel>
-
         protected EquivalencyAssertionOptions<ProjectCreateUpdateModel> CompareConfig(
             EquivalencyAssertionOptions<ProjectCreateUpdateModel> options)
         {
             return options;
         }
-
-        #endregion
-
-        #region Overrides of CrudComponentTestsBase<ProjectModel,ProjectCreateUpdateModel>
 
         protected IList<ProjectCreateUpdateModel> GetExampleData()
         {
@@ -111,7 +105,5 @@ namespace CoreDocker.Api.Tests.Integration
                 .DynamicCastTo<List<ProjectCreateUpdateModel>>();
             return projectCreateUpdateModels;
         }
-
-        #endregion
     }
 }

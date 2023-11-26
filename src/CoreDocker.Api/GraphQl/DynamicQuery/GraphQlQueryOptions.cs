@@ -33,7 +33,10 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
         {
             options = options ?? new TOptions();
 
-            foreach (var arg in _args) arg.Apply(options, context);
+            foreach (var arg in _args)
+            {
+                arg.Apply(options, context);
+            }
 
             return _lookup(options);
         }
@@ -46,24 +49,26 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
 
         public IObjectFieldDescriptor AddArguments(IObjectFieldDescriptor description)
         {
-            foreach (var argBase in _args) argBase.Apply(description);
+            foreach (var argBase in _args)
+            {
+                argBase.Apply(description);
+            }
 
             return description;
         }
 
-        public GraphQlQueryOptions<TDal, TOptions> AddArguments<TIn>(string name, string description,
+        public GraphQlQueryOptions<TDal, TOptions> AddArguments<TIn>(string name,
+            string description,
             Action<TOptions, IResolverContext> applyArgument) where TIn : IInputType
         {
             _args.Add(new Arg<TIn>(name, description, applyArgument));
             return this;
         }
 
-        #region Nested type: Arg
-
         public class Arg<TIn> : ArgBase where TIn : IInputType
         {
             public Arg(string name, string description, Action<TOptions, IResolverContext> applyArgument)
-            :base(name,description, applyArgument)
+                : base(name, description, applyArgument)
             {
             }
 
@@ -72,10 +77,6 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
                 description.Argument(Name, x => x.Type<TIn>().Description(Description));
             }
         }
-
-        #endregion
-
-        #region Nested type: ArgBase
 
         public abstract class ArgBase
         {
@@ -86,9 +87,9 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
                 ApplyArgument = applyArgument;
             }
 
-            public string Name { get;  }
+            public string Name { get; }
             public string Description { get; }
-            public Action<TOptions, IResolverContext> ApplyArgument { get;  }
+            public Action<TOptions, IResolverContext> ApplyArgument { get; }
             public abstract void Apply(IObjectFieldDescriptor description);
 
             public void Apply(TOptions description, IResolverContext context)
@@ -96,7 +97,5 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
                 ApplyArgument(description, context);
             }
         }
-
-        #endregion
     }
 }

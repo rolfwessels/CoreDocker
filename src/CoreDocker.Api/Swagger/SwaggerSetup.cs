@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.Security;
-using Bumbershoot.Utilities.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -14,8 +14,6 @@ namespace CoreDocker.Api.Swagger
     public static class SwaggerSetup
     {
         private static string _informationalVersion = Startup.InformationalVersion();
-
-        #region Private Methods
 
         private static string GetVersion()
         {
@@ -50,16 +48,12 @@ namespace CoreDocker.Api.Swagger
                             UriKind.Absolute),
                         Scopes = new Dictionary<string, string>
                         {
-                            {scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi}
+                            { scopeApi.UnderScoreAndCamelCaseToHumanReadable(), scopeApi }
                         }
                     }
                 }
             });
         }
-
-        #endregion
-
-        #region Instance
 
         public static void AddSwagger(this IServiceCollection services)
         {
@@ -84,7 +78,5 @@ namespace CoreDocker.Api.Swagger
                 c.OAuthAppName("SwaggerAuth");
             });
         }
-
-        #endregion
     }
 }

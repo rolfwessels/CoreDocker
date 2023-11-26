@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using CoreDocker.Core.Framework.Logging;
 using CoreDocker.Core.Framework.Settings;
 using Microsoft.AspNetCore;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
-using ILogger = Serilog.ILogger;
 
 namespace CoreDocker.Api
 {

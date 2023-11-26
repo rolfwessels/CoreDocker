@@ -15,7 +15,6 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
     [TestFixture]
     public class BaseManagerTests
     {
-        
         protected IGeneralUnitOfWork _fakeGeneralUnitOfWork = null!;
         public InMemoryGeneralUnitOfWorkFactory _inMemoryGeneralUnitOfWorkFactory = null!;
         public Mock<ICommander> _mockICommander = null!;
@@ -51,8 +50,6 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
                 .Excluding(x => x.CorrelationId);
         }
 
-        #region Nested type: FakeValidator
-
         internal class FakeValidator : ValidatorFactoryBase
         {
             private readonly object _createInstance;
@@ -62,21 +59,15 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
                 _createInstance = createInstance;
             }
 
-            #region Overrides of ValidatorFactoryBase
-
             protected override void TryResolve<T>(out IValidator<T> output)
             {
-                output = (IValidator<T>) _createInstance;
+                output = (IValidator<T>)_createInstance;
             }
-
-            #endregion
 
             public static IValidatorFactory New<T>()
             {
                 return new FakeValidator(Activator.CreateInstance(typeof(T))!);
             }
         }
-
-        #endregion
     }
 }

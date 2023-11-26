@@ -9,7 +9,11 @@
 
         public static string AppendUrl(this string baseUrl, string appendToUrl)
         {
-            if (!string.IsNullOrEmpty(appendToUrl)) return baseUrl + "/" + appendToUrl;
+            if (!string.IsNullOrEmpty(appendToUrl))
+            {
+                return baseUrl + "/" + appendToUrl;
+            }
+
             return baseUrl;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using CoreDocker.Api.Components.Projects;
+﻿using CoreDocker.Api.Components.Projects;
 using CoreDocker.Api.Components.Users;
 using HotChocolate.Types;
 

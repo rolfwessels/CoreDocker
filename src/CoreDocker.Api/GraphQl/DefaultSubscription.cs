@@ -6,7 +6,6 @@ using HotChocolate.Execution;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 
-
 namespace CoreDocker.Api.GraphQl
 {
     public class DefaultSubscription
@@ -27,6 +26,5 @@ namespace CoreDocker.Api.GraphQl
             return await eventReceiver.SubscribeAsync<string, RealTimeNotificationsMessage>(
                 nameof(RealTimeNotificationsMessage), cancellationToken);
         }
-
     }
 }

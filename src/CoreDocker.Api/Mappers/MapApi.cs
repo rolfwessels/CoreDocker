@@ -23,15 +23,13 @@ namespace CoreDocker.Api.Mappers
         public static ValueUpdateModel<TModel> ToValueUpdateModel<T, TModel>(this DalUpdateMessage<T> updateMessage)
         {
             return new ValueUpdateModel<TModel>(GetInstance().Map<T, TModel>(updateMessage.Value),
-                (UpdateTypeCodes) updateMessage.UpdateType);
+                (UpdateTypeCodes)updateMessage.UpdateType);
         }
 
         public static void AssertConfigurationIsValid()
         {
             GetInstance().ConfigurationProvider.AssertConfigurationIsValid();
         }
-
-        #region Private Methods
 
         private static IMapper InitializeMapping()
         {
@@ -43,7 +41,5 @@ namespace CoreDocker.Api.Mappers
             });
             return config.CreateMapper();
         }
-
-        #endregion
     }
 }

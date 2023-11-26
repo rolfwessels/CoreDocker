@@ -1,9 +1,4 @@
-﻿using System;
-using CoreDocker.Api.AppStartup;
-using CoreDocker.Api.Security;
-using Bumbershoot.Utilities.Helpers;
-using HotChocolate.AspNetCore;
-using HotChocolate.AspNetCore.Playground;
+﻿using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

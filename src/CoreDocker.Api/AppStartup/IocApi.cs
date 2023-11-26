@@ -20,7 +20,6 @@ namespace CoreDocker.Api.AppStartup
 {
     public class IocApi : IocCoreBase
     {
-
         private static readonly object _locker = new();
         private static IocApi? _instance;
         private static IServiceCollection? _services;
@@ -36,6 +35,26 @@ namespace CoreDocker.Api.AppStartup
             Container = builder.Build();
         }
 
+        public static IocApi Instance
+        {
+            get
+            {
+                if (_instance != null)
+                {
+                    return _instance;
+                }
+
+                lock (_locker)
+                {
+                    _instance ??= new IocApi();
+                }
+
+                return _instance;
+            }
+        }
+
+        public IContainer Container { get; }
+
         public static void Populate(IServiceCollection services)
         {
             if (_instance != null)
@@ -46,11 +65,10 @@ namespace CoreDocker.Api.AppStartup
             _services = services;
         }
 
-        #region Overrides of IocCoreBase
-
         protected override IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg)
         {
-            _log.Information("Connecting to :{MongoConnection} [{MongoDatabase}]", Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
+            _log.Information("Connecting to :{MongoConnection} [{MongoDatabase}]", Settings.Instance.MongoConnection,
+                Settings.Instance.MongoDatabase);
             try
             {
                 return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
@@ -61,10 +79,6 @@ namespace CoreDocker.Api.AppStartup
                 throw;
             }
         }
-
-        #endregion
-
-        #region Private Methods
 
         private static void SetupGraphQl(ContainerBuilder builder)
         {
@@ -99,41 +113,16 @@ namespace CoreDocker.Api.AppStartup
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
         }
 
-        
 
         private void SetupTools(ContainerBuilder builder)
         {
             builder.RegisterType<ObjectIdGenerator>().As<IIdGenerator>().SingleInstance();
         }
 
-        #endregion
-
-        #region Instance
-
-        public static IocApi Instance
-        {
-            get
-            {
-                if (_instance != null)
-                {
-                    return _instance;
-                }
-                lock (_locker)
-                {
-                    _instance ??= new IocApi();
-                }
-                return _instance;
-            }
-        }
-
-        public IContainer Container { get; }
-
 
         public T Resolve<T>() where T : notnull
         {
             return Container.Resolve<T>();
         }
-
-        #endregion
     }
 }

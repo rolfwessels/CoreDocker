@@ -16,13 +16,11 @@ namespace CoreDocker.Api.Mappers
             return GetInstance().Map(userGrant, model)!;
         }
 
-        #region Private Methods
-
         private static void MapUserGrantModel(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<PersistedGrant, UserGrant>()
                 .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.User, opt => opt.MapFrom(x => new UserReference {Id = x.SubjectId}))
+                .ForMember(x => x.User, opt => opt.MapFrom(x => new UserReference { Id = x.SubjectId }))
                 .ForMember(x => x.CreateDate, opt => opt.MapFrom(x => x.CreationTime))
                 .ForMember(x => x.UpdateDate, opt => opt.Ignore());
             configuration.CreateMap<UserGrant, PersistedGrant>()
@@ -32,7 +30,5 @@ namespace CoreDocker.Api.Mappers
                 .ForMember(x => x.ConsumedTime, opt => opt.Ignore())
                 .ForMember(x => x.SubjectId, opt => opt.MapFrom(x => x.User != null ? x.User.Id : ""));
         }
-
-        #endregion
     }
 }
