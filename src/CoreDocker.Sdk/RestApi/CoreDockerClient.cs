@@ -1,23 +1,19 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
-using Bumbershoot.Utilities.Helpers;
 using GraphQL;
-using GraphQL.Client.Abstractions.Websocket;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
-using RestSharp.Serializers.Json;
 using Serilog;
 
 namespace CoreDocker.Sdk.RestApi
@@ -43,11 +39,22 @@ namespace CoreDocker.Sdk.RestApi
 
         public string UrlBase { get; }
 
+
+        public AuthenticateApiClient Authenticate { get; set; }
+        public PingApiClient Ping { get; set; }
+
+
+        public ProjectApiClient Projects { get; set; }
+        public UserApiClient Users { get; set; }
+
         public async Task<GraphQLResponse<dynamic>> GraphQlPost(GraphQLRequest request)
         {
             var graphQlResponse = await _graphQlClient.SendQueryAsync<dynamic>(request);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+            {
                 throw new GraphQlResponseException<dynamic>(graphQlResponse);
+            }
+
             return graphQlResponse;
         }
 
@@ -58,7 +65,10 @@ namespace CoreDocker.Sdk.RestApi
             {
                 var graphQlResponse = await _graphQlClient.SendQueryAsync<T>(request);
                 if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                {
                     throw new GraphQlResponseException<T>(graphQlResponse);
+                }
+
                 return graphQlResponse;
             }
             catch (GraphQLHttpRequestException e)
@@ -67,7 +77,9 @@ namespace CoreDocker.Sdk.RestApi
                 {
                     var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
                     if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                    {
                         throw new GraphQlResponseException<T>(graphQlResponse);
+                    }
                 }
 
                 throw;
@@ -82,13 +94,7 @@ namespace CoreDocker.Sdk.RestApi
 
         public record RealTimeEventResponse(RealTimeEvent OnDefaultEvent);
 
-        #region Nested type: RealTimeEvent
-
         public record RealTimeEvent(string Id, string Event, string CorrelationId, string Exception);
-
-        #endregion
-
-        #region Implementation of ICoreDockerApi
 
         public void SetToken(TokenResponseModel data)
         {
@@ -108,7 +114,6 @@ namespace CoreDocker.Sdk.RestApi
             {
                 EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
                 HttpMessageHandler = new WithAuthHeader(dataAccessToken)
-
             };
             return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer);
         }
@@ -125,20 +130,13 @@ namespace CoreDocker.Sdk.RestApi
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
                 CancellationToken token)
             {
-                if (_token != null) request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _token);
+                if (_token != null)
+                {
+                    request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _token);
+                }
 
                 return await base.SendAsync(request, token);
             }
         }
-
-
-        public AuthenticateApiClient Authenticate { get; set; }
-        public PingApiClient Ping { get; set; }
-
-
-        public ProjectApiClient Projects { get; set; }
-        public UserApiClient Users { get; set; }
-
-        #endregion
     }
 }

@@ -18,8 +18,6 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
         }
 
-        #region IBaseStandardLookups<TModel,TReferenceModel> Members
-
         public async Task<PagedResult<TReferenceModel>> GetPaged(string oDataQuery)
         {
             var restRequest = new RestRequest(DefaultUrl($"?{EnsureHasInlinecount(oDataQuery)}"));
@@ -53,20 +51,15 @@ namespace CoreDocker.Sdk.RestApi.Base
             return ValidateResponse(executeAsyncWithLogging);
         }
 
-        #endregion
-
-        #region Private Methods
-
         private static string EnsureHasInlinecount(string oDataQuery)
         {
             if (oDataQuery == null || !oDataQuery.Contains("$inlinecount"))
+            {
                 oDataQuery = $"{oDataQuery}&$inlinecount=allpages";
+            }
+
             return oDataQuery;
         }
-
-        #endregion
-
-        #region Implementation of IBaseStandardLookups<UserModel,UserReferenceModel>
 
         public Task<IEnumerable<TReferenceModel>> Get()
         {
@@ -77,7 +70,5 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
             return GetDetail("");
         }
-
-        #endregion
     }
 }

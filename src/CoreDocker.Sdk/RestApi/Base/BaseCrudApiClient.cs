@@ -17,8 +17,6 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
         }
 
-        #region ICrudController<TModel,TDetailModel> Members
-
         public async Task<TModel> GetById(string id)
         {
             var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)));
@@ -48,7 +46,5 @@ namespace CoreDocker.Sdk.RestApi.Base
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<bool>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }
-
-        #endregion
     }
 }

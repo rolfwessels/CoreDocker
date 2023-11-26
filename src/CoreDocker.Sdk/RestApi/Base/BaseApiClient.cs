@@ -22,7 +22,7 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         protected virtual string DefaultUrl(string? appendToUrl = null)
         {
-            return CoreDockerClient.UrlBase.AppendUrl(_baseUrl).AppendUrl(appendToUrl??"");
+            return CoreDockerClient.UrlBase.AppendUrl(_baseUrl).AppendUrl(appendToUrl ?? "");
         }
 
         protected virtual string DefaultTokenUrl(string? appendToUrl = null)
