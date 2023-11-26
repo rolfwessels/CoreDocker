@@ -59,7 +59,6 @@ services:
       - /CoreDocker/src/CoreDocker.Utilities/bin
       - /CoreDocker/test/CoreDocker.Api.Tests/bin
       - /CoreDocker/test/CoreDocker.Core.Tests/bin
-      - /CoreDocker/test/CoreDocker.Utilities.Tests/bin
       #find src* | grep  '/obj$' | sed 's/^/ - /CoreDocker\//'
       - /CoreDocker/src/CoreDocker.Api/obj
       - /CoreDocker/src/CoreDocker.Api.Lambda/obj
@@ -71,7 +70,6 @@ services:
       - /CoreDocker/src/CoreDocker.Utilities/obj
       - /CoreDocker/test/CoreDocker.Api.Tests/obj
       - /CoreDocker/test/CoreDocker.Core.Tests/obj
-      - /CoreDocker/test/CoreDocker.Utilities.Tests/obj
 
     environment:
       - DOTNET_ENVIRONMENT=Development

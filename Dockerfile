@@ -21,7 +21,6 @@ COPY src/CoreDocker.Sdk/*.csproj ./src/CoreDocker.Sdk/
 COPY src/CoreDocker.Core/*.csproj ./src/CoreDocker.Core/
 COPY src/CoreDocker.Shared/*.csproj ./src/CoreDocker.Shared/
 COPY src/CoreDocker.Dal/*.csproj ./src/CoreDocker.Dal/
-COPY src/CoreDocker.Utilities/*.csproj ./src/CoreDocker.Utilities/
 COPY src/CoreDocker.Dal.MongoDb/*.csproj ./src/CoreDocker.Dal.MongoDb/
 
 WORKDIR /CoreDocker/src/CoreDocker.Api

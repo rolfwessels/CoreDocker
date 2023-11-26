@@ -1,14 +1,10 @@
-﻿using System;
-using System.Reflection;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.Subscriptions;
 using HotChocolate;
 using HotChocolate.Execution;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
-using Serilog;
-
 
 
 namespace CoreDocker.Api.GraphQl
@@ -32,55 +28,5 @@ namespace CoreDocker.Api.GraphQl
                 nameof(RealTimeNotificationsMessage), cancellationToken);
         }
 
-    }
-
-    public class SubscriptionSubscribe
-    {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-        private readonly ITopicEventSender _eventSender;
-        private int _counter;
-        private readonly Lazy<IDisposable> _disposable;
-
-        public SubscriptionSubscribe(SubscriptionNotifications notifications, ITopicEventSender eventSender)
-        {
-            _eventSender = eventSender;
-            _disposable = new Lazy<IDisposable>(() => notifications.Register(SendValue));
-        }
-
-        private void SendValue(RealTimeNotificationsMessage message)
-        {
-            _eventSender.SendAsync(nameof(RealTimeNotificationsMessage), message).AsTask().Wait(10000);
-        }
-
-        public void AddSubscription(CancellationToken cancellationToken)
-        {
-            Interlocked.Increment(ref _counter);
-            _log.Information("Subscription added [{counter}]", _counter);
-            if (!_disposable.IsValueCreated)
-            {
-                _log.Debug("SubscriptionSubscribe:AddSubscription create subscriptions {value}", _disposable.Value);
-            }
-
-            cancellationToken.Register(() =>
-            {
-                _log.Information("Subscription removed [{ct}]", _counter);
-                Interlocked.Decrement(ref _counter);
-            });
-        }
-    }
-
-    public class RealTimeNotificationsMessageType : ObjectType<RealTimeNotificationsMessage>
-    {
-        #region Overrides of ObjectType<RealTimeNotificationsMessage>
-
-        protected override void Configure(IObjectTypeDescriptor<RealTimeNotificationsMessage> descriptor)
-        {
-            descriptor.Field(x => x.Id).Type<NonNullType<StringType>>();
-            descriptor.Field(x => x.CorrelationId).Type<NonNullType<StringType>>();
-            descriptor.Field(x => x.Event).Type<NonNullType<StringType>>();
-            descriptor.Field(x => x.Exception);
-        }
-
-        #endregion
     }
 }
