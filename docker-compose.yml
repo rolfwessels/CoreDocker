@@ -21,7 +21,7 @@ services:
       - "mongodb-data:/data/db"
 
   redis:
-    image: redis:6.0-alpine
+    image: redis:7.0-alpine
     # restart: unless-stopped
     ports:
       - 6390:6379
@@ -33,7 +33,7 @@ services:
     links:
       - src
     environment:
-      - API_URL=http://localhost:5000
+      - API_URL=http://localhost:5010
     ports:
       - 84:80
 
@@ -76,10 +76,10 @@ services:
       - MongoConnection=mongodb://db:27017/core-docker
       - MongoDatabase=core-docker
       - RedisHost=redis
-      - App__HostUrl=http://localhost:5000
-      - OpenId__Origins=http://localhost:5000,http://localhost:84,http://localhost:3000
+      - App__HostUrl=http://localhost:5010
+      - OpenId__Origins=http://localhost:5010,http://localhost:84,http://localhost:3000
     ports:
-      - 5000:5000
+      - 5000:5010
     entrypoint: top -b
     logging:
       driver: none

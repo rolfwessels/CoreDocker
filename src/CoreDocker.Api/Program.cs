@@ -42,7 +42,7 @@ namespace CoreDocker.Api
                 .ConfigureServices((context, collection) =>
                     collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
                 .UseKestrel()
-                .UseUrls(args.FirstOrDefault() ?? "http://*:5000")
+                .UseUrls(args.FirstOrDefault() ?? "http://*:5010")
                 .ConfigureAppConfiguration(SettingsFileReaderHelper)
                 .UseStartup<Startup>()
                 .Build();

@@ -13,7 +13,6 @@ namespace CoreDocker.Api.Mappers
 
         private static void MapUserModel(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<Role, RoleModel>();
             configuration.CreateMap<UserCreateUpdateModel, User>()
                 .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email.ToLower()))
                 .ForMember(x => x.LastLoginDate, opt => opt.Ignore())

@@ -20,8 +20,7 @@ namespace CoreDocker.Api.Tests.Integration
         {
             _connection = _defaultRequestFactory.Value.GetConnection();
             _connectionAuth = _defaultRequestFactory.Value.GetConnection();
-            //            _connection = new CoreDockerClient("http://localhost:5000");
-            //            _connectionAuth = new CoreDockerClient("http://localhost:5000");   
+            //            _connectionAuth = new CoreDockerClient("http://localhost:5010");   
         }
 
         [TearDown]

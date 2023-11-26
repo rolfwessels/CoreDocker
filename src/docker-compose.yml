@@ -31,9 +31,9 @@ services:
             - OpenId__HostUrl=http://localhost:5010
 
         ports:
-            - 5010:5000
+            - 5010:5010
         # healthcheck:
-        #     test: ["CMD", "curl", "-f", "http://localhost:5000/api/ping/hc"]
+        #     test: ["CMD", "curl", "-f", "http://localhost:5010/api/ping/hc"]
         #     interval: 30s
         #     timeout: 10s
         #     retries: 3

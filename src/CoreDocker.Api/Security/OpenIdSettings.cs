@@ -10,7 +10,7 @@ namespace CoreDocker.Api.Security
         {
         }
 
-        public string HostUrl => ReadConfigValue("HostUrl", "http://localhost:5000");
+        public string HostUrl => ReadConfigValue("HostUrl", "http://localhost:5010");
 
         public string ApiResourceName => ReadConfigValue("ApiResourceName", "api.resource");
 
@@ -25,7 +25,7 @@ namespace CoreDocker.Api.Security
         public string ScopeApi => ReadConfigValue("ScopeApi", "api");
 
         public string Origins =>
-            ReadConfigValue("Origins", "http://localhost:5000,http://localhost:3000,http://localhost:84");
+            ReadConfigValue("Origins", "http://localhost:5010,http://localhost:3000,http://localhost:84");
 
         public string CertPfx => ReadConfigValue("CertPfx", "development.pfx");
 

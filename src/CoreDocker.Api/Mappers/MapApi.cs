@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using AutoMapper.Internal;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Shared.Models.Shared;
 
@@ -35,6 +36,7 @@ namespace CoreDocker.Api.Mappers
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.Internal().MethodMappingEnabled = false; 
                 MapUserModel(cfg);
                 MapProjectModel(cfg);
                 MapUserGrantModel(cfg);
