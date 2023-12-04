@@ -16,13 +16,18 @@ namespace CoreDocker.Api.Tests.Integration
     public class SubscriptionsClientTests : IntegrationTestsBase
     {
         private UserApiClient _userApiClient = null!;
+        private CoreDockerClient coreDockerClient;
 
         #region Setup/Teardown
 
         protected void Setup()
         {
             TestLoggingHelper.EnsureExists();
-            _userApiClient = _adminConnection.Value.Users;
+            // coreDockerClient = _adminConnection.Value;
+            
+            coreDockerClient = new CoreDockerClient("http://localhost:5010/");
+            coreDockerClient.Authenticate.Login(AdminUser,AdminPassword).Wait();
+            _userApiClient = coreDockerClient.Users;
         }
 
         [TearDown]
@@ -33,13 +38,14 @@ namespace CoreDocker.Api.Tests.Integration
         #endregion
 
         [Test]
+        [Explicit("For now the websockets to the test app is not working, need to launch websockets")]
         public async Task OnDefaultEvent_GivenInsertUpdateDelete_ShouldBeValid()
         {
             // arrange
             Setup();
             var userCreate = UserApiClientTests.GetExampleData().First();
             var items = new List<CoreDockerClient.RealTimeEvent>();
-            var sendSubscribeGeneralEvents = _adminConnection.Value.SendSubscribeGeneralEvents();
+            var sendSubscribeGeneralEvents = coreDockerClient.SendSubscribeGeneralEvents();
             Exception? error = null;
 
             void OnError(Exception e)
@@ -58,7 +64,7 @@ namespace CoreDocker.Api.Tests.Integration
                 var insert = await _userApiClient.ById(insertCommand.Id);
                 await _userApiClient.Remove(insert.Id);
 
-                items.WaitFor(x => x.Count >= 2, 10000);
+                items.WaitFor(x => x.Count >= 2, 5000);
                 items.Select(x => x.Event).Should().Contain("UserRemoved");
                 items.Should().HaveCountGreaterOrEqualTo(2);
                 error.Should().BeNull();

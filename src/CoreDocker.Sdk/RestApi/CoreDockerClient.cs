@@ -3,9 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
 using GraphQL;
@@ -92,7 +90,7 @@ namespace CoreDocker.Sdk.RestApi
         public IObservable<GraphQLResponse<RealTimeEventResponse>> SendSubscribeGeneralEvents()
         {
             var request = new GraphQLRequest(@"subscription { onDefaultEvent{id,event,correlationId}}");
-            return _graphQlClient.CreateSubscriptionStream<RealTimeEventResponse>(request);
+            return _graphQlClient.CreateSubscriptionStream<RealTimeEventResponse>(request,x=>_log.Error(x,"Broken"));
         }
 
         public record RealTimeEventResponse(RealTimeEvent OnDefaultEvent);
@@ -113,9 +111,13 @@ namespace CoreDocker.Sdk.RestApi
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 });
+            var endPoint = new Uri(_sharedClient.BaseAddress??new Uri("http://localhost/"),"graphql");
+            var webSocketEndPoint = endPoint.Scheme.Equals("https") ? new Uri(endPoint.ToString().Replace("https://", "wss://")) : new Uri(endPoint.ToString().Replace("http://", "ws://"));
+            
             var graphQlHttpClientOptions = new GraphQLHttpClientOptions
             {
-                EndPoint = new Uri(_sharedClient.BaseAddress??new Uri("http://localhost/"),"graphql"),
+                EndPoint = endPoint,
+                WebSocketEndPoint =  webSocketEndPoint
             };
             _sharedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", dataAccessToken);
             return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer,_sharedClient);

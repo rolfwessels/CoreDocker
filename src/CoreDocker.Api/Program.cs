@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System.Runtime.CompilerServices;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.Security;
@@ -8,14 +8,15 @@ using CoreDocker.Core.Startup;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Core;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFilesAndEnvironment();
 
 
 builder.Services.AddMediatR(cfg => cfg
-        .RegisterServicesFromAssemblyContaining<Program>()
-        .RegisterServicesFromAssemblyContaining<Settings>()
-    );
+    .RegisterServicesFromAssemblyContaining<Program>()
+    .RegisterServicesFromAssemblyContaining<Settings>()
+);
 builder.Services.AddCoreIoc();
 builder.Services.AddApiIoc();
 builder.Services.AddSingleton(builder.Configuration);
@@ -34,15 +35,14 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-app.UseStaticFiles();
 app.UseRouting();
 app.UseCors(policy =>
 {
- policy.AllowAnyMethod()
-     .AllowAnyHeader()
-     .AllowCredentials()
-     .SetPreflightMaxAge(TimeSpan.FromMinutes(10)) // Cache the OPTIONS calls.
-     .WithOrigins(openIdSettings.GetOriginList());
+    policy.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .SetPreflightMaxAge(TimeSpan.FromMinutes(10)) // Cache the OPTIONS calls.
+        .WithOrigins(openIdSettings.GetOriginList());
 });
 if (app.Environment.IsDevelopment())
 {
@@ -58,10 +58,8 @@ app.UseAuthorization();
 app.UseWebSockets();
 app.MapControllers();
 app.AddGraphQl();
-SimpleFileServer.Initialize(app);
 
 app.Run();
-
 
 
 
