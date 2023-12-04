@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
 using GraphQL;
@@ -20,14 +19,19 @@ namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
+        private readonly HttpClient _sharedClient;
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         private GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
-        public CoreDockerClient(string urlBase)
+        public CoreDockerClient(string urlBase) : this(new HttpClient { BaseAddress = new Uri(urlBase) })
         {
-            UrlBase = urlBase;
-            _restClient = new RestClient(UrlBase);
+        }
+
+        public CoreDockerClient(HttpClient sharedClient)
+        {
+            _sharedClient = sharedClient;
+            _restClient = new RestClient(sharedClient);
             Authenticate = new AuthenticateApiClient(this);
             Projects = new ProjectApiClient(this);
             Users = new UserApiClient(this);
@@ -36,8 +40,6 @@ namespace CoreDocker.Sdk.RestApi
         }
 
         public RestClient Client => _restClient;
-
-        public string UrlBase { get; }
 
 
         public AuthenticateApiClient Authenticate { get; set; }
@@ -112,10 +114,10 @@ namespace CoreDocker.Sdk.RestApi
                 });
             var graphQlHttpClientOptions = new GraphQLHttpClientOptions
             {
-                EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
+                // EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
                 HttpMessageHandler = new WithAuthHeader(dataAccessToken)
             };
-            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer);
+            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer,_sharedClient);
         }
 
         public class WithAuthHeader : HttpClientHandler

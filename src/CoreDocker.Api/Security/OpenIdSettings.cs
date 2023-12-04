@@ -21,9 +21,7 @@ namespace CoreDocker.Api.Security
         public string ClientSecret => ReadConfigValue("ClientSecret", "super_secure_password");
 
         public string IdentPath => ReadConfigValue("IdentPath", "identity");
-
-        public string ScopeApi => ReadConfigValue("ScopeApi", "api");
-
+        
         public string Origins =>
             ReadConfigValue("Origins", "http://localhost:5010,http://localhost:3000,http://localhost:84");
 

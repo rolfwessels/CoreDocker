@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Autofac;
 using Bumbershoot.Utilities.Serializer;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Components.Users;
@@ -14,18 +13,20 @@ using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using IValidatorFactory = CoreDocker.Dal.Validation.IValidatorFactory;
 using ValidatorFactoryBase = CoreDocker.Dal.Validation.ValidatorFactoryBase;
 
 namespace CoreDocker.Core.Startup
 {
-    public abstract class IocCoreBase
+    public static class IocCore 
     {
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
-        protected void SetupCore(ContainerBuilder builder)
-        {
+        public static void AddCoreIoc(this IServiceCollection builder)
+        { 
+
             SetupMongoDb(builder);
             SetupManagers(builder);
             SetupTools(builder);
@@ -33,45 +34,28 @@ namespace CoreDocker.Core.Startup
             SetupMediator(builder);
         }
 
-        private void SetupMediator(ContainerBuilder builder)
+        private static void SetupMediator(IServiceCollection builder)
         {
-            // mediator itself
-            builder
-                .RegisterType<Mediator>()
-                .As<IMediator>()
-                .InstancePerLifetimeScope();
-
-            // request & notification handlers
-            builder.Register<ServiceFactory>(context =>
-            {
-                var c = context.Resolve<IComponentContext>();
-                return t => c.Resolve(t);
-            });
-
-            builder.RegisterAssemblyTypes(typeof(IocCoreBase).GetTypeInfo().Assembly)
-                .Where(t => typeof(INotification).IsAssignableFrom(t) || t.IsClosedTypeOf(typeof(IRequestHandler<,>)) ||
-                            t.IsClosedTypeOf(typeof(INotificationHandler<>)))
-                .AsImplementedInterfaces(); // via assembly scan
+           
+            
         }
 
-        protected virtual void SetupMongoDb(ContainerBuilder builder)
+        private static void SetupMongoDb(IServiceCollection builder)
         {
-            builder.Register(GetInstanceOfIGeneralUnitOfWorkFactory).SingleInstance();
-            builder.Register(Delegate).As<IGeneralUnitOfWork>();
-            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().UserGrants);
-            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Projects);
-            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().Users);
-            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().SystemCommands);
-            builder.Register(x => x.Resolve<IGeneralUnitOfWork>().SystemEvents);
+            builder.AddTransient(Delegate);
+            builder.AddTransient(x => x.GetRequiredService<IGeneralUnitOfWork>().UserGrants);
+            builder.AddTransient(x => x.GetRequiredService<IGeneralUnitOfWork>().Projects);
+            builder.AddTransient(x => x.GetRequiredService<IGeneralUnitOfWork>().Users);
+            builder.AddTransient(x => x.GetRequiredService<IGeneralUnitOfWork>().SystemCommands);
+            builder.AddTransient(x => x.GetRequiredService<IGeneralUnitOfWork>().SystemEvents);
         }
 
-        protected abstract IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IComponentContext arg);
 
-        private IGeneralUnitOfWork Delegate(IComponentContext x)
+        private static IGeneralUnitOfWork Delegate(IServiceProvider provider)
         {
             try
             {
-                return x.Resolve<IGeneralUnitOfWorkFactory>().GetConnection();
+                return provider.GetRequiredService<IGeneralUnitOfWorkFactory>().GetConnection();
             }
             catch (Exception e)
             {
@@ -82,48 +66,45 @@ namespace CoreDocker.Core.Startup
             }
         }
 
-        private static void SetupManagers(ContainerBuilder builder)
+        private static void SetupManagers(IServiceCollection builder)
         {
-            builder.RegisterType<ProjectLookup>().As<IProjectLookup>();
-            builder.RegisterType<RoleManager>().As<IRoleManager>();
-            builder.RegisterType<UserLookup>().As<IUserLookup>();
-            builder.RegisterType<UserGrantLookup>().As<IUserGrantLookup>();
+            builder.AddTransient<IProjectLookup,ProjectLookup>();
+            builder.AddTransient<IRoleManager,RoleManager>();
+            builder.AddTransient<IUserLookup,UserLookup>();
+            builder.AddTransient<IUserGrantLookup,UserGrantLookup>();
         }
 
-        private static void SetupValidation(ContainerBuilder builder)
+        private static void SetupValidation(IServiceCollection builder)
         {
-            builder.RegisterType<AutofacValidatorFactory>().As<IValidatorFactory>();
-            builder.RegisterType<UserValidator>().As<IValidator<User>>();
-            builder.RegisterType<ProjectValidator>().As<IValidator<Project>>();
-            builder.RegisterType<UserGrantValidator>().As<IValidator<UserGrant>>();
-            builder.RegisterType<UserValidator>().As<IValidator<User>>();
+            builder.AddTransient<IValidatorFactory,ValidatorFactory>();
+            builder.AddTransient<IValidator<User>,UserValidator>();
+            builder.AddTransient<IValidator<Project>,ProjectValidator>();
+            builder.AddTransient<IValidator<UserGrant>,UserGrantValidator>();
+            builder.AddTransient<IValidator<User>,UserValidator>();
         }
 
-        private void SetupTools(ContainerBuilder builder)
+        private static void SetupTools(IServiceCollection builder)
         {
-            builder.Register(x => new RedisMessenger(Settings.Instance.RedisHost)).As<IMessenger>().SingleInstance();
-            builder.RegisterType<MediatorCommander>().SingleInstance();
-            builder.Register(x => new CommanderPersist(x.Resolve<MediatorCommander>(),
-                    x.Resolve<IRepository<SystemCommand>>(), x.Resolve<IStringify>(),
-                    x.Resolve<IEventStoreConnection>()))
-                .As<ICommander>();
-            builder.RegisterType<SubscriptionNotifications>().SingleInstance();
-            builder.RegisterType<StringifyJson>().As<IStringify>().SingleInstance();
-            builder.RegisterType<EventStoreConnection>().As<IEventStoreConnection>();
+            builder.AddSingleton<IMessenger>(x => new RedisMessenger(Settings.Instance.RedisHost));
+            builder.AddSingleton<MediatorCommander>();
+            builder.AddSingleton<SubscriptionNotifications>();
+            builder.AddSingleton<IStringify,StringifyJson>();
+            builder.AddTransient<ICommander>(x => new CommanderPersist(x.GetRequiredService<MediatorCommander>(), x.GetRequiredService<IRepository<SystemCommand>>(), x.GetRequiredService<IStringify>(), x.GetRequiredService<IEventStoreConnection>()));
+            builder.AddTransient<IEventStoreConnection,EventStoreConnection>();
         }
 
-        private class AutofacValidatorFactory : ValidatorFactoryBase
+        private class ValidatorFactory : ValidatorFactoryBase
         {
-            private readonly Func<IComponentContext> _context;
+            private readonly IServiceProvider _context;
 
-            public AutofacValidatorFactory(Func<IComponentContext> context)
+            public ValidatorFactory(IServiceProvider context)
             {
                 _context = context;
             }
 
             protected override void TryResolve<T>(out IValidator<T> output)
             {
-                _context().TryResolve(out output!);
+                output = _context.GetService<IValidator<T>>()!;
             }
         }
     }

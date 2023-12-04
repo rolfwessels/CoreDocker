@@ -1,22 +1,18 @@
 ﻿using System;
-using CoreDocker.Dal.Tests;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace CoreDocker.Api.Tests
 {
-    public class IntegrationTestsBase
+    public class IntegrationTestsBase 
     {
         public const string ClientId = "CoreDocker.Api";
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
-        protected static readonly Lazy<string> HostAddress;
 
         protected static Lazy<ConnectionFactory> _defaultRequestFactory;
         protected static Lazy<CoreDockerClient> _adminConnection;
@@ -25,8 +21,7 @@ namespace CoreDocker.Api.Tests
         static IntegrationTestsBase()
         {
             RestSharpHelper.Log = Log.Debug;
-            HostAddress = new Lazy<string>(StartHosting);
-            _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(HostAddress.Value));
+            _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(()=>new HostBuilder().CreateClient()));
             _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
             _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
         }
@@ -41,35 +36,28 @@ namespace CoreDocker.Api.Tests
             return _guestConnection.Value;
         }
 
-        private static string StartHosting()
+        class HostBuilder : WebApplicationFactory<Program>
         {
-            var port = new Random().Next(9000, 9999);
-            var address = $"http://localhost:{port}";
-            Environment.SetEnvironmentVariable("OpenId__HostUrl", address);
-            Environment.SetEnvironmentVariable("OpenId__UseReferenceTokens", "true"); //helps with testing on appveyor
-            TestLoggingHelper.EnsureExists();
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .ConfigureServices((context, collection) =>
-                    collection.AddSingleton<ILoggerFactory>(services =>
-                        new SerilogLoggerFactory()))
-                .ConfigureAppConfiguration(Program.SettingsFileReaderHelper)
-                .UseStartup<Startup>()
-                .UseUrls(address);
-            host.Build().Start();
+            protected override IHost CreateHost(IHostBuilder builder)
+            {
+                builder.ConfigureServices(services =>
+                {
+                    // add overrides here
+                });
 
-            Log.Information("Starting api on [{address}]", address);
-            var forContext = Log.ForContext(typeof(RestSharpHelper));
-            RestSharpHelper.Log = m => { forContext.Debug(m); };
-            return address;
+                return base.CreateHost(builder);
+            }
+
         }
+       
+        
 
 
         private static CoreDockerClient CreateLoggedInRequest(string adminAdminCom, string adminPassword)
         {
-            var coreDockerApi = _defaultRequestFactory.Value.GetConnection();
-            coreDockerApi.Authenticate.Login(adminAdminCom, adminPassword).Wait();
-            return (CoreDockerClient)coreDockerApi;
+            var api = _defaultRequestFactory.Value.GetConnection();
+            api.Authenticate.Login(adminAdminCom, adminPassword).Wait();
+            return (CoreDockerClient)api;
         }
 
         protected CoreDockerClient NewClientNotAuthorized()

@@ -16,7 +16,7 @@ namespace CoreDocker.Api.WebApi.Controllers
     [Route(RouteHelper.PingController)]
     public class PingController : Controller
     {
-        private static readonly string _informationalVersion = Startup.InformationalVersion();
+        private static readonly string _informationalVersion = EnvHelper.InformationalVersion();
         private readonly string _environmentName;
         private readonly IGeneralUnitOfWorkFactory _factory;
 

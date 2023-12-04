@@ -10,6 +10,8 @@ namespace CoreDocker.Api.Security
 {
     public class OpenIdConfig
     {
+        public const string Scope = "Api";
+
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
@@ -47,9 +49,11 @@ namespace CoreDocker.Api.Security
         {
             return new[]
             {
-                new ApiScope(openIdSettings.ScopeApi, "Standard api access")
+                new ApiScope(OpenIdConfig.Scope, "Standard api access")
             };
         }
+
+        
 
         public static IEnumerable<Client> GetClients(OpenIdSettings openIdSettings)
         {
@@ -81,7 +85,7 @@ namespace CoreDocker.Api.Security
                     AllowedCorsOrigins = openIdSettings.GetOriginList(),
                     AllowedScopes = new List<string>
                     {
-                        openIdSettings.ScopeApi
+                        Scope
                     }
                 }
             };

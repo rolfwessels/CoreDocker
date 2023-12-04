@@ -40,7 +40,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
 
         public async Task<TokenResponseModel> GetToken(TokenRequestModel tokenRequestModel)
         {
-            var request = new RestRequest(DefaultTokenUrl("token"), Method.Post);
+            var request = new RestRequest(Url(), Method.Post);
             request.AddParameter("client_id", tokenRequestModel.ClientId);
             request.AddParameter("client_secret", tokenRequestModel.ClientSecret);
             request.AddParameter("username", tokenRequestModel.UserName);

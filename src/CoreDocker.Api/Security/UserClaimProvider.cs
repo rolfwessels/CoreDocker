@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
@@ -20,13 +16,15 @@ namespace CoreDocker.Api.Security
     public class UserClaimProvider : IProfileService, IResourceOwnerPasswordValidator
     {
         private readonly IRoleManager _roleManager;
+        private readonly OpenIdSettings _settings;
         private readonly IUserLookup _userLookup;
 
 
-        public UserClaimProvider(IUserLookup userLookup, IRoleManager roleManager)
+        public UserClaimProvider(IUserLookup userLookup, IRoleManager roleManager , OpenIdSettings settings)
         {
             _userLookup = userLookup;
             _roleManager = roleManager;
+            _settings = settings;
         }
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -74,7 +72,7 @@ namespace CoreDocker.Api.Security
                 new(JwtClaimTypes.Id, user.Id),
                 new(JwtClaimTypes.GivenName, user.Name ?? throw new Exception("Email required for claim")),
                 new(IdentityServerConstants.StandardScopes.Email, user.Email),
-                new(JwtClaimTypes.Scope, IocApi.Instance.Resolve<OpenIdSettings>().ScopeApi),
+                new(JwtClaimTypes.Scope, OpenIdConfig.Scope),
                 user.Roles.Contains(RoleManager.Admin.Name)
                     ? new Claim(JwtClaimTypes.Role, RoleManager.Admin.Name)
                     : new Claim(JwtClaimTypes.Role, RoleManager.Guest.Name)

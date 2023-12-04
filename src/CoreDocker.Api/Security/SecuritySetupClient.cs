@@ -12,18 +12,17 @@ namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupClient
     {
-        public static void AddBearerAuthentication(this IServiceCollection services)
+        public static void AddBearerAuthentication(this IServiceCollection services, OpenIdSettings idSettings)
         {
             services.AddDistributedMemoryCache();
             services.AddAuthorization(AddFromActivities);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
-                    options.Authority = openIdSettings.HostUrl;
+                    options.Authority = idSettings.HostUrl;
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = openIdSettings.ApiResourceName;
-                    options.ApiSecret = openIdSettings.ApiResourceSecret;
+                    options.ApiName = idSettings.ApiResourceName;
+                    options.ApiSecret = idSettings.ApiResourceSecret;
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });

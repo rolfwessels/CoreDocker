@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
+using Path = System.IO.Path;
 
 namespace CoreDocker.Api.Security
 {
