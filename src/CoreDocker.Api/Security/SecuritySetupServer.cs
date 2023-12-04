@@ -1,15 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.Extensions;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
-using Serilog;
 using Path = System.IO.Path;
 
 namespace CoreDocker.Api.Security
@@ -19,7 +13,7 @@ namespace CoreDocker.Api.Security
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
 
-        public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
@@ -40,7 +34,7 @@ namespace CoreDocker.Api.Security
             }
         }
 
-        public static void UseIdentityService(this IApplicationBuilder app, OpenIdSettings openIdSettings)
+        public static void AddIdentityService(this IApplicationBuilder app, OpenIdSettings openIdSettings)
         {
             // update the host url if required
             // https://github.com/IdentityServer/IdentityServer4/issues/4592#issuecomment-659115122

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Bumbershoot.Utilities.Helpers;
+﻿using Bumbershoot.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -10,7 +7,7 @@ namespace CoreDocker.Api.Security
 {
     public class OpenIdConfig
     {
-        public const string Scope = "Api";
+        public const string Scope = "api";
 
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
@@ -85,7 +82,7 @@ namespace CoreDocker.Api.Security
                     AllowedCorsOrigins = openIdSettings.GetOriginList(),
                     AllowedScopes = new List<string>
                     {
-                        Scope
+                        Scope, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Email,
                     }
                 }
             };

@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Net.Http;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols;
 using Serilog;
 
 namespace CoreDocker.Api.Tests
@@ -36,21 +41,34 @@ namespace CoreDocker.Api.Tests
             return _guestConnection.Value;
         }
 
-        class HostBuilder : WebApplicationFactory<Program>
+        class HostBuilder : WebApplicationFactory<Program> , IHttpClientFactory
         {
             protected override IHost CreateHost(IHostBuilder builder)
             {
+                SetEnvironmentVariable("OpenId__IsClientUrlDisabled", "false");
                 builder.ConfigureServices(services =>
                 {
-                    // add overrides here
+                    
+                    services.AddSingleton<IHttpClientFactory>(this);
+                    services.RemoveAll<IdentityServerAuthenticationHandler>();
                 });
 
                 return base.CreateHost(builder);
             }
 
+            private void SetEnvironmentVariable(string variable, string value)
+            {
+                Environment.SetEnvironmentVariable(variable, value);
+            }
+
+            public HttpClient CreateClient(string name)
+            {
+                Console.Out.WriteLine("name:"+name);
+                return CreateClient();
+            }
         }
        
-        
+       
 
 
         private static CoreDockerClient CreateLoggedInRequest(string adminAdminCom, string adminPassword)

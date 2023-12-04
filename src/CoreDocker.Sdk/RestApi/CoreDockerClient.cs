@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
 using GraphQL;
@@ -114,31 +115,11 @@ namespace CoreDocker.Sdk.RestApi
                 });
             var graphQlHttpClientOptions = new GraphQLHttpClientOptions
             {
-                // EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
-                HttpMessageHandler = new WithAuthHeader(dataAccessToken)
+                EndPoint = new Uri(_sharedClient.BaseAddress??new Uri("http://localhost/"),"graphql"),
             };
+            _sharedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", dataAccessToken);
             return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer,_sharedClient);
         }
 
-        public class WithAuthHeader : HttpClientHandler
-        {
-            private readonly string? _token;
-
-            public WithAuthHeader(string? token)
-            {
-                _token = token;
-            }
-
-            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-                CancellationToken token)
-            {
-                if (_token != null)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _token);
-                }
-
-                return await base.SendAsync(request, token);
-            }
-        }
     }
 }

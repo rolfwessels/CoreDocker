@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Bumbershoot.Utilities;
-using Microsoft.Extensions.Configuration;
+﻿using Bumbershoot.Utilities;
 
 namespace CoreDocker.Api.Security
 {
@@ -19,8 +17,6 @@ namespace CoreDocker.Api.Security
         public string ClientName => ReadConfigValue("ClientName", "coredocker.api");
 
         public string ClientSecret => ReadConfigValue("ClientSecret", "super_secure_password");
-
-        public string IdentPath => ReadConfigValue("IdentPath", "identity");
         
         public string Origins =>
             ReadConfigValue("Origins", "http://localhost:5010,http://localhost:3000,http://localhost:84");
@@ -30,9 +26,8 @@ namespace CoreDocker.Api.Security
         public string CertPassword => ReadConfigValue("CertPassword", "60053018f4794862a82982640570c552");
 
         public string CertStoreThumbprint => ReadConfigValue("CertStoreThumbprint", "");
-        //B75303B3E5CEBE484C342D438987AB33560B5717
 
-        public bool UseReferenceTokens => ReadConfigValue("UseReferenceTokens", false);
+        public bool UseReferenceTokens => ReadConfigValue("UseReferenceTokens", true);
 
         public bool IsDebugEnabled => ReadConfigValue("IsDebugEnabled", true);
 

@@ -1,37 +1,17 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/CoreDocker.Api",
-      "sslPort": 0
-    },
-    "iisExpress": {
-      "applicationUrl": "http://localhost:5010/",
-      "sslPort": 0
-    }
-  },
+  
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger/ui",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "CoreDocker.Api": {
-      "commandName": "IIS",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:5010/api/values",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
+
     "App": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5010/"
+      "launchUrl": "http://localhost:5010/",
+      "applicationUrl": "http://localhost:5010",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "App__HostUrl": "http://localhost:5010",
+        "OpenId__Origins": "http://localhost:5010,http://localhost:84,http://localhost:3000"
+      }
     }
   }
 }

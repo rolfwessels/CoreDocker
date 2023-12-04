@@ -1,18 +1,14 @@
-﻿using System;
-using Bumbershoot.Utilities.Helpers;
-using CoreDocker.Api.AppStartup;
+﻿using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Models.Auth;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupClient
     {
-        public static void AddBearerAuthentication(this IServiceCollection services, OpenIdSettings idSettings)
+        public static void AddAuthenticationClient(this IServiceCollection services, OpenIdSettings idSettings)
         {
             services.AddDistributedMemoryCache();
             services.AddAuthorization(AddFromActivities);

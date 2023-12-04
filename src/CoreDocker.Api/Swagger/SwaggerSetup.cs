@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Bumbershoot.Utilities.Helpers;
-using CoreDocker.Api.AppStartup;
+﻿using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Api.Security;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -55,7 +49,7 @@ namespace CoreDocker.Api.Swagger
             });
         }
 
-        public static void AddSwagger(this IServiceCollection services, OpenIdSettings openIdSettings)
+        public static void AddSwagger1(this IServiceCollection services, OpenIdSettings openIdSettings)
         {
             services.AddSwaggerGen(options => SetupAction(options, openIdSettings.HostUrl));
             // todo: Rolf Add Auth response codes
