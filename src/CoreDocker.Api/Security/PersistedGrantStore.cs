@@ -14,7 +14,7 @@ namespace CoreDocker.Api.Security
 {
     public class PersistedGrantStore : IPersistedGrantStore
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
         private readonly IUserGrantLookup _userGrantLookup;
         private readonly IUserLookup _userLookup;

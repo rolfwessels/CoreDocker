@@ -10,7 +10,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations
 {
     public class VersionUpdater
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType!);
         private static readonly object _locker = new();
         private readonly IMigration[] _updates;
 

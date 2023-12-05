@@ -19,7 +19,7 @@ namespace CoreDocker.Sdk.RestApi
     public class CoreDockerClient : ICoreDockerClient
     {
         private readonly HttpClient _sharedClient;
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
         private GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
@@ -77,7 +77,7 @@ namespace CoreDocker.Sdk.RestApi
                 if (e.Content != null && e.Content.Contains("errors"))
                 {
                     var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
-                    if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                    if (graphQlResponse?.Errors != null && graphQlResponse.Errors.Any())
                     {
                         throw new GraphQlResponseException<T>(graphQlResponse);
                     }

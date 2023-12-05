@@ -24,7 +24,7 @@ namespace CoreDocker.Api.Tests.Integration
 
         protected void Setup()
         {
-            _projectApiClient = _adminConnection.Value.Projects;
+            _projectApiClient = AdminClient().Projects;
         }
 
         [TearDown]
@@ -43,7 +43,7 @@ namespace CoreDocker.Api.Tests.Integration
             // action
             var testUpdateValidationFail = () =>
             {
-                _guestConnection.Value.Projects.Create(invalidEmailProject).Wait();
+               GuestClient().Projects.Create(invalidEmailProject).Wait();
             };
             // action
             testUpdateValidationFail.Should().Throw<Exception>()

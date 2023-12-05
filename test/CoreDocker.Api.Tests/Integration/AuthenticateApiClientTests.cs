@@ -20,10 +20,12 @@ namespace CoreDocker.Api.Tests.Integration
 
         protected void Setup()
         {
-            var connectionFactory = _defaultRequestFactory.Value;
+            var connectionFactory = DefaultRequestFactory();
             _connection = connectionFactory.GetConnection();
             _connectionAuth = connectionFactory.GetConnection();  
         }
+
+        
 
         [TearDown]
         public void TearDown()

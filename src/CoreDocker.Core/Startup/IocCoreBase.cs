@@ -22,7 +22,7 @@ namespace CoreDocker.Core.Startup
 {
     public static class IocCore 
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
         public static void AddCoreIoc(this IServiceCollection builder)
         { 
@@ -60,8 +60,8 @@ namespace CoreDocker.Core.Startup
             catch (Exception e)
             {
                 _log.Error("IocCoreBase:Delegate " + e.Message, e);
-                _log.Error(e.Source);
-                _log.Error(e.StackTrace);
+                _log.Error(e.Source??"");
+                _log.Error(e.StackTrace??"");
                 throw;
             }
         }

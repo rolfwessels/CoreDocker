@@ -8,7 +8,7 @@ namespace CoreDocker.Core.Components.Users
     {
         public static string BuildUrl(string? email)
         {
-            var md5Hash = Md5Hash(email.OrEmpty().ToLower().Trim());
+            var md5Hash = Md5Hash((email??"").ToLower().Trim());
             return $"https://www.gravatar.com/avatar/{md5Hash}?d=robohash";
         }
 

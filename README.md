@@ -2,8 +2,9 @@
 
 ![CoreDocker Logo](https://github.com/rolfwessels/CoreDocker/raw/master/logo/coredocker_logo.png)
 
-[![Build Status](https://travis-ci.org/rolfwessels/CoreDocker.svg?branch=master)](https://travis-ci.org/rolfwessels/CoreDocker)
 [![Build status](https://ci.appveyor.com/api/projects/status/tumprt66bbfxb22o?svg=true)](https://ci.appveyor.com/project/rolfwessels/coredocker)
+[![Build status](https://github.com/rolfwessels/CoreDocker/actions/workflows/github-action.yml/badge.svg?branch=master)]https://github.com/rolfwessels/CoreDocker/actions)
+
 [![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker/)
 [![Coverage Status](https://coveralls.io/repos/github/rolfwessels/CoreDocker/badge.svg?branch=master)](https://coveralls.io/github/rolfwessels/CoreDocker?branch=master)
 

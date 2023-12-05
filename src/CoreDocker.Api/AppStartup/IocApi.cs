@@ -14,7 +14,7 @@ namespace CoreDocker.Api.AppStartup
     public static class IocApi 
     {
 
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
         
         private static IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IServiceProvider arg)
         {

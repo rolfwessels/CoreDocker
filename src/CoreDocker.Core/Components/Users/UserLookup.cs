@@ -14,7 +14,7 @@ namespace CoreDocker.Core.Components.Users
 {
     public class UserLookup : BaseLookup<User>, IUserLookup
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
         public UserLookup(IRepository<User> users)
         {
@@ -32,8 +32,8 @@ namespace CoreDocker.Core.Components.Users
                 {
                     query = query.Where(x =>
                         x.Id.ToLower().Contains(options.Search.ToLower()) ||
-                        x.Email.OrEmpty().ToLower().Contains(options.Search.ToLower()) ||
-                        x.Name.OrEmpty().ToLower().Contains(options.Search.ToLower()));
+                        (x.Email??"").ToLower().Contains(options.Search.ToLower()) ||
+                        (x.Name??"").ToLower().Contains(options.Search.ToLower()));
                 }
 
                 if (options.Sort != null)

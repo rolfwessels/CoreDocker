@@ -15,7 +15,7 @@ namespace CoreDocker.Api.WebApi.Filters
 {
     public class CaptureExceptionFilter : ExceptionFilterAttribute
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
         public override Task OnExceptionAsync(ExceptionContext context)
         {

@@ -11,7 +11,7 @@ namespace CoreDocker.Api.Components.Projects
 {
     public class ProjectsQueryType : ObjectType<ProjectsQueryType.ProjectQuery>
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
         private readonly IProjectLookup _projects;
 
         public ProjectsQueryType(IProjectLookup projects)

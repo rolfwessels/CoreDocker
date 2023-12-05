@@ -25,7 +25,7 @@ namespace CoreDocker.Api.Tests.Integration
 
         protected void Setup()
         {
-            _userApiClient = _adminConnection.Value.Users;
+            _userApiClient = AdminClient().Users;
         }
 
         [TearDown]
@@ -42,7 +42,7 @@ namespace CoreDocker.Api.Tests.Integration
             Setup();
             var invalidEmailUser = GetExampleData().First() with { Email = "test@sdfsd" };
             // action
-            var testUpdateValidationFail = () => { _guestConnection.Value.Users.Create(invalidEmailUser).Wait(); };
+            var testUpdateValidationFail = () => { GuestClient().Users.Create(invalidEmailUser).Wait(); };
             // action
             testUpdateValidationFail.Should().Throw<Exception>()
                 .WithMessage("The current user is not authorized to access this resource.");
@@ -83,7 +83,7 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             // action
-            var userModel = await _adminConnection.Value.Users.Me();
+            var userModel = await AdminClient().Users.Me();
             // action
             userModel.Activities.Should().Contain("ReadUsers");
         }
@@ -94,7 +94,7 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             // action
-            var userModel = await _adminConnection.Value.Users.Me();
+            var userModel = await AdminClient().Users.Me();
             // action
             userModel.Image.Should().StartWith("https://www.gravatar.com/avatar");
         }
@@ -106,7 +106,7 @@ namespace CoreDocker.Api.Tests.Integration
             Setup();
 
             // action
-            var userModel = await _adminConnection.Value.Users.Me();
+            var userModel = await AdminClient().Users.Me();
             // action
             userModel.Email.Should().Contain("@");
         }

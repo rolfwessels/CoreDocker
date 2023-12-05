@@ -19,9 +19,9 @@ namespace CoreDocker.Api.Tests
         public const string AdminPassword = "admin!";
         public const string AdminUser = "admin@admin.com";
 
-        protected static Lazy<ConnectionFactory> _defaultRequestFactory;
-        protected static Lazy<CoreDockerClient> _adminConnection;
-        protected static Lazy<CoreDockerClient> _guestConnection;
+        private static readonly Lazy<ConnectionFactory> _defaultRequestFactory;
+        private static readonly Lazy<CoreDockerClient> _adminConnection;
+        private static readonly Lazy<CoreDockerClient> _guestConnection;
 
         static IntegrationTestsBase()
         {
@@ -29,6 +29,11 @@ namespace CoreDocker.Api.Tests
             _defaultRequestFactory = new Lazy<ConnectionFactory>(() => new ConnectionFactory(()=>new HostBuilder().CreateClient()));
             _adminConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest(AdminUser, AdminPassword));
             _guestConnection = new Lazy<CoreDockerClient>(() => CreateLoggedInRequest("Guest@Guest.com", "guest!"));
+        }
+
+        public ConnectionFactory DefaultRequestFactory()
+        {
+            return _defaultRequestFactory.Value;
         }
 
         public CoreDockerClient AdminClient()
