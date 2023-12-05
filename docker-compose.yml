@@ -76,8 +76,7 @@ services:
 
     environment:
       - DOTNET_ENVIRONMENT=Development
-      - MongoConnection=mongodb://db:27017/core-docker
-      - MongoDatabase=core-docker
+      - MongoConnection=mongodb://db:27017/core-docker-dev
       - RedisHost=redis
       - App__HostUrl=http://localhost:5010
       - OpenId__Origins=http://localhost:5010,http://localhost:84,http://localhost:3000

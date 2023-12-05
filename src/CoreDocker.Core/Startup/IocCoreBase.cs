@@ -59,9 +59,7 @@ namespace CoreDocker.Core.Startup
             }
             catch (Exception e)
             {
-                _log.Error("IocCoreBase:Delegate " + e.Message, e);
-                _log.Error(e.Source??"");
-                _log.Error(e.StackTrace??"");
+                _log.Error(e,"IocCoreBase:Delegate {error}", e.Message);
                 throw;
             }
         }
