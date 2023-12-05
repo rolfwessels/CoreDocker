@@ -85,7 +85,8 @@ namespace CoreDocker.Core.Startup
 
         private static void SetupTools(IServiceCollection builder)
         {
-            builder.AddSingleton<IMessenger>(x => new RedisMessenger(Settings.Instance.RedisHost));
+            builder.AddSingleton<Settings>();
+            builder.AddSingleton<IMessenger>(x => new RedisMessenger(x.GetRequiredService<Settings>().RedisHost));
             builder.AddSingleton<MediatorCommander>();
             builder.AddSingleton<SubscriptionNotifications>();
             builder.AddSingleton<IStringify,StringifyJson>();

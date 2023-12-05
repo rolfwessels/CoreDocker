@@ -6,10 +6,11 @@ using CoreDocker.Api.WebApi.Filters;
 using CoreDocker.Core.Framework.Settings;
 using CoreDocker.Core.Startup;
 using CoreDocker.Api.Swagger;
-using CoreDocker.Core;
+using CoreDocker.Core;using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFilesAndEnvironment();
+
 builder.AddSerilog();
 
 builder.Services.AddMediatR(cfg => cfg

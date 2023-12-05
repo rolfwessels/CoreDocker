@@ -3,6 +3,7 @@ using System.Net.Http;
 using CoreDocker.Sdk;
 using CoreDocker.Sdk.Helpers;
 using CoreDocker.Sdk.RestApi;
+using FluentAssertions;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,10 +51,9 @@ namespace CoreDocker.Api.Tests
         {
             protected override IHost CreateHost(IHostBuilder builder)
             {
-                SetEnvironmentVariable("OpenId__IsClientUrlDisabled", "false");
+                
                 builder.ConfigureServices(services =>
                 {
-                    
                     services.AddSingleton<IHttpClientFactory>(this);
                     services.RemoveAll<IdentityServerAuthenticationHandler>();
                 });

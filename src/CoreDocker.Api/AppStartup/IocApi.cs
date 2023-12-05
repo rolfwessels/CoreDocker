@@ -18,11 +18,12 @@ namespace CoreDocker.Api.AppStartup
         
         private static IGeneralUnitOfWorkFactory GetInstanceOfIGeneralUnitOfWorkFactory(IServiceProvider arg)
         {
-            _log.Information("Connecting to :{MongoConnection} [{MongoDatabase}]", Settings.Instance.MongoConnection,
-                Settings.Instance.MongoDatabase);
+            var instance = arg.GetRequiredService<Settings>();
+            _log.Information("Connecting to :{MongoConnection} [{MongoDatabase}]", instance.MongoConnection,
+                instance.MongoDatabase);
             try
             {
-                return new MongoConnectionFactory(Settings.Instance.MongoConnection, Settings.Instance.MongoDatabase);
+                return new MongoConnectionFactory(instance.MongoConnection, instance.MongoDatabase);
             }
             catch (Exception e)
             {

@@ -48,7 +48,7 @@ services:
     volumes:
       - ".:/CoreDocker"
       - "./.aws:/root/.aws"
-      #find src* | grep  '/bin$' | sed 's/^/ - CoreDocker\//'
+      # (find src* | grep  '/bin$' && find src* | grep  '/obj$' && find test* | grep  '/bin$' && find test* | grep  '/obj$')  | sed 's/^/ - \/CoreDocker\//'
       - /CoreDocker/src/CoreDocker.Api/bin
       - /CoreDocker/src/CoreDocker.Api.Lambda/bin
       - /CoreDocker/src/CoreDocker.Core/bin
@@ -57,9 +57,6 @@ services:
       - /CoreDocker/src/CoreDocker.Sdk/bin
       - /CoreDocker/src/CoreDocker.Shared/bin
       - /CoreDocker/src/CoreDocker.Utilities/bin
-      - /CoreDocker/test/CoreDocker.Api.Tests/bin
-      - /CoreDocker/test/CoreDocker.Core.Tests/bin
-      #find src* | grep  '/obj$' | sed 's/^/ - /CoreDocker\//'
       - /CoreDocker/src/CoreDocker.Api/obj
       - /CoreDocker/src/CoreDocker.Api.Lambda/obj
       - /CoreDocker/src/CoreDocker.Core/obj
@@ -68,8 +65,14 @@ services:
       - /CoreDocker/src/CoreDocker.Sdk/obj
       - /CoreDocker/src/CoreDocker.Shared/obj
       - /CoreDocker/src/CoreDocker.Utilities/obj
+      - /CoreDocker/test/CoreDocker.Api.Tests/bin
+      - /CoreDocker/test/CoreDocker.Core.Tests/bin
+      - /CoreDocker/test/CoreDocker.Dal.Tests/bin
+      - /CoreDocker/test/CoreDocker.Utilities.Tests/bin
       - /CoreDocker/test/CoreDocker.Api.Tests/obj
       - /CoreDocker/test/CoreDocker.Core.Tests/obj
+      - /CoreDocker/test/CoreDocker.Dal.Tests/obj
+      - /CoreDocker/test/CoreDocker.Utilities.Tests/obj
 
     environment:
       - DOTNET_ENVIRONMENT=Development
