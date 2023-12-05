@@ -7,8 +7,10 @@ namespace CoreDocker.Core.Framework.Settings
         public static IConfigurationBuilder AddJsonFilesAndEnvironment(this IConfigurationBuilder config,
             string environment = "Development")
         {
-            config.AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{environment}.json", true, true);
+            var reloadOnChange = false;
+            var optional = true;
+            config.AddJsonFile("appsettings.json", optional, reloadOnChange)
+                .AddJsonFile($"appsettings.{environment}.json", optional, reloadOnChange);
             config.AddEnvironmentVariables();
             return config;
         }

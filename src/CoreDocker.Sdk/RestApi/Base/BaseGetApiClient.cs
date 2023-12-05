@@ -18,11 +18,9 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
         }
 
-        #region IBaseStandardLookups<TModel,TReferenceModel> Members
-
         public async Task<PagedResult<TReferenceModel>> GetPaged(string oDataQuery)
         {
-            var restRequest = new RestRequest(DefaultUrl($"?{EnsureHasInlinecount(oDataQuery)}"));
+            var restRequest = new RestRequest(Url($"?{EnsureHasInlinecount(oDataQuery)}"));
             var executeAsyncWithLogging =
                 await CoreDockerClient.Client.ExecuteAsyncWithLogging<PagedResult<TReferenceModel>>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
@@ -31,7 +29,7 @@ namespace CoreDocker.Sdk.RestApi.Base
         public async Task<PagedResult<TModel>> GetDetailPaged(string oDataQuery)
         {
             var restRequest =
-                new RestRequest(DefaultUrl($"{RouteHelper.WithDetail}?{EnsureHasInlinecount(oDataQuery)}"));
+                new RestRequest(Url($"{RouteHelper.WithDetail}?{EnsureHasInlinecount(oDataQuery)}"));
             var executeAsyncWithLogging =
                 await CoreDockerClient.Client.ExecuteAsyncWithLogging<PagedResult<TModel>>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
@@ -39,7 +37,7 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         public async Task<IEnumerable<TReferenceModel>> Get(string oDataQuery)
         {
-            var restRequest = new RestRequest(DefaultUrl($"?{oDataQuery}"));
+            var restRequest = new RestRequest(Url($"?{oDataQuery}"));
             var executeAsyncWithLogging =
                 await CoreDockerClient.Client.ExecuteAsyncWithLogging<List<TReferenceModel>>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
@@ -47,26 +45,21 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         public async Task<IEnumerable<TModel>> GetDetail(string oDataQuery)
         {
-            var restRequest = new RestRequest(DefaultUrl($"{RouteHelper.WithDetail}?{oDataQuery}"));
+            var restRequest = new RestRequest(Url($"{RouteHelper.WithDetail}?{oDataQuery}"));
             var executeAsyncWithLogging =
                 await CoreDockerClient.Client.ExecuteAsyncWithLogging<List<TModel>>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }
 
-        #endregion
-
-        #region Private Methods
-
         private static string EnsureHasInlinecount(string oDataQuery)
         {
             if (oDataQuery == null || !oDataQuery.Contains("$inlinecount"))
+            {
                 oDataQuery = $"{oDataQuery}&$inlinecount=allpages";
+            }
+
             return oDataQuery;
         }
-
-        #endregion
-
-        #region Implementation of IBaseStandardLookups<UserModel,UserReferenceModel>
 
         public Task<IEnumerable<TReferenceModel>> Get()
         {
@@ -77,7 +70,5 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
             return GetDetail("");
         }
-
-        #endregion
     }
 }

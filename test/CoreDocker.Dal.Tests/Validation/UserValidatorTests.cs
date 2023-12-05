@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using CoreDocker.Dal.Models.Users;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Dal.Models.Users;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentValidation.TestHelper;

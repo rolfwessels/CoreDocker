@@ -1,20 +1,24 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreDocker.Core.Framework.BaseManagers;
-using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
 using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 
 namespace CoreDocker.Core.Tests.Framework.BaseManagers
 {
     public abstract class BaseTypedManagerTests<T> : BaseManagerTests where T : BaseDalModelWithId
     {
+        protected abstract IRepository<T> Repository { get; }
+
+        protected virtual T SampleObject => Builder<T>.CreateNew().WithValidData().Build();
+
+        protected abstract BaseLookup<T> Lookup { get; }
+
         [Test]
         public virtual async Task Get_WhenCalledWithId_ShouldReturnSingleRecord()
         {
@@ -40,11 +44,5 @@ namespace CoreDocker.Core.Tests.Framework.BaseManagers
             // assert
             result.Should().HaveCount(expected);
         }
-
-        protected abstract IRepository<T> Repository { get; }
-
-        protected virtual T SampleObject => Builder<T>.CreateNew().WithValidData().Build();
-
-        protected abstract BaseLookup<T> Lookup { get; }
     }
 }

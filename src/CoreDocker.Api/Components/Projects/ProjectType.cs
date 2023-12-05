@@ -1,5 +1,4 @@
 ﻿using CoreDocker.Dal.Models.Projects;
-using CoreDocker.Shared.Models.Projects;
 using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects

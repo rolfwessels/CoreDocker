@@ -1,37 +1,36 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using CoreDocker.Sdk.RestApi.Clients;
 using CoreDocker.Shared.Models.Auth;
-using Bumbershoot.Utilities.Helpers;
 using GraphQL;
-using GraphQL.Client.Abstractions.Websocket;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
-using RestSharp.Serializers.Json;
 using Serilog;
 
 namespace CoreDocker.Sdk.RestApi
 {
     public class CoreDockerClient : ICoreDockerClient
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly HttpClient _sharedClient;
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
         private GraphQLHttpClient _graphQlClient;
         internal RestClient _restClient;
 
-        public CoreDockerClient(string urlBase)
+        public CoreDockerClient(string urlBase) : this(new HttpClient { BaseAddress = new Uri(urlBase) })
         {
-            UrlBase = urlBase;
-            _restClient = new RestClient(UrlBase);
+        }
+
+        public CoreDockerClient(HttpClient sharedClient)
+        {
+            _sharedClient = sharedClient;
+            _restClient = new RestClient(sharedClient);
             Authenticate = new AuthenticateApiClient(this);
             Projects = new ProjectApiClient(this);
             Users = new UserApiClient(this);
@@ -41,13 +40,22 @@ namespace CoreDocker.Sdk.RestApi
 
         public RestClient Client => _restClient;
 
-        public string UrlBase { get; }
+
+        public AuthenticateApiClient Authenticate { get; set; }
+        public PingApiClient Ping { get; set; }
+
+
+        public ProjectApiClient Projects { get; set; }
+        public UserApiClient Users { get; set; }
 
         public async Task<GraphQLResponse<dynamic>> GraphQlPost(GraphQLRequest request)
         {
             var graphQlResponse = await _graphQlClient.SendQueryAsync<dynamic>(request);
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+            {
                 throw new GraphQlResponseException<dynamic>(graphQlResponse);
+            }
+
             return graphQlResponse;
         }
 
@@ -58,7 +66,10 @@ namespace CoreDocker.Sdk.RestApi
             {
                 var graphQlResponse = await _graphQlClient.SendQueryAsync<T>(request);
                 if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                {
                     throw new GraphQlResponseException<T>(graphQlResponse);
+                }
+
                 return graphQlResponse;
             }
             catch (GraphQLHttpRequestException e)
@@ -66,8 +77,10 @@ namespace CoreDocker.Sdk.RestApi
                 if (e.Content != null && e.Content.Contains("errors"))
                 {
                     var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse<T>>(e.Content);
-                    if (graphQlResponse.Errors != null && graphQlResponse.Errors.Any())
+                    if (graphQlResponse?.Errors != null && graphQlResponse.Errors.Any())
+                    {
                         throw new GraphQlResponseException<T>(graphQlResponse);
+                    }
                 }
 
                 throw;
@@ -77,18 +90,12 @@ namespace CoreDocker.Sdk.RestApi
         public IObservable<GraphQLResponse<RealTimeEventResponse>> SendSubscribeGeneralEvents()
         {
             var request = new GraphQLRequest(@"subscription { onDefaultEvent{id,event,correlationId}}");
-            return _graphQlClient.CreateSubscriptionStream<RealTimeEventResponse>(request);
+            return _graphQlClient.CreateSubscriptionStream<RealTimeEventResponse>(request,x=>_log.Error(x,"Broken"));
         }
 
         public record RealTimeEventResponse(RealTimeEvent OnDefaultEvent);
 
-        #region Nested type: RealTimeEvent
-
         public record RealTimeEvent(string Id, string Event, string CorrelationId, string Exception);
-
-        #endregion
-
-        #region Implementation of ICoreDockerApi
 
         public void SetToken(TokenResponseModel data)
         {
@@ -104,41 +111,17 @@ namespace CoreDocker.Sdk.RestApi
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 });
+            var endPoint = new Uri(_sharedClient.BaseAddress??new Uri("http://localhost/"),"graphql");
+            var webSocketEndPoint = endPoint.Scheme.Equals("https") ? new Uri(endPoint.ToString().Replace("https://", "wss://")) : new Uri(endPoint.ToString().Replace("http://", "ws://"));
+            
             var graphQlHttpClientOptions = new GraphQLHttpClientOptions
             {
-                EndPoint = new Uri(UrlBase.UriCombine("/graphql")),
-                HttpMessageHandler = new WithAuthHeader(dataAccessToken)
-
+                EndPoint = endPoint,
+                WebSocketEndPoint =  webSocketEndPoint
             };
-            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer);
+            _sharedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", dataAccessToken);
+            return new GraphQLHttpClient(graphQlHttpClientOptions, jsonSerializer,_sharedClient);
         }
 
-        public class WithAuthHeader : HttpClientHandler
-        {
-            private readonly string? _token;
-
-            public WithAuthHeader(string? token)
-            {
-                _token = token;
-            }
-
-            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-                CancellationToken token)
-            {
-                if (_token != null) request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _token);
-
-                return await base.SendAsync(request, token);
-            }
-        }
-
-
-        public AuthenticateApiClient Authenticate { get; set; }
-        public PingApiClient Ping { get; set; }
-
-
-        public ProjectApiClient Projects { get; set; }
-        public UserApiClient Users { get; set; }
-
-        #endregion
     }
 }

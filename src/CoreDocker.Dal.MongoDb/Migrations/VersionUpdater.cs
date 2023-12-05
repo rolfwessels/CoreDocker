@@ -3,15 +3,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Serilog;
 using MongoDB.Driver;
+using Serilog;
 
 namespace CoreDocker.Dal.MongoDb.Migrations
 {
     public class VersionUpdater
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-        private static readonly object _locker = new object();
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType!);
+        private static readonly object _locker = new();
         private readonly IMigration[] _updates;
 
         public VersionUpdater(IMigration[] updates)
@@ -42,17 +42,18 @@ namespace CoreDocker.Dal.MongoDb.Migrations
             });
         }
 
-        #region Private Methods
-
-        private async Task EnsureThatVersionDoesNotExistThenUpdate(IEnumerable<DbVersion> versions, int i,
-            IMigration migrateInitialize, MongoRepository<DbVersion> repository, IMongoDatabase db)
+        private async Task EnsureThatVersionDoesNotExistThenUpdate(IEnumerable<DbVersion> versions,
+            int i,
+            IMigration migrateInitialize,
+            MongoRepository<DbVersion> repository,
+            IMongoDatabase db)
         {
             var version = versions.FirstOrDefault(x => x.Id == i);
             if (version == null)
             {
                 _log.Information($"Running version update {migrateInitialize.GetType().Name}");
                 await RunTheUpdate(migrateInitialize, db);
-                var dbVersion1 = new DbVersion (i,migrateInitialize.GetType().Name);
+                var dbVersion1 = new DbVersion(i, migrateInitialize.GetType().Name);
                 await repository.Add(dbVersion1);
             }
         }
@@ -64,9 +65,8 @@ namespace CoreDocker.Dal.MongoDb.Migrations
             stopwatch.Start();
             await migrateInitialize.Update(db);
             stopwatch.Stop();
-            _log.Information("Done {Name} in {ElapsedMilliseconds}ms", migrateInitialize.GetType().Name, stopwatch.ElapsedMilliseconds);
+            _log.Information("Done {Name} in {ElapsedMilliseconds}ms", migrateInitialize.GetType().Name,
+                stopwatch.ElapsedMilliseconds);
         }
-
-        #endregion
     }
 }

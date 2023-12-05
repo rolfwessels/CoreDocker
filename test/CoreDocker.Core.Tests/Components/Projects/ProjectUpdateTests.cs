@@ -1,12 +1,11 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Components.Projects;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Core.Tests.Helpers;
 using CoreDocker.Dal.Models.Projects;
 using CoreDocker.Dal.Persistence;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -39,9 +38,9 @@ namespace CoreDocker.Core.Tests.Components.Projects
         {
             // arrange
             Setup();
-            var validRequest = GetValidRequest() with {Name = ""};
+            var validRequest = GetValidRequest() with { Name = "" };
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
+            var testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x =>

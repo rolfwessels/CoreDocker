@@ -4,13 +4,9 @@
     {
         public string Id { get; init; } = null!;
 
-        #region Equality members
-
         protected bool Equals(BaseReferenceModel other)
         {
             return Id.Equals(other.Id);
         }
-
-        #endregion
     }
 }

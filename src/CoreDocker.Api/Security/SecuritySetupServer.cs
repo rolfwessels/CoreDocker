@@ -1,37 +1,35 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.Extensions;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
-using Serilog;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
+using Path = System.IO.Path;
 
 namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupServer
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        public const string CookieAuthenticationScheme = "CoreDockerCookie";
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
-
-        public static void UseIdentityService(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentityService(this IServiceCollection services, OpenIdSettings openIdSettings)
         {
-            
-            var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
-            services.AddIdentityServer()
-                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword, openIdSettings.CertStoreThumbprint))
+            services.AddIdentityServer(options=>
+                {
+                    options.IssuerUri = openIdSettings.HostUrl;
+                    options.Authentication.CookieAuthenticationScheme = CookieAuthenticationScheme;
+                })
+                .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword,
+                    openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())
                 .AddInMemoryApiScopes(OpenIdConfig.GetApiScopes(openIdSettings))
                 .AddInMemoryApiResources(OpenIdConfig.GetApiResources(openIdSettings))
                 .AddInMemoryClients(OpenIdConfig.GetClients(openIdSettings))
                 .Services
-                    .AddTransient<IPersistedGrantStore, PersistedGrantStore>()
-                    .AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
+                .AddTransient<IPersistedGrantStore, PersistedGrantStore>()
+                .AddTransient<IResourceOwnerPasswordValidator, UserClaimProvider>();
 
             if (openIdSettings.IsDebugEnabled)
             {
@@ -39,7 +37,7 @@ namespace CoreDocker.Api.Security
             }
         }
 
-        public static void UseIdentityService(this IApplicationBuilder app, OpenIdSettings openIdSettings)
+        public static void AddIdentityService(this IApplicationBuilder app, OpenIdSettings openIdSettings)
         {
             // update the host url if required
             // https://github.com/IdentityServer/IdentityServer4/issues/4592#issuecomment-659115122
@@ -50,19 +48,22 @@ namespace CoreDocker.Api.Security
                     context.SetIdentityServerOrigin(openIdSettings.HostUrl);
                     context.SetIdentityServerBasePath(context.Request.PathBase.Value?.TrimEnd('/'));
                 }
+
                 await next.Invoke();
             });
             app.UseIdentityServer();
         }
-
-        #region Private Methods
 
         private static X509Certificate2? Certificate(string certFile, string password, string certStoreThumbprint)
         {
             try
             {
                 X509Certificate2? cert = null;
-                if (!string.IsNullOrEmpty(certStoreThumbprint)) cert = LoadCertFromStore(certStoreThumbprint);
+                if (!string.IsNullOrEmpty(certStoreThumbprint))
+                {
+                    cert = LoadCertFromStore(certStoreThumbprint);
+                }
+
                 return cert ?? LoadCertFromFile(certFile, password);
             }
             catch (Exception e)
@@ -81,7 +82,11 @@ namespace CoreDocker.Api.Security
                 certStoreThumbprint,
                 false);
             // Get the first cert with the thumbprint
-            if (certCollection.Count <= 0) return null;
+            if (certCollection.Count <= 0)
+            {
+                return null;
+            }
+
             _log.Information("Successfully loaded cert from registry: {Thumbprint}", certCollection[0].Thumbprint);
             return certCollection[0];
         }
@@ -96,14 +101,12 @@ namespace CoreDocker.Api.Security
             }
             else
             {
-               var cert = new X509Certificate2(fileName, password);
+                var cert = new X509Certificate2(fileName, password);
                 _log.Information("Falling back to cert from file. Successfully loaded: {Thumbprint}", cert.Thumbprint);
                 return cert;
-
             }
+
             return null;
         }
-
-        #endregion
     }
 }

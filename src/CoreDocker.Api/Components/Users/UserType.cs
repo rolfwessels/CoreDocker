@@ -30,9 +30,6 @@ namespace CoreDocker.Api.Components.Users
                 .Description("The date when the user was created.");
         }
 
-
-        #region Private Methods
-
         private static List<string> Roles(List<string> sourceRoles)
         {
             var roles = sourceRoles.Select(RoleManager.GetRole)
@@ -44,7 +41,5 @@ namespace CoreDocker.Api.Components.Users
                 .ToList();
             return roles;
         }
-
-        #endregion
     }
 }

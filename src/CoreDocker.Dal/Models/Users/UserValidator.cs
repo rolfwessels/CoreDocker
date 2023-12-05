@@ -1,5 +1,4 @@
 ﻿using CoreDocker.Dal.Validation;
-using Bumbershoot.Utilities.Helpers;
 using FluentValidation;
 
 namespace CoreDocker.Dal.Models.Users

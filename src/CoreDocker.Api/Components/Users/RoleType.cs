@@ -1,5 +1,4 @@
-﻿using CoreDocker.Dal.Models.Users;
-using CoreDocker.Shared.Models.Users;
+﻿using CoreDocker.Shared.Models.Users;
 using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users

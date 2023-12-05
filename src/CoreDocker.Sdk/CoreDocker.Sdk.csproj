@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <AssemblyName>CoreDocker.Sdk</AssemblyName>
         <PackageId>CoreDocker.Sdk</PackageId>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -17,10 +17,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="GraphQL.Client" Version="4.0.2" />
-        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="4.0.2" />
-        <PackageReference Include="RestSharp" Version="107.3.0" />
-        <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
+        <PackageReference Include="GraphQL.Client" Version="6.0.2" />
+        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.2" />
+        <PackageReference Include="RestSharp" Version="110.2.0" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

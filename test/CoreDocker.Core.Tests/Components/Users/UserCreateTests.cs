@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Components.Users;
 using CoreDocker.Core.Tests.Framework.BaseManagers;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Dal.Persistence;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -40,7 +39,7 @@ namespace CoreDocker.Core.Tests.Components.Users
             var validRequest = GetValidRequest();
             validRequest.Email = "sere";
             // action
-            Action testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
+            var testCall = () => { _handler.ProcessCommand(validRequest, CancellationToken.None).Wait(); };
             // assert
             testCall.Should().Throw<ValidationException>()
                 .And.Errors.Should().Contain(x => x.ErrorMessage == "'Email' is not a valid email address.");

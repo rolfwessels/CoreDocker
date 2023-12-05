@@ -16,11 +16,7 @@ namespace CoreDocker.Dal.MongoDb.Migrations
         public int Id { get; set; }
         public string Name { get; set; }
 
-        #region Implementation of IBaseDalModel
-
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
-
-        #endregion
     }
 }

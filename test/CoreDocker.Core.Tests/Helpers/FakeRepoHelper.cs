@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
-using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Tests;
 using FizzWare.NBuilder;
 

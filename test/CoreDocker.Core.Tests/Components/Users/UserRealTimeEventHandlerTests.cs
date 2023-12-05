@@ -21,7 +21,7 @@ namespace CoreDocker.Core.Tests.Components.Users
         private SubscriptionNotifications _subscriptionNotifications = null!;
         private UserRealTimeEventHandler _userRealTimeEventHandler = null!;
 
-        #region Overrides of BaseManagerTests
+        #region Setup/Teardown
 
         public override void Setup()
         {
@@ -31,24 +31,6 @@ namespace CoreDocker.Core.Tests.Components.Users
         }
 
         #endregion
-
-        [Test]
-        public void Scan_GivenUserRealTimeEventHandler_ShouldNotBeMissingAnyNotifications()
-        {
-            Setup();
-            SubscribeHelper.NotificationScanner(typeof(UserRealTimeEventHandler));
-        }
-
-        [Test]
-        public void Handle_GivenUserUpdateNotification_ShouldNotifyOfUserChange()
-        {
-            // arrange
-            Setup();
-            var notification = BuildNotification<UserUpdate.Notification>();
-            // action
-            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
-                "UserUpdated");
-        }
 
         [Test]
         public void Handle_GivenUserCreateNotification_ShouldNotifyOfUserChange()
@@ -72,8 +54,27 @@ namespace CoreDocker.Core.Tests.Components.Users
                 "UserRemoved");
         }
 
+        [Test]
+        public void Handle_GivenUserUpdateNotification_ShouldNotifyOfUserChange()
+        {
+            // arrange
+            Setup();
+            var notification = BuildNotification<UserUpdate.Notification>();
+            // action
+            BasicTest(() => _userRealTimeEventHandler.Handle(notification, CancellationToken.None), notification,
+                "UserUpdated");
+        }
 
-        private void BasicTest(Action action, CommandNotificationBase notification,
+        [Test]
+        public void Scan_GivenUserRealTimeEventHandler_ShouldNotBeMissingAnyNotifications()
+        {
+            Setup();
+            SubscribeHelper.NotificationScanner(typeof(UserRealTimeEventHandler));
+        }
+
+
+        private void BasicTest(Action action,
+            CommandNotificationBase notification,
             string @event)
         {
             var list = new List<RealTimeNotificationsMessage>();

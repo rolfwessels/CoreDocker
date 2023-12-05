@@ -13,13 +13,7 @@ namespace CoreDocker.Core.Components.Users
             Repository = userGrant;
         }
 
-        #region Overrides of BaseLookup<UserGrant>
-
         protected override IRepository<UserGrant> Repository { get; }
-
-        #endregion
-
-        #region Implementation of IUserGrantLookup
 
         public Task<UserGrant?> GetByKey(string key)
         {
@@ -40,7 +34,5 @@ namespace CoreDocker.Core.Components.Users
         {
             return Repository.Remove(x => x.Id == id);
         }
-
-        #endregion
     }
 }

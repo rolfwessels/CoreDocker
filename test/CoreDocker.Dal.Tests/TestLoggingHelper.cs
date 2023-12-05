@@ -9,7 +9,7 @@ namespace CoreDocker.Dal.Tests
     [SetUpFixture]
     public class TestLoggingHelper
     {
-        private static Lazy<ILogger> _logger;
+        private static readonly Lazy<ILogger> _logger;
 
         static TestLoggingHelper()
         {

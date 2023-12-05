@@ -1,60 +1,67 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using CoreDocker.Core.Framework.Logging;
+﻿using CoreDocker.Api;
+using CoreDocker.Api.AppStartup;
+using CoreDocker.Api.GraphQl;
+using CoreDocker.Api.Security;
+using CoreDocker.Api.WebApi.Filters;
 using CoreDocker.Core.Framework.Settings;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Events;
-using Serilog.Extensions.Logging;
-using ILogger = Serilog.ILogger;
+using CoreDocker.Core.Startup;
+using CoreDocker.Api.Swagger;
+using CoreDocker.Core;using MongoDB.Driver;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFilesAndEnvironment();
+
+builder.AddSerilog();
+
+builder.Services.AddMediatR(cfg => cfg
+    .RegisterServicesFromAssemblyContaining<Program>()
+    .RegisterServicesFromAssemblyContaining<Settings>()
+);
+builder.Services.AddCoreIoc();
+builder.Services.AddApiIoc();
+builder.Services.AddSingleton(builder.Configuration);
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddGraphQl();
+builder.Services.AddCors();
+
+var openIdSettings = new OpenIdSettings(builder.Configuration);
+builder.Services.AddIdentityService(openIdSettings);
+builder.Services.AddAuthenticationClient(openIdSettings);
+builder.Services.AddMvc(config => { config.Filters.Add(new CaptureExceptionFilter()); });
+builder.Services.AddSwagger(openIdSettings);
+
+var app = builder.Build();
+
+app.UseRouting();
+app.UseCors(policy =>
+{
+    policy.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .SetPreflightMaxAge(TimeSpan.FromMinutes(10)) // Cache the OPTIONS calls.
+        .WithOrigins(openIdSettings.GetOriginList());
+});
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+}
+
+app.AddIdentityService(openIdSettings);
+app.UseBearerAuthentication();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseWebSockets();
+app.MapControllers();
+app.AddGraphQl();
+app.Run();
+
 
 namespace CoreDocker.Api
 {
-    public class Program
+    public partial class Program
     {
-        public static void Main(string[] args)
-        {
-            Console.Title = "CoreDocker.Api";
-
-            Log.Logger = LoggingHelper.SetupOnce(() => new LoggerConfiguration().MinimumLevel.Debug()
-                .WriteTo.File(Path.Combine(Path.GetTempPath(), "CoreDocker.Api.log"), fileSizeLimitBytes: 10 * LoggingHelper.MB,
-                    rollOnFileSizeLimit: true)
-                .WriteTo.Console(LogEventLevel.Information)
-                //.ReadFrom.Configuration(BaseSettings.Config)
-                .CreateLogger());
-
-            try
-            {
-                BuildWebHost(args).Run();
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
-
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices((context, collection) =>
-                    collection.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory()))
-                .UseKestrel()
-                .UseUrls(args.FirstOrDefault() ?? "http://*:5000")
-                .ConfigureAppConfiguration(SettingsFileReaderHelper)
-                .UseStartup<Startup>()
-                .Build();
-        }
-
-        public static void SettingsFileReaderHelper(WebHostBuilderContext hostingContext, IConfigurationBuilder config)
-        {
-            var env = hostingContext.HostingEnvironment;
-            config.AddJsonFilesAndEnvironment(env.EnvironmentName);
-        }
     }
 }

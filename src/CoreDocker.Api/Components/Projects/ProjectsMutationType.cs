@@ -1,6 +1,5 @@
 ﻿using CoreDocker.Api.GraphQl;
 using CoreDocker.Dal.Models.Auth;
-using CoreDocker.Shared.Models.Projects;
 using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Projects
@@ -26,7 +25,7 @@ namespace CoreDocker.Api.Components.Projects
 }
 
 /* scaffolding [
-    
+
     {
       "FileName": "DefaultMutation.cs",
       "Indexline": "using CoreDocker.Api.Components.Projects;",

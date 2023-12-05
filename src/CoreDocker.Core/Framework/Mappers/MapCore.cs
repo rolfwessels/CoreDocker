@@ -1,12 +1,13 @@
 ﻿using System;
 using AutoMapper;
+using AutoMapper.Internal;
 using CoreDocker.Dal.Models.Base;
 
 namespace CoreDocker.Core.Framework.Mappers
 {
     public static partial class MapCore
     {
-        private static readonly Lazy<IMapper> _mapper = new Lazy<IMapper>(InitializeMapping);
+        private static readonly Lazy<IMapper> _mapper = new(InitializeMapping);
 
         public static IMapper GetInstance()
         {
@@ -17,6 +18,7 @@ namespace CoreDocker.Core.Framework.Mappers
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.Internal().MethodMappingEnabled = false; 
                 CreateCommandMap(cfg);
                 CreateProjectMap(cfg);
                 CreateUserMap(cfg);

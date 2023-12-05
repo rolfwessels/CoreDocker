@@ -27,8 +27,6 @@ namespace CoreDocker.Api.Mappers
             return GetInstance().Map<IEnumerable<Project>, IEnumerable<ProjectModel>>(projects);
         }
 
-        #region Private Methods
-
         private static void MapProjectModel(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Project, ProjectModel>();
@@ -36,8 +34,6 @@ namespace CoreDocker.Api.Mappers
             configuration.CreateMap<ProjectReference, ProjectReferenceModel>();
             configuration.CreateMap<ProjectCreateUpdateModel, Project>().MapToDal();
         }
-
-        #endregion
     }
 }
 

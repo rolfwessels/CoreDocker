@@ -17,26 +17,14 @@ namespace CoreDocker.Dal.MongoDb
             SystemEvents = new MongoRepository<SystemEvent>(database);
         }
 
-        #region IGeneralUnitOfWork Members
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Implementation of IGeneralUnitOfWork
-
         public IRepository<User> Users { get; }
         public IRepository<Project> Projects { get; }
         public IRepository<UserGrant> UserGrants { get; }
         public IRepository<SystemCommand> SystemCommands { get; set; }
         public IRepository<SystemEvent> SystemEvents { get; set; }
 
-        #endregion
+        public void Dispose()
+        {
+        }
     }
 }

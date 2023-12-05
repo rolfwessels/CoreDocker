@@ -1,18 +1,14 @@
-﻿using System.Linq;
-using Bumbershoot.Utilities;
-using Microsoft.Extensions.Configuration;
+﻿using Bumbershoot.Utilities;
 
 namespace CoreDocker.Api.Security
 {
     public class OpenIdSettings : BaseSettings
     {
-        
-
         public OpenIdSettings(IConfiguration configuration) : base(configuration, "OpenId")
         {
         }
 
-        public string HostUrl => ReadConfigValue("HostUrl", "http://localhost:5000");
+        public string HostUrl => ReadConfigValue("HostUrl", "http://localhost:5010");
 
         public string ApiResourceName => ReadConfigValue("ApiResourceName", "api.resource");
 
@@ -21,23 +17,19 @@ namespace CoreDocker.Api.Security
         public string ClientName => ReadConfigValue("ClientName", "coredocker.api");
 
         public string ClientSecret => ReadConfigValue("ClientSecret", "super_secure_password");
-
-        public string IdentPath => ReadConfigValue("IdentPath", "identity");
-
-        public string ScopeApi => ReadConfigValue("ScopeApi", "api");
-
-        public string Origins => ReadConfigValue("Origins", "http://localhost:5000,http://localhost:3000,http://localhost:84");
         
+        public string Origins =>
+            ReadConfigValue("Origins", "http://localhost:5010,http://localhost:3000,http://localhost:84");
+
         public string CertPfx => ReadConfigValue("CertPfx", "development.pfx");
 
         public string CertPassword => ReadConfigValue("CertPassword", "60053018f4794862a82982640570c552");
 
         public string CertStoreThumbprint => ReadConfigValue("CertStoreThumbprint", "");
-        //B75303B3E5CEBE484C342D438987AB33560B5717
 
-        public bool UseReferenceTokens => ReadConfigValue("UseReferenceTokens", false);
+        public bool UseReferenceTokens => ReadConfigValue("UseReferenceTokens", true);
 
-        public bool IsDebugEnabled => ReadConfigValue("IsDebugEnabled", true);
+        public bool IsDebugEnabled => ReadConfigValue("IsDebugEnabled", false);
 
         public string[] GetOriginList()
         {

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-env
 WORKDIR /app
 COPY ./ ./
 WORKDIR /app/CoreDocker.Api
@@ -8,12 +8,12 @@ RUN dotnet publish  -p:VersionSuffix=${VERSION_SUFFIX}  -p:FileVersion=${VERSION
 
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine
 
 WORKDIR /app
 COPY --from=build-env /app/CoreDocker.Api/out .
 RUN apk add curl
-HEALTHCHECK CMD curl --fail http://localhost:5000/api/ping/hc || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:5010/api/ping/hc || exit 1
 
 ARG  VERSION=0.0.0
 ARG  VERSION_SUFFIX=pre-alpha

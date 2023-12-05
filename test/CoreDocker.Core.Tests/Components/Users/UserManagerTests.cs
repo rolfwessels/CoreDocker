@@ -104,10 +104,8 @@ namespace CoreDocker.Core.Tests.Components.Users
 
         protected override IRepository<User> Repository => _fakeGeneralUnitOfWork.Users;
 
-        protected override User SampleObject
-        {
-            get { return Builder<User>.CreateNew().With(x => x.Email = GetRandom.Email()).Build(); }
-        }
+        protected override User SampleObject =>
+            Builder<User>.CreateNew().With(x => x.Email = GetRandom.Email()).Build();
 
         protected override BaseLookup<User> Lookup => _userLookup;
     }

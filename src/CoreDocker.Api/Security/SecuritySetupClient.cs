@@ -1,29 +1,25 @@
-﻿using System;
-using CoreDocker.Api.AppStartup;
+﻿using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Dal.Models.Auth;
-using Bumbershoot.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupClient
     {
-        public static void AddBearerAuthentication(this IServiceCollection services)
+        public static void AddAuthenticationClient(this IServiceCollection services, OpenIdSettings idSettings)
         {
             services.AddDistributedMemoryCache();
             services.AddAuthorization(AddFromActivities);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(SecuritySetupServer.CookieAuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    var openIdSettings = IocApi.Instance.Resolve<OpenIdSettings>();
-                    options.Authority = openIdSettings.HostUrl;
+                    options.Authority = idSettings.HostUrl;
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = openIdSettings.ApiResourceName;
-                    options.ApiSecret = openIdSettings.ApiResourceSecret;
+                    options.ApiName = idSettings.ApiResourceName;
+                    options.ApiSecret = idSettings.ApiResourceSecret;
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(5);
                 });
@@ -33,8 +29,6 @@ namespace CoreDocker.Api.Security
         {
             app.UseAuthentication();
         }
-
-        #region Private Methods
 
         private static void AddFromActivities(AuthorizationOptions options)
         {
@@ -48,7 +42,5 @@ namespace CoreDocker.Api.Security
                         });
                 });
         }
-
-        #endregion
     }
 }

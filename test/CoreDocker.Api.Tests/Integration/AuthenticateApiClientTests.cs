@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreDocker.Sdk.RestApi;
 using Bumbershoot.Utilities.Helpers;
+using CoreDocker.Sdk.RestApi;
 using FluentAssertions;
 using NUnit.Framework;
+using static HotChocolate.ErrorCodes;
 
 namespace CoreDocker.Api.Tests.Integration
 {
@@ -14,16 +16,16 @@ namespace CoreDocker.Api.Tests.Integration
         private ICoreDockerClient? _connection;
         private ICoreDockerClient? _connectionAuth;
 
-
         #region Setup/Teardown
 
         protected void Setup()
         {
-            _connection = _defaultRequestFactory.Value.GetConnection();
-            _connectionAuth = _defaultRequestFactory.Value.GetConnection();
-            //            _connection = new CoreDockerClient("http://localhost:5000");
-            //            _connectionAuth = new CoreDockerClient("http://localhost:5000");   
+            var connectionFactory = DefaultRequestFactory();
+            _connection = connectionFactory.GetConnection();
+            _connectionAuth = connectionFactory.GetConnection();  
         }
+
+        
 
         [TearDown]
         public void TearDown()
@@ -38,6 +40,7 @@ namespace CoreDocker.Api.Tests.Integration
             // arrange
             Setup();
             var pingModel = await _connection!.Ping.Get();
+            await _connection!.Authenticate.GetConfiguration();
             // action
             var data = await _connectionAuth!.Authenticate.Login(AdminUser, AdminPassword);
             _connection.SetToken(data);
@@ -60,12 +63,25 @@ namespace CoreDocker.Api.Tests.Integration
         }
 
         [Test]
+        public async Task GetConfiguration_WhenCalled_ShouldHaveResult()
+        {
+            // arrange
+            Setup();
+            // action
+            var data = await _connection!.Authenticate.GetConfiguration();
+            // assert
+            data.Should().Contain("http://localhost/connect/token");
+        }
+
+        [Test]
         public async Task GivenAuthorization_WhenCalled_ShouldHaveResult()
         {
             // arrange
             Setup();
             // action
             var auth = await _connection!.Authenticate.Login(AdminUser, AdminPassword);
+            
+            var userInfoResponse = await _connection!.Authenticate.UserInfo();
             // assert
             auth.AccessToken.Should().NotBeEmpty();
             auth.ExpiresIn.Should().BeGreaterThan(30);

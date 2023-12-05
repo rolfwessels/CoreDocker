@@ -11,8 +11,8 @@ namespace CoreDocker.Core.Tests.Helpers
     public class PersistanceTester<T> where T : IBaseDalModelWithId
     {
         private readonly Func<IGeneralUnitOfWork, IRepository<T>> _repo;
-        private readonly List<Action<T, T>> _testSaved = new List<Action<T, T>>();
-        private readonly List<Action<T, T>> _testUpdated = new List<Action<T, T>>();
+        private readonly List<Action<T, T>> _testSaved = new();
+        private readonly List<Action<T, T>> _testUpdated = new();
         private readonly IGeneralUnitOfWork _unitOfWork;
 
         public PersistanceTester(IGeneralUnitOfWork unitOfWork, Func<IGeneralUnitOfWork, IRepository<T>> repo)

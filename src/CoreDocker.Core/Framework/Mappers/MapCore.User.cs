@@ -22,7 +22,10 @@ namespace CoreDocker.Core.Framework.Mappers
                 .ForMember(x => x.DefaultProject, opt => opt.Ignore())
                 .AfterMap((request, user) =>
                 {
-                    if (request.Password != null) user.SetPassword(request.Password);
+                    if (request.Password != null)
+                    {
+                        user.SetPassword(request.Password);
+                    }
                 })
                 .IgnoreCreateUpdate();
 
@@ -64,7 +67,8 @@ namespace CoreDocker.Core.Framework.Mappers
         }
 
 
-        public static UserRemove.Notification ToEvent(this UserRemove.Request user, bool wasRemoved,
+        public static UserRemove.Notification ToEvent(this UserRemove.Request user,
+            bool wasRemoved,
             UserRemove.Notification? userReference = null)
         {
             var notification = GetInstance().Map(user, userReference);

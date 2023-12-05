@@ -12,7 +12,7 @@ namespace CoreDocker.Sdk.RestApi.Clients
     public class ProjectApiClient : BaseApiClient
     {
         public ProjectApiClient(CoreDockerClient dockerClient)
-            : base(dockerClient, RouteHelper.ProjectController)
+            : base(dockerClient, "graphql")
         {
         }
 

@@ -16,7 +16,7 @@ namespace CoreDocker.Api.Lambda
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+                .UseStartup<Program>()
                 .Build();
         }
     }

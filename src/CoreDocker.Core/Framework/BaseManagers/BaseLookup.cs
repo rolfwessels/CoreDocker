@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Models.Base;
 using CoreDocker.Dal.Persistence;
-using CoreDocker.Dal.Validation;
 
 namespace CoreDocker.Core.Framework.BaseManagers
 {
-   
-
-    public abstract class BaseLookup<T> :  IBaseLookup<T> where T : BaseDalModelWithId
+    public abstract class BaseLookup<T> : IBaseLookup<T> where T : BaseDalModelWithId
     {
-        
         protected abstract IRepository<T> Repository { get; }
 
 

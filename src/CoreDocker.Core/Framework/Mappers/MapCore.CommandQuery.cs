@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CoreDocker.Core.Framework.CommandQuery;
-using CoreDocker.Dal.Models.Projects;
 
 namespace CoreDocker.Core.Framework.Mappers
 {

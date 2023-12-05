@@ -18,7 +18,7 @@ namespace CoreDocker.Api.Lambda
         protected override void Init(IWebHostBuilder builder)
         {
             builder
-                .UseStartup<Startup>();
+                .UseStartup<Program>();
         }
     }
 }

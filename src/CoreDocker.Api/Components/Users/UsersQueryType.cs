@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.GraphQl.DynamicQuery;
 using CoreDocker.Api.Mappers;
@@ -7,7 +8,6 @@ using CoreDocker.Core.Components.Users;
 using CoreDocker.Dal.Models.Auth;
 using CoreDocker.Dal.Models.Users;
 using CoreDocker.Shared.Models.Users;
-using Bumbershoot.Utilities.Helpers;
 using HotChocolate.Types;
 
 namespace CoreDocker.Api.Components.Users
@@ -70,10 +70,10 @@ namespace CoreDocker.Api.Components.Users
             return graphQlQueryOptions;
         }
 
-        #region Private Methods
-
-        private async Task<User?> Me(Task<User?> users) => await users;
-        #endregion
+        private async Task<User?> Me(Task<User?> users)
+        {
+            return await users;
+        }
 
         public class UsersQuery
         {

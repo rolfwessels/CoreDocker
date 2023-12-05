@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Bumbershoot.Utilities.Helpers;
+﻿using Bumbershoot.Utilities.Helpers;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
-using Microsoft.OpenApi.Writers;
 
 namespace CoreDocker.Api.Security
 {
     public class OpenIdConfig
     {
+        public const string Scope = "api";
+
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
@@ -25,13 +23,13 @@ namespace CoreDocker.Api.Security
         {
             return new List<ApiResource>
             {
-                new ApiResource(openIdSettings.ApiResourceName)
+                new(openIdSettings.ApiResourceName)
                 {
                     ApiSecrets =
                     {
                         new Secret(openIdSettings.ApiResourceSecret.Sha256())
                     },
-                    Scopes = GetApiScopes(openIdSettings).Select(x=>x.Name).ToArray(),
+                    Scopes = GetApiScopes(openIdSettings).Select(x => x.Name).ToArray(),
                     UserClaims =
                     {
                         JwtClaimTypes.Role,
@@ -44,23 +42,29 @@ namespace CoreDocker.Api.Security
             };
         }
 
-        public static IEnumerable<ApiScope> GetApiScopes(OpenIdSettings openIdSettings) =>
-            new[]
+        public static IEnumerable<ApiScope> GetApiScopes(OpenIdSettings openIdSettings)
+        {
+            return new[]
             {
-                new ApiScope(openIdSettings.ScopeApi, "Standard api access")
+                new ApiScope(OpenIdConfig.Scope, "Standard api access")
             };
+        }
+
+        
 
         public static IEnumerable<Client> GetClients(OpenIdSettings openIdSettings)
         {
             return new List<Client>
             {
-                new Client
+                new()
                 {
                     ClientName = "CoreDocker Api",
                     ClientId = openIdSettings.ClientName,
                     RequireConsent = false,
-                    AccessTokenType = openIdSettings.UseReferenceTokens? AccessTokenType.Reference : AccessTokenType.Jwt,
-                    AccessTokenLifetime = (int) TimeSpan.FromDays(1).TotalSeconds, // 10 minutes, default 60 minutes
+                    AccessTokenType = openIdSettings.UseReferenceTokens
+                        ? AccessTokenType.Reference
+                        : AccessTokenType.Jwt,
+                    AccessTokenLifetime = (int)TimeSpan.FromDays(1).TotalSeconds, // 10 minutes, default 60 minutes
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
                     {
@@ -78,11 +82,10 @@ namespace CoreDocker.Api.Security
                     AllowedCorsOrigins = openIdSettings.GetOriginList(),
                     AllowedScopes = new List<string>
                     {
-                        openIdSettings.ScopeApi
+                        Scope, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Email,
                     }
                 }
             };
         }
-
     }
 }

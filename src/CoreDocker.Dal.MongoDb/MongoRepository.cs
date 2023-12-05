@@ -23,8 +23,6 @@ namespace CoreDocker.Dal.MongoDb
             return Find(x => true);
         }
 
-        #region Implementation of IRepository<T>
-
         public IQueryable<T> Query()
         {
             return Collection.AsQueryable();
@@ -87,11 +85,12 @@ namespace CoreDocker.Dal.MongoDb
             var mongoUpdate = new MongoUpdate<T>(updateDefinition);
             upd(mongoUpdate);
             var result = await Collection.UpdateOneAsync(filterDefinition, mongoUpdate.UpdateDefinition,
-                new UpdateOptions {IsUpsert = true});
+                new UpdateOptions { IsUpsert = true });
             return result.ModifiedCount;
         }
 
-        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter, Action<IUpdateCalls<T>> upd,
+        public async Task<T> FindOneAndUpdate(Expression<Func<T, bool>> filter,
+            Action<IUpdateCalls<T>> upd,
             bool isUpsert = true)
         {
             var filterDefinition = Builders<T>.Filter.Where(filter);
@@ -99,7 +98,7 @@ namespace CoreDocker.Dal.MongoDb
             var mongoUpdate = new MongoUpdate<T>(updateDefinition);
             upd(mongoUpdate);
             var result = await Collection.FindOneAndUpdateAsync(filterDefinition, mongoUpdate.UpdateDefinition,
-                new FindOneAndUpdateOptions<T> {IsUpsert = isUpsert, ReturnDocument = ReturnDocument.After});
+                new FindOneAndUpdateOptions<T> { IsUpsert = isUpsert, ReturnDocument = ReturnDocument.After });
             return result;
         }
 
@@ -111,8 +110,6 @@ namespace CoreDocker.Dal.MongoDb
             }
 
             public UpdateDefinition<TType> UpdateDefinition { get; private set; }
-
-            #region IUpdateCalls<TType> Members
 
             public IUpdateCalls<TType> Set<TT>(Expression<Func<TType, TT>> expression, TT value)
             {
@@ -143,8 +140,6 @@ namespace CoreDocker.Dal.MongoDb
                 UpdateDefinition = UpdateDefinition.Push(expression, value);
                 return this;
             }
-
-            #endregion
         }
 
         public async Task<bool> Remove(Expression<Func<T, bool>> filter)
@@ -173,7 +168,5 @@ namespace CoreDocker.Dal.MongoDb
         {
             return Collection.CountDocumentsAsync(Builders<T>.Filter.Where(filter));
         }
-
-        #endregion
     }
 }

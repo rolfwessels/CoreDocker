@@ -17,18 +17,16 @@ namespace CoreDocker.Sdk.RestApi.Base
         {
         }
 
-        #region ICrudController<TModel,TDetailModel> Members
-
         public async Task<TModel> GetById(string id)
         {
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)));
+            var restRequest = new RestRequest(Url(RouteHelper.WithId.SetParam("id", id)));
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }
 
         public async Task<TModel> Insert(TDetailModel model)
         {
-            var restRequest = new RestRequest(DefaultUrl(), Method.Post);
+            var restRequest = new RestRequest(Url(), Method.Post);
             restRequest.AddBody(model!, ContentType.Json);
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
@@ -36,7 +34,7 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         public async Task<TModel> Update(string id, TDetailModel model)
         {
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)), Method.Put);
+            var restRequest = new RestRequest(Url(RouteHelper.WithId.SetParam("id", id)), Method.Put);
             restRequest.AddBody(model!, ContentType.Json);
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<TModel>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
@@ -44,11 +42,9 @@ namespace CoreDocker.Sdk.RestApi.Base
 
         public async Task<bool> Delete(string id)
         {
-            var restRequest = new RestRequest(DefaultUrl(RouteHelper.WithId.SetParam("id", id)), Method.Delete);
+            var restRequest = new RestRequest(Url(RouteHelper.WithId.SetParam("id", id)), Method.Delete);
             var executeAsyncWithLogging = await CoreDockerClient.Client.ExecuteAsyncWithLogging<bool>(restRequest);
             return ValidateResponse(executeAsyncWithLogging);
         }
-
-        #endregion
     }
 }

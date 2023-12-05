@@ -34,7 +34,10 @@ namespace CoreDocker.Core.Tests
                 .ToDictionary(x => x.Key, x => x.Count())
                 .Dump("Issue break down");
             foreach (var fileReport in fileReports.OrderBy(x => x.LinesOfCode))
+            {
                 Console.Out.WriteLine(fileReport.ToString());
+            }
+
             fileReports.Should().HaveCount(0);
         }
 

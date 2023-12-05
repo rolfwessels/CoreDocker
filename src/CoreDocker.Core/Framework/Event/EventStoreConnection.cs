@@ -4,21 +4,21 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Bumbershoot.Utilities.Helpers;
+using Bumbershoot.Utilities.Serializer;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.MessageUtil;
 using CoreDocker.Dal.Models.SystemEvents;
 using CoreDocker.Dal.Persistence;
-using Bumbershoot.Utilities.Helpers;
-using Bumbershoot.Utilities.Serializer;
 
 namespace CoreDocker.Core.Framework.Event
 {
     public class EventStoreConnection : IEventStoreConnection
     {
-        private readonly IRepository<SystemEvent> _storedEvents;
         private readonly IMessenger _messenger;
+        private readonly IRepository<SystemEvent> _storedEvents;
         private readonly IStringify _stringify;
-        public readonly Dictionary<string,Type> _types = new Dictionary<string, Type>();
+        public readonly Dictionary<string, Type> _types = new();
 
         public EventStoreConnection(IRepository<SystemEvent> storedEvents, IMessenger messenger, IStringify stringify)
         {
@@ -26,8 +26,6 @@ namespace CoreDocker.Core.Framework.Event
             _messenger = messenger;
             _stringify = stringify;
         }
-
-        #region Implementation of IEventStoreConnection
 
         public IAsyncEnumerable<EventHolder> Read(CancellationToken token)
         {
@@ -40,7 +38,8 @@ namespace CoreDocker.Core.Framework.Event
 
         private EventHolder ToEventHolder(SystemEvent systemEvent)
         {
-            return EventHolder.From(systemEvent.EventName, _stringify.Deserialize(_types[systemEvent.TypeName], systemEvent.Data.AsReadOnlyMemory()));
+            return EventHolder.From(systemEvent.EventName,
+                _stringify.Deserialize(_types[systemEvent.TypeName], systemEvent.Data.AsReadOnlyMemory()));
         }
 
 
@@ -56,11 +55,12 @@ namespace CoreDocker.Core.Framework.Event
                 var keyCollection = _types.Keys;
                 var asyncEnumerable = _storedEvents.Find(x => keyCollection.Contains(x.TypeName)).Result;
                 var receiver = new object();
-                _messenger.Register<SystemEvent>(receiver,e => o.OnNext(ToEventHolder(e)) );
+                _messenger.Register<SystemEvent>(receiver, e => o.OnNext(ToEventHolder(e)));
                 foreach (var holder in asyncEnumerable.Select(ToEventHolder))
                 {
                     o.OnNext(holder);
                 }
+
                 return () => { _messenger.UnRegister(receiver); };
             });
         }
@@ -72,14 +72,12 @@ namespace CoreDocker.Core.Framework.Event
                 commandNotificationBase?.CorrelationId ?? "",
                 commandNotificationBase?.CreatedAt ?? DateTime.Now,
                 commandNotificationBase?.Id ?? "",
-                commandNotificationBase?.EventName?? "",
+                commandNotificationBase?.EventName ?? "",
                 SystemEvent.BuildTypeName(value),
                 _stringify.Serialize(value)
             );
             await _storedEvents.Add(systemEvent);
             await _messenger.Send(systemEvent);
         }
-
-        #endregion
     }
 }

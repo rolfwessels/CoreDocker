@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bumbershoot.Utilities.Helpers;
 using CoreDocker.Core.Framework.CommandQuery;
 using CoreDocker.Core.Framework.Subscriptions;
-using Bumbershoot.Utilities.Helpers;
 using FluentAssertions;
 using MediatR;
 
@@ -24,7 +24,9 @@ namespace CoreDocker.Core.Tests.Components.Users
                 var notificationHandler = typeof(INotificationHandler<>).MakeGenericType(notification);
                 if (!type.GetInterfaces().Contains(notificationHandler) &&
                     !excludeNotifications.Contains(notification.Name))
+                {
                     list.Add(notification);
+                }
             }
 
             // assert
@@ -35,7 +37,8 @@ namespace CoreDocker.Core.Tests.Components.Users
         }
 
         public static void BasicNotificationValidation(RealTimeNotificationsMessage realTimeNotificationsMessage,
-            CommandNotificationBase notification, string @event)
+            CommandNotificationBase notification,
+            string @event)
         {
             realTimeNotificationsMessage.CorrelationId.Should().Be(notification.CorrelationId);
             realTimeNotificationsMessage.Id.Should().Be(notification.Id);

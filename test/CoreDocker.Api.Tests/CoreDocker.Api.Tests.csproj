@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>CoreDocker.Api.Tests</AssemblyName>
     <PackageId>CoreDocker.Api.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -20,11 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-			<PackageReference Include="coverlet.msbuild" Version="3.1.2">
+			<PackageReference Include="coverlet.msbuild" Version="6.0.0">
 			  <PrivateAssets>all</PrivateAssets>
 			  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			</PackageReference>
-			<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+			<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.14" />
+			<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <ProjectReference Include="..\..\src\CoreDocker.Api\CoreDocker.Api.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Core\CoreDocker.Core.csproj" />
     <ProjectReference Include="..\..\src\CoreDocker.Sdk\CoreDocker.Sdk.csproj" />
@@ -32,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -44,6 +45,14 @@
 
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Mappers\appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

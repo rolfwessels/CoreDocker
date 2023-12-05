@@ -12,23 +12,20 @@ namespace CoreDocker.Core.Components.Users
 {
     public class UserCreate
     {
-        #region Nested type: Handler
-
         public class Handler : CommandHandlerBase<Request>
         {
             private readonly ICommander _commander;
-            private readonly IValidatorFactory _validation;
             private readonly IGeneralUnitOfWorkFactory _persistance;
+            private readonly IValidatorFactory _validation;
 
-            public Handler(IGeneralUnitOfWorkFactory persistance, IValidatorFactory validation,
+            public Handler(IGeneralUnitOfWorkFactory persistance,
+                IValidatorFactory validation,
                 ICommander commander)
             {
                 _persistance = persistance;
                 _validation = validation;
                 _commander = commander;
             }
-
-            #region Overrides of CommandHandlerBase<Request>
 
             public override async Task ProcessCommand(Request request, CancellationToken cancellationToken)
             {
@@ -42,13 +39,7 @@ namespace CoreDocker.Core.Components.Users
 
                 await _commander.Notify(request.ToEvent(), cancellationToken);
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region Nested type: Notification
 
         public class Notification : CommandNotificationBase
         {
@@ -56,35 +47,28 @@ namespace CoreDocker.Core.Components.Users
             public string Email { get; set; } = null!;
             public List<string> Roles { get; set; } = null!;
 
-            #region Overrides of CommandNotificationBase
-
             public override string EventName => "UserCreated";
-
-            #endregion
         }
-
-        #endregion
-
-        #region Nested type: Request
 
         public record Request : CommandRequestBase
         {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public List<string> Roles { get; set; }
-            
             public Request(string id, string name, string email, string password, List<string> roles) : base(id)
             {
-                if (roles == null || !roles.Any()) throw new ArgumentNullException(nameof(roles));
-                
+                if (roles == null || !roles.Any())
+                {
+                    throw new ArgumentNullException(nameof(roles));
+                }
+
                 Name = name ?? throw new ArgumentNullException(nameof(name));
                 Email = email ?? throw new ArgumentNullException(nameof(email));
                 Password = password;
                 Roles = roles;
             }
-        }
 
-        #endregion
+            public string Name { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public List<string> Roles { get; set; }
+        }
     }
 }

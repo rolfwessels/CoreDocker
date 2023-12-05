@@ -11,7 +11,7 @@ namespace CoreDocker.Api.GraphQl.DynamicQuery
             Name = $"{typeof(TDal).Name}PagedList";
             descriptor.Field("items")
                 .Description("All items paged.")
-                .Type<NonNullType<ListType<TGt>> >()
+                .Type<NonNullType<ListType<TGt>>>()
                 .Resolve(x => x.Parent<PagedList<TDal>>().Items)
                 .RequirePermission(Activity.ReadProject);
 

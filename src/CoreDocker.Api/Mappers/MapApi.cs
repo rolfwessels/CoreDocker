@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using AutoMapper.Internal;
 using CoreDocker.Core.Framework.MessageUtil.Models;
 using CoreDocker.Shared.Models.Shared;
 
@@ -23,7 +24,7 @@ namespace CoreDocker.Api.Mappers
         public static ValueUpdateModel<TModel> ToValueUpdateModel<T, TModel>(this DalUpdateMessage<T> updateMessage)
         {
             return new ValueUpdateModel<TModel>(GetInstance().Map<T, TModel>(updateMessage.Value),
-                (UpdateTypeCodes) updateMessage.UpdateType);
+                (UpdateTypeCodes)updateMessage.UpdateType);
         }
 
         public static void AssertConfigurationIsValid()
@@ -31,19 +32,16 @@ namespace CoreDocker.Api.Mappers
             GetInstance().ConfigurationProvider.AssertConfigurationIsValid();
         }
 
-        #region Private Methods
-
         private static IMapper InitializeMapping()
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.Internal().MethodMappingEnabled = false; 
                 MapUserModel(cfg);
                 MapProjectModel(cfg);
                 MapUserGrantModel(cfg);
             });
             return config.CreateMapper();
         }
-
-        #endregion
     }
 }

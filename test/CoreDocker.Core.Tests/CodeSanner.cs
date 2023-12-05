@@ -32,6 +32,7 @@ namespace CoreDocker.Core.Tests
         {
             var fileReports = new List<FileReport>();
             foreach (var fileName in _lazy.Value)
+            {
                 if (_runners.Any(x => x.ShouldScan(fileName)))
                 {
                     var fileReport = new FileReport
@@ -52,16 +53,13 @@ namespace CoreDocker.Core.Tests
                         fileReports.Add(fileReport);
                     }
                 }
+            }
 
             return fileReports;
         }
 
-        #region Nested type: ClassesWithoutTests
-
         public class ClassesWithoutTests : ICodeSanner
         {
-            #region Implementation of ICodeSanner
-
             public bool ShouldScan(string fileName)
             {
                 return !fileName.Contains(".Tests") && !fileName.Contains("AssemblyInfo") &&
@@ -74,49 +72,40 @@ namespace CoreDocker.Core.Tests
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                 var testclassName = fileNameWithoutExtension + "Tests.cs";
                 if (!allFiles.Any(x => x.Contains(testclassName)))
+                {
                     yield return
                         new Issue(GetType().Name,
                             $"Expect the file {fileNameWithoutExtension} to have a test class somewhere {testclassName}.");
+                }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region Nested type: FileReport
 
         public record FileReport(string FileName, string ShortName)
         {
-            
             public List<Issue> Issues { get; set; } = new();
             public int LinesOfCode { get; set; }
-            
+
 
             public override string ToString()
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine($"FileName: {ShortName} [ lines : {LinesOfCode} , Issues {Issues.Count}]");
                 stringBuilder.AppendLine("----------------");
-                foreach (var issue in Issues) stringBuilder.AppendLine(issue.ToString());
+                foreach (var issue in Issues)
+                {
+                    stringBuilder.AppendLine(issue.ToString());
+                }
+
                 stringBuilder.AppendLine("");
                 return stringBuilder.ToString();
             }
         }
-
-        #endregion
-
-        #region Nested type: ICodeSanner
 
         public interface ICodeSanner
         {
             bool ShouldScan(string fileName);
             IEnumerable<Issue> IsFail(string fileName, string[] fileLines, string[] allFiles);
         }
-
-        #endregion
-
-        #region Nested type: Issue
 
         public record Issue(string Type, string Description)
         {
@@ -129,14 +118,8 @@ namespace CoreDocker.Core.Tests
             }
         }
 
-        #endregion
-
-        #region Nested type: TestsShouldEndWithFileNameTests
-
         public class TestsShouldEndWithFileNameTests : ICodeSanner
         {
-            #region Implementation of ICodeSanner
-
             public bool ShouldScan(string fileName)
             {
                 return fileName.Contains(".Tests");
@@ -148,24 +131,25 @@ namespace CoreDocker.Core.Tests
                 var nameNoExtention = Path.GetFileNameWithoutExtension(fileName) ?? "";
                 var endsWithTests = name.EndsWith("Test.cs");
                 if (endsWithTests)
+                {
                     yield return
                         new Issue
                         (
                             GetType().Name,
                             $"File should be called {name.Replace("Test.cs", "Tests.cs")}."
                         );
+                }
+
                 var endsWithTest = name.EndsWith("Tests.cs");
                 if (endsWithTest && !fileLines.Any(x => x.Contains(nameNoExtention)))
+                {
                     yield return
                         new Issue(
                             GetType().Name,
                             $"File {name} should contain class {nameNoExtention}."
                         );
+                }
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

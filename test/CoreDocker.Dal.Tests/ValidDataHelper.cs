@@ -19,12 +19,12 @@ namespace CoreDocker.Dal.Tests
             return value.All().With(ValidData);
         }
 
-        #region Private Methods
-
         private static T ValidData<T>(T value)
         {
             if (value is Project project)
+            {
                 project.Name = GetRandom.String(20);
+            }
 
             if (value is User user)
             {
@@ -36,10 +36,12 @@ namespace CoreDocker.Dal.Tests
             }
 
             var userGrant = value as UserGrant;
-            if (userGrant != null) userGrant.User = Builder<User>.CreateNew().Build().ToReference();
+            if (userGrant != null)
+            {
+                userGrant.User = Builder<User>.CreateNew().Build().ToReference();
+            }
+
             return value;
         }
-
-        #endregion
     }
 }
