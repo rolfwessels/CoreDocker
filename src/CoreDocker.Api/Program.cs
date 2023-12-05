@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using CoreDocker.Api;
 using CoreDocker.Api.AppStartup;
 using CoreDocker.Api.GraphQl;
 using CoreDocker.Api.Security;
@@ -11,7 +11,7 @@ using CoreDocker.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFilesAndEnvironment();
-
+builder.AddSerilog();
 
 builder.Services.AddMediatR(cfg => cfg
     .RegisterServicesFromAssemblyContaining<Program>()
@@ -60,7 +60,6 @@ app.MapControllers();
 app.AddGraphQl();
 
 app.Run();
-
 
 
 namespace CoreDocker.Api

@@ -25,5 +25,6 @@ namespace CoreDocker.Core.Framework.Logging
 
             return Log.Logger;
         }
+
     }
 }

@@ -10,14 +10,18 @@ namespace CoreDocker.Api.Security
 {
     public static class SecuritySetupServer
     {
-        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-
+        public const string CookieAuthenticationScheme = "CoreDockerCookie";
+        private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
         public static void AddIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
             var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
-            services.AddIdentityServer()
+            services.AddIdentityServer(options=>
+                {
+                    options.IssuerUri = openIdSettings.HostUrl;
+                    options.Authentication.CookieAuthenticationScheme = CookieAuthenticationScheme;
+                })
                 .AddSigningCredential(Certificate(openIdSettings.CertPfx, openIdSettings.CertPassword,
                     openIdSettings.CertStoreThumbprint))
                 .AddInMemoryIdentityResources(OpenIdConfig.GetIdentityResources())

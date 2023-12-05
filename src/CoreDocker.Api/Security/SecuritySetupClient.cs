@@ -13,6 +13,7 @@ namespace CoreDocker.Api.Security
             services.AddDistributedMemoryCache();
             services.AddAuthorization(AddFromActivities);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(SecuritySetupServer.CookieAuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = idSettings.HostUrl;

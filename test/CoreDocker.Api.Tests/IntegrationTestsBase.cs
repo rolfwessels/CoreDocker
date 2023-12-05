@@ -63,7 +63,6 @@ namespace CoreDocker.Api.Tests
 
             public HttpClient CreateClient(string name)
             {
-                Console.Out.WriteLine("name:"+name);
                 return CreateClient();
             }
         }
