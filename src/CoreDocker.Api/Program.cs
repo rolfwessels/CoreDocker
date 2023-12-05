@@ -8,7 +8,6 @@ using CoreDocker.Core.Startup;
 using CoreDocker.Api.Swagger;
 using CoreDocker.Core;
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFilesAndEnvironment();
 builder.AddSerilog();
@@ -22,16 +21,14 @@ builder.Services.AddApiIoc();
 builder.Services.AddSingleton(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-
 builder.Services.AddGraphQl();
 builder.Services.AddCors();
-builder.Services.AddIdentityService(builder.Configuration);
+
 var openIdSettings = new OpenIdSettings(builder.Configuration);
+builder.Services.AddIdentityService(openIdSettings);
 builder.Services.AddAuthenticationClient(openIdSettings);
 builder.Services.AddMvc(config => { config.Filters.Add(new CaptureExceptionFilter()); });
-builder.Services.AddSwagger1(openIdSettings);
-builder.Services.AddSignalR();
+builder.Services.AddSwagger(openIdSettings);
 
 var app = builder.Build();
 
@@ -58,7 +55,6 @@ app.UseAuthorization();
 app.UseWebSockets();
 app.MapControllers();
 app.AddGraphQl();
-
 app.Run();
 
 

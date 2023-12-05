@@ -13,9 +13,8 @@ namespace CoreDocker.Api.Security
         public const string CookieAuthenticationScheme = "CoreDockerCookie";
         private static readonly ILogger _log = Log.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType!);
 
-        public static void AddIdentityService(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentityService(this IServiceCollection services, OpenIdSettings openIdSettings)
         {
-            var openIdSettings = new OpenIdSettings(configuration);
             _log.Debug($"SecuritySetupServer:UseIdentityService Setting the host url {openIdSettings.HostUrl}");
             services.AddIdentityServer(options=>
                 {

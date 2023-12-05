@@ -49,7 +49,7 @@ namespace CoreDocker.Api.Swagger
             });
         }
 
-        public static void AddSwagger1(this IServiceCollection services, OpenIdSettings openIdSettings)
+        public static void AddSwagger(this IServiceCollection services, OpenIdSettings openIdSettings)
         {
             services.AddSwaggerGen(options => SetupAction(options, openIdSettings.HostUrl));
             // todo: Rolf Add Auth response codes
@@ -65,8 +65,6 @@ namespace CoreDocker.Api.Swagger
                     $"Main {GetVersion()}");
                 c.OAuthClientId(openIdSettings.ClientName);
                 var clientSecret = openIdSettings.ClientSecret;
-                c.OAuthClientSecret(clientSecret);
-                c.OAuthClientSecret(clientSecret);
                 c.OAuthClientSecret(clientSecret);
                 c.OAuthRealm(openIdSettings.ApiResourceName);
                 c.OAuthAppName("SwaggerAuth");
